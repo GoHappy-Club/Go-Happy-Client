@@ -10,12 +10,19 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-google-signin/google-signin": "^6.0.1",
+    "@react-navigation/material-bottom-tabs": "^6.0.4",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.5",
+    "axios": "^0.21.1",
     "react": "17.0.1",
     "react-native": "0.64.2",
+    "react-native-awesome-alerts": "^1.5.2",
+    "react-native-indicators": "^0.17.0",
+    "react-native-paper": "^4.9.2",
     "react-native-safe-area-context": "^3.3.0",
-    "react-native-screens": "^3.5.0"
+    "react-native-screens": "^3.5.0",
+    "react-native-vector-icons": "^8.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",
