@@ -6,7 +6,7 @@ import { Card as Cd, Title, Paragraph } from 'react-native-paper';
 
 
 
-export default class LoginScreen extends Component {
+export default class HomeDashboard extends Component {
 	constructor(props)
 	{
 		super(props);

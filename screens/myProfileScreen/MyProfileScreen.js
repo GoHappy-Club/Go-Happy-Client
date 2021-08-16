@@ -9,13 +9,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
-
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-  } from '@react-native-google-signin/google-signin';
-
+import MyProfile from '../../components/Profile';
 
 
 export default class MyProfileScreen extends Component {
@@ -36,9 +30,7 @@ export default class MyProfileScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text>This will contain details about user's profile.</Text>
-                  </View>
+			<MyProfile />
 		);
 	}
 
