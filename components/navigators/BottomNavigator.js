@@ -2,9 +2,9 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import HomeScreen from '../../screens/homeScreen/HomeScreen';
 import MySessionsScreen from '../../screens/mySessionsScreen/MySessionsScreen';
 import MyProfileScreen from '../../screens/myProfileScreen/MyProfileScreen';
-
 import React, {Component} from 'react';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { faHome,faHistory,faChild,faClipboardList } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -16,22 +16,21 @@ export default function BottomNavigator() {
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="home" color={color} size={26} />
-        ),
+          <FontAwesomeIcon icon={ faHome } color={ 'white' } size='25' />
+      ),
       }}/>
       <Tab.Screen name="MySessions" component={MySessionsScreen}
       options={{
         tabBarLabel: 'My Sessions',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="bell" color={color} size={26} />
-        ),
+          <FontAwesomeIcon icon={ faClipboardList } color={ 'white' } size='25' />
+       ),
       }} />
       <Tab.Screen name="MyProfile" component={MyProfileScreen}
       options={{
         tabBarLabel: 'My Profile',
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="bell" color={color} size={26} />
-        ),
+          <FontAwesomeIcon icon={ faChild } color={ 'white' } size='25' />       ),
       }} />
     </Tab.Navigator>
   );

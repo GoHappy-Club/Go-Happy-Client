@@ -9,14 +9,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
-
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-  } from '@react-native-google-signin/google-signin';
-
-
+import HomeDashboard from '../../components/HomeDashboard.js'
 
 export default class HomeScreen extends Component {
 	constructor(props)
@@ -36,9 +29,7 @@ export default class HomeScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text>This will contain a list of all sessions</Text>
-                  </View>
+			<HomeDashboard/>
 		);
 	}
 

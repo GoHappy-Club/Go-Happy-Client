@@ -122,7 +122,7 @@ export default class LoginScreen extends Component {
 	}
 	_login = async() => {
 		this.setState({loader:true});
-        this.props.navigation.navigate('Go Happy Club');
+        this.props.navigation.navigate('GoHappy Club');
         this.setState({loader:false});
         return;
 		axios.post("http://"+SERVER_URL+":8080/login/check", {'phoneNumber':this.state.phoneNumber,'password':this.state.password})
