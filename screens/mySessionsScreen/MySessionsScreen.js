@@ -1,20 +1,10 @@
 import React,{Component} from 'react';
 import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
-
-// import AsyncStorage from '@react-native-community/async-storage';
-import { Avatar } from 'react-native-paper'
-import axios from 'axios';
-import AwesomeAlert from 'react-native-awesome-alerts';
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
-
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-  } from '@react-native-google-signin/google-signin';
+import MySessions from '../../components/MySessions';
 
 
 
@@ -36,9 +26,7 @@ export default class MySessionsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text>This will contain a list of my sessions</Text>
-                  </View>
+			<MySessions/>
 		);
 	}
 

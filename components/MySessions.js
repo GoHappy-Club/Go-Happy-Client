@@ -6,7 +6,7 @@ import { Card as Cd, Title, Paragraph } from 'react-native-paper';
 
 
 
-export default class HomeDashboard extends Component {
+export default class MySessions extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -25,62 +25,28 @@ export default class HomeDashboard extends Component {
 		const title = 'Login';
 		return (
             <ScrollView>
-                {/* <ScrollView horizontal={true}>
-                    <Cd style={{...styles.card,margin:5,backgroundColor: '#40a8c4',padding:5}}>
-                    <Cd.Content>
-                    <Paragraph style={{color:'white',marginTop:-8,textAlign:'center'}}>Upcoming Session</Paragraph>
-                    <Title style={{color:'white',fontSize:30,textAlign:'center',marginTop:8}}>Tambola</Title>
-                    </Cd.Content>
-                    </Cd>
-                    <Cd style={{...styles.card,margin:5,backgroundColor: '#206a5d',padding:5}}>
-                        <Cd.Content>
-                        <Paragraph style={{color:'white',marginTop:-8,textAlign:'center'}}>Early Bird Offer </Paragraph>
-                        <Title style={{color:'white',fontSize:30,textAlign:'center',marginTop:8}}>50% off</Title>
-                        </Cd.Content>
-                    </Cd>
-                    <Cd style={{...styles.card,margin:5,backgroundColor: '#e94560',padding:5}}>
-
-                        <Cd.Content>
-                        <Paragraph style={{color:'white',marginTop:-8,textAlign:'center'}}>Monthly Subscription</Paragraph>
-                        <Title style={{color:'white',fontSize:30,textAlign:'center',marginTop:8}}>Rs.500 only</Title>
-                        </Cd.Content>
-                    </Cd>
-                    
-                </ScrollView> */}
+                
                 <ScrollView>
                     <Card>
-                        <CardImage 
-                        source={{uri: 'https://assets.seniority.in/media/ktpl_blog/Edited_Seniors_Day.jpg'}} 
-                        title="Health Awareness"
-                        />
                         <CardTitle
-                        subtitle="Health is Wealth"
+                        subtitle="Health Awareness"
                         />
-                        <CardContent text="Event Date: 18th August 2021" />
+                        <CardContent text="Event Date: 18th August 2021 " />
 						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />
                         <CardAction 
                         separator={true} 
                         inColumn={false}>
                         <CardButton
                             onPress={() => {}}
-                            title="Join"
-                            color="#FEB557"
-                        />
-                        <CardButton
-                            onPress={() => {}}
-                            title="Details"
+                            title="Not Started Yet"
                             color="#FEB557"
                         />
                         </CardAction>
                     </Card>
 
                     <Card>
-                        <CardImage 
-                        source={{uri: 'https://assets.seniority.in/media/ktpl_blog/Online_Games_for_Seniors_Cover_Image_1_Updated.jpg'}} 
-                        title="Antakshari Session"
-                        />
                         <CardTitle
-                        subtitle="Fun Activity"
+                        subtitle="Antakshari Session"
                         />
 						<CardContent text="Event Date: 18th August 2021" />			
 						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />  
@@ -89,12 +55,7 @@ export default class HomeDashboard extends Component {
                         inColumn={false}>
                         <CardButton
                             onPress={() => {}}
-                            title="Join"
-                            color="#FEB557"
-                        />
-                        <CardButton
-                            onPress={() => {}}
-                            title="Details"
+                            title="View Recording"
                             color="#FEB557"
                         />
                         </CardAction>
