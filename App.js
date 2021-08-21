@@ -5,7 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/loginScreen/LoginScreen'
 import BottomNavigator from './components/navigators/BottomNavigator'
-
+import axios from 'axios';
+import * as configData from "./config/dev/config.json";
+global.axios = axios;
+global.SERVER_URL = configData.BACKEND.SERVER_URL;
 
 
 const Stack = createNativeStackNavigator();

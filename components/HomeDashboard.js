@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { Card as Cd, Title, Paragraph } from 'react-native-paper';
 
@@ -10,19 +11,23 @@ export default class HomeDashboard extends Component {
 	constructor(props)
 	{
 		super(props);
+		console.log(props);
 		this.state = {
-			phoneNumber: '',
-			password: '',showAlert:false,loader:false,
-
+			events: this.props.events,
 		}
 	}
+	renderDictionary() {
+		return (this.state.dictionary.map(word => {
+			
+				<Text>eqq</Text>
+			
+		}));
+	  }
 	render() {
-		if(this.state.loader==true){
-			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
-		}
-		const navigation = this.props.navigation;
-		const title = 'Login';
+		// if(this.state.loader==true){
+		// 	// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+		// 	return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
+		// }
 		return (
             <ScrollView>
                 {/* <ScrollView horizontal={true}>
@@ -47,61 +52,39 @@ export default class HomeDashboard extends Component {
                     </Cd>
                     
                 </ScrollView> */}
-                <ScrollView>
-                    <Card>
-                        <CardImage 
-                        source={{uri: 'https://assets.seniority.in/media/ktpl_blog/Edited_Seniors_Day.jpg'}} 
-                        title="Health Awareness"
-                        />
-                        <CardTitle
-                        subtitle="Health is Wealth"
-                        />
-                        <CardContent text="Event Date: 18th August 2021" />
-						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />
-                        <CardAction 
-                        separator={true} 
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="Join"
-                            color="#FEB557"
-                        />
-                        <CardButton
-                            onPress={() => {}}
-                            title="Details"
-                            color="#FEB557"
-                        />
-                        </CardAction>
-                    </Card>
-
-                    <Card>
-                        <CardImage 
-                        source={{uri: 'https://assets.seniority.in/media/ktpl_blog/Online_Games_for_Seniors_Cover_Image_1_Updated.jpg'}} 
-                        title="Antakshari Session"
-                        />
-                        <CardTitle
-                        subtitle="Fun Activity"
-                        />
-						<CardContent text="Event Date: 18th August 2021" />			
-						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />  
-                        <CardAction 
-                        separator={true} 
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="Join"
-                            color="#FEB557"
-                        />
-                        <CardButton
-                            onPress={() => {}}
-                            title="Details"
-                            color="#FEB557"
-                        />
-                        </CardAction>
-                    </Card>
-                    
-                    </ScrollView>
-                </ScrollView>
+				<View >
+					{this.state.events.map((event, key) => {
+						return (
+							<Card>
+							<CardImage 
+							source={{uri: 'https://assets.seniority.in/media/ktpl_blog/Edited_Seniors_Day.jpg'}} 
+							title={event.eventName}
+							/>
+							<CardTitle
+							subtitle={event.category}
+							/>
+							<CardContent text={"Event Date: "+ (new Date(parseInt(event.eventDate))).toDateString()} />
+							<CardContent text={"Event Time: "+ (new Date(parseInt(event.startTime))).toLocaleTimeString()+" - "+
+						(new Date(parseInt(event.endTime))).toLocaleTimeString()} />
+							<CardAction 
+							separator={true} 
+							inColumn={false}>
+							<CardButton
+								onPress={() => {}}
+								title="Join"
+								color="#FEB557"
+							/>
+							<CardButton
+								onPress={() => {}}
+								title="Details"
+								color="#FEB557"
+							/>
+							</CardAction>
+						</Card>
+						);
+					})}
+				</View>
+            </ScrollView>
 		);
 	}
 }

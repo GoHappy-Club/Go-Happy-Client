@@ -17,7 +17,7 @@ import {
     statusCodes,
   } from '@react-native-google-signin/google-signin';
 
-
+ 
 
 export default class LoginScreen extends Component {
 	constructor(props)

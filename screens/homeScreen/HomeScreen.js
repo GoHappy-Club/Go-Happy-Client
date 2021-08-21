@@ -18,19 +18,31 @@ export default class HomeScreen extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-
+			events: [],
 		}
 	}
 	render() {
-		if(this.state.loader==true){
-			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+		if(this.state.events.length>0){
+			return (<HomeDashboard events={this.state.events}/>)
+		}
+		else{
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
 		}
-		const navigation = this.props.navigation;
-		const title = 'Login';
-		return (
-			<HomeDashboard/>
-		);
+	}
+	loadEvents() {
+		var url = SERVER_URL+"/home/getEvents";
+      axios.post(url,{})
+        .then(response => {
+            if (response.data) {
+				this.setState({events: response.data.events});
+            }
+        })
+        .catch(error => {
+            console.log('Error while fetching the transactions from sms');
+        });
+	}
+	componentDidMount() {
+		this.loadEvents();
 	}
 
 }
