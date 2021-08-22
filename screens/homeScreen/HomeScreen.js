@@ -15,6 +15,7 @@ export default class HomeScreen extends Component {
 	constructor(props)
 	{
 		super(props);
+		console.log('in home screen ',props);
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
@@ -23,7 +24,7 @@ export default class HomeScreen extends Component {
 	}
 	render() {
 		if(this.state.events.length>0){
-			return (<HomeDashboard events={this.state.events}/>)
+			return (<HomeDashboard events={this.state.events}  navigation={this.props.navigation}/>)
 		}
 		else{
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)

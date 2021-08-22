@@ -91,7 +91,7 @@ export default class LoginScreen extends Component {
 							ref={(input) => this.passwordInput = input}
 							secureTextEntry
 						/>
-						<TouchableOpacity style={styles.userBtn} onPress={this._login}>
+						<TouchableOpacity style={styles.userBtn} onPress={() => {this.props.navigation.navigate('GoHappy Club');}}>
 							<Text style={styles.btnTxt} >Submit</Text>
 						</TouchableOpacity>
 							<Text style={styles.registerTxt} onPress={this._register}>Not registered yet?</Text>
@@ -125,25 +125,25 @@ export default class LoginScreen extends Component {
         this.props.navigation.navigate('GoHappy Club');
         this.setState({loader:false});
         return;
-		axios.post("http://"+SERVER_URL+":8080/login/check", {'phoneNumber':this.state.phoneNumber,'password':this.state.password})
-					.then(response => {
-						console.log('here'+response);
-							if (response.data && response.data!="ERROR") {
-									// this.setState({fullName: userInfo.fullName});
-									AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
-									AsyncStorage.setItem('fullName',response.data.fullName);
-									AsyncStorage.setItem('username',response.data.username);
-									AsyncStorage.setItem('profileImage',response.data.profileImage);
-									AsyncStorage.setItem('lastDataSync',response.data.dataSyncTime);
-									this.props.navigation.navigate('DrawerNavigator');
-							}
-							else if(response.data=="ERROR"){
-								this.setState({showAlert:true,loader:false})
-							}
-					})
-					.catch(error => {
-							console.log('Error while fetching the transactions from sms');
-					});
+		// axios.post("http://"+SERVER_URL+":8080/login/check", {'phoneNumber':this.state.phoneNumber,'password':this.state.password})
+		// 			.then(response => {
+		// 				console.log('here'+response);
+		// 					if (response.data && response.data!="ERROR") {
+		// 							// this.setState({fullName: userInfo.fullName});
+		// 							AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
+		// 							AsyncStorage.setItem('fullName',response.data.fullName);
+		// 							AsyncStorage.setItem('username',response.data.username);
+		// 							AsyncStorage.setItem('profileImage',response.data.profileImage);
+		// 							AsyncStorage.setItem('lastDataSync',response.data.dataSyncTime);
+		// 							this.props.navigation.navigate('DrawerNavigator');
+		// 					}
+		// 					else if(response.data=="ERROR"){
+		// 						this.setState({showAlert:true,loader:false})
+		// 					}
+		// 			})
+		// 			.catch(error => {
+		// 					console.log('Error while fetching the transactions from sms');
+		// 			});
 	}
 
 }

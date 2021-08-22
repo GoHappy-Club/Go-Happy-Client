@@ -12,6 +12,8 @@ target 'GoHappyClient' do
     :hermes_enabled => false
   )
 
+  pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
+
   target 'GoHappyClientTests' do
     inherit! :complete
     # Pods for testing

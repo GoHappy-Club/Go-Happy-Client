@@ -16,21 +16,21 @@ export default function BottomNavigator() {
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color }) => (
-          <FontAwesomeIcon icon={ faHome } color={ 'white' } size='25' />
+          <FontAwesomeIcon icon={ faHome } color={ 'white' } size={25} />
       ),
       }}/>
       <Tab.Screen name="MySessions" component={MySessionsScreen}
       options={{
         tabBarLabel: 'My Sessions',
         tabBarIcon: ({ color }) => (
-          <FontAwesomeIcon icon={ faClipboardList } color={ 'white' } size='25' />
+          <FontAwesomeIcon icon={ faClipboardList } color={ 'white' } size={25} />
        ),
       }} />
       <Tab.Screen name="MyProfile" component={MyProfileScreen}
       options={{
         tabBarLabel: 'My Profile',
         tabBarIcon: ({ color }) => (
-          <FontAwesomeIcon icon={ faChild } color={ 'white' } size='25' />       ),
+          <FontAwesomeIcon icon={ faChild } color={ 'white' } size={25} />       ),
       }} />
     </Tab.Navigator>
   );

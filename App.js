@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/loginScreen/LoginScreen'
 import BottomNavigator from './components/navigators/BottomNavigator'
+import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen'
 import axios from 'axios';
 import * as configData from "./config/dev/config.json";
 global.axios = axios;
@@ -19,6 +20,7 @@ export default function App() {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="GoHappy Club" component={BottomNavigator} />
+      <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
     </Stack.Navigator>
     </NavigationContainer>
   );
