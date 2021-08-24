@@ -13,6 +13,8 @@ target 'GoHappyClient' do
   )
 
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
+  pod 'Firebase/Analytics'
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
   target 'GoHappyClientTests' do
     inherit! :complete

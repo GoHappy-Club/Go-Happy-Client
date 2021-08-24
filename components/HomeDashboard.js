@@ -16,6 +16,7 @@ import CalendarDays from 'react-native-calendar-slider-carousel';
 import { DefaultTheme } from '@react-navigation/native';
 import { faHome,faHistory,faHeart as test,faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -36,6 +37,7 @@ export default class HomeDashboard extends Component {
 		this.setState({
 		  selectedDate: select,
 		 });
+		this.props.loadEvents(new Date(Date.parse(date)).setHours(0,0,0,0));
 	  };
 	// _renderItem ({item, index}, parallaxProps) {
     //     return (
@@ -75,9 +77,12 @@ export default class HomeDashboard extends Component {
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
 
-							<Badge value="NEW" badgeStyle={styles.badge} />
+							<Badge value={item.category} badgeStyle={styles.badge} />
 							<Text style={{color:'#404040',fontSize:14, paddingLeft:4}}>
-								{(new Date(parseInt(item.startTime))).toLocaleTimeString()}
+								{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
+							</Text>
+							<Text style={{color:'red',fontSize:14, paddingLeft:4}}>
+								{item.seatsLeft} seats left
 							</Text>
 						</View>
 						<FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />     

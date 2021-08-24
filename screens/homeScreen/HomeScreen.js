@@ -20,25 +20,30 @@ export default class HomeScreen extends Component {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
 			events: [],
+			error:false,
 		}
 	}
 	render() {
-		if(this.state.events.length>0){
-			return (<HomeDashboard events={this.state.events}  navigation={this.props.navigation}/>)
+		if(this.state.error==false){
+			return (<HomeDashboard events={this.state.events} loadEvents={this.loadEvents.bind(this)}  navigation={this.props.navigation}/>)
 		}
 		else{
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
 		}
 	}
-	loadEvents() {
-		var url = SERVER_URL+"/home/getEvents";
-      axios.post(url,{})
+	loadEvents(selectedDate) {
+		var url = SERVER_URL+"/event/getEventsByDate";
+		var date = new Date().setHours(0,0,0,0);
+		if(selectedDate!=null)
+			date = selectedDate;
+      axios.post(url,{'date':date})
         .then(response => {
             if (response.data) {
 				this.setState({events: response.data.events});
             }
         })
         .catch(error => {
+			this.error=true;
             console.log('Error while fetching the transactions from sms');
         });
 	}

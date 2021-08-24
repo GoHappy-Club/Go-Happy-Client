@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
 
-// import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from 'react-native-paper'
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -17,7 +17,16 @@ import {
     statusCodes,
   } from '@react-native-google-signin/google-signin';
 
- 
+GoogleSignin.configure({
+	webClientId: '908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+	offlineAccess: true,
+	// hostedDomain: '', // specifies a hosted domain restriction
+	// loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
+	// forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+	// accountName: '', // [Android] specifies an account name on the device that should be used
+	iosClientId: '908368396731-vppvalbam1en8cj8a35k68ug076pq2be.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  });
+
 
 export default class LoginScreen extends Component {
 	constructor(props)
@@ -26,28 +35,85 @@ export default class LoginScreen extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-
+			userInfo: null,
 		}
+		this.getCurrentUserInfo();
 	}
-    // GoogleSignin.configure();
-    // signIn = async () => {
-    //     try {
-    //       await GoogleSignin.hasPlayServices();
-    //       const userInfo = await GoogleSignin.signIn();
-    //       console.log(userInfo);
-    //       this.setState({ userInfo });
-    //     } catch (error) {
-    //       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //         // user cancelled the login flow
-    //       } else if (error.code === statusCodes.IN_PROGRESS) {
-    //         // operation (e.g. sign in) is in progress already
-    //       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //         // play services not available or outdated
-    //       } else {
-    //         // some other error happened
-    //       }
-    //     }
-    //   };
+	getCurrentUserInfo = async () => {
+		try {
+		  const userInfo = await GoogleSignin.signInSilently();
+		  this.setState({ userInfo });
+		  this.setState({loader:true});
+		  this.props.navigation.navigate('GoHappy Club');
+		  this.setState({loader:false});
+		} catch (error) {
+		  if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+			// user has not signed in yet
+		  } else {
+			// some other error
+		  }
+		}
+	  };
+	componentDidMount(){
+		// this.getCurrentUserInfo();
+	}
+	signOut = async () => {
+		try {
+		  await GoogleSignin.revokeAccess();
+		  await GoogleSignin.signOut();
+		  setloggedIn(false);
+		  setuserInfo([]);
+		} catch (error) {
+		  console.error(error);
+		}
+	  };
+    _signIn = async () => {
+        try {
+			console.log('herehereherehereherehere');
+          await GoogleSignin.hasPlayServices();
+          const userInfo = await GoogleSignin.signIn();
+          console.log('teet',userInfo);
+          this.setState({ userInfo });
+		  var token = userInfo['idToken'];
+		  var email = userInfo['user']['email'];
+		  var name = userInfo['user']['name'];
+		  var profileImage = userInfo['user']['photo'];
+		  var url = SERVER_URL+"/auth/login";
+		  axios.post(url, {'token':token,'email':email,'name':name,'profileImage':profileImage})
+		  .then(response => {
+			  console.log('here'+response);
+				  if (response.data && response.data!="ERROR") {
+					// this.setState({fullName: userInfo.fullName});
+					AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
+					// AsyncStorage.setItem('fullName',response.data.fullName);
+					AsyncStorage.setItem('name',name);
+					AsyncStorage.setItem('profileImage',profileImage);
+					AsyncStorage.setItem('token',token);
+					// this.props.navigation.navigate('DrawerNavigator');
+					this.setState({loader:true});
+					this.props.navigation.navigate('GoHappy Club');
+					this.setState({loader:false});
+				  }
+				  else if(response.data=="ERROR"){
+					  this.setState({showAlert:true,loader:false})
+				  }
+		  })
+		  .catch(error => {
+				  console.log('Error while fetching the transactions from sms');
+		  });
+		  
+        } catch (error) {
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            // user cancelled the login flow
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+          }
+        }
+      };
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -95,10 +161,14 @@ export default class LoginScreen extends Component {
 							<Text style={styles.btnTxt} >Submit</Text>
 						</TouchableOpacity>
 							<Text style={styles.registerTxt} onPress={this._register}>Not registered yet?</Text>
-                        
+							<GoogleSigninButton
+								style={{width: 192, height: 48}}
+								size={GoogleSigninButton.Size.Wide}
+								color={GoogleSigninButton.Color.Dark}
+								onPress={this._signIn}
+							/>
 					</View>
-                    {/* <GoogleSigninButton
-                            style={{ width: 192, height: 48 }} /> */}
+                    
 				</View>
 				<AwesomeAlert
 				  show={this.state.showAlert}
