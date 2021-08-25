@@ -10,6 +10,7 @@ import {
   MaterialIndicator,
 } from 'react-native-indicators';
 import HomeDashboard from '../../components/HomeDashboard.js'
+import { faGlasses } from '@fortawesome/free-solid-svg-icons';
 
 export default class HomeScreen extends Component {
 	constructor(props)
@@ -18,20 +19,22 @@ export default class HomeScreen extends Component {
 		console.log('in home screen ',props);
 		this.state = {
 			phoneNumber: '',
-			password: '',showAlert:false,loader:false,
+			password: '',showAlert:false,childLoader:false,
 			events: [],
-			error:false,
+			error:true,
 		}
 	}
 	render() {
 		if(this.state.error==false){
-			return (<HomeDashboard events={this.state.events} loadEvents={this.loadEvents.bind(this)}  navigation={this.props.navigation}/>)
+			return (<HomeDashboard events={this.state.events} childLoader={this.state.childLoader} bookEvent={this.bookEvent.bind(this)} loadEvents={this.loadEvents.bind(this)}  navigation={this.props.navigation}/>)
 		}
 		else{
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
 		}
 	}
 	loadEvents(selectedDate) {
+		this.setState({childLoader: true});
+		this.setState({events:[]});
 		var url = SERVER_URL+"/event/getEventsByDate";
 		var date = new Date().setHours(0,0,0,0);
 		if(selectedDate!=null)
@@ -40,12 +43,31 @@ export default class HomeScreen extends Component {
         .then(response => {
             if (response.data) {
 				this.setState({events: response.data.events});
+				this.setState({error:false});
+				this.setState({childLoader: false});
             }
         })
         .catch(error => {
 			this.error=true;
             console.log('Error while fetching the transactions from sms');
         });
+	}
+
+	bookEvent(id,email){
+		var url = SERVER_URL+"/event/bookEvent";
+      axios.post(url,{'id':id,'email':email})
+        .then(response => {
+            if (response.data) {
+				if(response.data=="SUCCESS"){
+					return true;
+				}
+            }
+        })
+        .catch(error => {
+			this.error=true;
+            console.log('Error while fetching the transactions from sms');
+			return false;
+        });		
 	}
 	componentDidMount() {
 		this.loadEvents();

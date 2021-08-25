@@ -7,8 +7,11 @@ import LoginScreen from './screens/loginScreen/LoginScreen'
 import BottomNavigator from './components/navigators/BottomNavigator'
 import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen'
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as configData from "./config/dev/config.json";
+
 global.axios = axios;
+global.AsyncStorage = AsyncStorage;
 global.SERVER_URL = configData.BACKEND.SERVER_URL;
 
 

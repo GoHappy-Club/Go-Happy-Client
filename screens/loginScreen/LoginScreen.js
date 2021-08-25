@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from 'react-native-paper'
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -39,6 +39,10 @@ export default class LoginScreen extends Component {
 		}
 		this.getCurrentUserInfo();
 	}
+	getCurrentUser = async () => {
+		const currentUser = await GoogleSignin.getCurrentUser();
+		this.setState({ currentUser });
+	  };
 	getCurrentUserInfo = async () => {
 		try {
 		  const userInfo = await GoogleSignin.signInSilently();
@@ -84,9 +88,11 @@ export default class LoginScreen extends Component {
 			  console.log('here'+response);
 				  if (response.data && response.data!="ERROR") {
 					// this.setState({fullName: userInfo.fullName});
-					AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
+					if(response.data.phoneNumber!=null)
+						AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
 					// AsyncStorage.setItem('fullName',response.data.fullName);
 					AsyncStorage.setItem('name',name);
+					AsyncStorage.setItem('email',email);
 					AsyncStorage.setItem('profileImage',profileImage);
 					AsyncStorage.setItem('token',token);
 					// this.props.navigation.navigate('DrawerNavigator');

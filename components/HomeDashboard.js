@@ -17,7 +17,9 @@ import { DefaultTheme } from '@react-navigation/native';
 import { faHome,faHistory,faHeart as test,faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
-
+import {
+  MaterialIndicator,
+} from 'react-native-indicators';
 const { width: screenWidth } = Dimensions.get('window')
 
 
@@ -27,16 +29,33 @@ export default class HomeDashboard extends Component {
 		super(props);
 		var today = new Date().toDateString();
 		this.state = {
-			events: this.props.events,
+			loader:false,
 			selectedDate: today,
+			email: null,
+			bookingLoader:false,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
+		this._retrieveData();
 	}
+	_retrieveData = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('email');
+		  if (value !== null) {
+			// We have data!!
+			this.setState({email:value});
+			console.log('get async',value);
+		  }
+		} catch (error) {
+		  // Error retrieving data
+		  console.log('error here',error)
+		}
+	  };
 	changeSelectedDate = date => {
 		var select = new Date(Date.parse(date)).toDateString();
 		this.setState({
 		  selectedDate: select,
 		 });
+		 this.props.events =[]
 		this.props.loadEvents(new Date(Date.parse(date)).setHours(0,0,0,0));
 	  };
 	// _renderItem ({item, index}, parallaxProps) {
@@ -70,6 +89,18 @@ export default class HomeDashboard extends Component {
 		// 	// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
 		// 	return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
 		// }
+		// if(this.state.error==false){
+		// 	return (<SafeAreaView style={styles.container}>
+		// 		<FlatList
+		// 			data={this.props.events}
+		// 			renderItem={renderItem}
+		// 			keyExtractor={item => item.id}
+		// 		/>
+		// 	</SafeAreaView>)
+		// }
+		// else{
+		// 	return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
+		// }
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
@@ -99,7 +130,7 @@ export default class HomeDashboard extends Component {
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
-						<Button style={styles.bookButton} mode="contained" onPress={() => console.log('Pressed')}>Book</Button>
+						<Button disabled = {item.participants!=null && item.participants.includes(this.state.email)?true:false} style={styles.bookButton} mode="contained" onPress={() => this.setState({bookingLoader:!this.props.bookEvent(item.id,this.state.email)})}>{item.participants!=null && item.participants.includes(this.state.email)?"Booked":"Book"}</Button>
 					</View>
 
 					{/* <Paragraph style={{color:'black',marginTop:-8,textAlign:'center'}}>{item.eventName}</Paragraph> */}
@@ -119,9 +150,11 @@ export default class HomeDashboard extends Component {
 			{/* <ScrollView> */}
 			
 				{/* <View > */}
+				{this.state.bookingLoader==true && <MaterialIndicator color='blue'/>}
+				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
 				<SafeAreaView style={styles.container}>
 					<FlatList
-						data={this.state.events}
+						data={this.props.events}
 						renderItem={renderItem}
 						keyExtractor={item => item.id}
 					/>
