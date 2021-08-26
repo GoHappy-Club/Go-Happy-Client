@@ -24,6 +24,7 @@
     "axios": "^0.21.1",
     "react": "17.0.1",
     "react-native": "0.64.2",
+    "react-native-animate-loading-button": "^1.0.3",
     "react-native-awesome-alerts": "^1.5.2",
     "react-native-blink-view": "^0.0.6",
     "react-native-calendar-slider-carousel": "^1.1.0",

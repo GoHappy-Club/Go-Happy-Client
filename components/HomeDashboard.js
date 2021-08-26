@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, {Component,useState, useEffect } from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView,Pressable } from 'react-native';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Text, Badge, Icon, withBadge } from 'react-native-elements';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 import { Card as Cd, Title, Paragraph,  Avatar,
 	Caption,
@@ -35,6 +36,8 @@ export default class HomeDashboard extends Component {
 			bookingLoader:false,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
+		console.log(props);
+		
 		this._retrieveData();
 	}
 	_retrieveData = async () => {
@@ -55,7 +58,7 @@ export default class HomeDashboard extends Component {
 		this.setState({
 		  selectedDate: select,
 		 });
-		 this.props.events =[]
+		 this.setState({events:[]});
 		this.props.loadEvents(new Date(Date.parse(date)).setHours(0,0,0,0));
 	  };
 	// _renderItem ({item, index}, parallaxProps) {
@@ -82,7 +85,19 @@ export default class HomeDashboard extends Component {
 			return text;
 		return text.substring(0,cut)+'...';
 	}
+	updateEventBook(item){
+		item.loadingButton.showLoading(true);
+		item = this.props.bookEvent(item,this.state.email);
+		// this.setState({bookingLoader:!)
+
+	}
 	
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if(nextProps.events!==prevState.events){
+			return { events: nextProps.events};
+		 }
+		 else return null;
+		}
 	
 	render() {
 		// if(this.state.loader==true){
@@ -130,7 +145,20 @@ export default class HomeDashboard extends Component {
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
-						<Button disabled = {item.participants!=null && item.participants.includes(this.state.email)?true:false} style={styles.bookButton} mode="contained" onPress={() => this.setState({bookingLoader:!this.props.bookEvent(item.id,this.state.email)})}>{item.participants!=null && item.participants.includes(this.state.email)?"Booked":"Book"}</Button>
+						<AnimateLoadingButton
+						disabled={true}
+						// disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
+							ref={c => (item.loadingButton = c)}
+							width={80}
+							height={35}
+							title={item.participantsList!=null && item.participantsList.includes(this.state.email)?"BOOKED":"BOOK"}
+							titleFontSize={16}
+							titleColor="rgb(255,255,255)"
+							backgroundColor="green"
+							borderRadius={4}
+							onPress={this.updateEventBook.bind(this,item)}
+						/>
+
 					</View>
 
 					{/* <Paragraph style={{color:'black',marginTop:-8,textAlign:'center'}}>{item.eventName}</Paragraph> */}
@@ -147,18 +175,16 @@ export default class HomeDashboard extends Component {
 				onDateSelect={date => this.changeSelectedDate(date)}
 			/>
 			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>{this.state.selectedDate}</Text>
-			{/* <ScrollView> */}
-			
-				{/* <View > */}
-				{this.state.bookingLoader==true && <MaterialIndicator color='blue'/>}
+
+				{/* {this.state.bookingLoader==true && <MaterialIndicator color='blue'/>} */}
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				<SafeAreaView style={styles.container}>
+				{this.props.childLoader==false && <SafeAreaView style={styles.container}>
 					<FlatList
-						data={this.props.events}
+						data={this.state.events}
 						renderItem={renderItem}
 						keyExtractor={item => item.id}
 					/>
-				</SafeAreaView>
+				</SafeAreaView>}
 					{/* <Carousel
 						sliderWidth={screenWidth}
 						sliderHeight={screenWidth}
@@ -198,8 +224,6 @@ export default class HomeDashboard extends Component {
 						</Card>
 						);
 					})} */}
-				{/* </View> */}
-            {/* </ScrollView> */}
 			</>
 		);
 	}

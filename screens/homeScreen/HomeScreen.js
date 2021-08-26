@@ -42,6 +42,7 @@ export default class HomeScreen extends Component {
       axios.post(url,{'date':date})
         .then(response => {
             if (response.data) {
+				console.log('this is response',response.data);
 				this.setState({events: response.data.events});
 				this.setState({error:false});
 				this.setState({childLoader: false});
@@ -53,13 +54,26 @@ export default class HomeScreen extends Component {
         });
 	}
 
-	bookEvent(id,email){
+	bookEvent(item,email){
+		var id = item.id;
 		var url = SERVER_URL+"/event/bookEvent";
       axios.post(url,{'id':id,'email':email})
         .then(response => {
             if (response.data) {
+				item.loadingButton.showLoading(false);
 				if(response.data=="SUCCESS"){
-					return true;
+					var tempEvents = this.state.events;
+					for(var i=0;i<tempEvents.length;i++){
+						if(tempEvents[i].id==item.id){
+							tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
+							this.setState({events:tempEvents});
+							break;
+						}
+					}
+					// item.seatsLeft = item.seatsLeft - 1;
+
+					
+					return item;
 				}
             }
         })
