@@ -2,14 +2,14 @@ import React, {Component,useState, useEffect } from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView,Pressable } from 'react-native';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { Text, Badge, Icon, withBadge } from 'react-native-elements';
+import { Text, Badge, Icon, withBadge, Button } from 'react-native-elements';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 import { Card as Cd, Title, Paragraph,  Avatar,
 	Caption,
 	Drawer,
 	TouchableRipple,
-	Switch, Button } from 'react-native-paper';
+	Switch } from 'react-native-paper';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { Dimensions } from 'react-native';
 import { CirclesLoader, PulseLoader, TextLoader, DotsLoader } from 'react-native-indicator';
@@ -86,7 +86,8 @@ export default class HomeDashboard extends Component {
 		return text.substring(0,cut)+'...';
 	}
 	updateEventBook(item){
-		item.loadingButton.showLoading(true);
+		this.setState({bookingLoader:true});
+		item.loadingButton=true;
 		item = this.props.bookEvent(item,this.state.email);
 		// this.setState({bookingLoader:!)
 
@@ -145,24 +146,13 @@ export default class HomeDashboard extends Component {
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
-						<AnimateLoadingButton
-						disabled={true}
+						<Button
 						// disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
-							ref={c => (item.loadingButton = c)}
-							width={80}
-							height={35}
-							title={item.participantsList!=null && item.participantsList.includes(this.state.email)?"BOOKED":"BOOK"}
-							titleFontSize={16}
-							titleColor="rgb(255,255,255)"
-							backgroundColor="green"
-							borderRadius={4}
+							title={item.participantsList!=null && item.participantsList.includes(this.state.email)?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
+							loading={item.loadingButton}
 						/>
-
 					</View>
-
-					{/* <Paragraph style={{color:'black',marginTop:-8,textAlign:'center'}}>{item.eventName}</Paragraph> */}
-					{/* <Title style={{color:'black',fontSize:15,textAlign:'center',marginTop:8}}>{item.eventName}</Title> */}
 				</Cd.Content>
 			</Cd>
 		  );
