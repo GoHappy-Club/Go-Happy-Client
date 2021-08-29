@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { Text , Button} from 'react-native-elements';
 
-import { Card as Cd, Title, Paragraph } from 'react-native-paper';
-
+import { Card as Cd, Title, Paragraph,  Avatar,
+	Caption,
+	Drawer,
+	TouchableRipple,
+	Switch } from 'react-native-paper';
 
 
 export default class MySessions extends Component {
@@ -13,61 +17,113 @@ export default class MySessions extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-
+			mySession: [],
+			profileImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
 		}
 	}
+	static getDerivedStateFromProps(nextProps, prevState) {
+		console.log('nextprps',nextProps);
+		if(nextProps.mySessions!==prevState.mySessions){
+			return { mySessions: nextProps.mySessions};
+		 }
+		 else return null;
+	}
+	trimContent(text,cut){
+		if(text.length<cut)
+			return text;
+		return text.substring(0,cut)+'...';
+	}
 	render() {
-		if(this.state.loader==true){
-			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
-		}
-		const navigation = this.props.navigation;
-		const title = 'Login';
+		const renderItem = ({ item} , type) => (
+
+			<Cd style={{...styles.card,marginLeft:10,marginRight:10,marginBottom:10,backgroundColor: 'white'}}>
+				<Cd.Content>
+				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {(new Date(parseInt(item.startTime))).toLocaleTimeString()}</Text>     
+
+				<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
+						<View style={{ flex: 1, flexDirection: 'row'}}>
+
+							<Text style={{color:'#404040',fontSize:14,fontWeight:'700'}}>
+							{this.trimContent(item.eventName,30)}
+							</Text>
+						</View>
+				</View>
+
+					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
+						<View style={{ flex: 1, flexDirection: 'row'}}>
+							<Avatar.Image
+							source = {{
+								uri: this.state.profileImage
+							}}
+							size={30}
+							/>
+							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
+						</View>
+						{type!='expired' && <Button
+							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
+							title='Join'
+							// onPress={this.updateEventBook.bind(this,item)}
+							loading={item.loadingButton}
+						/>}
+						{type=='expired' && <Button
+							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
+							title='View Recording'
+							// onPress={this.updateEventBook.bind(this,item)}
+							loading={item.loadingButton}
+						/>}
+					</View>
+				</Cd.Content>
+			</Cd>
+		  );
 		return (
             <ScrollView>
-                
-                <ScrollView>
-                    <Card>
-                        <CardTitle
-                        subtitle="Health Awareness"
-                        />
-                        <CardContent text="Event Date: 18th August 2021 " />
-						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />
-                        <CardAction 
-                        separator={true} 
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="Not Started Yet"
-                            color="#FEB557"
-                        />
-                        </CardAction>
-                    </Card>
-
-                    <Card>
-                        <CardTitle
-                        subtitle="Antakshari Session"
-                        />
-						<CardContent text="Event Date: 18th August 2021" />			
-						<CardContent text="Event Time: 06:00 pm - 07:00 pm" />  
-                        <CardAction 
-                        separator={true} 
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="View Recording"
-                            color="#FEB557"
-                        />
-                        </CardAction>
-                    </Card>
-                    
-                    </ScrollView>
-                </ScrollView>
+				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.ongoingEvents.length>0 && <Text>Ongoing Events</Text>}
+				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
+				</Text>
+				<SafeAreaView style={styles.container}>
+				<FlatList 
+					data={this.props.ongoingEvents}
+					renderItem={renderItem}
+					keyExtractor={item => item.id}
+				/>
+				</SafeAreaView>
+				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.upcomingEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Upcoming Events</Text>}				
+				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
+				</Text>
+				<SafeAreaView style={styles.container}>
+				<FlatList horizontal={true}
+					data={this.props.upcomingEvents}
+					renderItem={renderItem}
+					keyExtractor={item => item.id}
+				/>
+				</SafeAreaView>
+				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.expiredEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Expired Events</Text>}				
+				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
+				</Text>
+				<SafeAreaView style={styles.container}>
+				<FlatList
+					data={this.props.expiredEvents}
+					renderItem={(item) => renderItem(item,'expired')}
+					keyExtractor={item => item.id}
+				/>
+				</SafeAreaView>
+			</ScrollView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
+
+	card: {
+		backgroundColor: "white",
+		marginBottom: 10,
+		borderRadius: 20,
+		borderWidth: 1,
+		borderColor: '#fff',
+	},
 	container1: {
 		flex: 1,
 		backgroundColor: '#0A1045'

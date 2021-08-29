@@ -15,8 +15,28 @@ export default class MySessionsScreen extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-
+			ongoingEvents:[],
+			expiredEvents:[],
+			upcomingEvents:[],
 		}
+	}
+	loadMySessions(email) {
+		var url = SERVER_URL+"/event/mySessions";
+		axios.post(url,{'email':email})
+        .then(response => {
+            if (response.data) {
+				console.log('this is response',response.data);
+				this.setState({expiredEvents: response.data.expiredEvents});
+				this.setState({upcomingEvents: response.data.upcomingEvents});
+				this.setState({ongoingEvents: response.data.ongoingEvents});
+				this.setState({error:false});
+				this.setState({childLoader: false});
+            }
+        })
+        .catch(error => {
+			this.error=true;
+            console.log('Errwdqor while fetching the transactions from sms');
+        });
 	}
 	render() {
 		if(this.state.loader==true){
@@ -26,8 +46,11 @@ export default class MySessionsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MySessions/>
+			<MySessions ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
 		);
+	}
+	componentDidMount() {
+		this.loadMySessions('rashu.sharma14@gmail.com');
 	}
 
 }
