@@ -65,16 +65,12 @@ export default class HomeScreen extends Component {
         .then(response => {
             if (response.data) {
 				item.loadingButton = true;
-				console.log('Error whilmjne fetching the transactions from sms');
 
 				if(response.data=="SUCCESS"){
-					console.log('Error whilmjne fetching the transactions from sms');
 
 					var tempEvents = this.state.events;
 					for(var i=0;i<tempEvents.length;i++){
-						console.log('Error whilmjne fetching the transactions from sms');
 						if(tempEvents[i].id==item.id){
-							console.log('Error whilmjne fetching the transactions from sms');
 							tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
 							tempEvents[i].loadingButton = false;
 							this.setState({events:tempEvents});
@@ -82,7 +78,6 @@ export default class HomeScreen extends Component {
 						}
 					}
 					// item.seatsLeft = item.seatsLeft - 1;
-					console.log('Error whilmjne fetching the transactions from sms');
 
 					
 					return item;

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
 
-import { Card as Cd, Title, Paragraph } from 'react-native-paper';
+import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 
 
 
@@ -13,6 +13,7 @@ export default class SessionDetails extends Component {
 		this.state = {
 			event:props.event,
 		}
+		console.log(props);
 	}
 	render() {
 		if(this.state.loader==true){
@@ -21,28 +22,59 @@ export default class SessionDetails extends Component {
 		}
 		const navigation = this.props.navigation;
 		const title = 'Login';
-		console.log(this.memoizedProps);
+		const item = this.props.event;
 		return (
-            <ScrollView>
-                    <Card>
-                        <CardTitle
-                        subtitle={this.state.event.eventName}
-                        />
-                        <CardContent text={"Session Date: "+ (new Date(parseInt(this.state.event.eventDate))).toDateString()} />
-						<CardContent text={"Session Time: "+ (new Date(parseInt(this.state.event.startTime))).toLocaleTimeString()+" - "+
-								(new Date(parseInt(this.state.event.endTime))).toLocaleTimeString()} />
-                        <CardAction 
-                        separator={true} 
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="Not Started Yet"
-                            color="#FEB557"
-                        />
-                        </CardAction>
-                    </Card>
+			<>
+			<ImageBackground
+			blurRadius={0}
+			fadeDuration={1000}
+			resizeMode="cover"
+				style={styles.cover}
+				source={{
+				uri: 'https://images.herzindagi.info/image/2019/Nov/yoga-fitness-senior-citizens.jpg',
+				}}
+			/>
+			<ScrollView>
+                    <Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
 
-                </ScrollView>
+						<Cd.Content>
+							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
+								<View style={{ flex: 1, flexDirection: 'row'}}>
+
+									{/* <Badge value={item.category} badgeStyle={styles.badge} /> */}
+									<Text style={{color:'#404040',fontSize:14, paddingLeft:4}}>
+										{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
+									</Text>
+									<Text style={{color:'red',fontSize:14, paddingLeft:4}}>
+										{item.seatsLeft} seats left
+									</Text>
+								</View>
+								{/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
+							</View>
+							<Title style={{color:'black',fontSize:20, padding:4}}>{item.eventName}</Title>
+
+							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
+								<View style={{ flex: 1, flexDirection: 'row'}}>
+									<Avatar.Image
+									source = {{
+										uri: this.state.profileImage
+									}}
+									size={30}
+									/>
+									<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{item.expertName}</Title>
+								</View>
+								<Button
+									disabled = {item.participantList!=null && item.participantList.includes(this.state.email)?true:false}
+									title={item.participantList!=null && item.participantList.includes(this.state.email)?"Booked":"Book"}
+									loading={item.loadingButton}
+								/>
+							</View>
+						</Cd.Content>
+
+					</Cd>
+					</ScrollView>
+					</>
+
 		);
 	}
 }
@@ -66,6 +98,10 @@ const styles = StyleSheet.create({
 		backgroundColor: "#f0ad4e",
 		paddingVertical: 15,
 		height: 60
+	},
+	cover:{
+		flex: 1,
+    	justifyContent: "center"
 	},
 	btnTxt: {
 		fontSize: 20,

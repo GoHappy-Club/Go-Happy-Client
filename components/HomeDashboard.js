@@ -82,9 +82,12 @@ export default class HomeDashboard extends Component {
 	}
 	
 	render() {
+		// this.props.navigation.navigate('Session Details')
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
+						<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item})}>
+
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
@@ -112,13 +115,15 @@ export default class HomeDashboard extends Component {
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
 						<Button
-							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
-							title={item.participantsList!=null && item.participantsList.includes(this.state.email)?"Booked":"Book"}
+							disabled = {item.participantList!=null && item.participantList.includes(this.state.email)?true:false}
+							title={item.participantList!=null && item.participantList.includes(this.state.email)?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
 							loading={item.loadingButton}
 						/>
 					</View>
 				</Cd.Content>
+				</TouchableOpacity>
+
 			</Cd>
 		  );
 		return ( 

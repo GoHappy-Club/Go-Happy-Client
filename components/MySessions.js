@@ -59,7 +59,7 @@ export default class MySessions extends Component {
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
-						{type!='expired' && <Button
+						{type=='ongoing' && <Button
 							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
 							title='Join'
 							// onPress={this.updateEventBook.bind(this,item)}
@@ -84,7 +84,7 @@ export default class MySessions extends Component {
 				<SafeAreaView style={styles.container}>
 				<FlatList 
 					data={this.props.ongoingEvents}
-					renderItem={renderItem}
+					renderItem={(item) => renderItem(item,'ongoing')}
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>
