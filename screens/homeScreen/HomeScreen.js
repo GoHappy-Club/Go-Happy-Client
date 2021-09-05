@@ -1,16 +1,12 @@
 import React,{Component} from 'react';
 import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
-
-// import AsyncStorage from '@react-native-community/async-storage';
 import { Avatar } from 'react-native-paper'
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
 import HomeDashboard from '../../components/HomeDashboard.js'
-import { faGlasses } from '@fortawesome/free-solid-svg-icons';
 
 export default class HomeScreen extends Component {
 	constructor(props)
@@ -36,26 +32,26 @@ export default class HomeScreen extends Component {
 		this.setState({childLoader: true});
 		this.setState({events:[]});
 		var url = SERVER_URL+"/event/getEventsByDate";
-		var date = new Date().setHours(0,0,0,0);
+		var date = new Date().getTime();
 		if(selectedDate!=null)
 			date = selectedDate;
-      axios.post(url,{'date':date})
-        .then(response => {
-            if (response.data) {
-				console.log('this is response',response.data);
-				for(var i=0;i<response.data.events.length;i++){
-					response.data.events[i].loadingButton = false;
+		axios.post(url,{'date':date})
+			.then(response => {
+				if (response.data) {
 					console.log('this is response',response.data);
+					for(var i=0;i<response.data.events.length;i++){
+						response.data.events[i].loadingButton = false;
+						console.log('this is response',response.data);
+					}
+					this.setState({events: response.data.events});
+					this.setState({error:false});
+					this.setState({childLoader: false});
 				}
-				this.setState({events: response.data.events});
-				this.setState({error:false});
-				this.setState({childLoader: false});
-            }
-        })
-        .catch(error => {
-			this.error=true;
-            console.log('Errwdqor while fetching the transactions from sms');
-        });
+			})
+			.catch(error => {
+				this.error=true;
+				console.log('Errwdqor while fetching the transactions from sms');
+			});
 	}
 
 	bookEvent(item,email){

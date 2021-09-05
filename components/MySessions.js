@@ -37,6 +37,8 @@ export default class MySessions extends Component {
 		const renderItem = ({ item} , type) => (
 
 			<Cd style={{...styles.card,marginLeft:10,marginRight:10,marginBottom:10,backgroundColor: 'white'}}>
+				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type})}>
+
 				<Cd.Content>
 				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {(new Date(parseInt(item.startTime))).toLocaleTimeString()}</Text>     
 
@@ -73,6 +75,8 @@ export default class MySessions extends Component {
 						/>}
 					</View>
 				</Cd.Content>
+				</TouchableOpacity>
+
 			</Cd>
 		  );
 		return (
@@ -100,7 +104,7 @@ export default class MySessions extends Component {
 				/>
 				</SafeAreaView>
 				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
-				{this.props.expiredEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Expired Events</Text>}				
+				{this.props.expiredEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Past Events and Recordings</Text>}				
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
 				</Text>
 				<SafeAreaView style={styles.container}>

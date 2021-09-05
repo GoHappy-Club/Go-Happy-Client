@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
 
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
+import { Text, Badge, withBadge,Button } from 'react-native-elements';
 
 
 
@@ -12,8 +13,19 @@ export default class SessionDetails extends Component {
 		super(props);
 		this.state = {
 			event:props.event,
+			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
 		console.log(props);
+	}	
+	getTitle(){
+		if(this.props.type=='expired')
+		return "View Recording";
+		if(this.props.type=='ongoing')
+		return "Join";
+		if(this.state.event.participantList!=null && this.state.event.participantList.includes('rashu.sharma14@gmail.com'))
+		return "Cancel Your Booking";
+		return "Book";
+		
 	}
 	render() {
 		if(this.state.loader==true){
@@ -24,56 +36,85 @@ export default class SessionDetails extends Component {
 		const title = 'Login';
 		const item = this.props.event;
 		return (
-			<>
-			<ImageBackground
-			blurRadius={0}
-			fadeDuration={1000}
-			resizeMode="cover"
-				style={styles.cover}
-				source={{
-				uri: 'https://images.herzindagi.info/image/2019/Nov/yoga-fitness-senior-citizens.jpg',
-				}}
-			/>
-			<ScrollView>
-                    <Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
-
-						<Cd.Content>
-							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
-								<View style={{ flex: 1, flexDirection: 'row'}}>
-
-									{/* <Badge value={item.category} badgeStyle={styles.badge} /> */}
-									<Text style={{color:'#404040',fontSize:14, paddingLeft:4}}>
-										{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
-									</Text>
-									<Text style={{color:'red',fontSize:14, paddingLeft:4}}>
-										{item.seatsLeft} seats left
-									</Text>
-								</View>
-								{/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
-							</View>
-							<Title style={{color:'black',fontSize:20, padding:4}}>{item.eventName}</Title>
-
-							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
-								<View style={{ flex: 1, flexDirection: 'row'}}>
-									<Avatar.Image
-									source = {{
-										uri: this.state.profileImage
-									}}
-									size={30}
-									/>
-									<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{item.expertName}</Title>
-								</View>
-								<Button
-									disabled = {item.participantList!=null && item.participantList.includes(this.state.email)?true:false}
-									title={item.participantList!=null && item.participantList.includes(this.state.email)?"Booked":"Book"}
-									loading={item.loadingButton}
+			<View style = {{
+				backgroundColor: 'white'
+			}}>
+				<ScrollView style = {{
+					backgroundColor: 'white',height:'90%'
+				}}>
+					<View style = {{
+						backgroundColor: 'white', borderRadius: 50,
+						shadowColor: "black",
+						shadowOffset: { height: 2},
+						shadowOpacity: 0.3,
+						width:'100%',
+						height:'100%',
+						justifyContent: "center",
+					}}>
+						<Image
+						style={styles.cover}
+						source={{
+						uri: 'https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg',
+						}}
+						/>
+						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '180%', alignItems: 'flex-start', justifyContent: 'center' }}>
+							<Text style={{overflow:"hidden",backgroundColor:'white',padding:4,color:'black',
+								borderRadius:4}}>
+								{item.seatsLeft} seats left
+							</Text>
+						</View>
+					</View>
+					<View style={{margin:20}}>
+						<Text h3 style={{fontWeight: "bold"}}>
+							{item.eventName}
+						</Text>
+						<Text h5 style={{color: "grey",marginTop:5}}>
+							{item.expertName}
+						</Text>
+						<Icon
+						name="time-outline" color="grey" size={15} 
+						style={{marginTop:20}}>
+							<Text style={{color: "grey",marginTop:15,fontSize:15}}>
+							{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} -     
+							{(new Date(parseInt(item.endTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")}
+							</Text>
+						</Icon>
+						<View style={{
+							marginTop:2,
+							borderBottomColor: 'grey',
+							borderBottomWidth: 1,
+						}}
+						/>
+						<Text style={{fontSize:17,color: "grey",marginTop:20,fontWeight:'bold'}}>
+							About
+						</Text>
+						<Text style={{fontSize:17,color: "grey",marginTop:10}}>
+							{item.description}
+						</Text>
+						<Text style={{fontSize:17,color: "grey",marginTop:20,fontWeight:'bold'}}>
+							Expert
+						</Text>
+						<View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop:10}}>
+						<View style={{ flex: 1, flexDirection: 'row'}}>
+								<Avatar.Image
+								source = {{
+									uri: this.state.profileImage
+								}}
+								size={30}
 								/>
+								<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{item.expertName}</Title>
 							</View>
-						</Cd.Content>
-
-					</Cd>
-					</ScrollView>
-					</>
+						</View>
+					</View>
+					
+				</ScrollView>
+				<View style={{margin:15}}>
+					<Button outline 
+						title={this.getTitle()}
+						onPress={this.props.sessionAction()}>
+					</Button>
+				</View>
+			</View>
 
 		);
 	}
@@ -101,7 +142,9 @@ const styles = StyleSheet.create({
 	},
 	cover:{
 		flex: 1,
-    	justifyContent: "center"
+    	justifyContent: "center",
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20,
 	},
 	btnTxt: {
 		fontSize: 20,

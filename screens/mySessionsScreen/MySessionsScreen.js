@@ -46,7 +46,7 @@ export default class MySessionsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MySessions ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
+			<MySessions navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
 		);
 	}
 	componentDidMount() {

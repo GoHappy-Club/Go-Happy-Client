@@ -9,11 +9,13 @@ import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as configData from "./config/dev/config.json";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
 global.SERVER_URL = configData.BACKEND.SERVER_URL;
-
+global.Icon = Icon;
+Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
 

@@ -86,7 +86,7 @@ export default class HomeDashboard extends Component {
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
-						<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item})}>
+						<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
 
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
