@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { Linking,ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
 
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { Text, Badge, withBadge,Button } from 'react-native-elements';
+import Video from 'react-native-video';
 
 
 
@@ -27,6 +28,9 @@ export default class SessionDetails extends Component {
 		return "Book";
 		
 	}
+	sessionAction(){
+		this.props.sessionAction();
+	}
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -42,6 +46,7 @@ export default class SessionDetails extends Component {
 				<ScrollView style = {{
 					backgroundColor: 'white',height:'90%'
 				}}>
+					
 					<View style = {{
 						backgroundColor: 'white', borderRadius: 50,
 						shadowColor: "black",
@@ -64,6 +69,7 @@ export default class SessionDetails extends Component {
 							</Text>
 						</View>
 					</View>
+					
 					<View style={{margin:20}}>
 						<Text h3 style={{fontWeight: "bold"}}>
 							{item.eventName}
@@ -108,10 +114,11 @@ export default class SessionDetails extends Component {
 					</View>
 					
 				</ScrollView>
+				
 				<View style={{margin:15}}>
 					<Button outline 
 						title={this.getTitle()}
-						onPress={this.props.sessionAction()}>
+						onPress={this.sessionAction.bind(this)}>
 					</Button>
 				</View>
 			</View>
@@ -200,5 +207,12 @@ const styles = StyleSheet.create({
 		opacity: 0.9,
 		textAlign: 'center',
 		fontSize: 30
-	}
+	},
+	backgroundVideo: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		bottom: 0,
+		right: 0,
+	  },
 });

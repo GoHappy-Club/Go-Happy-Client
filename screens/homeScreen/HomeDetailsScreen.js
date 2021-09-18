@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
-import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { Linking,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
 import SessionDetails from '../../components/SessionDetails';
+import Video from 'react-native-video';
 
 
 
@@ -16,12 +17,45 @@ export default class HomeDetailsScreen extends Component {
 		}
 	}
 	sessionAction(){
-		if(this.props.route.params.type=='expired')
-		return "View Recording";
-		if(this.props.route.params.type=='ongoing')
-		return "Join";
-		if(this.props.route.params.event.participantList.includes('rashu.sharma14@gmail.com')){
-
+		if(this.props.route.params.type=='expired'){
+			var meetingLink  = this.props.route.params.event.meetingLink;
+			if(meetingLink==null)
+				return;
+			var si = meetingLink.indexOf("/j/")+3;
+			var ei = meetingLink.indexOf("?");
+			var meetingId = meetingLink.substring(si,ei);
+			console.log("This is the meeting ID",meetingId);
+			axios.post(SERVER_URL+"/zoom/getRecording",{'meetingId':meetingId})
+				.then(response => {
+					if (response.data) {
+						console.log('this is response',response.data);
+						Linking.canOpenURL(response.data).then(supported => {
+							if (supported) {
+							  Linking.openURL(response.data);
+							} else {
+							  console.log("Don't know how to open URI: " + response.data);
+							}
+						  })
+					}
+				})
+				.catch(error => {
+					this.error=true;
+					console.log('Event Cancel output Error');
+				}
+			);
+		}
+		else if(this.props.route.params.type=='ongoing'){
+			Linking.canOpenURL(this.props.route.params.event.meetingLink).then(supported => {
+				if (supported) {
+				  Linking.openURL(this.props.route.params.event.meetingLink);
+				} else {
+				  console.log("Don't know how to open URI: " + this.props.route.params.event.meetingLink);
+				}
+			  })
+		}
+		if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes('rashu.sharma14@gmail.com')){
+		console.log(this.props.route.params.event.id);
+		console.log(this.props.route.params.email);
 		var url = SERVER_URL+"/event/cancelEvent";
 		axios.post(url,{'id':this.props.route.params.event.id,'email':this.props.route.params.email})
 			.then(response => {
@@ -29,7 +63,7 @@ export default class HomeDetailsScreen extends Component {
 					console.log('this is response',response.data);
 					for(var i=0;i<response.data.events.length;i++){
 						response.data.events[i].loadingButton = false;
-						console.log('this is response',response.data);
+						console.log('Event Cancel output',response.data);
 					}
 					this.setState({events: response.data.events});
 					this.setState({error:false});
@@ -38,7 +72,7 @@ export default class HomeDetailsScreen extends Component {
 			})
 			.catch(error => {
 				this.error=true;
-				console.log('Errwdqor while fetching the transactions from sms');
+				console.log('Event Cancel output Error');
 			}
 		);
 		}

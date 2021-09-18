@@ -47,6 +47,15 @@ export default class LoginScreen extends Component {
 		try {
 		  const userInfo = await GoogleSignin.signInSilently();
 		  this.setState({ userInfo });
+		  console.log('login state',this.state);
+		  var token = userInfo['idToken'];
+		  var email = userInfo['user']['email'];
+		  var name = userInfo['user']['name'];
+		  var profileImage = userInfo['user']['photo'];
+		  AsyncStorage.setItem('name',name);
+		  AsyncStorage.setItem('email',email);
+		  AsyncStorage.setItem('profileImage',profileImage);
+		  AsyncStorage.setItem('token',token);
 		  this.setState({loader:true});
 		  this.props.navigation.navigate('GoHappy Club');
 		  this.setState({loader:false});
@@ -89,7 +98,7 @@ export default class LoginScreen extends Component {
 				  if (response.data && response.data!="ERROR") {
 					// this.setState({fullName: userInfo.fullName});
 					if(response.data.phoneNumber!=null)
-						AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
+					AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
 					// AsyncStorage.setItem('fullName',response.data.fullName);
 					AsyncStorage.setItem('name',name);
 					AsyncStorage.setItem('email',email);
@@ -195,31 +204,6 @@ export default class LoginScreen extends Component {
 	}
   _register = async() => {
 		this.props.navigation.navigate('Register');
-	}
-	_login = async() => {
-		this.setState({loader:true});
-        this.props.navigation.navigate('GoHappy Club');
-        this.setState({loader:false});
-        return;
-		// axios.post("http://"+SERVER_URL+":8080/login/check", {'phoneNumber':this.state.phoneNumber,'password':this.state.password})
-		// 			.then(response => {
-		// 				console.log('here'+response);
-		// 					if (response.data && response.data!="ERROR") {
-		// 							// this.setState({fullName: userInfo.fullName});
-		// 							AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
-		// 							AsyncStorage.setItem('fullName',response.data.fullName);
-		// 							AsyncStorage.setItem('username',response.data.username);
-		// 							AsyncStorage.setItem('profileImage',response.data.profileImage);
-		// 							AsyncStorage.setItem('lastDataSync',response.data.dataSyncTime);
-		// 							this.props.navigation.navigate('DrawerNavigator');
-		// 					}
-		// 					else if(response.data=="ERROR"){
-		// 						this.setState({showAlert:true,loader:false})
-		// 					}
-		// 			})
-		// 			.catch(error => {
-		// 					console.log('Error while fetching the transactions from sms');
-		// 			});
 	}
 
 }
