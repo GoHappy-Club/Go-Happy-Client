@@ -81,10 +81,10 @@ export default class MySessions extends Component {
 		  );
 		return (
             <ScrollView>
-				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.ongoingEvents.length>0 &&<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
 				{this.props.ongoingEvents.length>0 && <Text>Ongoing Events</Text>}
-				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				</Text>
+				{this.props.childLoader==true && <MaterialIndicator color='blue'/>} 
+				</Text>}
 				<SafeAreaView style={styles.container}>
 				<FlatList 
 					data={this.props.ongoingEvents}
@@ -92,10 +92,10 @@ export default class MySessions extends Component {
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>
-				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.upcomingEvents.length>0 && <Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
 				{this.props.upcomingEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Upcoming Events</Text>}				
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				</Text>
+				</Text>}
 				<SafeAreaView style={styles.container}>
 				<FlatList horizontal={true}
 					data={this.props.upcomingEvents}
@@ -103,10 +103,10 @@ export default class MySessions extends Component {
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>
-				<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
+				{this.props.expiredEvents.length>0 && <Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
 				{this.props.expiredEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Past Events and Recordings</Text>}				
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				</Text>
+				</Text>}
 				<SafeAreaView style={styles.container}>
 				<FlatList
 					data={this.props.expiredEvents}

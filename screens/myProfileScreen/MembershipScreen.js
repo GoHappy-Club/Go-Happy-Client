@@ -9,10 +9,10 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
-import MyProfile from '../../components/Profile';
+import Membership from '../../components/Membership';
 
 
-export default class MyProfileScreen extends Component {
+export default class MembershipScreen extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -30,7 +30,7 @@ export default class MyProfileScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MyProfile navigation={this.props.navigation}/>
+			<Membership navigation={this.props.navigation}/>
 		);
 	}
 
