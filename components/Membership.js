@@ -5,6 +5,7 @@ import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { white } from 'react-native-paper/lib/typescript/styles/colors';
 import { Text, Button} from 'react-native-elements';
+import RazorpayCheckout from 'react-native-razorpay';
 
 
 export default class Membership extends Component {
@@ -18,9 +19,84 @@ export default class Membership extends Component {
 			name: '',
 			email:'',
 			city:'Pune',
-			state:'Maharashtra'
+			state:'Maharashtra',
+			backgroundColor:'white',
+			textColor:'black',
+			plans:{
+				selectedItem:'',
+				planDetails:[{
+					amount:'100',
+					duration:'30 days',
+					textColor:'black',
+					backgroundColor:'white',
+					selected:false
+				},
+				{
+					amount:'300',
+					duration:'45 days',
+					textColor:'black',
+					backgroundColor:'white',
+					selected:false
+				},
+				{
+					amount:'550',
+					duration:'6 monhts',
+					textColor:'black',
+					backgroundColor:'white',
+					selected:false
+				},
+				{
+					amount:'1100',
+					duration:'1 year',
+					textColor:'black',
+					backgroundColor:'white',
+					selected:false
+				}]
+			}
 		}
 		this._retrieveData();
+	}
+	razorPay(){
+		console.log('in razorpay',this.state.plans);
+		var options = {
+			description: 'GoHappy Subscription',
+			image: 'https://i.imgur.com/3g7nmJC.png',
+			currency: 'INR',
+			key: 'rzp_test_sMRXf9zvPN1rCs',
+			amount: this.state.plans.planDetails[this.state.plans.selectedItem].amount,
+			name: 'GoHappy',
+			order_id: 'order_I0zXHKi7SP8ijQ',//Replace this with an order_id created using Orders API.
+			prefill: {
+			email: this.state.email,
+			contact: '9888138824', 
+			name: 'Rakshit Sharma'
+			},
+			theme: {color: '#53a20e'}
+		}	
+		RazorpayCheckout.open(options).then((data) => {
+			// handle success
+			alert(`Success: ${data.razorpay_payment_id}`);
+		}).catch((error) => {
+			// handle failure
+			alert(`Error: ${error.code} | ${error.description}`);
+		});
+	
+	}
+	planSelected(plan,index){
+		console.log('index',index);
+		var allPlans = this.state.plans;
+		plan.backgroundColor='blue';
+		plan.textColor='white';
+		allPlans.planDetails[index]=plan;
+		allPlans.selectedItem=index;
+		for(var i=0;i<allPlans.planDetails.length;i++){
+			if(i==index){
+				continue;
+			}
+			allPlans.planDetails[i].backgroundColor='white';
+			allPlans.planDetails[i].textColor='black';
+		}
+		this.setState({plans:allPlans});
 	}
 	_retrieveData = async () => {
 		try {
@@ -37,24 +113,29 @@ export default class Membership extends Component {
 		  console.log('error here',error)
 		}
 	  };
-    planBox(price,duration,unit){
-        return (
-            <View style={{width:'50%'}}>
-                <TouchableOpacity onPress={this._onPressButton}>
-                <View style={{backgroundColor:'black',backgroundColor: 'white', 
+  
+	renderPlans(plan,key) {
+
+		console.log('here',plan,key);
+		  return(
+			<View style={{width:'50%'}}>
+                <TouchableOpacity style={{backgroundColor: plan.backgroundColor, 
                     shadowColor: "black",
                     shadowOffset: { height: 2},
                     shadowOpacity: 0.3, borderRadius:10,
                     height:100,margin:30,justifyContent:'center',
                     alignItems:'center'
+				}} onPress={this.planSelected.bind(this,plan,key)}>
+                <View style={{justifyContent:'center', alignItems:'center'
 				}}>
-                    <Text style={{fontSize:30}}>₹{price}</Text> 
-                    <Text>{duration} {unit}</Text>                    
+                    <Text style={{fontSize:30,color:plan.textColor}}>₹{plan.amount}</Text> 
+                    <Text style={{color:plan.textColor}}>{plan.duration}</Text>                    
                 </View>
                 </TouchableOpacity>
             </View>
-        )
-    }
+		  );
+		
+	}
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -75,63 +156,33 @@ export default class Membership extends Component {
 					
 					<Text h1 style={{fontWeight:'bold',marginTop:'25%'}}>Choose your plan</Text>
 					<View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
+						{
+						this.state.plans.planDetails.map((item, key) =>
+							(
+								this.renderPlans(item,key)
+							))
+					}</View>
+					{/* <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
                         {this.planBox(100,30,'days')}
                         {this.planBox(300,45,'days')}
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
                     {this.planBox(550,6,'months')}
                     {this.planBox(1100,1,'year')}
-                    </View>
+                    </View> */}
 
-                    <Text h4 style={{marginLeft:20,width:Dimensions.get('window').width*0.9}}>Payment Methods</Text>
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
+						<TouchableOpacity  disabled={this.state.plans.selectedItem===''}
+						 style={this.state.plans.selectedItem==='' && styles.checkoutButtonDisabled || styles.checkoutButtonEnabled}
+						 onPress={this.razorPay.bind(this)}>
 							<View>
-								<Text style={styles.optionList}>Google Pay</Text>
+								<Text style={styles.optionList}>Proceed to Checkout</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>Apple Pay</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>PhonePe</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>Paytm</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>Debit Card</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0',borderBottomWidth:1}} onPress={this._onPressButton}>
-							<View>
-								<Text style={styles.optionList}>Credit Card</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					{/* <View >
-							<View>
-								<Text >GoHappy Club from GoIndependent.in</Text>
-								<Text >All rights reserved</Text>
-							</View>
-					</View> */}
+					
+					
+					
 				</ScrollView>
 				
 				
@@ -157,6 +208,17 @@ const styles = StyleSheet.create({
 	optionList:{
 		fontSize:16,
 		padding:10,
-		color:'#424242'
+		color:'white'
+	},
+	checkoutButtonDisabled:{
+		opacity:0.5,
+		alignItems: "center",
+		backgroundColor: "blue",
+		padding: 10
+	},
+	checkoutButtonEnabled:{
+		alignItems: "center",
+		backgroundColor: "blue",
+		padding: 10
 	}
 });
