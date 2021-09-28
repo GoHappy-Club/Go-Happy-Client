@@ -16,6 +16,7 @@ import {
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-google-signin/google-signin';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 GoogleSignin.configure({
 	webClientId: '908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -43,6 +44,20 @@ export default class LoginScreen extends Component {
 		const currentUser = await GoogleSignin.getCurrentUser();
 		this.setState({ currentUser });
 	  };
+	async fetchUserInfo(email){
+		var url = SERVER_URL+"/user/getUserByEmail";
+		console.log('right here');
+		axios.post(url,{'email':email})
+        .then(response => {
+            if (response.data) {
+				AsyncStorage.setItem('membership',response.data.user.membership);
+            }
+        })
+        .catch(error => {
+			this.error=true;
+            console.log('Errwdqor while fetching the transactions from sms');
+        });
+	}
 	getCurrentUserInfo = async () => {
 		try {
 		  const userInfo = await GoogleSignin.signInSilently();
@@ -52,12 +67,18 @@ export default class LoginScreen extends Component {
 		  var email = userInfo['user']['email'];
 		  var name = userInfo['user']['name'];
 		  var profileImage = userInfo['user']['photo'];
+		  await this.fetchUserInfo(email);
 		  AsyncStorage.setItem('name',name);
 		  AsyncStorage.setItem('email',email);
 		  AsyncStorage.setItem('profileImage',profileImage);
 		  AsyncStorage.setItem('token',token);
 		  this.setState({loader:true});
+		//   this.props.navigator.resetTo({
+		// 	title: 'GoHappy Club',
+		// 	component: 'GoHappy Club',
+		// })
 		  this.props.navigation.navigate('GoHappy Club');
+		  
 		  this.setState({loader:false});
 		} catch (error) {
 		  if (error.code === statusCodes.SIGN_IN_REQUIRED) {
@@ -91,6 +112,7 @@ export default class LoginScreen extends Component {
 		  var email = userInfo['user']['email'];
 		  var name = userInfo['user']['name'];
 		  var profileImage = userInfo['user']['photo'];
+		  await this.fetchUserInfo(email);
 		  var url = SERVER_URL+"/auth/login";
 		  axios.post(url, {'token':token,'email':email,'name':name,'profileImage':profileImage})
 		  .then(response => {

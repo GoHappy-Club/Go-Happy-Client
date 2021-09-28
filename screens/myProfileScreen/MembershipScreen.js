@@ -13,8 +13,38 @@ export default class MembershipScreen extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-
+			orderId:''
 		}
+	}
+	getOrderId(amount){
+		var url = SERVER_URL+"/razorPay/pay";
+		console.log('right here');
+		axios.post(url,{'amount':amount})
+        .then(response => {
+            if (response.data) {
+				console.log('this is response',response.data);
+				this.setState({orderId: response.data});
+				return response.data;
+            }
+        })
+        .catch(error => {
+			this.error=true;
+            console.log('Errwdqor while fetching the transactions from sms');
+        });
+	}
+	setMembership(email,planName,_callback){
+		var url = SERVER_URL+"/user/setMembership";
+		axios.post(url,{'email':email,'planName':planName})
+        .then(response => {
+            // if (response.data) {
+				AsyncStorage.setItem('membership',planName);
+				_callback();
+            // } 
+        })
+        .catch(error => {
+			this.error=true;
+            console.log('Errwdqor while fetching the transactions from sms');
+        });
 	}
 	render() {
 		if(this.state.loader==true){
@@ -23,7 +53,8 @@ export default class MembershipScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<Membership navigation={this.props.navigation}/>
+			<Membership navigation={this.props.navigation} getOrderId={this.getOrderId.bind(this)}
+			setMembership={this.setMembership.bind(this)}/>
 		);
 	}
 

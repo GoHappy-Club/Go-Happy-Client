@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { RefreshControl,FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
 import { Text , Button} from 'react-native-elements';
 
 import { Card as Cd, Title, Paragraph,  Avatar,
@@ -18,11 +18,11 @@ export default class MySessions extends Component {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
 			mySession: [],
+			refreshing:false,
 			profileImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
 		}
 	}
 	static getDerivedStateFromProps(nextProps, prevState) {
-		console.log('nextprps',nextProps);
 		if(nextProps.mySessions!==prevState.mySessions){
 			return { mySessions: nextProps.mySessions};
 		 }
@@ -33,6 +33,15 @@ export default class MySessions extends Component {
 			return text;
 		return text.substring(0,cut)+'...';
 	}
+	_onRefresh(){
+		this.setState({refreshing:true});
+		var _this = this;
+		this.props.loadMySessions("",function(){
+			console.log('i am in callback');
+			_this.setState({refreshing:false});
+		});
+	}
+
 	render() {
 		const renderItem = ({ item} , type) => (
 
@@ -79,8 +88,15 @@ export default class MySessions extends Component {
 
 			</Cd>
 		  );
+
 		return (
-            <ScrollView>
+            <ScrollView
+			refreshControl={
+				<RefreshControl
+				  refreshing={this.state.refreshing}
+				  onRefresh={this._onRefresh.bind(this)}
+				/>
+			  }>
 				{this.props.ongoingEvents.length>0 &&<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
 				{this.props.ongoingEvents.length>0 && <Text>Ongoing Events</Text>}
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>} 

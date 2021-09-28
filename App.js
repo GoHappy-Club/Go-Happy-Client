@@ -19,15 +19,31 @@ global.Icon = Icon;
 Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
-
+var token='';
 export default function App() {
+  AsyncStorage.getItem("token").then((out)=>{token=out});
   return (
-    <NavigationContainer>
+    <NavigationContainer>  
     <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="GoHappy Club" component={BottomNavigator} />
+      {this.token==''?
+      (<><Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
+        headerLeft: null,
+      }}/>
+  <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
+  <Stack.Screen name="Membership Details" component={MembershipScreen} /></>):(
+      <>
+      <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
+        headerLeft: null,
+      }}/>
+  <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
+  <Stack.Screen name="Membership Details" component={MembershipScreen} /></>)
+  }
+      {/* <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
+            headerLeft: null,
+          }}/>
       <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
-      <Stack.Screen name="Membership Details" component={MembershipScreen} />
+      <Stack.Screen name="Membership Details" component={MembershipScreen} /> */}
     </Stack.Navigator>
     </NavigationContainer>
   );

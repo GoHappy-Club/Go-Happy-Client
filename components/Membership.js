@@ -18,6 +18,7 @@ export default class Membership extends Component {
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
 			name: '',
 			email:'',
+			membership:'',
 			city:'Pune',
 			state:'Maharashtra',
 			backgroundColor:'white',
@@ -25,47 +26,51 @@ export default class Membership extends Component {
 			plans:{
 				selectedItem:'',
 				planDetails:[{
-					amount:'100',
+					amount:99,
 					duration:'30 days',
 					textColor:'black',
 					backgroundColor:'white',
-					selected:false
+					selected:false,
+					name:'Basic'
 				},
 				{
-					amount:'300',
+					amount:299,
 					duration:'45 days',
 					textColor:'black',
 					backgroundColor:'white',
-					selected:false
+					selected:false,
+					name:'Silver'
 				},
 				{
-					amount:'550',
+					amount:549,
 					duration:'6 monhts',
 					textColor:'black',
 					backgroundColor:'white',
-					selected:false
+					selected:false,
+					name:'Gold'
 				},
 				{
-					amount:'1100',
+					amount:1099,
 					duration:'1 year',
 					textColor:'black',
 					backgroundColor:'white',
-					selected:false
+					selected:false,
+					name:'Premium'
 				}]
 			}
 		}
 		this._retrieveData();
 	}
-	razorPay(){
-		console.log('in razorpay',this.state.plans);
+	async razorPay(){
+		var orderId = await this.props.getOrderId(this.state.plans.planDetails[this.state.plans.selectedItem?this.state.plans.selectedItem:0].amount*100);
+		console.log('in razorpay',this.state.plans.planDetails[this.state.plans.selectedItem].amount);
 		var options = {
 			description: 'GoHappy Subscription',
-			image: 'https://i.imgur.com/3g7nmJC.png',
 			currency: 'INR',
 			key: 'rzp_test_sMRXf9zvPN1rCs',
-			amount: this.state.plans.planDetails[this.state.plans.selectedItem].amount,
-			name: 'GoHappy',
-			order_id: 'order_I0zXHKi7SP8ijQ',//Replace this with an order_id created using Orders API.
+			amount: this.state.plans.planDetails[this.state.plans.selectedItem].amount*100,
+			name: this.state.plans.planDetails[this.state.plans.selectedItem].name+' Membership',
+			order_id: orderId,//Replace this with an order_id created using Orders API.
 			prefill: {
 			email: this.state.email,
 			contact: '9888138824', 
@@ -76,6 +81,12 @@ export default class Membership extends Component {
 		RazorpayCheckout.open(options).then((data) => {
 			// handle success
 			alert(`Success: ${data.razorpay_payment_id}`);
+			var _this = this;
+			this.props.setMembership(this.state.email,this.state.plans.planDetails[this.state.plans.selectedItem?this.state.plans.selectedItem:0].name,
+				function(){
+					_this.props.navigation.navigate('GoHappy Club')
+
+				});
 		}).catch((error) => {
 			// handle failure
 			alert(`Error: ${error.code} | ${error.description}`);
@@ -103,9 +114,11 @@ export default class Membership extends Component {
 		  const name = await AsyncStorage.getItem("name");
 		  const email = await AsyncStorage.getItem("email");
 		  const profileImage = await AsyncStorage.getItem("profileImage");
+		  const membership = await AsyncStorage.getItem("membership");
 		  this.setState({name:name});
 		  this.setState({email:email});
 		  this.setState({profileImage:profileImage});
+		  this.setState({membership:membership})
 		  console.log('get async',name);
 		  
 		} catch (error) {

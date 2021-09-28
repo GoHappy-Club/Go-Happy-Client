@@ -5,6 +5,7 @@ import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { white } from 'react-native-paper/lib/typescript/styles/colors';
 import { Text, Button} from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default class Profile extends Component {
@@ -17,6 +18,7 @@ export default class Profile extends Component {
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
 			name: '',
 			email:'',
+			membership:'',
 			city:'Pune',
 			state:'Maharashtra'
 		}
@@ -24,19 +26,30 @@ export default class Profile extends Component {
 	}
 	_retrieveData = async () => {
 		try {
+			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
 		  const name = await AsyncStorage.getItem("name");
 		  const email = await AsyncStorage.getItem("email");
 		  const profileImage = await AsyncStorage.getItem("profileImage");
+		  const membership = await AsyncStorage.getItem("membership");
 		  this.setState({name:name});
 		  this.setState({email:email});
 		  this.setState({profileImage:profileImage});
-		  console.log('get async',name);
+		  this.setState({membership:membership})
+		  console.log('get async',membership);
 		  
 		} catch (error) {
 		  // Error retrieving data
 		  console.log('error here',error)
 		}
 	  };
+	  componentDidMount = () => {
+		this.focusListener = this.props.navigation.addListener('focus',
+		   () => { 
+				   console.log('focus is called'); 
+				   this._retrieveData();
+			}
+		 );
+	}
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -105,7 +118,7 @@ export default class Profile extends Component {
 								<Text style={{...styles.cardText}}>To Be Decided</Text>
 							</View>
 							<View style={{width: '33%',height:'100%',justifyContent:'center',alignContent:'center'}}>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>Basic</Text>
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>{this.state.membership}</Text>
 								<Text style={{...styles.cardText}}>Plan</Text>
 							</View>
 						</View>

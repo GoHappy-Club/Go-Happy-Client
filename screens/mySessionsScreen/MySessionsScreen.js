@@ -20,22 +20,27 @@ export default class MySessionsScreen extends Component {
 			upcomingEvents:[],
 		}
 	}
-	loadMySessions(email) {
+	loadMySessions(email,_callback) {
+		email="rashu.sharma14@gmail.com";
 		var url = SERVER_URL+"/event/mySessions";
 		axios.post(url,{'email':email})
         .then(response => {
             if (response.data) {
-				console.log('this is response',response.data);
+				// console.log('this is response',response.data);
 				this.setState({expiredEvents: response.data.expiredEvents});
 				this.setState({upcomingEvents: response.data.upcomingEvents});
 				this.setState({ongoingEvents: response.data.ongoingEvents});
 				this.setState({error:false});
 				this.setState({childLoader: false});
+				
+				console.log('oldhere');
+				_callback();
+				console.log('here');
             }
         })
         .catch(error => {
 			this.error=true;
-            console.log('Errwdqor while fetching the transactions from sms');
+            console.log('Errwdaqor while fetching the transactions from sms');
         });
 	}
 	render() {
@@ -46,7 +51,7 @@ export default class MySessionsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MySessions navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
+			<MySessions loadMySessions={this.loadMySessions.bind(this)} navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
 		);
 	}
 	componentDidMount() {
