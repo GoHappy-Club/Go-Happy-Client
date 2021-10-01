@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/loginScreen/LoginScreen'
@@ -20,40 +20,62 @@ Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
 var token='';
+
+
+
+
 export default function App() {
   AsyncStorage.getItem("token").then((out)=>{token=out});
   return (
     <NavigationContainer>  
     <Stack.Navigator>
-      {this.token==''?
-      (<><Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
-        headerLeft: null,
-      }}/>
-  <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
-  <Stack.Screen name="Membership Details" component={MembershipScreen} /></>):(
+      
       <>
-      <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
-        headerLeft: null,
-      }}/>
-  <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
-  <Stack.Screen name="Membership Details" component={MembershipScreen} /></>)
-  }
-      {/* <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
-            headerLeft: null,
-          }}/>
-      <Stack.Screen name="Session Details" component={HomeDetailsScreen} />
-      <Stack.Screen name="Membership Details" component={MembershipScreen} /> */}
-    </Stack.Navigator>
+        <Stack.Screen name="Login" component={LoginScreen} options={{
+          headerLeft: ()=> <View></View>,
+          headerShown: false
+        }}/>
+        <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
+          headerLeft: ()=> <View></View>,
+          headerTransparent: true,title:null
+        }}/>
+        <Stack.Screen name="Session Details" component={HomeDetailsScreen} options = {({ navigation }) => ({
+          headerTransparent: true,title:null,headerBackTitle:'back',
+          headerLeft: ()=>(
+            <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => navigation.navigate('GoHappy Club')}
+                  underlayColor='#fff'>
+                  <Text style={styles.backText}>back</Text>
+            </TouchableOpacity>
+          )})}
+        />
+        <Stack.Screen name="Membership Details" component={MembershipScreen} options = {({ navigation }) => ({
+          headerTransparent: true,title:null,headerBackTitle:'back',
+          headerLeft: ()=>(
+            <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => navigation.navigate('GoHappy Club')}
+                  underlayColor='#fff'>
+                  <Text style={styles.backText}>back</Text>
+            </TouchableOpacity>
+          )})}/>
+        </>
+        </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  backButton:{
+    padding:4,
+    backgroundColor:'white',
+    borderRadius:4,
+    borderWidth: 1,
+    borderColor: '#fff'
   },
+  backText:{
+      color:'#000',
+      textAlign:'center',
+  }
 });

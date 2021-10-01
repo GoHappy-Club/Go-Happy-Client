@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, Button, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
 
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from 'react-native-paper'
@@ -17,6 +17,14 @@ import {
     statusCodes,
   } from '@react-native-google-signin/google-signin';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { SafeAreaViewBase } from 'react-native';
+import { ViewPagerAndroidBase } from 'react-native';
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/auth';
+import { Button } from 'react-native-elements';
+
+
+const user = firebase.auth().currentUser;
 
 GoogleSignin.configure({
 	webClientId: '908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -34,9 +42,12 @@ export default class LoginScreen extends Component {
 	{
 		super(props);
 		this.state = {
-			phoneNumber: '',
+			phoneNumber: '+91',
 			password: '',showAlert:false,loader:false,
 			userInfo: null,
+			confirmResult: null,
+			verificationCode:'',
+			userId:''
 		}
 		this.getCurrentUserInfo();
 	}
@@ -44,6 +55,73 @@ export default class LoginScreen extends Component {
 		const currentUser = await GoogleSignin.getCurrentUser();
 		this.setState({ currentUser });
 	  };
+	validatePhoneNumber = () => {
+		var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/
+		return regexp.test(this.state.phoneNumber)
+	}
+	handleSendCode = () => {
+		// Request to send OTP
+		if (this.validatePhoneNumber()) {
+		  firebase
+			.auth()
+			.signInWithPhoneNumber(this.state.phoneNumber)
+			.then(confirmResult => {
+			  this.setState({ confirmResult })
+			})
+			.catch(error => {
+			  alert(error.message)
+			  console.log(error)
+			})
+		} else {
+		  alert('Invalid Phone Number')
+		}
+	  }
+	changePhoneNumber = () => {
+		this.setState({ confirmResult: null, verificationCode: '' })
+	}
+	handleVerifyCode = () => {
+		// Request for OTP verification
+		const { confirmResult, verificationCode } = this.state
+		if (verificationCode.length == 6) {
+		  confirmResult
+			.confirm(verificationCode)
+			.then(user => {
+			  this.setState({ userId: user.uid })
+			  this.setState({loader:true});
+					this.props.navigation.navigate('GoHappy Club');
+					this.setState({loader:false});
+			  alert(`Verified! ${user.uid}`)
+			})
+			.catch(error => {
+			  alert(error.message)
+			  console.log(error)
+			})
+		} else {
+		  alert('Please enter a 6 digit OTP code.')
+		}
+	  }
+	  renderConfirmationCodeView = () => {
+		return (
+		  <View style={styles.verificationView}>
+			<TextInput
+			  style={styles.textInput}
+			  placeholder='Verification code'
+			  placeholderTextColor='#eee'
+			  value={this.state.verificationCode}
+			  keyboardType='numeric'
+			  onChangeText={verificationCode => {
+				this.setState({ verificationCode })
+			  }}
+			  maxLength={6}
+			/>
+			<TouchableOpacity
+			  style={[styles.themeButton, { marginTop: 20 }]}
+			  onPress={this.handleVerifyCode}>
+			  <Text style={styles.themeButtonTitle}>Verify Code</Text>
+			</TouchableOpacity>
+		  </View>
+		)
+	  }
 	async fetchUserInfo(email){
 		var url = SERVER_URL+"/user/getUserByEmail";
 		console.log('right here');
@@ -72,7 +150,6 @@ export default class LoginScreen extends Component {
 		  AsyncStorage.setItem('email',email);
 		  AsyncStorage.setItem('profileImage',profileImage);
 		  AsyncStorage.setItem('token',token);
-		  this.setState({loader:true});
 		//   this.props.navigator.resetTo({
 		// 	title: 'GoHappy Club',
 		// 	component: 'GoHappy Club',
@@ -159,54 +236,51 @@ export default class LoginScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<KeyboardAvoidingView behavior="padding" style={styles.container1}>
-				<Text style={styles.title2}>Welcome to GoHappy Club</Text>
-				<View style={styles.logoContainer}>
-					<Avatar.Image
-						style={styles.logo}
-                      	source={require('../../images/logo.jpeg')}
-                      size={150}
-                    />
-					<Text style={styles.title}>Hum hain na, dekhlenge.</Text>
-				</View>
-
-				<View style={styles.formContainer}>
-					<View style={styles.container2}>
-
-						<TextInput
-							style={styles.newinput}
-							placeholder="Phone Number"
-							placeholderTextColor='rgba(255,255,255,0.7)'
-							returnKeyType = "next"
-							onChangeText = {(text)=>this.setState({phoneNumber: text})}
-							onSubmitEditing={() => this.passwordInput.focus()}
-							value={this.state.phoneNumber}
-							autoCapitalize="none"
-							keyboardType="numeric"
-						/>
-						<TextInput
-							style={styles.newinput}
-							placeholder="Password"
-							placeholderTextColor='rgba(255,255,255,0.7)'
-							returnKeyType = "go"
-							onChangeText = {(text)=>this.setState({password: text})}
-							value={this.state.password}
-							ref={(input) => this.passwordInput = input}
-							secureTextEntry
-						/>
-						<TouchableOpacity style={styles.userBtn} onPress={() => {this.props.navigation.navigate('GoHappy Club');}}>
-							<Text style={styles.btnTxt} >Submit</Text>
-						</TouchableOpacity>
-							<Text style={styles.registerTxt} onPress={this._register}>Not registered yet?</Text>
-							<GoogleSigninButton
-								style={{width: 192, height: 48}}
+			<View style={styles.container1}>
+				
+					<Text style={styles.title}>Login</Text>
+					{/* <GoogleSigninButton
+								style={{width: 192, height: 48,alignSelf:'center'}}
 								size={GoogleSigninButton.Size.Wide}
 								color={GoogleSigninButton.Color.Dark}
 								onPress={this._signIn}
 							/>
-					</View>
+							<Text>OR</Text> */}
+						
+
+						<View style={styles.page}>
+							<TextInput
+							style={styles.textInput}
+							placeholder='Phone Number with country code'
+							placeholderTextColor='#eee'
+							keyboardType='phone-pad'
+							value={this.state.phoneNumber}
+							onChangeText={phoneNumber => {
+								this.setState({ phoneNumber })
+							}}
+							maxLength={15}
+							editable={this.state.confirmResult ? false : true}
+							/>
+							<Button outline style={[styles.themeButton, { marginTop: 20 }]}
+								title={this.state.confirmResult ? 'Change Phone Number' : 'Get OTP'}
+								onPress={this.state.confirmResult
+									? this.changePhoneNumber
+									: this.handleSendCode}>
+							</Button>
+							{/* <TouchableOpacity
+							style={[styles.themeButton, { marginTop: 20 }]}
+							onPress={
+								this.state.confirmResult
+								? this.changePhoneNumber
+								: this.handleSendCode
+							}>
+							<Text style={styles.themeButtonTitle}>
+								{this.state.confirmResult ? 'Change Phone Number' : 'Get OTP'}
+							</Text>
+							</TouchableOpacity> */}
+							{this.state.confirmResult ? this.renderConfirmationCodeView() : null}
+						</View>
                     
-				</View>
 				<AwesomeAlert
 				  show={this.state.showAlert}
 				  showProgress={false}
@@ -221,7 +295,7 @@ export default class LoginScreen extends Component {
 				    this.setState({showAlert:false})
 				  }}
 				/>
-			</KeyboardAvoidingView>
+			 </View>
 		);
 	}
   _register = async() => {
@@ -231,9 +305,16 @@ export default class LoginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+	title: {
+		fontSize: 20,
+    	fontWeight: "bold",
+		color:'white',
+		marginTop:'60%',
+		alignSelf:'center'
+	},
 	container1: {
 		flex: 1,
-		backgroundColor: '#0A1045'
+		backgroundColor: '#0A1045',
 	},
 	input: {
 		width: "90%",
@@ -269,24 +350,15 @@ const styles = StyleSheet.create({
 		color: 'white'
 	},
 	logo: {
-		width: 150,
-		height: 150
+		width: 250,
+		height: 250
 	},
 	logoContainer: {
 		alignItems: 'center',
 		flexGrow: 1,
 		justifyContent: 'center'
 	},
-	formContainer: {
-
-	},
-	title: {
-		color: 'white',
-		marginTop: 10,
-		width: 160,
-		opacity: 0.9,
-		textAlign: 'center'
-	},
+	
 	newinput: {
 		height: 50,
 		backgroundColor: 'rgba(255,255,255,0.2)',
@@ -295,7 +367,8 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10
 	},
 	container2: {
-		padding: 25
+		flex: 1,
+		backgroundColor: '#aaa'
 	},
 	title2: {
 		color: 'white',
@@ -304,5 +377,38 @@ const styles = StyleSheet.create({
 		opacity: 0.9,
 		textAlign: 'center',
 		fontSize: 30
-	}
+	},
+	page: {
+		marginTop:'30%',
+		alignItems: 'center',
+		justifyContent: 'center'
+	  },
+	  textInput: {
+		width: '90%',
+		height: 40,
+		borderColor: '#555',
+		borderWidth: 2,
+		borderRadius: 5,
+		paddingLeft: 10,
+		color: '#fff',
+		fontSize: 16
+	  },
+	  themeButton: {
+		width: '100%',
+		height: 50,
+		alignItems: 'center',
+		justifyContent: 'center',
+		
+		borderRadius: 5
+	  },
+	  themeButtonTitle: {
+		fontSize: 24,
+		fontWeight: 'bold',
+		color: '#fff'
+	  },
+	  verificationView: {
+		width: '100%',
+		alignItems: 'center',
+		marginTop: 50
+	  }
 });

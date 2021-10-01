@@ -128,7 +128,8 @@ export default class HomeDashboard extends Component {
 		  );
 		return ( 
 			<>
-			<CalendarDays
+			<View style={{marginTop:'10%'}}>
+			<CalendarDays 
 				numberOfDays={15}
 				daysInView={4}
 				paginate={true}
@@ -143,6 +144,7 @@ export default class HomeDashboard extends Component {
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>}
+				</View>
 			</>
 		);
 	}
