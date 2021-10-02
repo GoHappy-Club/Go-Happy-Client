@@ -30,7 +30,7 @@ export default class Profile extends Component {
 		this.state = {
 			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
-			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+			profileImage: '',
 			name: '',
 			email:'',
 			membership:'',
@@ -108,7 +108,7 @@ export default class Profile extends Component {
 						<Image
 						style={styles.cover}
 						source={{
-						uri: this.state.profileImage+'0',
+						uri: this.state.profileImage,
 						}}
 						/>
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '170%', alignItems: 'flex-start', justifyContent: 'center' }}>

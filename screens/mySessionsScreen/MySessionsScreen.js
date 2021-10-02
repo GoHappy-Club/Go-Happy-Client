@@ -18,10 +18,22 @@ export default class MySessionsScreen extends Component {
 			ongoingEvents:[],
 			expiredEvents:[],
 			upcomingEvents:[],
+			email:'',
 		}
+		this._retrieveData();
 	}
+	_retrieveData = async () => {
+		try {
+			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
+		  const email = await AsyncStorage.getItem("email");
+		  this.setState({email:email});		  
+		} catch (error) {
+		  // Error retrieving data
+		  console.log('error here',error)
+		}
+	  };
 	loadMySessions(email,_callback) {
-		email="rashu.sharma14@gmail.com";
+		email=this.state.email;
 		var url = SERVER_URL+"/event/mySessions";
 		axios.post(url,{'email':email})
         .then(response => {
@@ -55,7 +67,7 @@ export default class MySessionsScreen extends Component {
 		);
 	}
 	componentDidMount() {
-		this.loadMySessions('rashu.sharma14@gmail.com');
+		this.loadMySessions(this.state.email);
 	}
 
 }

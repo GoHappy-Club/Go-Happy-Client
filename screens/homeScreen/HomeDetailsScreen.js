@@ -5,7 +5,6 @@ import {
   MaterialIndicator,
 } from 'react-native-indicators';
 import SessionDetails from '../../components/SessionDetails';
-import Video from 'react-native-video';
 
 
 
@@ -14,8 +13,25 @@ export default class HomeDetailsScreen extends Component {
 	{
 		super(props);
 		this.state = {
+			email:''
 		}
+		this._retrieveData();
 	}
+	_retrieveData = async () => {
+		try {
+		  const value = await AsyncStorage.getItem('email');
+		  console.log('get async',value);
+		  console.log(this.props.route.params.event.participantList);
+		  if (value !== null) {
+			// We have data!!
+			this.setState({email:value});
+			
+		  }
+		} catch (error) {
+		  // Error retrieving data
+		  console.log('error here',error)
+		}
+	  };
 	sessionAction(){
 		if(this.props.route.params.type=='expired'){
 			var meetingLink  = this.props.route.params.event.meetingLink;
@@ -53,7 +69,7 @@ export default class HomeDetailsScreen extends Component {
 				}
 			  })
 		}
-		if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes('rashu.sharma14@gmail.com')){
+		if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(this.state.email)){
 		console.log(this.props.route.params.event.id);
 		console.log(this.props.route.params.email);
 		var url = SERVER_URL+"/event/cancelEvent";
@@ -85,7 +101,7 @@ export default class HomeDetailsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type}/>
+			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type} email={this.state.email}/>
 		);
 	}
 

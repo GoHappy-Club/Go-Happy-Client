@@ -23,7 +23,7 @@ export default class SessionDetails extends Component {
 		return "View Recording";
 		if(this.props.type=='ongoing')
 		return "Join";
-		if(this.state.event.participantList!=null && this.state.event.participantList.includes('rashu.sharma14@gmail.com'))
+		if(this.state.event.participantList!=null && this.state.event.participantList.includes(this.props.email))
 		return "Cancel Your Booking";
 		return "Book";
 		

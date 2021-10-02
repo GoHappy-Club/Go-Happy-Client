@@ -7,6 +7,8 @@ import LoginScreen from './screens/loginScreen/LoginScreen'
 import BottomNavigator from './components/navigators/BottomNavigator'
 import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen'
 import MembershipScreen from './screens/myProfileScreen/MembershipScreen'
+import AdditionalDetails from './components/AdditionalDetails'
+
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as configData from "./config/dev/config.json";
@@ -60,6 +62,9 @@ export default function App() {
                   <Text style={styles.backText}>back</Text>
             </TouchableOpacity>
           )})}/>
+          <Stack.Screen name="Additional Details" component={AdditionalDetails} options = {{
+            headerLeft: ()=> <View></View>,
+            headerTransparent: true,title:null}}/>
         </>
         </Stack.Navigator>
     </NavigationContainer>

@@ -6,7 +6,7 @@ import { Avatar } from 'react-native-paper'
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import HomeScreen from '../homeScreen/HomeScreen';
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
+import PhoneInput from "react-native-phone-number-input";
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
@@ -22,7 +22,8 @@ import { ViewPagerAndroidBase } from 'react-native';
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
 import { Button } from 'react-native-elements';
-
+import OTPTextInput from 'react-native-otp-textinput';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const user = firebase.auth().currentUser;
 
@@ -42,12 +43,16 @@ export default class LoginScreen extends Component {
 	{
 		super(props);
 		this.state = {
-			phoneNumber: '+91',
+			phoneNumber: '',
 			password: '',showAlert:false,loader:false,
 			userInfo: null,
 			confirmResult: null,
 			verificationCode:'',
-			userId:''
+			userId:'',
+			email:'',
+			name:'',
+			state:'',
+			city:''
 		}
 		this.getCurrentUserInfo();
 	}
@@ -86,11 +91,22 @@ export default class LoginScreen extends Component {
 		  confirmResult
 			.confirm(verificationCode)
 			.then(user => {
-			  this.setState({ userId: user.uid })
-			  this.setState({loader:true});
-					this.props.navigation.navigate('GoHappy Club');
-					this.setState({loader:false});
-			  alert(`Verified! ${user.uid}`)
+				console.log('htis is user',user);
+			  this.setState({ userId: user.user.uid })
+			  this._backendSignIn(user.user.uid,user.user.email,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
+			   
+			//   if(this.pending()){
+			// 	this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
+			// 		name:this.state.name,state:this.state.state,city:this.state.city},{email:this.state.email,phoneNumber:this.state.phoneNumber,
+			// 		name:this.state.name,state:this.state.state,city:this.state.city});
+			// 	return;
+			//   }
+			//   else{
+			// 	this.setState({loader:true});
+			// 	this.props.navigation.navigate('GoHappy Club');
+			// 	this.setState({loader:false});
+			// 	alert(`Verified! ${user.user.uid}`)
+			//   }
 			})
 			.catch(error => {
 			  alert(error.message)
@@ -103,23 +119,14 @@ export default class LoginScreen extends Component {
 	  renderConfirmationCodeView = () => {
 		return (
 		  <View style={styles.verificationView}>
-			<TextInput
-			  style={styles.textInput}
-			  placeholder='Verification code'
-			  placeholderTextColor='#eee'
-			  value={this.state.verificationCode}
-			  keyboardType='numeric'
-			  onChangeText={verificationCode => {
-				this.setState({ verificationCode })
-			  }}
-			  maxLength={6}
-			/>
-			<TouchableOpacity
-			  style={[styles.themeButton, { marginTop: 20 }]}
-			  onPress={this.handleVerifyCode}>
-			  <Text style={styles.themeButtonTitle}>Verify Code</Text>
-			</TouchableOpacity>
-		  </View>
+			<OTPTextInput inputCount={6} textInputStyle={{color:'white'}} handleTextChange= {(text) => {
+				this.setState({verificationCode:text})}}/>
+			<Button outline style={[styles.themeButton, { marginTop: 20 }]}
+				title='Verify OTP'
+				onPress={this.handleVerifyCode}>
+			</Button>
+		</View>
+			
 		)
 	  }
 	async fetchUserInfo(email){
@@ -138,7 +145,21 @@ export default class LoginScreen extends Component {
 	}
 	getCurrentUserInfo = async () => {
 		try {
-		  const userInfo = await GoogleSignin.signInSilently();
+			console.log('hrewrwerewrew');
+		  const token1 = await AsyncStorage.getItem('token');
+		  var userInfo=null; 
+		  if(token1==null)
+		  	userInfo = await GoogleSignin.signInSilently();
+		  else{
+			if(this.pending())
+				this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
+					name:this.state.name,state:this.state.state,city:this.state.city});
+			else{
+				this.props.navigation.navigate('GoHappy Club');
+				this.setState({loader:false});
+				return;
+			}
+		  }
 		  this.setState({ userInfo });
 		  console.log('login state',this.state);
 		  var token = userInfo['idToken'];
@@ -154,7 +175,11 @@ export default class LoginScreen extends Component {
 		// 	title: 'GoHappy Club',
 		// 	component: 'GoHappy Club',
 		// })
-		  this.props.navigation.navigate('GoHappy Club');
+		  if(this.pending())
+		  	this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
+					name:this.state.name,state:this.state.state,city:this.state.city});
+		  else
+		  	this.props.navigation.navigate('GoHappy Club');
 		  
 		  this.setState({loader:false});
 		} catch (error) {
@@ -178,9 +203,48 @@ export default class LoginScreen extends Component {
 		  console.error(error);
 		}
 	  };
+	_backendSignIn(token,email,name,profileImage,phone){
+		var url = SERVER_URL+"/auth/login";
+		axios.post(url, {'token':token,'email':email,'name':name,'profileImage':profileImage,'phone':phone})
+		.then(response => {
+			console.log('here'+response);
+				if (response.data && response.data!="ERROR") {
+				  // this.setState({fullName: userInfo.fullName});
+				  if(response.data.phoneNumber!=null)
+				  AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
+				  // AsyncStorage.setItem('fullName',response.data.fullName);
+				  if(response.data.name!=null) 
+				  AsyncStorage.setItem('name',name);
+				  if(response.data.email!=null)
+				  AsyncStorage.setItem('email',email);
+				  if(response.data.profileImage!=null)
+				  AsyncStorage.setItem('profileImage',profileImage);
+				  AsyncStorage.setItem('token',token);
+				  this.setState({name:response.data.name,email:response.data.email,
+						phoneNumber:response.data.phone});
+				  // this.props.navigation.navigate('DrawerNavigator');
+				  if(this.pending()){
+					this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
+						name:this.state.name,state:this.state.state,city:this.state.city},{email:this.state.email,phoneNumber:this.state.phoneNumber,
+						name:this.state.name,state:this.state.state,city:this.state.city});
+					return;
+				  }
+				  else{
+					this.setState({loader:true});
+					this.props.navigation.navigate('GoHappy Club');
+					this.setState({loader:false});
+				  }
+				}
+				else if(response.data=="ERROR"){
+					this.setState({showAlert:true,loader:false})
+				}
+		})
+		.catch(error => {
+				console.log('Error while logging in',error);
+		});
+	}
     _signIn = async () => {
         try {
-			console.log('herehereherehereherehere');
           await GoogleSignin.hasPlayServices();
           const userInfo = await GoogleSignin.signIn();
           console.log('teet',userInfo);
@@ -190,31 +254,7 @@ export default class LoginScreen extends Component {
 		  var name = userInfo['user']['name'];
 		  var profileImage = userInfo['user']['photo'];
 		  await this.fetchUserInfo(email);
-		  var url = SERVER_URL+"/auth/login";
-		  axios.post(url, {'token':token,'email':email,'name':name,'profileImage':profileImage})
-		  .then(response => {
-			  console.log('here'+response);
-				  if (response.data && response.data!="ERROR") {
-					// this.setState({fullName: userInfo.fullName});
-					if(response.data.phoneNumber!=null)
-					AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
-					// AsyncStorage.setItem('fullName',response.data.fullName);
-					AsyncStorage.setItem('name',name);
-					AsyncStorage.setItem('email',email);
-					AsyncStorage.setItem('profileImage',profileImage);
-					AsyncStorage.setItem('token',token);
-					// this.props.navigation.navigate('DrawerNavigator');
-					this.setState({loader:true});
-					this.props.navigation.navigate('GoHappy Club');
-					this.setState({loader:false});
-				  }
-				  else if(response.data=="ERROR"){
-					  this.setState({showAlert:true,loader:false})
-				  }
-		  })
-		  .catch(error => {
-				  console.log('Error while fetching the transactions from sms');
-		  });
+		  this._backendSignIn(token,email,name,profileImage,'');
 		  
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -228,6 +268,11 @@ export default class LoginScreen extends Component {
           }
         }
       };
+	pending(){
+		if(this.state.email.length==0||this.state.phoneNumber.length==0||this.state.name.length==0)
+			return true;
+		return false;
+	}
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -238,28 +283,31 @@ export default class LoginScreen extends Component {
 		return (
 			<View style={styles.container1}>
 				
-					<Text style={styles.title}>Login</Text>
-					{/* <GoogleSigninButton
-								style={{width: 192, height: 48,alignSelf:'center'}}
-								size={GoogleSigninButton.Size.Wide}
-								color={GoogleSigninButton.Color.Dark}
-								onPress={this._signIn}
-							/>
-							<Text>OR</Text> */}
-						
+					<Text style={styles.title}>Login </Text>
+					<Text style={{marginTop:'3%',fontSize:20,color:'white',alignSelf:'center',fontWeight:'bold'}}>to</Text>
+					<Text style={{marginTop:'5%',fontSize:30,color:'white',alignSelf:'center',fontWeight:'bold'}}>GoHappy Club</Text>
+					<Text style={{marginTop:'5%',fontSize:15,color:'white',alignSelf:'center'}}>
+						India ka sabse khush pariwar
+					</Text>
+
 
 						<View style={styles.page}>
-							<TextInput
+							<PhoneInput
 							style={styles.textInput}
-							placeholder='Phone Number with country code'
-							placeholderTextColor='#eee'
-							keyboardType='phone-pad'
-							value={this.state.phoneNumber}
-							onChangeText={phoneNumber => {
-								this.setState({ phoneNumber })
-							}}
-							maxLength={15}
-							editable={this.state.confirmResult ? false : true}
+								ref={this.state.phoneNumber}
+								keyboardType='phone-pad'
+								defaultCode="IN"
+								layout="first"
+								onChangeText={(text) => {
+									this.setState({phoneNumber:text})
+								}}
+								onChangeFormattedText={(text) => {
+								console.log(text);
+								this.setState({phoneNumber:text});
+								}}
+								withDarkTheme
+								withShadow
+								autoFocus
 							/>
 							<Button outline style={[styles.themeButton, { marginTop: 20 }]}
 								title={this.state.confirmResult ? 'Change Phone Number' : 'Get OTP'}
@@ -267,19 +315,18 @@ export default class LoginScreen extends Component {
 									? this.changePhoneNumber
 									: this.handleSendCode}>
 							</Button>
-							{/* <TouchableOpacity
-							style={[styles.themeButton, { marginTop: 20 }]}
-							onPress={
-								this.state.confirmResult
-								? this.changePhoneNumber
-								: this.handleSendCode
-							}>
-							<Text style={styles.themeButtonTitle}>
-								{this.state.confirmResult ? 'Change Phone Number' : 'Get OTP'}
-							</Text>
-							</TouchableOpacity> */}
-							{this.state.confirmResult ? this.renderConfirmationCodeView() : null}
+							{this.state.confirmResult ? this.renderConfirmationCodeView() : 
+								(<>
+									<Text style={{color:'white',alignSelf:'center',marginTop:'9%'}}>OR</Text>
+										<GoogleSigninButton 
+												style={{width: 192, height: 48,alignSelf:'center',marginTop:'9%'}}
+												size={GoogleSigninButton.Size.Wide}
+												color={GoogleSigninButton.Color.Dark}
+												onPress={this._signIn}
+										/>
+								</>)}
 						</View>
+						
                     
 				<AwesomeAlert
 				  show={this.state.showAlert}
@@ -298,9 +345,6 @@ export default class LoginScreen extends Component {
 			 </View>
 		);
 	}
-  _register = async() => {
-		this.props.navigation.navigate('Register');
-	}
 
 }
 
@@ -309,7 +353,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
     	fontWeight: "bold",
 		color:'white',
-		marginTop:'60%',
+		marginTop:'30%',
 		alignSelf:'center'
 	},
 	container1: {
@@ -379,7 +423,7 @@ const styles = StyleSheet.create({
 		fontSize: 30
 	},
 	page: {
-		marginTop:'30%',
+		marginTop:'20%',
 		alignItems: 'center',
 		justifyContent: 'center'
 	  },

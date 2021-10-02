@@ -60,7 +60,6 @@ export default class HomeScreen extends Component {
       axios.post(url,{'id':id,'email':email})
         .then(response => {
             if (response.data) {
-				item.loadingButton = true;
 
 				if(response.data=="SUCCESS"){
 
@@ -69,6 +68,7 @@ export default class HomeScreen extends Component {
 						if(tempEvents[i].id==item.id){
 							tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
 							tempEvents[i].loadingButton = false;
+							tempEvents[i].status="Booked";
 							this.setState({events:tempEvents});
 							break;
 						}

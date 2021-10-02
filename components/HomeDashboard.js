@@ -100,7 +100,7 @@ export default class HomeDashboard extends Component {
 								{item.seatsLeft} seats left
 							</Text>
 						</View>
-						<FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />     
+						{/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
 					</View>
 					<Title style={{color:'black',fontSize:20, padding:4}}>{this.trimContent(item.eventName,30)}</Title>
 
@@ -114,9 +114,10 @@ export default class HomeDashboard extends Component {
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
+						{/* item.participantList!=null && item.participantList.includes(this.state.email) */}
 						<Button
-							disabled = {item.participantList!=null && item.participantList.includes(this.state.email)?true:false}
-							title={item.participantList!=null && item.participantList.includes(this.state.email)?"Booked":"Book"}
+							disabled = {item.status!=null || (item.participantList!=null && item.participantList.includes(this.state.email))?true:false}
+							title={item.status!=null || (item.participantList!=null && item.participantList.includes(this.state.email))?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
 							loading={item.loadingButton}
 						/>
@@ -137,7 +138,7 @@ export default class HomeDashboard extends Component {
 			/>
 			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>{this.state.selectedDate}</Text>
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				{this.props.childLoader==false && <SafeAreaView style={styles.container}>
+				{this.props.childLoader==false && <SafeAreaView >
 				<FlatList
 					data={this.props.events}
 					renderItem={renderItem}
