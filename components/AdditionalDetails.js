@@ -35,22 +35,23 @@ export default class AdditionalDetails extends Component {
 		var url = SERVER_URL+"/user/update";
 		axios.post(url, {'email':this.state.email,'name':this.state.name,'state':this.state.state,'city':this.state.city,'phone':this.state.phoneNumber})
 		.then(response => {
-			console.log('here'+response);
+			console.log('here',response);
 				if (response.data && response.data!="ERROR") {
 				  // this.setState({fullName: userInfo.fullName});
 				  if(response.data.phoneNumber!=null)
 				  AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
 				  // AsyncStorage.setItem('fullName',response.data.fullName);
 				  if(response.data.name!=null) 
-				  AsyncStorage.setItem('name',name);
+				  AsyncStorage.setItem('name',response.data.name);
 				  if(response.data.email!=null)
-				  AsyncStorage.setItem('email',email);
+				  AsyncStorage.setItem('email',response.data.email);
 				  if(response.data.profileImage!=null)
-				  AsyncStorage.setItem('profileImage',profileImage);
-				  AsyncStorage.setItem('token',token);
+				  AsyncStorage.setItem('profileImage',response.data.profileImage);
+				  AsyncStorage.setItem('token',response.data.token);
 				  // this.state.navigation.navigate('DrawerNavigator');
 				  this.setState({loader:true});
-				  this.state.navigation.navigate('GoHappy Club');
+				  console.log('naviii',this.props.route.params);
+				  this.props.route.params.navigation.navigate('GoHappy Club');
 				  this.setState({loader:false});
 				}
 				else if(response.data=="ERROR"){

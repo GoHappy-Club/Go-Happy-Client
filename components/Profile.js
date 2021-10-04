@@ -34,8 +34,8 @@ export default class Profile extends Component {
 			name: '',
 			email:'',
 			membership:'',
-			city:'Pune',
-			state:'Maharashtra'
+			city:'',
+			state:''
 		}
 		this._retrieveData();
 	}
@@ -118,7 +118,7 @@ export default class Profile extends Component {
 							</Text>
 							<Text style={{overflow:"hidden",paddingLeft:4,color:'white',
 								}}>
-								{this.state.city}, {this.state.state}
+								{this.state.city} {this.state.state}
 							</Text>
 						</View>
 					</View>
@@ -137,7 +137,7 @@ export default class Profile extends Component {
 						>
 							<View style={{width: '33%',height:'100%',borderColor:'#E0E0E0'
 							,borderRightWidth:1,justifyContent:'center',alignContent:'center'}}>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>20</Text>
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>Unlimited</Text>
 								<Text style={{...styles.cardText}}>Sessions Left</Text>
 							</View>
 							<View style={{width: '33%',height:'100%',borderColor:'#E0E0E0'

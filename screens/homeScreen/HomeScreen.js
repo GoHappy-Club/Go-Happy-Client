@@ -32,10 +32,8 @@ export default class HomeScreen extends Component {
 		this.setState({childLoader: true});
 		this.setState({events:[]});
 		var url = SERVER_URL+"/event/getEventsByDate";
-		var date = new Date().getTime();
-		if(selectedDate!=null)
-			date = selectedDate;
-		axios.post(url,{'date':date})
+		console.log('date for events',selectedDate);
+		axios.post(url,{'date':selectedDate})
 			.then(response => {
 				if (response.data) {
 					console.log('this is response',response.data);
@@ -87,7 +85,7 @@ export default class HomeScreen extends Component {
         });		
 	}
 	componentDidMount() {
-		this.loadEvents();
+		this.loadEvents(new Date().setHours(0,0,0,0));
 	}
 
 }

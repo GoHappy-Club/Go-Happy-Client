@@ -26,7 +26,8 @@ export default class MySessionsScreen extends Component {
 		try {
 			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
 		  const email = await AsyncStorage.getItem("email");
-		  this.setState({email:email});		  
+		  this.setState({email:email});	
+		  this.loadMySessions(this.state.email);	  
 		} catch (error) {
 		  // Error retrieving data
 		  console.log('error here',error)
@@ -67,7 +68,7 @@ export default class MySessionsScreen extends Component {
 		);
 	}
 	componentDidMount() {
-		this.loadMySessions(this.state.email);
+		// this.loadMySessions(this.state.email);
 	}
 
 }

@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
-import { SafeAreaView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { Text,StyleSheet, View} from 'react-native';
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from 'react-native-paper'
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
-import HomeScreen from '../homeScreen/HomeScreen';
 import PhoneInput from "react-native-phone-number-input";
 import {
   MaterialIndicator,
@@ -16,16 +13,12 @@ import {
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-google-signin/google-signin';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { SafeAreaViewBase } from 'react-native';
-import { ViewPagerAndroidBase } from 'react-native';
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
 import { Button } from 'react-native-elements';
 import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const user = firebase.auth().currentUser;
 
 GoogleSignin.configure({
 	webClientId: '908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
@@ -75,7 +68,7 @@ export default class LoginScreen extends Component {
 			})
 			.catch(error => {
 			  alert(error.message)
-			  console.log(error)
+			   
 			})
 		} else {
 		  alert('Invalid Phone Number')
@@ -91,26 +84,14 @@ export default class LoginScreen extends Component {
 		  confirmResult
 			.confirm(verificationCode)
 			.then(user => {
-				console.log('htis is user',user);
+				 
 			  this.setState({ userId: user.user.uid })
 			  this._backendSignIn(user.user.uid,user.user.email,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
 			   
-			//   if(this.pending()){
-			// 	this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
-			// 		name:this.state.name,state:this.state.state,city:this.state.city},{email:this.state.email,phoneNumber:this.state.phoneNumber,
-			// 		name:this.state.name,state:this.state.state,city:this.state.city});
-			// 	return;
-			//   }
-			//   else{
-			// 	this.setState({loader:true});
-			// 	this.props.navigation.navigate('GoHappy Club');
-			// 	this.setState({loader:false});
-			// 	alert(`Verified! ${user.user.uid}`)
-			//   }
 			})
 			.catch(error => {
 			  alert(error.message)
-			  console.log(error)
+			   
 			})
 		} else {
 		  alert('Please enter a 6 digit OTP code.')
@@ -131,7 +112,7 @@ export default class LoginScreen extends Component {
 	  }
 	async fetchUserInfo(email){
 		var url = SERVER_URL+"/user/getUserByEmail";
-		console.log('right here');
+		 
 		axios.post(url,{'email':email})
         .then(response => {
             if (response.data) {
@@ -140,28 +121,29 @@ export default class LoginScreen extends Component {
         })
         .catch(error => {
 			this.error=true;
-            console.log('Errwdqor while fetching the transactions from sms');
+             
         });
 	}
 	getCurrentUserInfo = async () => {
 		try {
-			console.log('hrewrwerewrew');
+			 
 		  const token1 = await AsyncStorage.getItem('token');
+		   
 		  var userInfo=null; 
 		  if(token1==null)
 		  	userInfo = await GoogleSignin.signInSilently();
 		  else{
-			if(this.pending())
-				this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
-					name:this.state.name,state:this.state.state,city:this.state.city});
-			else{
+			// if(this.pending())
+			// 	this.props.navigation.navigate('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
+			// 		name:this.state.name,state:this.state.state,city:this.state.city});
+			// else{
 				this.props.navigation.navigate('GoHappy Club');
 				this.setState({loader:false});
 				return;
-			}
+			// }
 		  }
 		  this.setState({ userInfo });
-		  console.log('login state',this.state);
+		   
 		  var token = userInfo['idToken'];
 		  var email = userInfo['user']['email'];
 		  var name = userInfo['user']['name'];
@@ -176,7 +158,7 @@ export default class LoginScreen extends Component {
 		// 	component: 'GoHappy Club',
 		// })
 		  if(this.pending())
-		  	this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
+		  	this.props.navigation.navigate('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
 					name:this.state.name,state:this.state.state,city:this.state.city});
 		  else
 		  	this.props.navigation.navigate('GoHappy Club');
@@ -207,25 +189,25 @@ export default class LoginScreen extends Component {
 		var url = SERVER_URL+"/auth/login";
 		axios.post(url, {'token':token,'email':email,'name':name,'profileImage':profileImage,'phone':phone})
 		.then(response => {
-			console.log('here'+response);
+			 console.log('backend sign in',response)
 				if (response.data && response.data!="ERROR") {
 				  // this.setState({fullName: userInfo.fullName});
-				  if(response.data.phoneNumber!=null)
+				  if(response.data.phone!=null)
 				  AsyncStorage.setItem('phoneNumber',response.data.phoneNumber);
 				  // AsyncStorage.setItem('fullName',response.data.fullName);
+				   
 				  if(response.data.name!=null) 
-				  AsyncStorage.setItem('name',name);
+				  AsyncStorage.setItem('name',response.data.name);
 				  if(response.data.email!=null)
-				  AsyncStorage.setItem('email',email);
+				  AsyncStorage.setItem('email',response.data.email);
 				  if(response.data.profileImage!=null)
-				  AsyncStorage.setItem('profileImage',profileImage);
+				  AsyncStorage.setItem('profileImage',response.data.profileImage);
 				  AsyncStorage.setItem('token',token);
 				  this.setState({name:response.data.name,email:response.data.email,
 						phoneNumber:response.data.phone});
 				  // this.props.navigation.navigate('DrawerNavigator');
 				  if(this.pending()){
-					this.props.navigation.navigate('Additional Details',{email:this.state.email,phoneNumber:this.state.phoneNumber,
-						name:this.state.name,state:this.state.state,city:this.state.city},{email:this.state.email,phoneNumber:this.state.phoneNumber,
+					this.props.navigation.navigate('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
 						name:this.state.name,state:this.state.state,city:this.state.city});
 					return;
 				  }
@@ -240,14 +222,14 @@ export default class LoginScreen extends Component {
 				}
 		})
 		.catch(error => {
-				console.log('Error while logging in',error);
+				 
 		});
 	}
     _signIn = async () => {
         try {
           await GoogleSignin.hasPlayServices();
           const userInfo = await GoogleSignin.signIn();
-          console.log('teet',userInfo);
+           
           this.setState({ userInfo });
 		  var token = userInfo['idToken'];
 		  var email = userInfo['user']['email'];
@@ -269,7 +251,8 @@ export default class LoginScreen extends Component {
         }
       };
 	pending(){
-		if(this.state.email.length==0||this.state.phoneNumber.length==0||this.state.name.length==0)
+		console.log('state in pending',this.state);
+		if((this.state.email==null || this.state.email.length==0)|| (this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0))
 			return true;
 		return false;
 	}
@@ -302,7 +285,7 @@ export default class LoginScreen extends Component {
 									this.setState({phoneNumber:text})
 								}}
 								onChangeFormattedText={(text) => {
-								console.log(text);
+								 
 								this.setState({phoneNumber:text});
 								}}
 								withDarkTheme
