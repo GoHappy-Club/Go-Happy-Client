@@ -69,8 +69,8 @@ export default class HomeDashboard extends Component {
 	updateEventBook(item){
 		this.setState({bookingLoader:true});
 		item.loadingButton=true;
-		item = this.props.bookEvent(item,this.state.email);
-		// this.setState({bookingLoader:!)
+		var _this = this;
+		this.props.bookEvent(item,this.state.email);
 
 	}
 	
@@ -86,12 +86,11 @@ export default class HomeDashboard extends Component {
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
-						<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
+				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
 
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
-
 							<Badge value={item.category} badgeStyle={styles.badge} />
 							<Text style={{color:'#404040',fontSize:14, paddingLeft:4}}>
 								{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
@@ -128,8 +127,8 @@ export default class HomeDashboard extends Component {
 			</Cd>
 		  );
 		return ( 
-			<>
-			<View style={{marginTop:'10%'}}>
+			
+			<View style={{marginTop:'10%',flex:1}}>
 			<CalendarDays 
 				numberOfDays={15}
 				daysInView={4}
@@ -137,16 +136,19 @@ export default class HomeDashboard extends Component {
 				onDateSelect={date => this.changeSelectedDate(date)}
 			/>
 			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>{this.state.selectedDate}</Text>
-				{this.props.childLoader==true && <MaterialIndicator color='blue'/>}
-				{this.props.childLoader==false && <SafeAreaView >
-				<FlatList
-					data={this.props.events}
-					renderItem={renderItem}
-					keyExtractor={item => item.id}
-				/>
+				{this.props.childLoader==true && <MaterialIndicator style={{marginTop:'10%'}} color='blue'/>}
+				{this.props.childLoader==false && 
+				<SafeAreaView style={{flex:1}}>
+				
+					<FlatList contentContainerStyle={{ flexGrow: 1 }}
+						data={this.props.events}
+						renderItem={renderItem}
+						keyExtractor={item => item.id}
+					/>
+				
 				</SafeAreaView>}
 				</View>
-			</>
+			
 		);
 	}
 }

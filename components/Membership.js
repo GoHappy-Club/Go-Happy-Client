@@ -43,7 +43,7 @@ export default class Membership extends Component {
 				},
 				{
 					amount:549,
-					duration:'6 monhts',
+					duration:'6 months',
 					textColor:'black',
 					backgroundColor:'white',
 					selected:false,
@@ -133,7 +133,7 @@ export default class Membership extends Component {
 		  return(
 			<View style={{width:'50%'}}>
                 <TouchableOpacity style={{backgroundColor: plan.backgroundColor, 
-                    shadowColor: "black",
+                    shadowColor: "black",elevation: 10,
                     shadowOffset: { height: 2},
                     shadowOpacity: 0.3, borderRadius:10,
                     height:100,margin:30,justifyContent:'center',
@@ -175,14 +175,6 @@ export default class Membership extends Component {
 								this.renderPlans(item,key)
 							))
 					}</View>
-					{/* <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
-                        {this.planBox(100,30,'days')}
-                        {this.planBox(300,45,'days')}
-                    </View>
-                    <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {this.planBox(550,6,'months')}
-                    {this.planBox(1100,1,'year')}
-                    </View> */}
 
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity  disabled={this.state.plans.selectedItem===''}

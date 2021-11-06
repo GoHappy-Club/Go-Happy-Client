@@ -36,15 +36,13 @@ export default class SessionDetails extends Component {
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
 		}
-		const navigation = this.props.navigation;
-		const title = 'Login';
 		const item = this.props.event;
 		return (
 			<View style = {{
-				backgroundColor: 'white'
+				backgroundColor: 'white',flex:1
 			}}>
-				<ScrollView style = {{
-					backgroundColor: 'white',height:'90%'
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }} style = {{
+					backgroundColor: 'white'
 				}}>
 					
 					<View style = {{
@@ -53,7 +51,7 @@ export default class SessionDetails extends Component {
 						shadowOffset: { height: 2},
 						shadowOpacity: 0.3,
 						width:'100%',
-						height:'100%',
+						height:300,
 						justifyContent: "center",
 					}}>
 						<Image
@@ -96,9 +94,6 @@ export default class SessionDetails extends Component {
 						</Text>
 						<Text style={{fontSize:17,color: "grey",marginTop:10}}>
 							{item.description}
-						</Text>
-						<Text style={{fontSize:17,color: "grey",marginTop:20,fontWeight:'bold'}}>
-							Expert
 						</Text>
 						<View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop:10}}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>

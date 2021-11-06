@@ -8,10 +8,10 @@ import BottomNavigator from './components/navigators/BottomNavigator'
 import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen'
 import MembershipScreen from './screens/myProfileScreen/MembershipScreen'
 import AdditionalDetails from './components/AdditionalDetails'
-
+import About from './components/About'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/cloud-dev/config.json";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 global.axios = axios;
@@ -39,7 +39,8 @@ export default function App() {
         }}/>
         <Stack.Screen name="GoHappy Club" component={BottomNavigator} options={{
           headerLeft: ()=> <View></View>,
-          headerTransparent: true,title:null
+          headerTransparent: true,title:null,elevation: 0, 
+          shadowOpacity: 0,headerShadowVisible: false,
         }}/>
         <Stack.Screen name="Session Details" component={HomeDetailsScreen} options = {({ navigation }) => ({
           headerTransparent: true,title:null,headerBackTitle:'back',
@@ -50,7 +51,9 @@ export default function App() {
                   underlayColor='#fff'>
                   <Text style={styles.backText}>back</Text>
             </TouchableOpacity>
-          )})}
+          ),
+          headerShadowVisible: false,
+        })}
         />
         <Stack.Screen name="Membership Details" component={MembershipScreen} options = {({ navigation }) => ({
           headerTransparent: true,title:null,headerBackTitle:'back',
@@ -61,10 +64,20 @@ export default function App() {
                   underlayColor='#fff'>
                   <Text style={styles.backText}>back</Text>
             </TouchableOpacity>
-          )})}/>
-          <Stack.Screen name="Additional Details" component={AdditionalDetails} options = {{
-            headerLeft: ()=> <View></View>,
-            headerTransparent: true,title:null}}/>
+          ),headerShadowVisible: false,})}/>
+        <Stack.Screen name="Additional Details" component={AdditionalDetails} options = {{
+          headerLeft: ()=> <View></View>,
+          headerTransparent: true,title:null,headerShadowVisible: false,}}/>
+        <Stack.Screen name="About GoHappy Club" component={About} options = {({ navigation }) => ({
+          headerTransparent: true,title:null,headerBackTitle:'back',
+          headerLeft: ()=>(
+            <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => navigation.navigate('GoHappy Club')}
+                  underlayColor='#fff'>
+                  <Text style={styles.backText}>back</Text>
+            </TouchableOpacity>
+          ),headerShadowVisible: false,})}/>
         </>
         </Stack.Navigator>
     </NavigationContainer>
@@ -77,7 +90,9 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     borderRadius:4,
     borderWidth: 1,
-    borderColor: '#fff'
+    borderColor: '#fff',shadowColor: "black",elevation: 10,
+                    shadowOffset: { height: 2},
+                    shadowOpacity: 0.3,
   },
   backText:{
       color:'#000',

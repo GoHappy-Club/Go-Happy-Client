@@ -32,9 +32,11 @@ export default class HomeScreen extends Component {
 		this.setState({childLoader: true});
 		this.setState({events:[]});
 		var url = SERVER_URL+"/event/getEventsByDate";
-		console.log('date for events',selectedDate);
+
+		console.log('date for events',selectedDate,url);
 		axios.post(url,{'date':selectedDate})
 			.then(response => {
+				console.log(response);
 				if (response.data) {
 					console.log('this is response',response.data);
 					for(var i=0;i<response.data.events.length;i++){
@@ -48,17 +50,19 @@ export default class HomeScreen extends Component {
 			})
 			.catch(error => {
 				this.error=true;
-				console.log('Errwdqor while fetching the transactions from sms');
+				console.log('Errwdqor lllwhile fetching the transactions from sms',error);
 			});
 	}
 
 	bookEvent(item,email){
 		var id = item.id;
 		var url = SERVER_URL+"/event/bookEvent";
-      axios.post(url,{'id':id,'email':email})
+		console.log(item,email,url);
+        axios.post(url,{'id':id,'email':email})
         .then(response => {
+			console.log(response);
             if (response.data) {
-
+				
 				if(response.data=="SUCCESS"){
 
 					var tempEvents = this.state.events;
@@ -71,6 +75,7 @@ export default class HomeScreen extends Component {
 							break;
 						}
 					}
+					// _callback();
 					// item.seatsLeft = item.seatsLeft - 1;
 
 					
@@ -80,7 +85,7 @@ export default class HomeScreen extends Component {
         })
         .catch(error => {
 			this.error=true;
-            console.log('Error whilmjne fetching the transactions from sms');
+            console.log('Error whilmjne fetching the transactions from sms',error);
 			return false;
         });		
 	}

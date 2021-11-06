@@ -158,15 +158,15 @@ export default class Profile extends Component {
 							</View>
 						</TouchableOpacity>
 					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
+					{/* <View style={{width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
 							<View >
 								<Text style={styles.optionList}>Refer and Earn</Text>
 							</View>
 						</TouchableOpacity>
-					</View>
+					</View> */}
 					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
+						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={() => {this.props.navigation.navigate('About GoHappy Club')}}>
 							<View >
 								<Text style={styles.optionList}>About GoHappy Club</Text>
 							</View>
