@@ -1,0 +1,7 @@
+#Sun Nov 07 12:23:36 IST 2021
+base.1=/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/dex/release/mergeDexRelease/classes2.dex
+path.1=classes2.dex
+base.0=/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex

@@ -1,0 +1,9 @@
+com/gohappyclient/MainActivity.java
+ com.gohappyclient.MainActivity
+com/gohappyclient/MainApplication.java
+ com.gohappyclient.MainApplication
+ com.gohappyclient.MainApplication$1
+com/gohappyclient/BuildConfig.java
+ com.gohappyclient.BuildConfig
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList

@@ -8,6 +8,11 @@ import {
 } from 'react-native-indicators';
 import HomeDashboard from '../../components/HomeDashboard.js'
 
+// var tambola = require('tambola-generator');
+import tambola from 'tambola';
+
+
+
 export default class HomeScreen extends Component {
 	constructor(props)
 	{
@@ -55,10 +60,13 @@ export default class HomeScreen extends Component {
 	}
 
 	bookEvent(item,email){
+		let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
+
+		console.log(ticket);
 		var id = item.id;
 		var url = SERVER_URL+"/event/bookEvent";
 		console.log(item,email,url);
-        axios.post(url,{'id':id,'email':email})
+        axios.post(url,{'id':id,'email':email,'tambolaTicket':ticket})
         .then(response => {
 			console.log(response);
             if (response.data) {

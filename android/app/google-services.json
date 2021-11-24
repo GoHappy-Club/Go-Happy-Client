@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "908368396731",
+    "project_id": "go-happy-322816",
+    "storage_bucket": "go-happy-322816.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908368396731:android:1d5125dd23f2787c0fc49e",
+        "android_client_info": {
+          "package_name": "com.gohappyclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908368396731-pmfpgvjlktk9iqqofbvd94dgqljtqffb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gohappyclient",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA-o1g_jYZxWau59tabcapsVtRD3UCjvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "908368396731-vppvalbam1en8cj8a35k68ug076pq2be.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.startup.goHappy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

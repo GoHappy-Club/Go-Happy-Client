@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">908368396731</string>
+    <string name="google_api_key" translatable="false">AIzaSyDA-o1g_jYZxWau59tabcapsVtRD3UCjvo</string>
+    <string name="google_app_id" translatable="false">1:908368396731:android:1d5125dd23f2787c0fc49e</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDA-o1g_jYZxWau59tabcapsVtRD3UCjvo</string>
+    <string name="google_storage_bucket" translatable="false">go-happy-322816.appspot.com</string>
+    <string name="project_id" translatable="false">go-happy-322816</string>
+</resources>

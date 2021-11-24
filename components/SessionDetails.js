@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, {Component}  from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { Linking,ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { Pressable,Modal,Linking,ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
 
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { Text, Badge, withBadge,Button } from 'react-native-elements';
+import TambolaTicket from './TambolaTicket.js'
 import Video from 'react-native-video';
 
 
@@ -14,6 +15,7 @@ export default class SessionDetails extends Component {
 		super(props);
 		this.state = {
 			event:props.event,
+			modalVisible:false,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
 		console.log(props);
@@ -27,6 +29,13 @@ export default class SessionDetails extends Component {
 		return "Cancel Your Booking";
 		return "Book";
 		
+	}
+
+	checkTambola(){
+		if(this.props.event.eventName.contains("Tambola")){
+			return true;
+		}
+		return false;
 	}
 	sessionAction(){
 		this.props.sessionAction();
@@ -109,7 +118,7 @@ export default class SessionDetails extends Component {
 					</View>
 					
 				</ScrollView>
-				
+				<TambolaTicket event={this.props.event} email={this.props.email}/>
 				<View style={{margin:15}}>
 					<Button outline 
 						title={this.getTitle()}

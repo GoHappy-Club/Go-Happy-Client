@@ -48,11 +48,14 @@
     "react-native-share": "^7.2.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^12.1.1",
+    "react-native-table-component": "^1.2.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-video": "^5.1.1",
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.4",
-    "redux": "^4.1.1"
+    "redux": "^4.1.1",
+    "tambola": "^3.0.3",
+    "tambola-generator": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",
