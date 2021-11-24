@@ -12,29 +12,35 @@ export default class TambolaTicket extends Component {
 		super(props);
         this.state={
             modalVisible:false,
-            tambolaTicket:[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+            tambolaTicket1:[[0,0,0,0,"-",0,0,0,0],[0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0]],
+            tambolaTicket:[[0,0,0,0,"-",0,0,0,0],[0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0]],
             widthArr: [40, 40, 40, 40, 40,40,40,40,40]
         }
         console.log('----------------------------------------');
-		console.log(props.event);
+		console.log(props);
 	}
 
 
     setModalVisible(flag){
 		this.setState({modalVisible:flag});
-        var index = this.props.event.participantList.indexOf(this.props.email);
+        // var index = this.props.event.participantList.indexOf(this.props.email);
         // this.setState({tambolaTicket:this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2)})
-        console.log(this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2));
+        // console.log(this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2));
 	}
-	
+	x
 	render() {
         // const tic = ;
         const item = this.props.event;
         console.log('fsdfsfdfdfdsfdsfdsfdsfdsfdsfdfdsfdfdsfdsfdsfdsfdsf');
         console.log(item);
-        const tic = JSON.parse(this.props.event.tambolaTickets[this.props.event.participantList.indexOf("rashu.sharma14@gmail.com")].replaceAll('"',''));
-        console.log(tic);
+        var tic=null;
+        if(item!=null && this.props.event.participantList!=null && this.props.event.participantList.length!=0){
+            var jsonString = this.props.event.tambolaTickets[this.props.event.participantList.indexOf("rashu.sharma14@gmail.com")].replaceAll('"','');
+            tic = JSON.parse(jsonString);
+            console.log('sfsfdsfsdfdsfdsf',tic);
+        }
         return (
 			<View style={styles.centeredView}>
 					<Modal
@@ -62,10 +68,11 @@ export default class TambolaTicket extends Component {
 						</View>
 						</View>
 					</Modal>
-                    <Button outline 
+                    {this.props!=null && this.props.event.eventName.indexOf("Tambola")>0
+                    && this.props.email!=null && this.props.event.participantList!=null && this.props.event.participantList.includes(this.props.email) && <Button outline 
 						title='Check Tambola Ticket'
 						onPress={() => this.setModalVisible(true)}>
-					</Button> 
+					</Button>}
 				</View>	
 		);
 	}
