@@ -34,6 +34,7 @@ export default class HomeDashboard extends Component {
 			selectedDate: today,
 			email: null,
 			bookingLoader:false,
+			selectedDateRaw:null,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
 		console.log(props);
@@ -57,6 +58,7 @@ export default class HomeDashboard extends Component {
 		var select = new Date(Date.parse(date)).toDateString();
 		this.setState({
 		  selectedDate: select,
+		  selectedDateRaw:new Date(Date.parse(date)).setHours(0,0,0,0)
 		 });
 		 this.setState({events:[]});
 		this.props.loadEvents(new Date(Date.parse(date)).setHours(0,0,0,0));
@@ -70,7 +72,7 @@ export default class HomeDashboard extends Component {
 		this.setState({bookingLoader:true});
 		item.loadingButton=true;
 		var _this = this;
-		this.props.bookEvent(item,this.state.email);
+		this.props.bookEvent(item,this.state.email,this.state.selectedDateRaw);
 
 	}
 	

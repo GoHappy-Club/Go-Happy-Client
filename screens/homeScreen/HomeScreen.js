@@ -59,7 +59,7 @@ export default class HomeScreen extends Component {
 			});
 	}
 
-	bookEvent(item,email){
+	bookEvent(item,email,selectedDate){
 		let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 
 		console.log(ticket);
@@ -83,6 +83,7 @@ export default class HomeScreen extends Component {
 							break;
 						}
 					}
+					this.loadEvents(selectedDate);
 					// _callback();
 					// item.seatsLeft = item.seatsLeft - 1;
 
