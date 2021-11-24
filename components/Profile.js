@@ -41,8 +41,8 @@ export default class Profile extends Component {
 	}
 	_signout = async () => {
 		try {
-		  await GoogleSignin.revokeAccess();
-		  await GoogleSignin.signOut();
+		//   await GoogleSignin.revokeAccess();
+		//   await GoogleSignin.signOut();
 		  AsyncStorage.clear();
 		  this.props.navigation.reset({
 			index: 0,
