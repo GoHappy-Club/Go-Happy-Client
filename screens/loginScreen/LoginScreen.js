@@ -67,29 +67,30 @@ class LoginScreen extends Component {
 	}
 	handleSendCode = () => {
 		// Request to send OTP
-		this.loadingButton=false;
+		this.setState({ loadingButton:true })
 		if (this.validatePhoneNumber()) {
 		  firebase
 			.auth()
 			.signInWithPhoneNumber(this.state.phoneNumber)
 			.then(confirmResult => {
 			  this.setState({ confirmResult })
-			  this.loadingButton=false;
+			  this.setState({ loadingButton:false })
 			})
 			.catch(error => {
 			  alert(error.message)
-			  this.loadingButton=false;
+			  this.setState({ loadingButton:false })
 			})
 		} else {
 		  alert('Invalid Phone Number')
 		}
 	  }
 	changePhoneNumber = () => {
-		this.setState({ confirmResult: null, verificationCode: '' })
+		// this.loadingButton=true;
+		this.setState({ confirmResult: null, verificationCode: '',phoneNumber:null})
 	}
 	handleVerifyCode = () => {
 		// Request for OTP verification
-		this.loadingButton=true;
+		this.setState({ loadingButton:true })
 		const { confirmResult, verificationCode } = this.state
 		if (verificationCode.length == 6) {
 		  confirmResult
@@ -98,11 +99,11 @@ class LoginScreen extends Component {
 		
 			  this.setState({ userId: user.user.uid })
 			  this._backendSignIn(user.user.uid,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
-			  this.loadingButton=false;
+			  this.setState({ loadingButton:false })
 			})
 			.catch(error => {
 			  alert(error.message)
-			  this.loadingButton=false;
+			  this.setState({ loadingButton:false })
 			})
 		} else {
 		  alert('Please enter a 6 digit OTP code.')
@@ -125,7 +126,7 @@ class LoginScreen extends Component {
 				/>	
 			<Button outline style={[styles.themeButton, { paddingTop:20 }]}
 				title='Verify Code'
-				loading={this.loadingButton}
+				loading={this.state.loadingButton}
 				onPress={this.handleVerifyCode}
 				ViewComponent={LinearGradient}
 				linearGradientProps={{
@@ -137,7 +138,7 @@ class LoginScreen extends Component {
 			</Button>
 			<Button type='clear' 
 				title='Enter a Different Phone Number'
-				loading={this.loadingButton}
+				loading={this.state.loadingButton}
 				onPress={this.changePhoneNumber}
 				>
 			</Button>
@@ -286,8 +287,8 @@ class LoginScreen extends Component {
 							/>
 							
 							<Button outline style={[styles.themeButton, { paddingTop:20 }]}
-								title={this.state.confirmResult ? 'Change Phone Number' : 'Login'}
-								loading={this.loadingButton}
+								title={'Login'}
+								loading={this.state.loadingButton}
 								ViewComponent={LinearGradient}
 								linearGradientProps={{
 									colors: ['#4c669f', '#3b5998', '#192f6a'],
@@ -296,9 +297,7 @@ class LoginScreen extends Component {
 									locations: [0,0.5,0.6]
 									}}
 
-								onPress={this.state.confirmResult
-									? this.changePhoneNumber
-									: this.handleSendCode}>
+								onPress={this.handleSendCode}>
 							</Button>
 						</View>
 					}
