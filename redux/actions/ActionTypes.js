@@ -1,1 +1,0 @@
-export const UPDATE_EVENTS = 'update_events';

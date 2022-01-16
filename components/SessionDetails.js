@@ -25,7 +25,7 @@ export default class SessionDetails extends Component {
 		return "View Recording";
 		if(this.props.type=='ongoing')
 		return "Join";
-		if(this.state.event.participantList!=null && this.state.event.participantList.includes(this.props.email))
+		if(this.state.event.participantList!=null && this.props.email!=null && this.state.event.participantList.includes(this.props.email))
 		return "Cancel Your Booking";
 		return "Book";
 		
@@ -38,7 +38,10 @@ export default class SessionDetails extends Component {
 		return false;
 	}
 	sessionAction(){
-		this.props.sessionAction();
+		var output = this.props.sessionAction('book');
+		if(output=='SUCCESS'){
+			console.log(this.props);
+		}
 	}
 	render() {
 		if(this.state.loader==true){

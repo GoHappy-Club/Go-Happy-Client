@@ -2,15 +2,16 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import HomeScreen from '../../screens/homeScreen/HomeScreen';
 import MySessionsScreen from '../../screens/mySessionsScreen/MySessionsScreen';
 import MyProfileScreen from '../../screens/myProfileScreen/MyProfileScreen';
+import ReferScreen from '../../screens/ReferScreen/ReferScreen';
 import React, {Component} from 'react';
-import { faHome,faHistory,faChild,faClipboardList } from '@fortawesome/free-solid-svg-icons'
+import { faHome,faHistory,faChild,faClipboardList,faProjectDiagram} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   return (
-    <Tab.Navigator initialRouteName="Home"
+    <Tab.Navigator initialRouteName="Home" barStyle={{backgroundColor:'#3D5466'}}
   >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
@@ -26,6 +27,13 @@ export default function BottomNavigator() {
         tabBarLabel: 'My Sessions',
         tabBarIcon: ({ color }) => (
           <FontAwesomeIcon icon={ faClipboardList } color={ 'white' } size={25} />
+       ),
+      }} />
+      <Tab.Screen name="ReferScreen" component={ReferScreen}
+      options={{
+        tabBarLabel: 'Refer & Earn',
+        tabBarIcon: ({ color }) => (
+          <FontAwesomeIcon icon={ faProjectDiagram } color={ 'white' } size={25} />
        ),
       }} />
       <Tab.Screen name="MyProfile" component={MyProfileScreen}

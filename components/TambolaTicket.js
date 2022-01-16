@@ -35,11 +35,15 @@ export default class TambolaTicket extends Component {
         const item = this.props.event;
         console.log('fsdfsfdfdfdsfdsfdsfdsfdsfdsfdfdsfdfdsfdsfdsfdsfdsf');
         console.log(item);
+		console.log(this.props);
         var tic=null;
         if(item!=null && this.props.event.participantList!=null && this.props.event.participantList.length!=0){
-            var jsonString = this.props.event.tambolaTickets[this.props.event.participantList.indexOf("rashu.sharma14@gmail.com")].replaceAll('"','');
-            tic = JSON.parse(jsonString);
-            console.log('sfsfdsfsdfdsfdsf',tic);
+            var jsonString = this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)];
+			if(jsonString!=null){
+				jsonString = jsonString.replaceAll('"','');
+            	tic = JSON.parse(jsonString);
+            	console.log('sfsfdsfsdfdsfdsf',tic);
+			}
         }
         return (
 			<View style={styles.centeredView}>
@@ -68,7 +72,7 @@ export default class TambolaTicket extends Component {
 						</View>
 						</View>
 					</Modal>
-                    {this.props!=null && this.props.event.eventName.indexOf("Tambola")>0
+                    {this.props!=null && this.props.event.eventName.indexOf("Tambola")>=0
                     && this.props.email!=null && this.props.event.participantList!=null && this.props.event.participantList.includes(this.props.email) && <Button outline 
 						title='Check Tambola Ticket'
 						onPress={() => this.setModalVisible(true)}>

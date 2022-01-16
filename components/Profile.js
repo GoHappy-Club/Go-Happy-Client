@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { ScrollView,TouchableOpacity,StyleSheet, View, Image, Dimensions } from 'react-native';
 
-import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
-import { white } from 'react-native-paper/lib/typescript/styles/colors';
-import { Text, Button} from 'react-native-elements';
+import { Text} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackActions, NavigationActions } from 'react-navigation';
+
+import { connect } from 'react-redux';
+import { changeCount, setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+
 import {
     GoogleSignin,
     GoogleSigninButton,
@@ -23,7 +24,7 @@ import {
 	iosClientId: '908368396731-vppvalbam1en8cj8a35k68ug076pq2be.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   });
 
-export default class Profile extends Component {
+class Profile extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -39,6 +40,18 @@ export default class Profile extends Component {
 		}
 		this._retrieveData();
 	}
+	decrementCount() {
+		let { count, actions } = this.props;
+		count--;
+		actions.changeCount(count);
+	  }
+	  incrementCount() {
+		let { count, actions } = this.props;
+		console.log(this.props);
+		count++;
+		actions.changeCount(count);
+	  }
+	  
 	_signout = async () => {
 		try {
 		//   await GoogleSignin.revokeAccess();
@@ -85,6 +98,11 @@ export default class Profile extends Component {
 		}
 		const navigation = this.props.navigation;
 		const title = 'Login';
+		const { count } = this.props;
+		const {profile} = this.props;
+		console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+		console.log(this.props);
+		console.log(this.state);
 		return (
 			<View style = {{
 				backgroundColor: 'white',flex:1
@@ -108,22 +126,26 @@ export default class Profile extends Component {
 						<Image
 						style={styles.cover}
 						source={{
-						uri: this.state.profileImage,
+						uri: profile.profileImage,
 						}}
 						/>
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '170%', alignItems: 'flex-start', justifyContent: 'center' }}>
-							<Text h3 style={{overflow:"hidden",paddingLeft:4,color:'white',
+							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(61,84,102,0.9)',padding:4,color:'white',
+									borderRadius:10}}>
+									{this.state.name}
+							</Text>
+							{/* <Text h3 style={{overflow:"hidden",paddingLeft:4,color:'black',
 							}}>
 								{this.state.name}
-							</Text>
-							<Text style={{overflow:"hidden",paddingLeft:4,color:'white',
+							</Text> */}
+							{/* <Text style={{overflow:"hidden",paddingLeft:4,color:'white',
 								}}>
 								{this.state.city} {this.state.state}
-							</Text>
+							</Text> */}
 						</View>
 					</View>
 
-					<View style={{backgroundColor:'black',backgroundColor: 'white', 
+					<View style={{backgroundColor:'#3D5466', 
 						shadowColor: "black",
 						shadowOffset: { height: 2},
 						shadowOpacity: 0.3, borderRadius:10,
@@ -137,18 +159,22 @@ export default class Profile extends Component {
 						>
 							<View style={{width: '33%',height:'100%',borderColor:'#E0E0E0'
 							,borderRightWidth:1,justifyContent:'center',alignContent:'center'}}>
+								<Text style={{...styles.cardText}}>Sessions Attended</Text>
 								<Text style={{...styles.cardText,fontWeight: "bold"}}>Unlimited</Text>
-								<Text style={{...styles.cardText}}>Sessions Left</Text>
+								
 							</View>
-							<View style={{width: '33%',height:'100%',borderColor:'#E0E0E0'
-							,borderRightWidth:1,justifyContent:'center',alignContent:'center'}}>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>XX-XX-XX-XX</Text>
-								<Text style={{...styles.cardText}}>To Be Decided</Text>
+							<View style={{width: '33%',height:'100%',justifyContent:'center',borderColor:'#E0E0E0',borderRightWidth:1,alignContent:'center'}}>
+							<Text style={{...styles.cardText}}>Plan</Text>
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>{profile.membership}</Text>
+								
 							</View>
-							<View style={{width: '33%',height:'100%',justifyContent:'center',alignContent:'center'}}>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>{this.state.membership}</Text>
-								<Text style={{...styles.cardText}}>Plan</Text>
+							<View style={{width: '33%',height:'100%'
+							,justifyContent:'center',alignContent:'center'}}>
+								<Text style={{...styles.cardText}}>Member Since</Text>
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>{count}</Text>
+								
 							</View>
+							
 						</View>
 					</View>
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
@@ -158,13 +184,6 @@ export default class Profile extends Component {
 							</View>
 						</TouchableOpacity>
 					</View>
-					{/* <View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>Refer and Earn</Text>
-							</View>
-						</TouchableOpacity>
-					</View> */}
 					<View style={{width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={() => {this.props.navigation.navigate('About GoHappy Club')}}>
 							<View >
@@ -173,7 +192,7 @@ export default class Profile extends Component {
 						</TouchableOpacity>
 					</View>
 					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
+						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.incrementCount.bind(this)}>
 							<View >
 								<Text style={styles.optionList}>Privacy Policy</Text>
 							</View>
@@ -219,7 +238,8 @@ const styles = StyleSheet.create({
 	},
 	cardText:{
 		textAlign:'center',
-		marginTop:10
+		marginTop:10,
+		color:'white'
 	},
 	optionList:{
 		fontSize:16,
@@ -227,3 +247,19 @@ const styles = StyleSheet.create({
 		color:'#424242'
 	}
 });
+
+const mapStateToProps = state => ({
+	count: state.count.count,
+	profile:state.profile.profile
+  });
+
+  const ActionCreators = Object.assign(
+	{},
+	{changeCount},
+	{setProfile}
+  );
+  const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(ActionCreators, dispatch),
+  });
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Profile)

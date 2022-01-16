@@ -5,6 +5,7 @@ import {
   MaterialIndicator,
 } from 'react-native-indicators';
 import SessionDetails from '../../components/SessionDetails';
+import tambola from 'tambola';
 
 
 
@@ -32,8 +33,13 @@ export default class HomeDetailsScreen extends Component {
 		  console.log('error here',error)
 		}
 	  };
-	sessionAction(){
-		if(this.props.route.params.type=='expired'){
+	sessionAction(par){
+		var type = this.props.route.params.type;
+		if(type==null){
+			type = par;
+		}
+		console.log('i am here',this.props);
+		if(type=='expired'){
 			var meetingLink  = this.props.route.params.event.meetingLink;
 			if(meetingLink==null)
 				return;
@@ -60,7 +66,7 @@ export default class HomeDetailsScreen extends Component {
 				}
 			);
 		}
-		else if(this.props.route.params.type=='ongoing'){
+		else if(type=='ongoing'){
 			Linking.canOpenURL(this.props.route.params.event.meetingLink).then(supported => {
 				if (supported) {
 				  Linking.openURL(this.props.route.params.event.meetingLink);
@@ -69,7 +75,7 @@ export default class HomeDetailsScreen extends Component {
 				}
 			  })
 		}
-		if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(this.state.email)){
+		else if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(this.state.email)){
 		console.log(this.props.route.params.event.id);
 		console.log(this.props.route.params.email);
 		var url = SERVER_URL+"/event/cancelEvent";
@@ -77,20 +83,44 @@ export default class HomeDetailsScreen extends Component {
 			.then(response => {
 				if (response.data) {
 					console.log('this is response',response.data);
-					for(var i=0;i<response.data.events.length;i++){
-						response.data.events[i].loadingButton = false;
-						console.log('Event Cancel output',response.data);
-					}
-					this.setState({events: response.data.events});
-					this.setState({error:false});
-					this.setState({childLoader: false});
+					this.props.navigation.goBack(null, {
+						wentBack: true,
+					  });
 				}
 			})
 			.catch(error => {
 				this.error=true;
-				console.log('Event Cancel output Error');
+				console.log('Event Cancel output Error',error);
 			}
 		);
+		}
+		else if(type=='book'){
+			let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
+			console.log(ticket);
+			var url = SERVER_URL+"/event/bookEvent";
+			var email = this.props.route.params.email;
+			var id = this.props.route.params.event.id;
+			axios.post(url,{'id':id,'email':email,'tambolaTicket':ticket})
+			.then(response => {
+				console.log(response);
+				if (response.data) {
+					
+					if(response.data=="SUCCESS"){
+						console.log(response.data);
+						this.props.navigation.goBack(null, {
+							wentBack: true,
+						  });
+						return response.data;
+						// _callback();
+						// item.seatsLeft = item.seatsLeft - 1
+					}
+				}
+			})
+			.catch(error => {
+				this.error=true;
+				console.log('Error whilmjne fetching the transactions from sms',error);
+				return false;
+			});
 		}
 	}
 	render() {
@@ -101,7 +131,7 @@ export default class HomeDetailsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type} email={this.state.email}/>
+			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type} email={this.props.route.params.email}/>
 		);
 	}
 

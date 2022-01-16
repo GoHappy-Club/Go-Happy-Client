@@ -23,6 +23,8 @@ import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+// react-native-linear-gradient
+import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-razorpay
 import com.razorpay.rn.RazorpayPackage;
 // react-native-safe-area-context
@@ -88,6 +90,7 @@ public class PackageList {
       new ReactNativeFirebaseAuthPackage(),
       new RNGoogleSigninPackage(),
       new RNGestureHandlerPackage(),
+      new LinearGradientPackage(),
       new RazorpayPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),

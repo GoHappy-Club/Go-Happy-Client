@@ -11,7 +11,7 @@ import AdditionalDetails from './components/AdditionalDetails'
 import About from './components/About'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/cloud-dev/config.json";
 import Icon from 'react-native-vector-icons/Ionicons';
 
 global.axios = axios;
@@ -41,6 +41,9 @@ export default function App() {
           headerLeft: ()=> <View></View>,
           headerTransparent: true,title:null,elevation: 0, 
           shadowOpacity: 0,headerShadowVisible: false,
+          // headerStyle: {
+          //   backgroundColor: '#F4ECD4'
+          // },
         }}/>
         <Stack.Screen name="Session Details" component={HomeDetailsScreen} options = {({ navigation }) => ({
           headerTransparent: true,title:null,headerBackTitle:'back',

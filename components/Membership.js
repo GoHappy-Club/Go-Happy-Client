@@ -8,7 +8,12 @@ import { Text, Button} from 'react-native-elements';
 import RazorpayCheckout from 'react-native-razorpay';
 
 
-export default class Membership extends Component {
+import { connect } from 'react-redux';
+import { changeCount, setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+
+
+class Membership extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -27,15 +32,15 @@ export default class Membership extends Component {
 				selectedItem:'',
 				planDetails:[{
 					amount:99,
-					duration:'30 days',
+					duration:'1 month',
 					textColor:'black',
 					backgroundColor:'white',
 					selected:false,
 					name:'Basic'
 				},
 				{
-					amount:299,
-					duration:'45 days',
+					amount:249,
+					duration:'3 months',
 					textColor:'black',
 					backgroundColor:'white',
 					selected:false,
@@ -227,3 +232,17 @@ const styles = StyleSheet.create({
 		padding: 10
 	}
 });
+
+const mapStateToProps = state => ({
+	profile:state.profile.profile
+  });
+
+  const ActionCreators = Object.assign(
+	{},
+	{setProfile}
+  );
+  const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(ActionCreators, dispatch),
+  });
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Membership)

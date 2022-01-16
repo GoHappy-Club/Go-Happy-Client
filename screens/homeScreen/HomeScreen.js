@@ -10,7 +10,7 @@ import HomeDashboard from '../../components/HomeDashboard.js'
 
 // var tambola = require('tambola-generator');
 import tambola from 'tambola';
-
+import Video from 'react-native-video'
 
 
 export default class HomeScreen extends Component {
@@ -30,7 +30,22 @@ export default class HomeScreen extends Component {
 			return (<HomeDashboard events={this.state.events} childLoader={this.state.childLoader} bookEvent={this.bookEvent.bind(this)} loadEvents={this.loadEvents.bind(this)}  navigation={this.props.navigation}/>)
 		}
 		else{
-			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
+			// return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
+			return (
+					<Video source={require('../../images/logo_splash.mp4')}
+						style={{position: 'absolute',
+								top: 0,flex: 1,
+								flexDirection: 'column',
+								justifyContent: 'center',
+								alignItems: 'center',
+								left: 0,
+								right: 0,
+								bottom: 0,
+								opacity: 1,}}
+								muted={true}
+								repeat={true}
+								resizeMode="cover"/>
+			)
 		}
 	}
 	loadEvents(selectedDate) {

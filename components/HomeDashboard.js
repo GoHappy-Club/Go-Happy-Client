@@ -84,26 +84,27 @@ export default class HomeDashboard extends Component {
 	}
 	
 	render() {
+		// const wentBack = this.props.route.params.wentBack;
 		// this.props.navigation.navigate('Session Details')
 		const renderItem = ({ item }) => (
 
-			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: 'white'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
+			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#3D5466'}}>
+				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
 
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
-							<Badge value={item.category} badgeStyle={styles.badge} />
-							<Text style={{color:'#404040',fontSize:14, paddingLeft:4}}>
+							<Badge value={item.category} badgeStyle={styles.badge} textStyle={{color:'#3D5466'}}/>
+							<Text style={{color:'#F4ECD4',fontSize:14, paddingLeft:4}}>
 								{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
 							</Text>
-							<Text style={{color:'red',fontSize:14, paddingLeft:4}}>
+							<Text style={{color:'#F4ECD4',fontSize:14, paddingLeft:4}}>
 								{item.seatsLeft} seats left
 							</Text>
 						</View>
 						{/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
 					</View>
-					<Title style={{color:'black',fontSize:20, padding:4}}>{this.trimContent(item.eventName,30)}</Title>
+					<Title style={{color:'#F4ECD4',fontSize:20, padding:4}}>{this.trimContent(item.eventName,30)}</Title>
 
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
@@ -113,7 +114,7 @@ export default class HomeDashboard extends Component {
 							}}
 							size={30}
 							/>
-							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
+							<Title style={{color:'#F4ECD4',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
 						{/* item.participantList!=null && item.participantList.includes(this.state.email) */}
 						<Button
@@ -121,6 +122,8 @@ export default class HomeDashboard extends Component {
 							title={item.status!=null || (item.participantList!=null && item.participantList.includes(this.state.email))?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
 							loading={item.loadingButton}
+							buttonStyle={{backgroundColor:'#F4ECD4'}}
+							titleStyle={{color:'#3D5466'}}
 						/>
 					</View>
 				</Cd.Content>
@@ -130,14 +133,14 @@ export default class HomeDashboard extends Component {
 		  );
 		return ( 
 			
-			<View style={{marginTop:'10%',flex:1}}>
+			<View style={{marginTop:'10%',flex:1,backgroundColor:'#F4ECD4'}}>
 			<CalendarDays 
 				numberOfDays={15}
 				daysInView={4}
 				paginate={true}
 				onDateSelect={date => this.changeSelectedDate(date)}
 			/>
-			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>{this.state.selectedDate}</Text>
+			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15,color:'#3D5466'}}>{this.state.selectedDate}</Text>
 				{this.props.childLoader==true && <MaterialIndicator style={{marginTop:'10%'}} color='blue'/>}
 				{this.props.childLoader==false && 
 				<SafeAreaView style={{flex:1}}>
@@ -149,6 +152,7 @@ export default class HomeDashboard extends Component {
 					/>
 				
 				</SafeAreaView>}
+				{/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
 				</View>
 			
 		);
@@ -185,13 +189,13 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderRadius: 20,
 		borderWidth: 1,
-		borderColor: '#fff',
+		borderColor: '#3D5466',
 	},
 	badge: {
-		backgroundColor:'green',
+		backgroundColor:'#F4ECD4',
 		alignSelf:'flex-start',
-		
-		padding:2
+		color:'#3D5466',
+		// padding:4
 	},
 	fav: {
 		alignSelf:'flex-start',

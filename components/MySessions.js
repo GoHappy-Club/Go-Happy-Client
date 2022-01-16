@@ -16,12 +16,24 @@ export default class MySessions extends Component {
 		super(props);
 		this.state = {
 			phoneNumber: '',
+			email:'',
 			password: '',showAlert:false,loader:false,
 			mySession: [],
 			refreshing:false,
 			profileImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
 		}
+		this._retrieveData();
 	}
+	_retrieveData = async () => {
+		try {
+			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
+		  const email = await AsyncStorage.getItem("email");
+		  this.setState({email:email});	
+		} catch (error) {
+		  // Error retrieving data
+		  console.log('error here',error)
+		}
+	  };
 	static getDerivedStateFromProps(nextProps, prevState) {
 		if(nextProps.mySessions!==prevState.mySessions){
 			return { mySessions: nextProps.mySessions};
@@ -46,7 +58,7 @@ export default class MySessions extends Component {
 		const renderItem = ({ item} , type) => (
 
 			<Cd style={{...styles.card,marginLeft:10,marginRight:10,marginBottom:10,backgroundColor: 'white'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type})}>
+				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type,email:this.state.email})}>
 
 				<Cd.Content>
 				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {(new Date(parseInt(item.startTime))).toLocaleTimeString()}</Text>     
