@@ -115,13 +115,13 @@ class LoginScreen extends Component {
 			{/* <OTPTextInput inputCount={6} textInputStyle={{color:'white'}} handleTextChange= {(text) => {
 				this.setState({verificationCode:text})}}/> */}
 				<OTPInputView
-					style={{width: '80%', height: 60}}
+					style={{width: '80%', height: 60,color:'#000'}}
 					pinCount={6}
 					// code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
 					// onCodeChanged = {code => { this.setState({code})}}
 					autoFocusOnLoad
-					// codeInputFieldStyle={styles.underlineStyleBase}
-					// codeInputHighlightStyle={styles.underlineStyleHighLighted}
+					codeInputFieldStyle={styles.underlineStyleBase}
+					codeInputHighlightStyle={styles.underlineStyleHighLighted}
 					onCodeChanged = {code => { this.setState({verificationCode:code})}}
 				/>	
 			<Button outline style={[styles.themeButton, { paddingTop:20 }]}
@@ -450,7 +450,15 @@ const styles = StyleSheet.create({
 		width: '100%',
 		alignItems: 'center',
 		// marginTop: 50
-	  }
+	  },
+	  underlineStyleBase: {
+		borderColor: "black",
+		color:'black'
+	  },
+	
+	  underlineStyleHighLighted: {
+		borderColor: "black",
+	  },
 });
 
 const mapStateToProps = state => ({

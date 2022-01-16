@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { ScrollView,TouchableOpacity,StyleSheet, View, Image, Dimensions } from 'react-native';
+import { ScrollView,TouchableOpacity,StyleSheet, View, Image, Dimensions,Linking } from 'react-native';
+import { FAB , PaperProvider} from 'react-native-paper';
 
 import { Text} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { changeCount, setProfile } from '../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faComment} from '@fortawesome/free-solid-svg-icons'
 
 import {
     GoogleSignin,
@@ -91,6 +94,19 @@ class Profile extends Component {
 			}
 		 );
 	}
+	openWhatsApp = () => {
+		// let msg = this.state.message;
+		// let mobile = this.state.mobileNo;
+		let url = "https://chat.whatsapp.com/I8xONK4XQeIAkJQcyt3q0J";
+		Linking.openURL(url)
+			.then(data => {
+			console.log("WhatsApp Opened successfully " + data);
+			})
+			.catch(() => {
+			alert("Make sure WhatsApp installed on your device");
+			});
+		  
+	  };
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -192,6 +208,13 @@ class Profile extends Component {
 						</TouchableOpacity>
 					</View>
 					<View style={{width:Dimensions.get('window').width*0.9}}>
+						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
+							<View >
+								<Text style={styles.optionList}>Get Support</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+					<View style={{width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.incrementCount.bind(this)}>
 							<View >
 								<Text style={styles.optionList}>Privacy Policy</Text>
@@ -220,6 +243,15 @@ class Profile extends Component {
 					</View> */}
 				</ScrollView>
 				
+				<FAB
+					style={styles.fab}
+					
+					icon={({ size, color }) => (
+						<FontAwesomeIcon icon={ faComment } color={ 'white' } size={25} />
+					  )}
+					onPress={this.openWhatsApp}
+				/>
+				
 				
 			</View>
 		);
@@ -245,7 +277,14 @@ const styles = StyleSheet.create({
 		fontSize:16,
 		padding:10,
 		color:'#424242'
-	}
+	},
+	fab: {
+		backgroundColor:'#3D5466',
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0,
+	  },
 });
 
 const mapStateToProps = state => ({
