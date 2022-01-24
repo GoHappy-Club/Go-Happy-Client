@@ -5,11 +5,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { Text, Badge, Icon, withBadge, Button } from 'react-native-elements';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
-import { Card as Cd, Title, Paragraph,  Avatar,
-	Caption,
-	Drawer,
-	TouchableRipple,
-	Switch } from 'react-native-paper';
+import { Card as Cd, Title, Paragraph,  Avatar} from 'react-native-paper';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { Dimensions } from 'react-native';
 import { CirclesLoader, PulseLoader, TextLoader, DotsLoader } from 'react-native-indicator';
@@ -21,10 +17,16 @@ import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
+
+import { connect } from 'react-redux';
+import { changeCount, setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+
+
 const { width: screenWidth } = Dimensions.get('window')
 
 
-export default class HomeDashboard extends Component {
+class HomeDashboard extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -37,21 +39,27 @@ export default class HomeDashboard extends Component {
 			selectedDateRaw:null,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
-		console.log(props);
+		//console.log(props);
 		
 		this._retrieveData();
 	}
 	_retrieveData = async () => {
 		try {
 		  const value = await AsyncStorage.getItem('email');
+		  const phoneNumber = await AsyncStorage.getItem('phoneNumber');
 		  if (value !== null) {
 			// We have data!!
 			this.setState({email:value});
-			console.log('get async',value);
+			//console.log('get async',value);
+		  }
+		  if (phoneNumber !== null) {
+			// We have data!!
+			this.setState({phoneNumber:phoneNumber});
+			//console.log('get async',phoneNumber);
 		  }
 		} catch (error) {
 		  // Error retrieving data
-		  console.log('error here',error)
+		  //console.log('error here',error)
 		}
 	  };
 	changeSelectedDate = date => {
@@ -72,7 +80,8 @@ export default class HomeDashboard extends Component {
 		this.setState({bookingLoader:true});
 		item.loadingButton=true;
 		var _this = this;
-		this.props.bookEvent(item,this.state.email,this.state.selectedDateRaw);
+		console.log('in update profile',this.props);
+		this.props.bookEvent(item,this.props.profile.phoneNumber,this.state.selectedDateRaw);
 
 	}
 	
@@ -84,12 +93,12 @@ export default class HomeDashboard extends Component {
 	}
 	
 	render() {
-		// const wentBack = this.props.route.params.wentBack;
-		// this.props.navigation.navigate('Session Details')
+
+		const {profile} = this.props;
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#3D5466'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,email:this.state.email})}>
+				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber})}>
 
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
@@ -118,8 +127,8 @@ export default class HomeDashboard extends Component {
 						</View>
 						{/* item.participantList!=null && item.participantList.includes(this.state.email) */}
 						<Button
-							disabled = {item.status!=null || (item.participantList!=null && item.participantList.includes(this.state.email))?true:false}
-							title={item.status!=null || (item.participantList!=null && item.participantList.includes(this.state.email))?"Booked":"Book"}
+							disabled = {item.status!=null || (item.participantList!=null && item.participantList.includes(profile.phoneNumber))?true:false}
+							title={item.status!=null || (item.participantList!=null && item.participantList.includes(profile.phoneNumber))?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
 							loading={item.loadingButton}
 							buttonStyle={{backgroundColor:'#F4ECD4'}}
@@ -205,3 +214,17 @@ const styles = StyleSheet.create({
 		
 	}
 });
+
+
+const mapStateToProps = state => ({
+	profile:state.profile.profile
+  });
+
+  const ActionCreators = Object.assign(
+	{},
+	{setProfile}
+  );
+  const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(ActionCreators, dispatch),
+  });
+  export default connect(mapStateToProps, mapDispatchToProps)(HomeDashboard)

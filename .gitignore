@@ -28,3 +28,5 @@ android/.idea/*
 android/app/.DS_Store
 *.xml
 *.bin
+*.txt
+*.dex

@@ -37,12 +37,32 @@ export default class TambolaTicket extends Component {
         console.log(item);
 		console.log(this.props);
         var tic=null;
+		var tic = new Array(10);
+		for (var i = 0; i < tic.length; i++) {
+			tic[i] = new Array(3);
+		}
         if(item!=null && this.props.event.participantList!=null && this.props.event.participantList.length!=0){
-            var jsonString = this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)];
-			if(jsonString!=null){
-				jsonString = jsonString.replaceAll('"','');
-            	tic = JSON.parse(jsonString);
-            	console.log('sfsfdsfsdfdsfdsf',tic);
+			if(this.props.event.participantList.indexOf(this.props.phoneNumber)!=-1){
+				var jsonString = this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.phoneNumber)];
+				console.log('this is json string',jsonString);
+				if(jsonString!=null){
+					console.log('this is json string',jsonString);
+					var temp = jsonString.match(/\d+/g);
+					for (var i = 0; i < 9 ;i++) {
+						tic[0][i] = parseInt(temp[i]);
+					}
+					for (var i = 9; i < 18; i++) {
+						tic[1][i-9] = parseInt(temp[i]);
+					}
+					for (var i = 18; i < 27; i++) {
+						tic[2][i-18] = parseInt(temp[i]);
+					}
+					console.log(tic);
+					// jsonString = jsonString.replace('"','');
+					// jsonString = jsonString.substr(1,jsonString.length-1);
+					// tic = JSON.parse(jsonString);
+					console.log('sfsfdsfsdfdsfdsf',tic);
+				}
 			}
         }
         return (
@@ -73,7 +93,7 @@ export default class TambolaTicket extends Component {
 						</View>
 					</Modal>
                     {this.props!=null && this.props.event.eventName.indexOf("Tambola")>=0
-                    && this.props.email!=null && this.props.event.participantList!=null && this.props.event.participantList.includes(this.props.email) && <Button outline 
+                    && this.props.phoneNumber!=null && this.props.event.participantList!=null && this.props.event.participantList.indexOf(this.props.phoneNumber)!=-1 && <Button outline 
 						title='Check Tambola Ticket'
 						onPress={() => this.setModalVisible(true)}>
 					</Button>}

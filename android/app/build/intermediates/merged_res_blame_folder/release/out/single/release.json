@@ -104,6 +104,10 @@
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
     },
     {
+        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/drawable-mdpi_images_login_bg.png.flat",
+        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/drawable-mdpi/images_login_bg.png"
+    },
+    {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/drawable-mdpi_node_modules_reactnavigation_nativestack_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/drawable-mdpi/node_modules_reactnavigation_nativestack_node_modules_reactnavigation_elements_src_assets_backicon.png"
     },
@@ -206,6 +210,14 @@
     {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/drawable-mdpi_node_modules_reactnativeratings_dist_images_rocket.png.flat",
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/drawable-mdpi/node_modules_reactnativeratings_dist_images_rocket.png"
+    },
+    {
+        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_images_logo_splash.mp4.flat",
+        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/raw/images_logo_splash.mp4"
+    },
+    {
+        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/drawable-mdpi_images_logo.png.flat",
+        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/drawable-mdpi/images_logo.png"
     },
     {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_node_modules_reactnativevectoricons_glyphmaps_entypo.json.flat",

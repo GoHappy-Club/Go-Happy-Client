@@ -6,7 +6,8 @@ import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { Text, Badge, withBadge,Button } from 'react-native-elements';
 import TambolaTicket from './TambolaTicket.js'
 import Video from 'react-native-video';
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faClock} from '@fortawesome/free-solid-svg-icons'
 
 
 export default class SessionDetails extends Component {
@@ -25,7 +26,7 @@ export default class SessionDetails extends Component {
 		return "View Recording";
 		if(this.props.type=='ongoing')
 		return "Join";
-		if(this.state.event.participantList!=null && this.props.email!=null && this.state.event.participantList.includes(this.props.email))
+		if(this.state.event.participantList!=null && this.props.phoneNumber!=null && this.state.event.participantList.includes(this.props.phoneNumber))
 		return "Cancel Your Booking";
 		return "Book";
 		
@@ -87,14 +88,16 @@ export default class SessionDetails extends Component {
 						<Text h5 style={{color: "grey",marginTop:5}}>
 							{item.expertName}
 						</Text>
-						<Icon
-						name="time-outline" color="grey" size={15} 
+						{/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
+
+						<FontAwesomeIcon
+						icon={ faClock }  color={ 'grey' } size={25} 
 						style={{marginTop:20}}>
 							<Text style={{color: "grey",marginTop:15,fontSize:15}}>
 							{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} -     
 							{(new Date(parseInt(item.endTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")}
 							</Text>
-						</Icon>
+						</FontAwesomeIcon>
 						<View style={{
 							marginTop:2,
 							borderBottomColor: 'grey',
@@ -119,9 +122,9 @@ export default class SessionDetails extends Component {
 							</View>
 						</View>
 					</View>
-					
+					<TambolaTicket event={this.props.event} phoneNumber={this.props.phoneNumber}/>
 				</ScrollView>
-				<TambolaTicket event={this.props.event} email={this.props.email}/>
+				
 				<View style={{margin:15}}>
 					<Button outline 
 						title={this.getTitle()}

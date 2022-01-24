@@ -26,7 +26,7 @@ export default class HomeScreen extends Component {
 		}
 	}
 	render() {
-		if(this.state.error==false){
+		if(this.state.error==false){ 
 			return (<HomeDashboard events={this.state.events} childLoader={this.state.childLoader} bookEvent={this.bookEvent.bind(this)} loadEvents={this.loadEvents.bind(this)}  navigation={this.props.navigation}/>)
 		}
 		else{
@@ -58,10 +58,10 @@ export default class HomeScreen extends Component {
 			.then(response => {
 				console.log(response);
 				if (response.data) {
-					console.log('this is response',response.data);
+					console.log('this is response1',response.data);
 					for(var i=0;i<response.data.events.length;i++){
 						response.data.events[i].loadingButton = false;
-						console.log('this is response',response.data);
+						console.log('this is response2',response.data);
 					}
 					this.setState({events: response.data.events});
 					this.setState({error:false});
@@ -74,14 +74,14 @@ export default class HomeScreen extends Component {
 			});
 	}
 
-	bookEvent(item,email,selectedDate){
+	bookEvent(item,phoneNumber,selectedDate){
 		let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 
 		console.log(ticket);
 		var id = item.id;
 		var url = SERVER_URL+"/event/bookEvent";
-		console.log(item,email,url);
-        axios.post(url,{'id':id,'email':email,'tambolaTicket':ticket})
+		console.log(item,phoneNumber,url);
+        axios.post(url,{'id':id,'phoneNumber':phoneNumber,'tambolaTicket':ticket})
         .then(response => {
 			console.log(response);
             if (response.data) {

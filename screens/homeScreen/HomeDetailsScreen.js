@@ -35,10 +35,11 @@ export default class HomeDetailsScreen extends Component {
 	  };
 	sessionAction(par){
 		var type = this.props.route.params.type;
+		var phoneNumber = this.props.route.params.phoneNumber;
 		if(type==null){
 			type = par;
 		}
-		console.log('i am here',this.props);
+		console.log('i am herewwwwwww',this.props);
 		if(type=='expired'){
 			var meetingLink  = this.props.route.params.event.meetingLink;
 			if(meetingLink==null)
@@ -75,11 +76,11 @@ export default class HomeDetailsScreen extends Component {
 				}
 			  })
 		}
-		else if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(this.state.email)){
+		else if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(phoneNumber)){
 		console.log(this.props.route.params.event.id);
-		console.log(this.props.route.params.email);
+		console.log(this.props.route.params.phoneNumber);
 		var url = SERVER_URL+"/event/cancelEvent";
-		axios.post(url,{'id':this.props.route.params.event.id,'email':this.props.route.params.email})
+		axios.post(url,{'id':this.props.route.params.event.id,'phoneNumber':this.props.route.params.phoneNumber})
 			.then(response => {
 				if (response.data) {
 					console.log('this is response',response.data);
@@ -98,9 +99,9 @@ export default class HomeDetailsScreen extends Component {
 			let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 			console.log(ticket);
 			var url = SERVER_URL+"/event/bookEvent";
-			var email = this.props.route.params.email;
+			var phoneNumber = this.props.route.params.phoneNumber;
 			var id = this.props.route.params.event.id;
-			axios.post(url,{'id':id,'email':email,'tambolaTicket':ticket})
+			axios.post(url,{'id':id,'phoneNumber':phoneNumber,'tambolaTicket':ticket})
 			.then(response => {
 				console.log(response);
 				if (response.data) {
@@ -131,7 +132,7 @@ export default class HomeDetailsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type} email={this.props.route.params.email}/>
+			<SessionDetails navigation={navigation} sessionAction={this.sessionAction.bind(this)} event={this.props.route.params.event} type={this.props.route.params.type} phoneNumber={this.props.route.params.phoneNumber}/>
 		);
 	}
 

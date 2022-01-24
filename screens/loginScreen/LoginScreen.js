@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ImageBackground,Image,Text,StyleSheet, View,KeyboardAvoidingView,Keyboard,TouchableWithoutFeedback} from 'react-native';
+import { NativeSyntheticEvent,ImageBackground,Image,Text,StyleSheet, View,KeyboardAvoidingView,Keyboard,TouchableWithoutFeedback} from 'react-native';
 
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -17,13 +17,14 @@ import {
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
 import { Button } from 'react-native-elements';
-import OTPTextInput from 'react-native-otp-textinput';
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+// import OTPTextInput from 'react-native-otp-textinput';
+import OTPInputView from '@bherila/react-native-otp-input'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import LinearGradient from 'react-native-linear-gradient';
+import OtpInputs from 'react-native-otp-inputs';
 
 
 // GoogleSignin.configure({
@@ -91,6 +92,7 @@ class LoginScreen extends Component {
 	handleVerifyCode = () => {
 		// Request for OTP verification
 		this.setState({ loadingButton:true })
+		console.log('fsddfssdfsdfdsfdsfsdfs');
 		const { confirmResult, verificationCode } = this.state
 		if (verificationCode.length == 6) {
 		  confirmResult
@@ -98,32 +100,51 @@ class LoginScreen extends Component {
 			.then(user => {
 		
 			  this.setState({ userId: user.user.uid })
-			  this._backendSignIn(user.user.uid,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
-			  this.setState({ loadingButton:false })
+			  try{
+			  	this._backendSignIn(user.user.uid,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
+			  } 
+			  catch(error){
+				  console.log(error);
+			  }
+			  this.setState({ loadingButton:false });
+			  console.log('fsddfssdfsdfdsfdsfrwerewrwerwerwerewrewrsdfs');
 			})
 			.catch(error => {
 			  alert(error.message)
 			  this.setState({ loadingButton:false })
+
+			  console.log('fwrewrsdfs');
 			})
 		} else {
 		  alert('Please enter a 6 digit OTP code.')
+
+		  console.log('fwrewrsdfsOTP');
 		}
 	  }
+	  
 	  renderConfirmationCodeView = () => {
 		return (
 		  <View style={styles.verificationView}>
 			{/* <OTPTextInput inputCount={6} textInputStyle={{color:'white'}} handleTextChange= {(text) => {
 				this.setState({verificationCode:text})}}/> */}
 				<OTPInputView
+					// ref={input => this.otpInput = input}
 					style={{width: '80%', height: 60,color:'#000'}}
 					pinCount={6}
+					// secureTextEntry={true}
+
 					// code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
 					// onCodeChanged = {code => { this.setState({code})}}
-					autoFocusOnLoad
+					// autoFocusOnLoad
 					codeInputFieldStyle={styles.underlineStyleBase}
 					codeInputHighlightStyle={styles.underlineStyleHighLighted}
 					onCodeChanged = {code => { this.setState({verificationCode:code})}}
 				/>	
+				 {/* <OtpInputs
+				 style={{width: '50%', height: 60,color:'#000',backgroundColor:'black'}}
+					handleChange={(code) => console.log(code)}
+					numberOfInputs={6}
+					/> */}
 			<Button outline style={[styles.themeButton, { paddingTop:20 }]}
 				title='Verify Code'
 				loading={this.state.loadingButton}
@@ -188,6 +209,10 @@ class LoginScreen extends Component {
 		}
 	  };
 	_backendSignIn(token,name,profileImage,phone){
+		console.log(token,name,profileImage,phone);
+		if(name==null){
+			name='';
+		}
 		var url = SERVER_URL+"/auth/login";
 		axios.post(url, {'token':token,'name':name,'profileImage':profileImage,'phone':phone.substr(1)})
 		.then(response => {
@@ -225,7 +250,7 @@ class LoginScreen extends Component {
 				}
 		})
 		.catch(error => {
-				 
+				 console.log(error);
 		});
 	}
 	pending(){
