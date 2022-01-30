@@ -11,7 +11,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   return (
-    <Tab.Navigator initialRouteName="Home" barStyle={{backgroundColor:'#3D5466'}}
+    <Tab.Navigator initialRouteName="Home" barStyle={{backgroundColor:'#3D5466'}} shifting={false}
   >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
@@ -29,13 +29,13 @@ export default function BottomNavigator() {
           <FontAwesomeIcon icon={ faClipboardList } color={ 'white' } size={25} />
        ),
       }} />
-      <Tab.Screen name="ReferScreen" component={ReferScreen}
+      {/* <Tab.Screen name="ReferScreen" component={ReferScreen}
       options={{
         tabBarLabel: 'Refer & Earn',
         tabBarIcon: ({ color }) => (
           <FontAwesomeIcon icon={ faProjectDiagram } color={ 'white' } size={25} />
        ),
-      }} />
+      }} /> */}
       <Tab.Screen name="MyProfile" component={MyProfileScreen}
       options={{
         tabBarLabel: 'My Profile',

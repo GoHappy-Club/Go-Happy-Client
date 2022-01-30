@@ -148,7 +148,7 @@ class Profile extends Component {
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '170%', alignItems: 'flex-start', justifyContent: 'center' }}>
 							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(61,84,102,0.9)',padding:4,color:'white',
 									borderRadius:10}}>
-									{this.state.name}
+									{profile.name}
 							</Text>
 							{/* <Text h3 style={{overflow:"hidden",paddingLeft:4,color:'black',
 							}}>
@@ -176,7 +176,7 @@ class Profile extends Component {
 							<View style={{width: '33%',height:'100%',borderColor:'#E0E0E0'
 							,borderRightWidth:1,justifyContent:'center',alignContent:'center'}}>
 								<Text style={{...styles.cardText}}>Sessions Attended</Text>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>Unlimited</Text>
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>{profile.sessionsAttended}</Text>
 								
 							</View>
 							<View style={{width: '33%',height:'100%',justifyContent:'center',borderColor:'#E0E0E0',borderRightWidth:1,alignContent:'center'}}>
@@ -208,7 +208,7 @@ class Profile extends Component {
 						</TouchableOpacity>
 					</View>
 					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
+						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.openWhatsApp}>
 							<View >
 								<Text style={styles.optionList}>Get Support</Text>
 							</View>

@@ -84,9 +84,10 @@ export default class HomeDetailsScreen extends Component {
 			.then(response => {
 				if (response.data) {
 					console.log('this is response',response.data);
-					this.props.navigation.goBack(null, {
-						wentBack: true,
-					  });
+					this.props.route.params.onGoBack();
+					// this.props.navigation.state.params.onGoBack();
+					this.props.navigation.goBack();
+					
 				}
 			})
 			.catch(error => {
@@ -108,9 +109,8 @@ export default class HomeDetailsScreen extends Component {
 					
 					if(response.data=="SUCCESS"){
 						console.log(response.data);
-						this.props.navigation.goBack(null, {
-							wentBack: true,
-						  });
+						this.props.route.params.onGoBack();
+						this.props.navigation.goBack();
 						return response.data;
 						// _callback();
 						// item.seatsLeft = item.seatsLeft - 1

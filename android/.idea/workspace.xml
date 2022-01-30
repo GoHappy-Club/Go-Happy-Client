@@ -23,9 +23,43 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/md5-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/generated/assets/react/release/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/assets/react/release/index.android.bundle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/generated/source/buildConfig/release/com/gohappyclient/BuildConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/source/buildConfig/release/com/gohappyclient/BuildConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/generated/sourcemaps/react/release/index.android.bundle.map" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/sourcemaps/react/release/index.android.bundle.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/assets/release/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/assets/release/index.android.bundle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/dex/release/mergeDexRelease/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/dex/release/mergeDexRelease/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/release/classes/com/gohappyclient/BuildConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/release/classes/com/gohappyclient/BuildConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_assets/release/mergeReleaseAssets/out/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_assets/release/mergeReleaseAssets/out/index.android.bundle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_assets/release/out/index.android.bundle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_assets/release/out/index.android.bundle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_manifest/release/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_manifest/release/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/release/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/release/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/merged_manifests/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/packaged_manifests/release/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/packaged_manifests/release/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/packaged_manifests/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/packaged_manifests/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/processed_res/release/out/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/processed_res/release/out/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/processed_res/release/out/resources-release.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/processed_res/release/out/resources-release.ap_" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/release/out/com/gohappyclient/BuildConfig.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/project_dex_archive/release/out/com/gohappyclient/BuildConfig.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-release-report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/logs/manifest-merger-release-report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/gohappyclient/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/gohappyclient/MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/AdditionalDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/AdditionalDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/HomeDashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/HomeDashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/MySessions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/MySessions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../components/SessionDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/SessionDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/TambolaTicket.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/TambolaTicket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/navigators/BottomNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/navigators/BottomNavigator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/ReferScreen/ReferScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/ReferScreen/ReferScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/homeScreen/HomeDetailsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/homeScreen/HomeDetailsScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../screens/loginScreen/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/loginScreen/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/mySessionsScreen/MySessionsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/mySessionsScreen/MySessionsScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -24,6 +24,16 @@ export default class MySessions extends Component {
 		}
 		this._retrieveData();
 	}
+	componentDidMount() {
+
+		this.props.navigation.addListener(
+		  'focus',
+		  payload => {
+			this._onRefresh();
+		  }
+		);
+	
+	}
 	_retrieveData = async () => {
 		try {
 			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
@@ -54,11 +64,30 @@ export default class MySessions extends Component {
 		});
 	}
 
+	sorry(){
+		return (
+			<Text  h3 style={{height:'100%',marginTop:'20%',alignSelf:'center',textAlign:'center',flex: 1,
+			justifyContent: 'center',
+			alignItems: 'center'}}>
+				No Events Booked 😟
+			</Text>
+		)
+	}
+	loadCaller(){
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
+	}
+
 	render() {
 		const renderItem = ({ item} , type) => (
 
 			<Cd style={{...styles.card,marginLeft:10,marginRight:10,marginBottom:10,backgroundColor: 'white'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type,email:this.state.email})}>
+				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type,phoneNumber:this.props.phoneNumber,onGoBack: () => this.loadCaller()})}>
 
 				<Cd.Content>
 				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {(new Date(parseInt(item.startTime))).toLocaleTimeString()}</Text>     
@@ -109,8 +138,10 @@ export default class MySessions extends Component {
 				  onRefresh={this._onRefresh.bind(this)}
 				/>
 			  }>
+				{this.props.ongoingEvents.length==0 && this.props.upcomingEvents.length==0 && this.props.expiredEvents.length==0 
+				&& this.sorry()}
 				{this.props.ongoingEvents.length>0 &&<Text h4 style={{marginLeft:5,marginTop:20,marginBottom:15}}>
-				{this.props.ongoingEvents.length>0 && <Text>Ongoing Events</Text>}
+				{this.props.ongoingEvents.length>0 && <Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15}}>Ongoing Events</Text>}
 				{this.props.childLoader==true && <MaterialIndicator color='blue'/>} 
 				</Text>}
 				<SafeAreaView style={styles.container}>
@@ -127,7 +158,7 @@ export default class MySessions extends Component {
 				<SafeAreaView style={styles.container}>
 				<FlatList horizontal={true}
 					data={this.props.upcomingEvents}
-					renderItem={renderItem}
+					renderItem={(item) => renderItem(item,'upcoming')}
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>

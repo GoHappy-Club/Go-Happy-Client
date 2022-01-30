@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { Pressable,Modal,Linking,ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView } from 'react-native';
-
+import { Pressable,Modal,Linking,ImageBackground,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View,  TextInput, Image, KeyboardAvoidingView} from 'react-native';
+import {WebView} from 'react-native-webview';
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { Text, Badge, withBadge,Button } from 'react-native-elements';
 import TambolaTicket from './TambolaTicket.js'
@@ -17,7 +17,9 @@ export default class SessionDetails extends Component {
 		this.state = {
 			event:props.event,
 			modalVisible:false,
-			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
+			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+			loadingButton:false,
+			videoVisible:false
 		}
 		console.log(props);
 	}	
@@ -39,10 +41,17 @@ export default class SessionDetails extends Component {
 		return false;
 	}
 	sessionAction(){
+		if(this.getTitle()=='View Recording'){
+			return this.videoPlayer();			;
+		}
 		var output = this.props.sessionAction('book');
+		this.setState({loadingButton:true});
 		if(output=='SUCCESS'){
 			console.log(this.props);
 		}
+	}
+	videoPlayer(){
+		this.setState({videoVisible:true});
 	}
 	render() {
 		if(this.state.loader==true){
@@ -89,15 +98,16 @@ export default class SessionDetails extends Component {
 							{item.expertName}
 						</Text>
 						{/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
-
+						<View style={{flexDirection:'row'}}>
 						<FontAwesomeIcon
-						icon={ faClock }  color={ 'grey' } size={25} 
+						icon={ faClock }  color={ 'grey' } size={15}
 						style={{marginTop:20}}>
-							<Text style={{color: "grey",marginTop:15,fontSize:15}}>
-							{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} -     
-							{(new Date(parseInt(item.endTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")}
-							</Text>
 						</FontAwesomeIcon>
+						<Text style={{color: "grey",marginTop:15,fontSize:15,marginLeft:5}}>
+							{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} -   
+							{(new Date(parseInt(item.endTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, " $1$3")}
+						</Text>
+						</View>
 						<View style={{
 							marginTop:2,
 							borderBottomColor: 'grey',
@@ -128,9 +138,33 @@ export default class SessionDetails extends Component {
 				<View style={{margin:15}}>
 					<Button outline 
 						title={this.getTitle()}
+						loading={this.state.loadingButton}
 						onPress={this.sessionAction.bind(this)}>
 					</Button>
 				</View>
+
+				{item.recordingLink!=null && <Modal
+					style={{
+
+					}}
+					animationType="slide"
+					transparent={false}
+					visible={this.state.videoVisible}
+					onRequestClose={() => {
+					alert('Modal has been closed.');
+					}}>
+						<WebView
+						javaScriptEnabled={true}
+						style={{flex:1, borderColor:'red', borderWidth:1, height:400, width:400}}
+						source={{
+							uri: item.recordingLink
+						}}
+						/>
+						<TouchableOpacity onPress={() => this.setState({videoVisible:false})}>
+						<Text>Hide Modal</Text>
+						</TouchableOpacity>
+				</Modal>}
+
 			</View>
 
 		);

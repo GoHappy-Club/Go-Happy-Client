@@ -4,7 +4,7 @@ import { TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleShee
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
-import MySessions from '../../components/MySessions';
+import Refer from '../../components/Refer';
 
 
 
@@ -64,13 +64,9 @@ export default class ReferScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MySessions loadMySessions={this.loadMySessions.bind(this)} navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
+			<Refer loadMySessions={this.loadMySessions.bind(this)} navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
 		);
 	}
-	componentDidMount() {
-		// this.loadMySessions(this.state.email);
-	}
-
 }
 
 const styles = StyleSheet.create({

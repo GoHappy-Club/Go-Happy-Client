@@ -134,8 +134,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "7.0"
+        versionCode 9
+        versionName "9.0"
     }
     splits {
         abi {
@@ -201,6 +201,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation "androidx.browser:browser:1.2.0"
+    implementation project(':react-native-contacts')
 //    implementation project(':react-native-razorpay')
 //    implementation project(':@react-native-async-storage')
 

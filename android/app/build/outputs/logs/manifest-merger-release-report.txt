@@ -6,10 +6,12 @@ INJECTED from /Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/An
 INJECTED from /Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/AndroidManifest.xml:1:1-25:12
 MERGED from [:react-native-async-storage_async-storage] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-async-storage/async-storage/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-community_art] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/art/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-community_clipboard] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/clipboard/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-firebase_auth] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/auth/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-13:12
 MERGED from [:react-native-firebase_app] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-27:12
 MERGED from [:react-native-google-signin_google-signin] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-google-signin/google-signin/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-gesture-handler] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-lottie-splash-screen] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-lottie-splash-screen/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-12:12
 MERGED from [:react-native-razorpay] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-razorpay/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-15:12
 MERGED from [:react-native-safe-area-context] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-safe-area-context/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-screens/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
@@ -28,6 +30,7 @@ MERGED from [com.google.android.gms:play-services-measurement-api:19.0.2] /Users
 MERGED from [com.google.firebase:firebase-auth-interop:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/e052db315c14e7c494cea90a6e80d05e/transformed/jetified-firebase-auth-interop-20.0.0/AndroidManifest.xml:2:1-10:12
 MERGED from [com.google.firebase:firebase-installations:17.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/a844cd1cfb8e0f3354c1720799017d59/transformed/jetified-firebase-installations-17.0.0/AndroidManifest.xml:2:1-24:12
 MERGED from [com.google.firebase:firebase-common:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/45b4a080f8d120803c4464eae4da744b/transformed/jetified-firebase-common-20.0.0/AndroidManifest.xml:15:1-40:12
+MERGED from [com.airbnb.android:lottie:3.4.4] /Users/rakshitsharma/.gradle/caches/transforms-3/9d7dc174a45229f5af14fe30956883a6/transformed/jetified-lottie-3.4.4/AndroidManifest.xml:2:1-11:12
 MERGED from [com.google.android.material:material:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/647ab810063e5668b96b65398a6b880d/transformed/material-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/39736487ac687384dc9e57e7782c7047/transformed/appcompat-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [com.facebook.fresco:fresco:2.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/bf242ee39ef5547a271a7e6e0a504bc0/transformed/jetified-fresco-2.0.0/AndroidManifest.xml:2:1-9:12
@@ -128,6 +131,8 @@ application
 ADDED from /Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/AndroidManifest.xml:6:5-24:19
 MERGED from [:react-native-firebase_app] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-25:19
 MERGED from [:react-native-firebase_app] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-25:19
+MERGED from [:react-native-lottie-splash-screen] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-lottie-splash-screen/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-10:19
+MERGED from [:react-native-lottie-splash-screen] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-lottie-splash-screen/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-10:19
 MERGED from [:react-native-razorpay] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-razorpay/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-13:19
 MERGED from [:react-native-razorpay] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-razorpay/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-13:19
 MERGED from [:react-native-share] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-share/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-19:19
@@ -146,6 +151,8 @@ MERGED from [com.google.firebase:firebase-installations:17.0.0] /Users/rakshitsh
 MERGED from [com.google.firebase:firebase-installations:17.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/a844cd1cfb8e0f3354c1720799017d59/transformed/jetified-firebase-installations-17.0.0/AndroidManifest.xml:14:5-22:19
 MERGED from [com.google.firebase:firebase-common:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/45b4a080f8d120803c4464eae4da744b/transformed/jetified-firebase-common-20.0.0/AndroidManifest.xml:25:5-38:19
 MERGED from [com.google.firebase:firebase-common:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/45b4a080f8d120803c4464eae4da744b/transformed/jetified-firebase-common-20.0.0/AndroidManifest.xml:25:5-38:19
+MERGED from [com.airbnb.android:lottie:3.4.4] /Users/rakshitsharma/.gradle/caches/transforms-3/9d7dc174a45229f5af14fe30956883a6/transformed/jetified-lottie-3.4.4/AndroidManifest.xml:9:5-20
+MERGED from [com.airbnb.android:lottie:3.4.4] /Users/rakshitsharma/.gradle/caches/transforms-3/9d7dc174a45229f5af14fe30956883a6/transformed/jetified-lottie-3.4.4/AndroidManifest.xml:9:5-20
 MERGED from [com.google.android.material:material:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/647ab810063e5668b96b65398a6b880d/transformed/material-1.1.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/647ab810063e5668b96b65398a6b880d/transformed/material-1.1.0/AndroidManifest.xml:22:5-20
 MERGED from [com.facebook.soloader:soloader:0.9.0] /Users/rakshitsharma/.gradle/caches/transforms-3/b715fe150d08710ab4d96d59e95ee389/transformed/jetified-soloader-0.9.0/AndroidManifest.xml:11:5-20
@@ -224,6 +231,8 @@ MERGED from [:react-native-async-storage_async-storage] /Users/rakshitsharma/Cod
 MERGED from [:react-native-async-storage_async-storage] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-async-storage/async-storage/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-community_art] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/art/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-community_art] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/art/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-community_clipboard] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/clipboard/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-community_clipboard] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-community/clipboard/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-firebase_auth] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/auth/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-firebase_auth] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/auth/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-firebase_app] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-firebase/app/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
@@ -232,6 +241,8 @@ MERGED from [:react-native-google-signin_google-signin] /Users/rakshitsharma/Cod
 MERGED from [:react-native-google-signin_google-signin] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/@react-native-google-signin/google-signin/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-gesture-handler] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-gesture-handler] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-gesture-handler/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-lottie-splash-screen] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-lottie-splash-screen/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-lottie-splash-screen] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-lottie-splash-screen/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-razorpay] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-razorpay/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-razorpay] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-razorpay/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-safe-area-context] /Users/rakshitsharma/Codes/Go-Happy-Client/node_modules/react-native-safe-area-context/android/build/intermediates/merged_manifest/release/AndroidManifest.xml:5:5-7:41
@@ -268,6 +279,8 @@ MERGED from [com.google.firebase:firebase-installations:17.0.0] /Users/rakshitsh
 MERGED from [com.google.firebase:firebase-installations:17.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/a844cd1cfb8e0f3354c1720799017d59/transformed/jetified-firebase-installations-17.0.0/AndroidManifest.xml:6:5-8:41
 MERGED from [com.google.firebase:firebase-common:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/45b4a080f8d120803c4464eae4da744b/transformed/jetified-firebase-common-20.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [com.google.firebase:firebase-common:20.0.0] /Users/rakshitsharma/.gradle/caches/transforms-3/45b4a080f8d120803c4464eae4da744b/transformed/jetified-firebase-common-20.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [com.airbnb.android:lottie:3.4.4] /Users/rakshitsharma/.gradle/caches/transforms-3/9d7dc174a45229f5af14fe30956883a6/transformed/jetified-lottie-3.4.4/AndroidManifest.xml:5:5-7:41
+MERGED from [com.airbnb.android:lottie:3.4.4] /Users/rakshitsharma/.gradle/caches/transforms-3/9d7dc174a45229f5af14fe30956883a6/transformed/jetified-lottie-3.4.4/AndroidManifest.xml:5:5-7:41
 MERGED from [com.google.android.material:material:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/647ab810063e5668b96b65398a6b880d/transformed/material-1.1.0/AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.material:material:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/647ab810063e5668b96b65398a6b880d/transformed/material-1.1.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.1.0] /Users/rakshitsharma/.gradle/caches/transforms-3/39736487ac687384dc9e57e7782c7047/transformed/appcompat-1.1.0/AndroidManifest.xml:20:5-22:41

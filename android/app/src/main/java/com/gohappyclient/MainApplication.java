@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.razorpay.rn.RazorpayPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -33,7 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
 //          packages.add(new RazorpayPackage());
 //          packages.add(new AsyncStoragePackage());
-
+          // packages.add(new ReactNativeContacts());
             return packages;
         }
 

@@ -25,18 +25,18 @@ export default class MySessionsScreen extends Component {
 	_retrieveData = async () => {
 		try {
 			console.log('dsadadadadada',await AsyncStorage.getAllKeys());
-		  const email = await AsyncStorage.getItem("email");
-		  this.setState({email:email});	
-		  this.loadMySessions(this.state.email);	  
+		  const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+		  this.setState({phoneNumber:phoneNumber});	
+		  this.loadMySessions(this.state.phoneNumber);	  
 		} catch (error) {
 		  // Error retrieving data
 		  console.log('error here',error)
 		}
 	  };
-	loadMySessions(email,_callback) {
-		email=this.state.email;
+	loadMySessions(phoneNumber,_callback) {
+		phoneNumber=this.state.phoneNumber;
 		var url = SERVER_URL+"/event/mySessions";
-		axios.post(url,{'email':email})
+		axios.post(url,{'phoneNumber':phoneNumber})
         .then(response => {
             if (response.data) {
 				// console.log('this is response',response.data);
@@ -64,7 +64,7 @@ export default class MySessionsScreen extends Component {
 		const navigation = this.props.navigation;
 		const title = 'Login';
 		return (
-			<MySessions loadMySessions={this.loadMySessions.bind(this)} navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents}/>
+			<MySessions loadMySessions={this.loadMySessions.bind(this)} navigation={this.props.navigation} ongoingEvents={this.state.ongoingEvents} upcomingEvents={this.state.upcomingEvents} expiredEvents={this.state.expiredEvents} phoneNumber={this.state.phoneNumber}/>
 		);
 	}
 	componentDidMount() {

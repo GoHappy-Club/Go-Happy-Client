@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import LinearGradient from 'react-native-linear-gradient';
-import OtpInputs from 'react-native-otp-inputs';
+// import OtpInputs from 'react-native-otp-inputs';
 
 
 // GoogleSignin.configure({
@@ -53,9 +53,9 @@ class LoginScreen extends Component {
 		this.getCurrentUserInfo();
 	}
 	
-	setProfile(name,email,phoneNumber,profileImage,token,plan) {
+	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended) {
 		let { profile, actions } = this.props;
-		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan};
+		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended};
 		actions.setProfile(profile);
 	}
 	getCurrentUser = async () => {
@@ -167,20 +167,6 @@ class LoginScreen extends Component {
 			
 		)
 	  }
-	async fetchUserInfo(email){
-		var url = SERVER_URL+"/user/getUserByEmail";
-		 
-		axios.post(url,{'email':email})
-        .then(response => {
-            if (response.data) {
-				AsyncStorage.setItem('membership',response.data.user.membership);
-            }
-        })
-        .catch(error => {
-			this.error=true;
-             
-        });
-	}
 	getCurrentUserInfo = async () => {
 		try {
 			 
@@ -193,8 +179,9 @@ class LoginScreen extends Component {
 				const token = await AsyncStorage.getItem('token');
 				const membership = await AsyncStorage.getItem('membership');
 				const phoneNumber = await AsyncStorage.getItem('phoneNumber');
-				this.setProfile(name,email,phoneNumber,profileImage,token,membership);
-				this.props.navigation.navigate('GoHappy Club');
+				const sessionsAttended = await AsyncStorage.getItem('sessionsAttended');
+				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended);
+				this.props.navigation.replace('GoHappy Club');
 				// this.setState({loader:false});
 				return;
 			// }
@@ -230,18 +217,20 @@ class LoginScreen extends Component {
 				  if(response.data.profileImage!=null)
 				  AsyncStorage.setItem('profileImage',response.data.profileImage);
 				  AsyncStorage.setItem('token',token);
-				  this.setProfile(response.data.name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership)
+				  AsyncStorage.setItem('membership',response.data.membership);
+				  AsyncStorage.setItem('sessionsAttended',response.data.sessionsAttended);
+				  this.setProfile(response.data.name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended)
 				  this.setState({name:response.data.name,email:response.data.email,
 						phoneNumber:response.data.phone});
 				  // this.props.navigation.navigate('DrawerNavigator');
 				  if(this.pending()){
-					this.props.navigation.navigate('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
+					this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
 						name:this.state.name,state:this.state.state,city:this.state.city});
 					return;
 				  }
 				  else{
 					this.setState({loader:true});
-					this.props.navigation.navigate('GoHappy Club');
+					this.props.navigation.replace('GoHappy Club');
 					this.setState({loader:false});
 				  }
 				}
@@ -255,7 +244,7 @@ class LoginScreen extends Component {
 	}
 	pending(){
 		console.log('state in pending',this.state);
-		if((this.state.email==null || this.state.email.length==0)|| (this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0))
+		if((this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0))
 			return true;
 		return false;
 	}

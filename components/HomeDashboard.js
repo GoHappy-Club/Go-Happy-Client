@@ -91,6 +91,19 @@ class HomeDashboard extends Component {
 		 }
 		 else return null;
 	}
+	// componentDidMount() {
+
+	// 	this.props.navigation.addListener(
+	// 	  'focus',
+	// 	  payload => {
+	// 		this.props.loadEvents(this.state.selectedDateRaw);
+	// 	  }
+	// 	);
+	
+	// }
+	loadCaller(){
+		this.props.loadEvents(this.state.selectedDateRaw);
+	}
 	
 	render() {
 
@@ -98,7 +111,10 @@ class HomeDashboard extends Component {
 		const renderItem = ({ item }) => (
 
 			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#3D5466'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber})}>
+				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber,
+					onGoBack: () => this.loadCaller(),
+				  }
+				)}>
 
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>

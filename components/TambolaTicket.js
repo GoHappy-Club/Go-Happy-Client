@@ -16,7 +16,8 @@ export default class TambolaTicket extends Component {
             [0,0,0,0,0,0,0,0,0]],
             tambolaTicket:[[0,0,0,0,"-",0,0,0,0],[0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0]],
-            widthArr: [40, 40, 40, 40, 40,40,40,40,40]
+            widthArr: [40, 40, 40, 40, 40,40,40,40,40],
+			ticketNumber:-1
         }
         console.log('----------------------------------------');
 		console.log(props);
@@ -25,6 +26,7 @@ export default class TambolaTicket extends Component {
 
     setModalVisible(flag){
 		this.setState({modalVisible:flag});
+		this.setState({ticketNumber:this.props.event.participantList.indexOf(this.props.phoneNumber)});
         // var index = this.props.event.participantList.indexOf(this.props.email);
         // this.setState({tambolaTicket:this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2)})
         // console.log(this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2));
@@ -50,12 +52,21 @@ export default class TambolaTicket extends Component {
 					var temp = jsonString.match(/\d+/g);
 					for (var i = 0; i < 9 ;i++) {
 						tic[0][i] = parseInt(temp[i]);
+						if(tic[0][i]==0){
+							tic[0][i]=''
+						}
 					}
 					for (var i = 9; i < 18; i++) {
 						tic[1][i-9] = parseInt(temp[i]);
+						if(tic[1][i-9]==0){
+							tic[1][i-9]=''
+						}
 					}
 					for (var i = 18; i < 27; i++) {
 						tic[2][i-18] = parseInt(temp[i]);
+						if(tic[2][i-18]==0){
+							tic[2][i-18]=''
+						}
 					}
 					console.log(tic);
 					// jsonString = jsonString.replace('"','');
@@ -82,7 +93,7 @@ export default class TambolaTicket extends Component {
                         {this.props!=null &&  <Table borderStyle={{borderWidth: 1, borderColor: '#ffa1d2'}}>
                             <Rows data={tic} widthArr={this.state.widthArr} textStyle={styles.TableText}/>
                         </Table>}
-                       
+						<Text style={{textAlign:'left',marginTop:'5%'}}>Ticket Number: {this.state.ticketNumber}</Text>
                         <Pressable
                         style={[styles.button, styles.buttonClose]}
                         onPress={() => this.setModalVisible(!this.state.modalVisible)}

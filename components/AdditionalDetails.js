@@ -1,15 +1,9 @@
-import React, {Component} from 'react';
-import { SafeAreaView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, Text, KeyboardAvoidingView } from 'react-native';
+import React, {Component, useState} from 'react';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Avatar } from 'react-native-paper'
 import axios from 'axios';
-import AwesomeAlert from 'react-native-awesome-alerts';
+import DatePicker from 'react-native-date-picker'
 
-import PhoneInput from "react-native-phone-number-input";
-import {
-  MaterialIndicator,
-} from 'react-native-indicators';
 
 import { Button } from 'react-native-elements';
 
@@ -22,7 +16,11 @@ export default class AdditionalDetails extends Component {
 			name:props.route.params.name,
 			state:props.route.params.state,
 			city:props.route.params.city,
-            phoneNumber:props.route.params.phoneNumber
+            phoneNumber:props.route.params.phoneNumber,
+			loadingButton:false,
+			date:new Date(),
+			open:false,
+			uiDate:''
 		}
         console.log('ffsefsdds',props.route.params);
 	}
@@ -32,8 +30,9 @@ export default class AdditionalDetails extends Component {
 	}
 	
 	updateDetails(){
+		this.setState({loadingButton:true});
 		var url = SERVER_URL+"/user/update";
-		axios.post(url, {'email':this.state.email,'name':this.state.name,'state':this.state.state,'city':this.state.city,'phone':this.state.phoneNumber})
+		axios.post(url, {'email':this.state.email,'name':this.state.name,'state':this.state.state,'city':this.state.city,'phone':this.state.phoneNumber,'dob':this.state.date})
 		.then(response => {
 			console.log('here',response);
 				if (response.data && response.data!="ERROR") {
@@ -57,10 +56,15 @@ export default class AdditionalDetails extends Component {
 				else if(response.data=="ERROR"){
 					this.setState({showAlert:true,loader:false})
 				}
+				this.setState({loadingButton:false});
 		})
 		.catch(error => {
 				console.log('Error while logging in',error);
+				this.setState({loadingButton:false});
 		});
+	}
+	setDate(){
+		console.log('in set date');
 	}
     
 	render() {
@@ -87,28 +91,50 @@ export default class AdditionalDetails extends Component {
                     underlineColorAndroid = "transparent"
                     placeholder = "Phone Number"
                     placeholderTextColor = "#000"
+					editable={false}
+					selectTextOnFocus={false} 
                     autoCapitalize = "none"
                     value={this.state.phoneNumber}
                     onChangeText={(text) => this.setState({phoneNumber:text})}
                 />      
-                <TextInput style = {styles.input}
+				<TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "State"
+                    placeholder = "Date Of Birth"
                     placeholderTextColor = "#000"
                     autoCapitalize = "none"
-                    value={this.state.state}
-                    onChangeText={(text) => this.setState({state:text})}
-                />      
-                <TextInput style = {styles.input}
-                    underlineColorAndroid = "transparent"
-                    placeholder = "City"
-                    placeholderTextColor = "#000"
-                    autoCapitalize = "none"
-                    value={this.state.city}
-                    onChangeText={(text) => this.setState({city:text})}
-                />     
+                    value={this.state.uiDate}
+					// onPress={() => this.setState({open:true})} 
+                />  
+				<Button  buttonStyle = {styles.dateInput} 
+					// buttonStyle={{backgroundColor:'#F4ECD4'}}
+					titleStyle={{color:'#3D5466'}}
+					title="Set Date of Birth" 
+					onPress={() => this.setState({open:true})} />
+				<DatePicker
+					modal
+					// androidVariant = 'iosClone'
+					textColor='black'
+					mode="date"
+					open={this.state.open}
+					date={this.state.date}
+					onConfirm={(date) => {
+						this.setState({open:false})
+						this.setState({date:date})
+						console.log(this.state);
+						var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
+						this.setState({uiDate:uiDate})
+					// setOpen(false)
+					
+					}}
+					onCancel={() => {
+						this.setState({open:false})
+					}}
+				/>
                 <Button outline style={ { marginTop: '30%' }}
                     title='Save'
+					loading={this.state.loadingButton}
+					buttonStyle={{backgroundColor:'#F4ECD4',marginTop:'30%'}}
+					titleStyle={{color:'#3D5466'}}
                     onPress={this.updateDetails.bind(this)}>
                 </Button>          
 			 </View>
@@ -140,6 +166,13 @@ const styles = StyleSheet.create({
         borderWidth:2,
         borderRadius:5,
         width:'90%'
+	},
+	dateInput: {
+		fontSize: 20,
+		marginTop:'5%',
+		alignSelf:'center',
+		backgroundColor:'#F4ECD4',
+        width:'40%'
 	},
 	btnContainer: {
 		flexDirection: "row",
