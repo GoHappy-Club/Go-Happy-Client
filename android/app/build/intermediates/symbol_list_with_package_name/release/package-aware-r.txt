@@ -516,6 +516,34 @@ attr navigationContentDescription
 attr navigationIcon
 attr navigationMode
 attr navigationViewStyle
+attr npv_AlternativeHint
+attr npv_AlternativeTextArrayWithMeasureHint
+attr npv_AlternativeTextArrayWithoutMeasureHint
+attr npv_DividerColor
+attr npv_DividerHeight
+attr npv_DividerMarginLeft
+attr npv_DividerMarginRight
+attr npv_EmptyItemHint
+attr npv_HintText
+attr npv_ItemPaddingHorizontal
+attr npv_ItemPaddingVertical
+attr npv_MarginEndOfHint
+attr npv_MarginStartOfHint
+attr npv_MaxValue
+attr npv_MinValue
+attr npv_RespondChangeInMainThread
+attr npv_RespondChangeOnDetached
+attr npv_ShowDivider
+attr npv_ShownCount
+attr npv_TextArray
+attr npv_TextColorHint
+attr npv_TextColorNormal
+attr npv_TextColorSelected
+attr npv_TextEllipsize
+attr npv_TextSizeHint
+attr npv_TextSizeNormal
+attr npv_TextSizeSelected
+attr npv_WrapSelectorWheel
 attr number
 attr numericModifiers
 attr overlapAnchor
@@ -1449,6 +1477,7 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable overlay
 drawable redbox_top_border_background
 drawable rzp_border
 drawable rzp_border_bottom
@@ -1536,6 +1565,7 @@ id adjust_width
 id alertTitle
 id all
 id always
+id ampm
 id async
 id auto
 id automatic
@@ -1577,7 +1607,9 @@ id custom
 id customPanel
 id cut
 id dark
+id date
 id date_picker_actions
+id day
 id decor_content_parent
 id default_activity_button
 id design_bottom_sheet
@@ -1589,6 +1621,8 @@ id dialog_button
 id disableHome
 id dropdown_menu
 id edit_query
+id empty_end
+id empty_start
 id end
 id endInside
 id enterAlways
@@ -1620,6 +1654,7 @@ id hardware
 id hideable
 id home
 id homeAsUp
+id hour
 id icon
 id icon_group
 id icon_only
@@ -1648,6 +1683,8 @@ id masked
 id message
 id middle
 id mini
+id minutes
+id month
 id month_grid
 id month_navigation_bar
 id month_navigation_fragment_toggle
@@ -1686,11 +1723,15 @@ id notification_main_column_container
 id off
 id on
 id outline
+id overlay_bottom
+id overlay_image
+id overlay_top
 id parallax
 id parentPanel
 id parent_matrix
 id password_toggle
 id peekHeight
+id pickerWrapper
 id pin
 id progressBar
 id progress_circular
@@ -1813,6 +1854,7 @@ id visible_removing_fragment_view_tag
 id wide
 id withText
 id wrap_content
+id year
 integer abc_config_activityDefaultDur
 integer abc_config_activityShortDur
 integer app_bar_elevation_anim_duration
@@ -1896,6 +1938,7 @@ layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dev_loading_view
 layout fps_view
+layout ios_clone
 layout launch_screen
 layout mtrl_alert_dialog
 layout mtrl_alert_dialog_actions
@@ -1925,6 +1968,7 @@ layout mtrl_picker_header_title_text
 layout mtrl_picker_header_toggle
 layout mtrl_picker_text_input_date
 layout mtrl_picker_text_input_date_range
+layout native_picker
 layout notification_action
 layout notification_action_tombstone
 layout notification_template_custom_big
@@ -2015,6 +2059,7 @@ string abc_shareactionprovider_share_with
 string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
 string alert_description
+string ampm_description
 string app_name
 string appbar_scrolling_view_behavior
 string bottom_sheet_behavior
@@ -2073,6 +2118,8 @@ string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
 string copy_toast_msg
+string date_description
+string day_description
 string default_web_client_id
 string error_icon_content_description
 string exposed_dropdown_menu_content_description
@@ -2088,6 +2135,8 @@ string google_crash_reporting_api_key
 string google_storage_bucket
 string header_description
 string hide_bottom_view_on_scroll_behavior
+string hour_description
+string hour_tag
 string icon_content_description
 string image_description
 string imagebutton_description
@@ -2095,6 +2144,9 @@ string link_description
 string menu_description
 string menubar_description
 string menuitem_description
+string minutes_description
+string minutes_tag
+string month_description
 string mtrl_badge_numberless_content_description
 string mtrl_chip_close_icon_content_description
 string mtrl_exceed_max_badge_number_suffix
@@ -2129,6 +2181,7 @@ string mtrl_picker_toggle_to_calendar_input_mode
 string mtrl_picker_toggle_to_day_selection
 string mtrl_picker_toggle_to_text_input_mode
 string mtrl_picker_toggle_to_year_selection
+string overlay
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through
@@ -2151,8 +2204,10 @@ string state_on_description
 string status_bar_notification_info_overflow
 string summary_description
 string tablist_description
+string time_tag
 string timer_description
 string toolbar_description
+string year_description
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog
@@ -2845,6 +2900,9 @@ style Widget_MaterialComponents_Toolbar_Primary
 style Widget_MaterialComponents_Toolbar_PrimarySurface
 style Widget_MaterialComponents_Toolbar_Surface
 style Widget_Support_CoordinatorLayout
+style android_native
+style android_native_small
+style android_native_theme
 style redboxButton
 styleable ActionBar background backgroundSplit backgroundStacked contentInsetEnd contentInsetEndWithActions contentInsetLeft contentInsetRight contentInsetStart contentInsetStartWithNavigation customNavigationLayout displayOptions divider elevation height hideOnContentScroll homeAsUpIndicator homeLayout icon indeterminateProgressStyle itemPadding logo navigationMode popupTheme progressBarPadding progressBarStyle subtitle subtitleTextStyle title titleTextStyle
 styleable ActionBarLayout android_layout_gravity
@@ -2913,6 +2971,7 @@ styleable MenuGroup android_enabled android_id android_visible android_menuCateg
 styleable MenuItem android_icon android_enabled android_id android_checked android_visible android_menuCategory android_orderInCategory android_title android_titleCondensed android_alphabeticShortcut android_numericShortcut android_checkable android_onClick actionLayout actionProviderClass actionViewClass alphabeticModifiers contentDescription iconTint iconTintMode numericModifiers showAsAction tooltipText
 styleable MenuView android_windowAnimationStyle android_itemTextAppearance android_horizontalDivider android_verticalDivider android_headerBackground android_itemBackground android_itemIconDisabledAlpha preserveIconSpacing subMenuArrow
 styleable NavigationView android_background android_fitsSystemWindows android_maxWidth elevation headerLayout itemBackground itemHorizontalPadding itemIconPadding itemIconSize itemIconTint itemMaxLines itemShapeAppearance itemShapeAppearanceOverlay itemShapeFillColor itemShapeInsetBottom itemShapeInsetEnd itemShapeInsetStart itemShapeInsetTop itemTextAppearance itemTextColor menu
+styleable NumberPickerView npv_AlternativeHint npv_AlternativeTextArrayWithMeasureHint npv_AlternativeTextArrayWithoutMeasureHint npv_DividerColor npv_DividerHeight npv_DividerMarginLeft npv_DividerMarginRight npv_EmptyItemHint npv_HintText npv_ItemPaddingHorizontal npv_ItemPaddingVertical npv_MarginEndOfHint npv_MarginStartOfHint npv_MaxValue npv_MinValue npv_RespondChangeInMainThread npv_RespondChangeOnDetached npv_ShowDivider npv_ShownCount npv_TextArray npv_TextColorHint npv_TextColorNormal npv_TextColorSelected npv_TextEllipsize npv_TextSizeHint npv_TextSizeNormal npv_TextSizeSelected npv_WrapSelectorWheel
 styleable PopupWindow android_popupBackground android_popupAnimationStyle overlapAnchor
 styleable PopupWindowBackgroundState state_above_anchor
 styleable RecycleListView paddingBottomNoButtons paddingTopNoTitle
@@ -2941,6 +3000,7 @@ styleable ViewBackgroundHelper android_background backgroundTint backgroundTintM
 styleable ViewPager2 android_orientation
 styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable scaleStyle scalableType
+xml file_provider_paths
 xml image_share_filepaths
 xml rn_dev_preferences
 xml share_download_paths

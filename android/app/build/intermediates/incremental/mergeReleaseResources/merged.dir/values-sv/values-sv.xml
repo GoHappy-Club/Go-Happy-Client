@@ -27,6 +27,7 @@
     <string msgid="2650565705514630347" name="abc_shareactionprovider_share_with">"Dela med"</string>
     <string msgid="9009661856846212431" name="abc_shareactionprovider_share_with_application">"Dela med <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
     <string msgid="6389460216547290468" name="abc_toolbar_collapse_description">"Komprimera"</string>
+    <string name="ampm_description">Välj am/pm</string>
     <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Aktivera"</string>
     <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> fungerar inte om du inte aktiverar Google Play-tjänster."</string>
     <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Aktivera Google Play-tjänster"</string>
@@ -46,9 +47,19 @@
     <string msgid="3441753203274453993" name="common_signin_button_text">"Logga in"</string>
     <string msgid="669893613918351210" name="common_signin_button_text_long">"Logga in med Google"</string>
     <string msgid="8230469354668895088" name="copy_toast_msg">"Länk kopierad till Urklipp"</string>
+    <string name="date_description">Välj ett datum</string>
+    <string name="day_description">Välj en dag</string>
     <string msgid="2615365786337886368" name="fallback_menu_item_copy_link">"Kopiera länk"</string>
     <string msgid="8984733760067120953" name="fallback_menu_item_open_in_browser">"Öppna i webbläsaren"</string>
     <string msgid="271185644269364308" name="fallback_menu_item_share_link">"Dela länk"</string>
+    <string name="hour_description">Välj en timme</string>
+    <string name="hour_tag">Timme:</string>
+    <string name="minutes_description">Välj minuter</string>
+    <string name="minutes_tag">Minuter</string>
+    <string name="month_description">Välj en månad</string>
+    <string name="overlay">Datumväljare på</string>
     <string msgid="730395136688082741" name="search_menu_title">"Sök"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="time_tag">Tiden är</string>
+    <string name="year_description">Välj ett år</string>
 </resources>

@@ -27,6 +27,7 @@
     <string msgid="2650565705514630347" name="abc_shareactionprovider_share_with">"Del med"</string>
     <string msgid="9009661856846212431" name="abc_shareactionprovider_share_with_application">"Del med <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
     <string msgid="6389460216547290468" name="abc_toolbar_collapse_description">"Skjul"</string>
+    <string name="ampm_description">Velg am/pm</string>
     <string msgid="8585111718777012708" name="common_google_play_services_enable_button">"Slå på"</string>
     <string msgid="7045129128108380659" name="common_google_play_services_enable_text">"<ns1:g id="APP_NAME">%1$s</ns1:g> fungerer ikke med mindre du slår på Google Play-tjenester."</string>
     <string msgid="3147157405986503375" name="common_google_play_services_enable_title">"Slå på Google Play-tjenester"</string>
@@ -46,9 +47,19 @@
     <string msgid="3441753203274453993" name="common_signin_button_text">"Logg på"</string>
     <string msgid="669893613918351210" name="common_signin_button_text_long">"Logg på med Google"</string>
     <string msgid="8230469354668895088" name="copy_toast_msg">"Linken er kopiert til utklippstavlen"</string>
+    <string name="date_description">Velg dato</string>
+    <string name="day_description">Velg dag</string>
     <string msgid="2615365786337886368" name="fallback_menu_item_copy_link">"Kopiér linken"</string>
     <string msgid="8984733760067120953" name="fallback_menu_item_open_in_browser">"Åpne i nettleseren"</string>
     <string msgid="271185644269364308" name="fallback_menu_item_share_link">"Del link"</string>
+    <string name="hour_description">Velg time</string>
+    <string name="hour_tag">Time</string>
+    <string name="minutes_description">Velg minutter</string>
+    <string name="minutes_tag">Minutter</string>
+    <string name="month_description">Velg måned</string>
+    <string name="overlay">Datovelger</string>
     <string msgid="730395136688082741" name="search_menu_title">"Søk"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="time_tag">Tiden er</string>
+    <string name="year_description">Velg år</string>
 </resources>
