@@ -13,6 +13,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as configData from "./config/cloud-dev/config.json";
 import Icon from 'react-native-vector-icons/Ionicons';
+import PushNotification from 'react-native-push-notification'
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -24,7 +25,18 @@ const Stack = createNativeStackNavigator();
 var token='';
 
 
-
+PushNotification.createChannel(
+  {
+    channelId: "events", // (required)
+    channelName: "My channel", // (required)
+    channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+    playSound: false, // (optional) default: true
+    soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+    importance: 4, // (optional) default: 4. Int value of the Android notification importance
+    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+  },
+  (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+);
 
 export default function App() {
   AsyncStorage.getItem("token").then((out)=>{token=out});

@@ -3,7 +3,8 @@ import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 import axios from 'axios';
 import DatePicker from 'react-native-date-picker'
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { Button } from 'react-native-elements';
 
@@ -20,7 +21,8 @@ export default class AdditionalDetails extends Component {
 			loadingButton:false,
 			date:new Date(),
 			open:false,
-			uiDate:''
+			uiDate:'',
+			showAlert:false
 		}
         console.log('ffsefsdds',props.route.params);
 	}
@@ -30,6 +32,11 @@ export default class AdditionalDetails extends Component {
 	}
 	
 	updateDetails(){
+		if(this.state.email==null || this.state.email=='' || this.state.date=='' || this.state.date==null){
+			this.setState({showAlert:true});
+			console.log(this.state);
+			return;
+		}
 		this.setState({loadingButton:true});
 		var url = SERVER_URL+"/user/update";
 		axios.post(url, {'email':this.state.email,'name':this.state.name,'state':this.state.state,'city':this.state.city,'phone':this.state.phoneNumber,'dob':this.state.date})
@@ -68,9 +75,11 @@ export default class AdditionalDetails extends Component {
 	}
     
 	render() {
+		var open = this.state.open;
 		return (
 			<View style={styles.container1}>
                 <Text style = {styles.title}>Add Information</Text>
+				<View style={styles.inputs}>
                 <TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
                     placeholder = "name"
@@ -100,43 +109,50 @@ export default class AdditionalDetails extends Component {
 				<TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
                     placeholder = "Date Of Birth"
+					editable={false}
                     placeholderTextColor = "#000"
                     autoCapitalize = "none"
-                    value={this.state.uiDate}
+                    value={this.state.date}
 					// onPress={() => this.setState({open:true})} 
                 />  
+				 <DateTimePickerModal
+					isVisible={open}
+					mode="date"
+					onConfirm={(date) => {
+						this.setState({open:false})
+						//this.setState({date:date})
+						console.log(this.state);
+						var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
+						this.setState({date:uiDate})}}
+					onCancel={() => this.setState({open:false})}
+				/>
+				</View>
 				<Button  buttonStyle = {styles.dateInput} 
 					// buttonStyle={{backgroundColor:'#F4ECD4'}}
 					titleStyle={{color:'#3D5466'}}
 					title="Set Date of Birth" 
 					onPress={() => this.setState({open:true})} />
-				<DatePicker
-					modal
-					// androidVariant = 'iosClone'
-					textColor='black'
-					mode="date"
-					open={this.state.open}
-					date={this.state.date}
-					onConfirm={(date) => {
-						this.setState({open:false})
-						this.setState({date:date})
-						console.log(this.state);
-						var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
-						this.setState({uiDate:uiDate})
-					// setOpen(false)
-					
-					}}
-					onCancel={() => {
-						this.setState({open:false})
-					}}
-				/>
                 <Button outline style={ { marginTop: '30%' }}
                     title='Save'
 					loading={this.state.loadingButton}
 					buttonStyle={{backgroundColor:'#F4ECD4',marginTop:'30%'}}
 					titleStyle={{color:'#3D5466'}}
                     onPress={this.updateDetails.bind(this)}>
-                </Button>          
+                </Button>      
+				<AwesomeAlert
+						show={this.state.showAlert}
+						showProgress={false}
+						title="Error"
+						message="Mandatory details are missing"
+						closeOnTouchOutside={true}
+						closeOnHardwareBackPress={false}
+						showConfirmButton={true}
+						confirmText="Try Again"
+						confirmButtonColor="#DD6B55"
+						onConfirmPressed={() => {
+							this.setState({showAlert:false})
+						}}
+						/>	    
 			 </View>
 		);
 	}
@@ -147,25 +163,28 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 25,
         fontWeight:'bold',
-		color:'white',
-		marginTop:'30%',
+		color:'black',
+		marginTop:'15%',
 		alignSelf:'center',
 	},
 	container1: {
 		flex: 1,
-		backgroundColor: '#0A1045',
+		backgroundColor: '#fffaf1',
 	},
 	input: {
 		fontSize: 20,
 		color:'black',
-		marginTop:'10%',
+		marginTop:'5%',
 		alignSelf:'center',
 		backgroundColor: 'white',
-        padding:15,
-        borderColor:'yellow',
-        borderWidth:2,
+        paddingLeft:15,
+        borderColor:'black',
+        borderWidth:1,
         borderRadius:5,
-        width:'90%'
+        width:'70%'
+	},
+	inputs: {
+		marginTop:'15%',
 	},
 	dateInput: {
 		fontSize: 20,
@@ -223,7 +242,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#aaa'
 	},
 	title2: {
-		color: 'white',
+		color: 'black',
 		marginTop: '30%',
 		marginBottom: 10,
 		opacity: 0.9,

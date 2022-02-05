@@ -16,12 +16,12 @@
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/res/mipmap-mdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_node_modules_entities_lib_maps_entities.json.flat",
-        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/raw/node_modules_entities_lib_maps_entities.json"
-    },
-    {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_node_modules_reactnativevectoricons_glyphmaps_antdesign.json.flat",
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/raw/node_modules_reactnativevectoricons_glyphmaps_antdesign.json"
+    },
+    {
+        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_node_modules_entities_lib_maps_entities.json.flat",
+        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/raw/node_modules_entities_lib_maps_entities.json"
     },
     {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/raw_node_modules_nodeemoji_lib_emoji.json.flat",
@@ -150,6 +150,10 @@
     {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/drawable-mdpi_node_modules_reactnativepaper_src_assets_backchevron.png.flat",
         "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/generated/res/react/release/drawable-mdpi/node_modules_reactnativepaper_src_assets_backchevron.png"
+    },
+    {
+        "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/mipmap-ldpi_ic_launcher.png.flat",
+        "source": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/src/main/res/mipmap-ldpi/ic_launcher.png"
     },
     {
         "merged": "/Users/rakshitsharma/Codes/Go-Happy-Client/android/app/build/intermediates/merged_res/release/mipmap-xhdpi_ic_launcher.png.flat",

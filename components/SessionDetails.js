@@ -41,9 +41,12 @@ export default class SessionDetails extends Component {
 		return false;
 	}
 	sessionAction(){
-		if(this.getTitle()=='View Recording'){
-			return this.videoPlayer();			;
+		if(this.getTitle()==='View Recording'){
+			console.log(this.props);
+			this.videoPlayer();
+			return;			;
 		}
+		console.log('outside');
 		var output = this.props.sessionAction('book');
 		this.setState({loadingButton:true});
 		if(output=='SUCCESS'){

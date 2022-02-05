@@ -11,6 +11,7 @@ import HomeDashboard from '../../components/HomeDashboard.js'
 // var tambola = require('tambola-generator');
 import tambola from 'tambola';
 import Video from 'react-native-video'
+import { EventNotification , EventReminderNotification} from '../../services/LocalPushController'
 
 
 export default class HomeScreen extends Component {
@@ -76,7 +77,7 @@ export default class HomeScreen extends Component {
 
 	bookEvent(item,phoneNumber,selectedDate){
 		let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
-
+		
 		console.log(ticket);
 		var id = item.id;
 		var url = SERVER_URL+"/event/bookEvent";
@@ -87,7 +88,9 @@ export default class HomeScreen extends Component {
             if (response.data) {
 				
 				if(response.data=="SUCCESS"){
-
+					//EventNotification({channelId: 'events',event:item});
+					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)-1000*60*10),bigText:'Your Event Starts in 10 minutes.'});
+					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)),bigText:'Your Session has been started. Join Now!'});
 					var tempEvents = this.state.events;
 					for(var i=0;i<tempEvents.length;i++){
 						if(tempEvents[i].id==item.id){

@@ -89,6 +89,11 @@ class LoginScreen extends Component {
 		// this.loadingButton=true;
 		this.setState({ confirmResult: null, verificationCode: '',phoneNumber:null})
 	}
+	resendOtp = () => {
+		// this.loadingButton=true;
+		this.setState({ confirmResult: null, verificationCode: ''})
+		this.handleSendCode();
+	}
 	handleVerifyCode = () => {
 		// Request for OTP verification
 		this.setState({ loadingButton:true })
@@ -156,6 +161,12 @@ class LoginScreen extends Component {
 					end: { x: 0.5, y: 1 },
 					locations: [0,0.5,0.6]
 					}}>
+			</Button>
+			<Button type='clear' 
+				title='Resend OTP'
+				loading={this.state.loadingButton}
+				onPress={this.resendOtp}
+				>
 			</Button>
 			<Button type='clear' 
 				title='Enter a Different Phone Number'
@@ -244,7 +255,7 @@ class LoginScreen extends Component {
 	}
 	pending(){
 		console.log('state in pending',this.state);
-		if((this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0))
+		if((this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0)||(this.state.dob==null || this.state.dob.length==0))
 			return true;
 		return false;
 	}

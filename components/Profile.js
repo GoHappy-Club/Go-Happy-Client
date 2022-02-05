@@ -210,7 +210,7 @@ class Profile extends Component {
 					<View style={{width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.openWhatsApp}>
 							<View >
-								<Text style={styles.optionList}>Get Support</Text>
+								<Text style={styles.optionList}>Join Whatsapp Support Group</Text>
 							</View>
 						</TouchableOpacity>
 					</View>

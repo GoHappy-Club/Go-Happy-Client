@@ -17,6 +17,8 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.art.ARTPackage;
 // @react-native-community/clipboard
 import com.reactnativecommunity.clipboard.ClipboardPackage;
+// @react-native-community/datetimepicker
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 // @react-native-firebase/app
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-firebase/auth
@@ -33,6 +35,8 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-lottie-splash-screen
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+// react-native-push-notification
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 // react-native-razorpay
 import com.razorpay.rn.RazorpayPackage;
 // react-native-safe-area-context
@@ -97,6 +101,7 @@ public class PackageList {
       new AsyncStoragePackage(),
       new ARTPackage(),
       new ClipboardPackage(),
+      new RNDateTimePickerPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new RNGoogleSigninPackage(),
@@ -105,6 +110,7 @@ public class PackageList {
       new RNGestureHandlerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
+      new ReactNativePushNotificationPackage(),
       new RazorpayPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),

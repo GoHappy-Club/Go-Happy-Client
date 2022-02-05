@@ -35,3 +35,5 @@ android/app/.DS_Store
 *.xml
 *.properties
 *.dex
+*.xml
+*.xml
