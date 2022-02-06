@@ -68,13 +68,7 @@ export default class HomeDetailsScreen extends Component {
 			);
 		}
 		else if(type=='ongoing'){
-			Linking.canOpenURL(this.props.route.params.event.meetingLink).then(supported => {
-				if (supported) {
-				  Linking.openURL(this.props.route.params.event.meetingLink);
-				} else {
-				  console.log("Don't know how to open URI: " + this.props.route.params.event.meetingLink);
-				}
-			  })
+			Linking.openURL(this.props.route.params.event.meetingLink);
 		}
 		else if(this.props.route.params.event.participantList!=null && this.props.route.params.event.participantList.includes(phoneNumber)){
 		console.log(this.props.route.params.event.id);

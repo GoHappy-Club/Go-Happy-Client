@@ -88,7 +88,9 @@ export default class MySessions extends Component {
 		console.log(link);
 		this.setState({videoVisible:true});
 	}
-
+	startEvent(item){
+		Linking.openURL(item.meetingLink);
+	}
 	render() {
 		const renderItem = ({ item} , type) => (
 
@@ -120,7 +122,7 @@ export default class MySessions extends Component {
 						{type=='ongoing' && <Button
 							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
 							title='Join'
-							// onPress={this.updateEventBook.bind(this,item)}
+							onPress={this.startEvent.bind(this,item)}
 							loading={item.loadingButton}
 						/>}
 						{type=='expired' && <Button
