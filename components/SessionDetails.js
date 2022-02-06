@@ -19,7 +19,8 @@ export default class SessionDetails extends Component {
 			modalVisible:false,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
 			loadingButton:false,
-			videoVisible:false
+			videoVisible:false,
+			defaultCoverImage:'https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg',
 		}
 		console.log(props);
 	}	
@@ -82,7 +83,7 @@ export default class SessionDetails extends Component {
 						<Image
 						style={styles.cover}
 						source={{
-						uri: 'https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg',
+						uri: item.coverImage,
 						}}
 						/>
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '180%', alignItems: 'flex-start', justifyContent: 'center' }}>
@@ -154,7 +155,7 @@ export default class SessionDetails extends Component {
 					transparent={false}
 					visible={this.state.videoVisible}
 					onRequestClose={() => {
-					alert('Modal has been closed.');
+						this.setState({videoVisible:false});
 					}}>
 						<WebView
 						javaScriptEnabled={true}
@@ -163,9 +164,6 @@ export default class SessionDetails extends Component {
 							uri: item.recordingLink
 						}}
 						/>
-						<TouchableOpacity onPress={() => this.setState({videoVisible:false})}>
-						<Text>Hide Modal</Text>
-						</TouchableOpacity>
 				</Modal>}
 
 			</View>

@@ -32,7 +32,7 @@ export default class AdditionalDetails extends Component {
 	}
 	
 	updateDetails(){
-		if(this.state.email==null || this.state.email=='' || this.state.date=='' || this.state.date==null){
+		if(this.state.name==null || this.state.name=='' || this.state.date=='' || this.state.date==null){
 			this.setState({showAlert:true});
 			console.log(this.state);
 			return;

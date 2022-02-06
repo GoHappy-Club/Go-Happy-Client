@@ -68,12 +68,14 @@ class LoginScreen extends Component {
 	}
 	handleSendCode = () => {
 		// Request to send OTP
+		console.log('in handle send code');
 		this.setState({ loadingButton:true })
 		if (this.validatePhoneNumber()) {
 		  firebase
 			.auth()
 			.signInWithPhoneNumber(this.state.phoneNumber)
 			.then(confirmResult => {
+				console.log('in handle send code inside');
 			  this.setState({ confirmResult })
 			  this.setState({ loadingButton:false })
 			})
@@ -91,7 +93,7 @@ class LoginScreen extends Component {
 	}
 	resendOtp = () => {
 		// this.loadingButton=true;
-		this.setState({ confirmResult: null, verificationCode: ''})
+		//this.setState({ confirmResult: null, verificationCode: ''})
 		this.handleSendCode();
 	}
 	handleVerifyCode = () => {
@@ -165,7 +167,7 @@ class LoginScreen extends Component {
 			<Button type='clear' 
 				title='Resend OTP'
 				loading={this.state.loadingButton}
-				onPress={this.resendOtp}
+				onPress={this.resendOtp.bind(this)}
 				>
 			</Button>
 			<Button type='clear' 

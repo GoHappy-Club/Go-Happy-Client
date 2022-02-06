@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { RefreshControl,FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { RefreshControl,Modal,FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
 import { Text , Button} from 'react-native-elements';
+import {WebView} from 'react-native-webview';
 
 import { Card as Cd, Title, Paragraph,  Avatar,
 	Caption,
@@ -20,6 +21,7 @@ export default class MySessions extends Component {
 			password: '',showAlert:false,loader:false,
 			mySession: [],
 			refreshing:false,
+			videoVisible:false,
 			profileImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
 		}
 		this._retrieveData();
@@ -82,6 +84,10 @@ export default class MySessions extends Component {
 		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
 		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
 	}
+	videoPlayer(link){
+		console.log(link);
+		this.setState({videoVisible:true});
+	}
 
 	render() {
 		const renderItem = ({ item} , type) => (
@@ -120,9 +126,27 @@ export default class MySessions extends Component {
 						{type=='expired' && <Button
 							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
 							title='View Recording'
-							// onPress={this.updateEventBook.bind(this,item)}
+							onPress={this.videoPlayer.bind(this,item.recordingLink)}
 							loading={item.loadingButton}
 						/>}
+						{item.recordingLink!=null && <Modal
+							style={{
+
+							}}
+							animationType="slide"
+							transparent={false}
+							visible={this.state.videoVisible}
+							onRequestClose={() => {
+								this.setState({videoVisible:false});
+							}}>
+								<WebView
+								javaScriptEnabled={true}
+								style={{flex:1, borderColor:'red', borderWidth:1, height:400, width:400}}
+								source={{
+									uri: item.recordingLink
+								}}
+								/>
+						</Modal>}
 					</View>
 				</Cd.Content>
 				</TouchableOpacity>
