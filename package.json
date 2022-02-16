@@ -41,6 +41,7 @@
     "react-native-cards": "^1.1.4",
     "react-native-contacts": "^7.0.3",
     "react-native-date-picker": "^4.1.3",
+    "react-native-dialog": "^9.2.1",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-imaged-carousel-card": "^0.1.1",

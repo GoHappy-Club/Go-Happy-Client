@@ -22,7 +22,9 @@ export default class AdditionalDetails extends Component {
 			date:new Date(),
 			open:false,
 			uiDate:'',
-			showAlert:false
+			showAlert:false,
+			alertMessage:'',
+			dob:props.route.params.dob
 		}
         console.log('ffsefsdds',props.route.params);
 	}
@@ -30,11 +32,26 @@ export default class AdditionalDetails extends Component {
 	componentDidMount(){
 		// this.getCurrentUserInfo();
 	}
+	getAge() {
+		var today = new Date();
+		var birthDate = new Date(this.state.date);
+		var age = today.getFullYear() - birthDate.getFullYear();
+		var m = today.getMonth() - birthDate.getMonth();
+		if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+			age--;
+		}
+		console.log(age);
+		return age;
+	}
 	
 	updateDetails(){
-		if(this.state.name==null || this.state.name=='' || this.state.date=='' || this.state.date==null){
-			this.setState({showAlert:true});
+		if(this.state.name==null || this.state.name=='' || this.state.uiDate=='' || this.state.uiDate==null){
+			this.setState({showAlert:true.valueOf,alertMessage:'Mandatory details are missing'});
 			console.log(this.state);
+			return;
+		}
+		if(this.getAge() < 50){
+			this.setState({showAlert:true,alertMessage:'Your age is less than 50 years. You are not eligible to login. Thank you'});
 			return;
 		}
 		this.setState({loadingButton:true});
@@ -123,7 +140,8 @@ export default class AdditionalDetails extends Component {
 						//this.setState({date:date})
 						console.log(this.state);
 						var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
-						this.setState({date:uiDate})}}
+						this.setState({date:uiDate})
+						this.setState({uiDate:uiDate})}}
 					onCancel={() => this.setState({open:false})}
 				/>
 				</View>
@@ -143,7 +161,7 @@ export default class AdditionalDetails extends Component {
 						show={this.state.showAlert}
 						showProgress={false}
 						title="Error"
-						message="Mandatory details are missing"
+						message={this.state.alertMessage}
 						closeOnTouchOutside={true}
 						closeOnHardwareBackPress={false}
 						showConfirmButton={true}
