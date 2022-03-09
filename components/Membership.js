@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { ToastAndroid,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView, Dimensions } from 'react-native';
 
 import { Card as Cd, Title, Paragraph, Avatar } from 'react-native-paper';
 import { white } from 'react-native-paper/lib/typescript/styles/colors';
@@ -9,7 +9,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 
 
 import { connect } from 'react-redux';
-import { changeCount, setProfile } from '../redux/actions/counts.js';
+import { setProfile } from '../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 
 
@@ -28,6 +28,7 @@ class Membership extends Component {
 			state:'Maharashtra',
 			backgroundColor:'white',
 			textColor:'black',
+			amount:249,
 			plans:{
 				selectedItem:'',
 				planDetails:[{
@@ -68,18 +69,18 @@ class Membership extends Component {
 	}
 	async razorPay(){
 		var orderId = await this.props.getOrderId(this.state.plans.planDetails[this.state.plans.selectedItem?this.state.plans.selectedItem:0].amount*100);
-		console.log('in razorpay',this.state.plans.planDetails[this.state.plans.selectedItem].amount);
+		console.log('in razorpay',this.state);
 		var options = {
 			description: 'GoHappy Subscription',
 			currency: 'INR',
-			key: 'rzp_test_sMRXf9zvPN1rCs',
-			amount: this.state.plans.planDetails[this.state.plans.selectedItem].amount*100,
-			name: this.state.plans.planDetails[this.state.plans.selectedItem].name+' Membership',
+			key: 'rzp_test_0hFnv5l1gJ5GLp',
+			amount: this.state.amount*100,
+			name: 'Contribution',
 			order_id: orderId,//Replace this with an order_id created using Orders API.
 			prefill: {
 			email: this.state.email,
-			contact: '9888138824', 
-			name: 'Rakshit Sharma'
+			contact: this.props.profile.phoneNumber, 
+			name: this.props.profile.name
 			},
 			theme: {color: '#53a20e'}
 		}	
@@ -94,8 +95,11 @@ class Membership extends Component {
 				});
 		}).catch((error) => {
 			// handle failure
-			alert(`Error: ${error.code} | ${error.description}`);
-		});
+			console.log('payment cancelled');
+			ToastAndroid.show(
+				"Payment could not be processed, please try again.",
+				ToastAndroid.LONG
+		)});
 	
 	}
 	planSelected(plan,index){
@@ -154,6 +158,9 @@ class Membership extends Component {
 		  );
 		
 	}
+	checkValidAmount(text){
+		this.setState({amount:text})
+	}
 	render() {
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -165,7 +172,11 @@ class Membership extends Component {
 			<View style = {{
 				backgroundColor: 'white',flex:1
 			}}>
-				<ScrollView style = {{
+
+			{/*--------------------------------------OLD UI------------------------------------------------ */}
+
+
+				{/* <ScrollView style = {{
 					backgroundColor: 'white',height:'100%'
 				}}
 				contentContainerStyle={{justifyContent: 'center',
@@ -193,9 +204,107 @@ class Membership extends Component {
 					
 					
 					
+				</ScrollView> */}
+				
+			{/* ------------------------------------------------------------------------------------ */}
+			<ScrollView style = {{
+					backgroundColor: 'white',height:'100%'
+				}}
+				contentContainerStyle={{justifyContent: 'center',
+				alignItems: 'center'}}
+				>
+					<Text h3 style={{fontWeight:'bold',marginTop:'20%'}}>Enter your contribution</Text>
+					<View style={{ justifyContent: 'center',
+				alignItems: 'center'}}>
+					<TextInput 
+						style={styles.input}
+						keyboardType='numeric'
+						onChangeText={(text)=> this.checkValidAmount(text)}
+						value={this.state.amount.toString()}
+						maxLength={10}  //setting limit of input
+						
+					/>
+					<View style={{flexDirection:'row'}}>
+						<TouchableOpacity
+							style={{
+								margin:'2%',
+								borderWidth:1,
+								borderColor:'rgba(0,0,0,0.2)',
+								alignItems:'center',
+								justifyContent:'center',
+								// width:50,
+								// height:20,
+								backgroundColor:'#fff',
+								borderRadius:10,
+								}}
+								onPress={()=>{this.setState({amount:249})}}
+							>
+								<Text  style={{fontWeight:'bold',padding:5}}>249</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								margin:'2%',
+								borderWidth:1,
+								borderColor:'rgba(0,0,0,0.2)',
+								alignItems:'center',
+								justifyContent:'center',
+								// width:50,
+								// height:20,
+								backgroundColor:'#fff',
+								borderRadius:10,
+								}}
+								onPress={()=>{this.setState({amount:'499'})}}
+							>
+								<Text  style={{fontWeight:'bold',padding:5}}>499</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								margin:'2%',
+								borderWidth:1,
+								borderColor:'rgba(0,0,0,0.2)',
+								alignItems:'center',
+								justifyContent:'center',
+								// width:50,
+								// height:20,
+								backgroundColor:'#fff',
+								borderRadius:10,
+								}}
+								onPress={()=>{this.setState({amount:999})}}
+							>
+								<Text  style={{fontWeight:'bold',padding:5}}>999</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={{
+								margin:'2%',
+								borderWidth:1,
+								borderColor:'rgba(0,0,0,0.2)',
+								alignItems:'center',
+								justifyContent:'center',
+								// width:50,
+								// height:20,
+								backgroundColor:'#fff',
+								borderRadius:10,
+								}}
+								onPress={()=>{this.setState({amount:1999})}}
+							>
+								<Text  style={{fontWeight:'bold',padding:5}}>1999</Text>
+						</TouchableOpacity>
+					</View>
+					{/* <Text style={{color:'grey'}}>Average contribution is Rs. 250</Text> */}
+					<Text style={{color:'black',width:Dimensions.get('window').width*0.9,}}>Your generous contribution will enable this club to remain vibrant and become strong by funding experts, interns, and infrastructure.
+Additionally, it will help us to reach more seniors citizens to make their life happy and productive.</Text>
+					</View>
+					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
+						<TouchableOpacity  
+						disabled={this.state.amount<1}
+						 style={this.state.amount<1 && styles.checkoutButtonDisabled || styles.checkoutButtonEnabled}
+						 onPress={this.razorPay.bind(this)}>
+							<View>
+								<Text style={styles.optionList}>Proceed to Pay</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
 				</ScrollView>
-				
-				
 			</View>
 		);
 	}
@@ -223,14 +332,23 @@ const styles = StyleSheet.create({
 	checkoutButtonDisabled:{
 		opacity:0.5,
 		alignItems: "center",
-		backgroundColor: "blue",
+		backgroundColor: "#73a3ef",
 		padding: 10
 	},
 	checkoutButtonEnabled:{
 		alignItems: "center",
-		backgroundColor: "blue",
+		backgroundColor: "#73a3ef",
 		padding: 10
-	}
+	},
+	input: {
+		height: 40,
+		marginTop:'10%',
+		borderWidth: 1,
+		padding: 10,
+		marginTop:'20%',
+		width:Dimensions.get('window').width*0.9,
+		alignItems: "center",
+	  },
 });
 
 const mapStateToProps = state => ({
@@ -244,5 +362,4 @@ const mapStateToProps = state => ({
   const mapDispatchToProps = dispatch => ({
 	actions: bindActionCreators(ActionCreators, dispatch),
   });
-
   export default connect(mapStateToProps, mapDispatchToProps)(Membership)

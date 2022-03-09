@@ -4,38 +4,23 @@ import { SafeAreaView,NativeSyntheticEvent,Dimensions,TouchableOpacity,ImageBack
 import axios from 'axios';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import PhoneInput from "react-native-phone-number-input";
-import {
-  MaterialIndicator,
-} from 'react-native-indicators';
+
 import Video from 'react-native-video'
 
 import {
     GoogleSignin,
-    GoogleSigninButton,
     statusCodes,
   } from '@react-native-google-signin/google-signin';
 import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/auth';
 import { Button } from 'react-native-elements';
 import { BottomSheet, ListItem } from 'react-native-elements';
-// import OTPTextInput from 'react-native-otp-textinput';
 import OTPInputView from '@bherila/react-native-otp-input'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import LinearGradient from 'react-native-linear-gradient';
-import Dialog from "react-native-dialog";
-import { ScrollView } from 'react-native-gesture-handler';
-
-// import OtpInputs from 'react-native-otp-inputs';
-
-
-// GoogleSignin.configure({
-// 	webClientId: '908368396731-fr0kop29br013r5u6vrt41v8k2j9dak1.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-// 	offlineAccess: true,
-// 	iosClientId: '908368396731-vppvalbam1en8cj8a35k68ug076pq2be.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-//   });
 
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
@@ -63,10 +48,23 @@ class LoginScreen extends Component {
 		}
 		this.getCurrentUserInfo();
 	}
+	conponentDidMount() {    
+		firebase.auth().onAuthStateChanged((user) => {
+					if (user) {
+						this.setState({ userId: user.user.uid })
+						try{
+							this._backendSignIn(user.user.uid,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
+						} 
+						catch(error){
+							console.log(error);
+						}
+					}
+				});
+		}
 	
-	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended,dob) {
+	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended,dob,dateOfJoining) {
 		let { profile, actions } = this.props;
-		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended,dob:dob};
+		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended,dob:dob,dateOfJoining:dateOfJoining};
 		actions.setProfile(profile);
 	}
 	getCurrentUser = async () => {
@@ -108,10 +106,15 @@ class LoginScreen extends Component {
 		this.handleSendCode();
 	}
 	handleVerifyCode = () => {
-		// Request for OTP verification
-		this.setState({ loadingButton:true })
-		console.log('fsddfssdfsdfdsfdsfsdfs');
 		const { confirmResult, verificationCode } = this.state
+		// Request for OTP verification
+		if(verificationCode.length==6){
+			this.setState({ loadingButton:true });
+		}
+		else{
+			this.setState({showAlert:true});
+		}
+		console.log('fsddfssdfsdfdsfdsfsdfs');
 		if (verificationCode.length == 6) {
 		  confirmResult
 			.confirm(verificationCode)
@@ -124,7 +127,7 @@ class LoginScreen extends Component {
 			  catch(error){
 				  console.log(error);
 			  }
-			  this.setState({ loadingButton:false });
+			//   this.setState({ loadingButton:false });
 			  console.log('fsddfssdfsdfdsfdsfrwerewrwerwerwerewrewrsdfs');
 			})
 			.catch(error => {
@@ -143,26 +146,13 @@ class LoginScreen extends Component {
 	  renderConfirmationCodeView = () => {
 		return (
 		  <View style={styles.verificationView}>
-			{/* <OTPTextInput inputCount={6} textInputStyle={{color:'white'}} handleTextChange= {(text) => {
-				this.setState({verificationCode:text})}}/> */}
 				<OTPInputView
-					// ref={input => this.otpInput = input}
 					style={{width: '80%', height: 60,color:'#000'}}
 					pinCount={6}
-					// secureTextEntry={true}
-
-					// code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-					// onCodeChanged = {code => { this.setState({code})}}
-					// autoFocusOnLoad
 					codeInputFieldStyle={styles.underlineStyleBase}
 					codeInputHighlightStyle={styles.underlineStyleHighLighted}
 					onCodeChanged = {code => { this.setState({verificationCode:code})}}
 				/>	
-				 {/* <OtpInputs
-				 style={{width: '50%', height: 60,color:'#000',backgroundColor:'black'}}
-					handleChange={(code) => console.log(code)}
-					numberOfInputs={6}
-					/> */}
 			<Button outline style={[styles.themeButton, { paddingTop:20 }]}
 				title='Verify Code'
 				loading={this.state.loadingButton}
@@ -205,8 +195,9 @@ class LoginScreen extends Component {
 				const phoneNumber = await AsyncStorage.getItem('phoneNumber');
 				const sessionsAttended = await AsyncStorage.getItem('sessionsAttended');
 				const dob = await AsyncStorage.getItem('dob');
+				const dateOfJoining = await AsyncStorage.getItem('dateOfJoining');
 				
-				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended,dob);
+				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended,dob,dateOfJoining);
 				this.props.navigation.replace('GoHappy Club');
 				// this.setState({loader:false});
 				return;
@@ -246,13 +237,14 @@ class LoginScreen extends Component {
 				  AsyncStorage.setItem('membership',response.data.membership);
 				  AsyncStorage.setItem('sessionsAttended',response.data.sessionsAttended);
 				  AsyncStorage.setItem('dob',response.data.dob);
-				  this.setProfile(response.data.name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob)
+				  AsyncStorage.setItem('dateOfJoining',response.data.dateOfJoining);
+				  this.setProfile(response.data.name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob,response.data.dateOfJoining)
 				  this.setState({name:response.data.name,email:response.data.email,
 						phoneNumber:response.data.phone,dob:response.data.dob});
 				  // this.props.navigation.navigate('DrawerNavigator');
 				  if(this.pending()){
 					this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
-						name:this.state.name,state:this.state.state,city:this.state.city,dob:this.state.dob});
+						name:this.state.name,state:this.state.state,city:this.state.city,dob:this.state.dob,dateOfJoining:response.data.dateOfJoining});
 					return;
 				  }
 				  else{
@@ -276,6 +268,81 @@ class LoginScreen extends Component {
 		return false;
 	}
 	showConditions(type){
+		var tac = 'These terms of use (“Terms of Use” or “Terms”) mandate the terms and conditions on which the users (“User”) access and register on the "GoHappy Club” through its mobile device application (the “App”) , which provides audio and audio-visual content in the genre of inter alia wellness, meditation, educational programs, lifestyle and entertainment services (collectively referred to as the “Platform”) to end-users (hereinafter referred to as “End-User” or “you” or “your”), operated by GoHappy Club(“Partnership Firm”) ,a partnership firm established under the laws of India having its registered office at 306/19, Lane No:5 Golden City, Amritsar (143001), Punjab.The terms “we”, “our” or “us” refer to the firm. The terms “you”, “your” or “yourself” refer to the User. '
+
+		+'Please read these Terms carefully before accepting as they contain provisions that define your limits, your exercise of legal rights and obligations with respect to your use of our Services. By accessing and using our Services, you agree to be bound, without limitation or qualification, by these Terms. If you do not agree to be bound by these Terms, do not use the Services in any manner whatsoever or authorize or permit any other person or entity to do so. Any person who is not legally eligible to be bound by these Terms shall not access and use the Services. If you are not willing to agree to the foregoing, you should not click to affirm your acceptance thereto, in which case you are prohibited from accessing or using the Services.Nothing in these Terms shall be deemed to confer any third-party rights or benefits. While certain aspects of the Services or using certain Services, you will be subject to any additional terms applicable to such services that may be posted on the Service from time to time. All such terms are hereby incorporated by reference into these Terms of Service. The Services would be availed through the platform wherein our experts / mentors (Guides) would take /teach through the sessions as scheduled and communicated to you . '
+		
+		+'1. ELIGIBILITY: You must be of 50 years or more in your province, territory, or country, and otherwise be fully able and competent to enter into, abide by, and comply with these Terms .The Platform Services are not available to minors i.e. persons under the age of 18 (eighteen) years or to any Users suspended or removed by theCompany for any reason whatsoever. You represent that You are of legal age to form a binding contract and are not a person barred from receiving Platform Services under the applicable laws. At any time during your use of our Services, we reserve the right to terminate your access without prior warning (i) if any information provided proves to be inaccurate, not current or incomplete; (ii) if it is believed that your actions may cause legal liability for you or us; and/or (iii) if you are found to be non-compliant with these Terms. '
+		
+		+'The Company reserves the right to refuse access to the Platform or Platform Services to new Users or to terminate access granted to existing User(s) at any time without according any reasons for doing so. You shall not have more than one active Account (as defined hereinafter) on the Platform. Additionally, You are prohibited from selling, trading, or otherwise transferring Your Account to another party or impersonating any other person for the purposing of creating an account with the Platform. '
+		
+		+'2. CHANGES OR MODIFICATIONS: We may modify these Terms from time to time in our sole discretion. We will notify or let you know by posting the modified Terms on the platform. You shall, at all times, be responsible for regularly reviewing and noting the changes made to the Terms. Your continued use of our Services after the effective date of any change to the Terms will signify your assent to and will be deemed to be your acceptance of the modified Terms. If you don’t agree to be bound by the modified Terms, kindly discontinue accessing and using the Services immediately. We may change or discontinue all or any part of the Services, at any time and without notice, at our sole discretion. '
+		
+		+'3. SYSTEM REQUIREMENTS: For using the services in our Platform, you would require one or more compatible devices (mobile handset ), Internet access (fees may apply), and certain software and may require obtaining updates or upgrades from time to time. Because use of the Services involves hardware, software, and Internet access, your ability to access and use the Services may be affected by the performance of these factors. High speed Internet access is recommended. GoHappy Club shall also not be responsible for any reduction in speed or efficiency of the Services due to poor connectivity or any other such collateral requirements related to internet services. You acknowledge and agree that such collateral system requirements, which may be changed from time to time, are your responsibility, and we shall not, under any circumstances whatsoever, be responsible or liable for such costs or performance . '
+		
+		+'4. USE OF THE APPLICATION You shall be solely responsible for accessing and using our Services and shall ensure that you comply with laws of the territory while using our Services including but not limited to intellectual property, privacy, cookies and third party rights. You will use the Services only for such purposes as is permitted by (a) these Terms; and (b) any law, regulation or generally accepted practices or guidelines applicable in the country of which you are a citizen, in which you are a resident or from where you use the Services. You shall not use the Services or any Content (as defined) for any purpose that is unlawfulor prohibited by these Terms, or to solicit the performance of any illegal activity or other activity that infringes the rights of Ultrahuman andor others. '
+		
+		+'You shall be solely responsible and liable for your use of the Services, including without limitation for any and all Content transmitted, streamed, communicated, recorded, received, and/or stored to or through the Services by you. To the extent that you choose to use any software applicationsprovided by us in relation to the Services, you agree that you will promptly install all upgrades, bug fixes, patches, and other corrections relating to the Services made available by us.' 
+		
+		+'We would be improving our Services and creating new ones all the time. We at our sole discretion, at any time, with or without notice, and without any obligation or liability to you or any other party may suspend, terminate, limit, change, modify, downgrade, and/or update the Services (inwhole or in part), including without limitation, any feature, functionality, integration or component thereof. '
+		
+		+'The Services shall not, and is not intended to be used for any application where failure, interruption or malfunction may reasonably be anticipated to result in bodily injury, loss of life, or substantial damage to property and we shall not be liable for any claims, damages or loss which arise from such limitation. '
+		
+		+'5. REGISTRATION AND LOGIN DETAILS You need to register with GoHappy Club to access the platform and actively access all features in the platform as a User, through your account (“User Account”) which can be created by filling your contact number to login . To create a User Account, you must submit the information requested for at the time of registration (“Registration Information”) through your contact number ,subsequent to it an OTP will be generated which needs to be filled accordingly for its activation and therafter you can access the platform. '
+		
+		+'Our information collection and use policies with respect to the privacy of such information are set forth in the Privacy Policy. You acknowledge and agree that you are solely responsible for the accuracy and content of the Registration Information, and you agree to keep it up to date. '
+		
+		+'At any time after the registration, we reserve the right to suspend or terminate your User Account (i) if any Registration Information or any information provided thereafter proves to be inaccurate, not current or incomplete; (ii) if it is believed that your actions may cause legal liability for you, other End-Users or us; and/or (iii) if you are found to be non-compliant with these Terms. '
+		
+		+'You are responsible for safeguarding your User Account details and password. You agree that you will not disclose your password to any third party and that you will take sole responsibility for any activities or actions underyour User Account. You shall notify GoHappy Club immediately in case of any breach of security or any unauthorized use of your User Account. Similarly, you shall never use another person’s User Account without prior consent from GoHappy Club.You agree that you will not misrepresent yourself or represent yourself on the platform. You hereby expressly acknowledge and agree that you will be liable for any losses, damages (whether direct or indirect) caused to you, GoHappy Club or any others as a result of unauthorized use of your User Account. '
+		
+		+'By agreeing to create a User Account, you may receive occasional special offer, marketing, and survey communication emails with respect to the Services/Content. You can unsubscribe from the GoHappy Club commercial emails by following the opt-out instruction in these emails. '
+		
+		+'6. CHARGES, FEES AND SUBSCRIPTIONS TERMS Whenever you sign up or login GoHappy Club you may avail the services with a free trial period which includes certain sessions or whatsoever may be the available offer duringthe said period. The free trial period for any services offered will last for the period of time specified when you signed or logged in . Free trials shall not be combined with any other offers, as specified or communicated while login. You can also contribute to the club. '
+		
+		+'You agree to pay for all fees and charges along with applicable taxes incurred while using the GoHappy Club Services. '
+		
+		+'**For the purpose of clarity, monthly cycle means a 30 days cycle from the payment to GoHappy Club'
+		
+		+'Payment terms '
+		
+		+'All payments in respect of the GoHappy Club Services shall be made to the Company through the payment gateways as made available to you for purchasing any plan/ services. To the extent permitted by applicable law and subject to the Company’s Privacy Policy, you acknowledge and agree that the Company may use certain third-party vendors and service providers, including payment gateways, to process payments and manage payment card information. '
+		
+		+'In order to make payments online, You are requested to use a valid payment mode (card or netbanking or third party wallets or details required for any other mode of payment) (“Payment Details”) with the authority to use the same and to have sufficient funds or credit available to complete the payment on the GoHappy Club for availing the services . By providing the Payment Details, You represent, warrant, and covenant that: (1) You are legally authorized to provide such Payment Details; (2) You are legally authorized to perform payments using such Payment Details; and (3) such action does not violate the terms and conditions applicable to Your use of such Payment Details or applicable law. You agree that You are responsible for any fees charged by your internet service provider in connection with the payment services to avail the GoHappy Club payment plans. You may add, delete, and edit the Payment Details You have provided from time to time through the Platform. '
+		
+		+'The payment receipt for completion of a transaction shall be provided by the third party payment vendor and the transaction summary shall be provided by the Company, the payment receipt and transaction summary shall be made available on the Platform and also sent to your registered email address. '
+		
+		+'Except to the extent otherwise required by applicable law, the Company is not liable for any payments authorized through the Platform using your Payment Details. Particularly, the Company is not liable for any payments that do not complete because: (1) Your payment card or net banking or third party wallet does not contain sufficient funds to complete the transaction or the transaction exceeds the credit limit in respect of the Payment Details provided; (2) You have not provided the Company with correct Payment Details;(3) Your payment card has expired; or (4) circumstances beyond the Company’s control (such as, but not limited to, power outages, interruptions of cellular service, or any other interferences from an outside force) prevent the execution of the transaction. '
+		
+		+' Refund & Cancellation Policy of Top/ Subscription Plans/Contribution '
+		
+		+'A. Contribution'
+		
+		+'Contributions once purchased cannot be cancelled.No refund will be provided for payments already made. '
+		
+		+'7. USER CONTENT '
+		
+		+'You acknowledge that you are responsible for any content you may submit through the Application, including the legality, reliability, appropriateness, originality and copyright of any such content. You may not upload to, host, display, modify, transmit, update, share, distribute or otherwise publish through this Application any content that: '
+		
+		+'is confidential, proprietary, invasive of privacy or publicity rights, infringing on patents'
+		
+		+' trademarks, copyrights, or other intellectual property rights, unlawful, harmful, threatening, false, fraudulent, libellous, defamatory, obscene, vulgar, pornographic, paedophilic, profane, abusive, harassing, hateful, racially, ethnically or otherwise objectionable, disparaging, relating or encouraging money laundering or gambling, or otherwise unlawful in any manner whatever, including, but not limited to any content that encourages conduct that would constitute a criminal offence, violates the rights of any party or otherwise gives rise to civil liability or otherwise violates any applicable laws for the time being in force; belongs to another person and towhich you do not have any right to; violates any law for the time being in force; harms minors in any way; deceives or misleads the addressee about the origin of such messages or communicates any information which is grossly offensive or menacing in nature; threatens the unity, integrity, defence, security or sovereignty of India, friendly relations with foreign states, or public order or causes incitement to the commission of any cognisable offence of prevents investigation of any offence or is insulting to any other nation; infringes upon or violates any third party\'s privacy rights (including without limitation unauthorized disclosure of a person\'s name, physical address, phone number or email address); provides material that exploitspeople in a sexual, violent or otherwise inappropriate manner or solicits personal information from anyone; interferes with another user\'s use and enjoyment of the Platform or any other individual\'s user and enjoyment of similar services; or directly or indirectly, offer for trade, the dealing of any item which is prohibited or restricted in any manner under the provisions of any applicable law, rule, regulation or guideline for the time being in force; may contain software viruses or malware or files or programs designed to interrupt, destroy or limit the functionality of any computer; contains advertisements or solicitations of any kind, or other commercial content; is designed to impersonate others; contains messages that offer unauthorized downloads of any copyrighted, confidential or private information; contains multiple messages placed within individual folders by the same user restating the same point; contains identical (or substantially similar) messages to multiple recipients advertising any service, expressing a political or other similar message, or any other type of unsolicited commercial message; this prohibition includes but is not limited to (a) using the invitation functionality that may be available on the Platform to send messages to people who do not know you or who are unlikely to recognize you as a known contact; (b) using the Platform to connect to people who do not know you and then sending unsolicited promotional messages to those direct connections without their permission; or (c) sending messages to distribution lists, newsgroup aliases or group aliases. You may not use a false email address or other identifying information, impersonate any person or entity or otherwise mislead as to the origin of any content. Some features that may be available on this Platform require registration. By registering, you agree to provide true, accurate, current and complete information about yourself. '
+		
+		+'With respect to any content you submit or make available through the Application (other than personal information, which is handled in accordance with the Privacy Notice, you grant GoHappy Clyb a perpetual, irrevocable, non-terminable, worldwide, royalty-free and non-exclusive license to use, copy, distribute, publicly display, modify, create derivative works, and sublicense such content or any part of such content, in any media. You hereby represent, warrant and covenant that any content you provide does not include anything (including, but not limited to, text, images, music or video) to which you do not have the fullright to grant such a license to GoHappy club. '
+		
+		+'GoHappy club does not authorise or approve such unauthorised usage of your information but by using the Application, you acknowledge and agree that GoHappy Club will not be responsible for any third party\'s use of any of your information which you may have publicly disclosed on the Application. We advise that you exercise caution in disclosing any information on the Application which may become publicly available. '
+		
+		 
+		
+		+'8. DISCLAIMERS '
+		
+		+'EXCEPT AS OTHERWISE EXPRESSLY PROVIDED IN THESE TERMS OF USE, OR REQUIRED BY APPLICABLE LAW, GoHappy CLUB MAKES NO REPRESENTATIONS, COVENANTS OR WARRANTIES AND OFFERS NO OTHER CONDITIONS, EXPRESS OR IMPLIED, REGARDING ANY MATTER, INCLUDING, WITHOUT LIMITATION, THE MERCHANTABILITY, SUITABILITY, FITNESS FOR A PARTICULAR USE OR PURPOSE, OR NON-INFRINGEMENT OF PRODUCTS, ANY CONTENT ON THE APPLICATION, OR SERVICES PURCHASED THROUGH THE APPLICATION AS WELL AS WARRANTIES IMPLIED FROM A COURSE OF PERFORMANCE OR COURSE OF DEALING. '
+		
+		+'YOUR USE OF THIS PLATFORM IS AT YOUR SOLE RISK. THE PLATFORM IS PROVIDED ON AN “AS IS” AND “AS AVAILABLE” BASIS. WE RESERVE THE RIGHT TO RESTRICT OR TERMINATE YOUR ACCESS TO THE APPLICATION OR ANY FEATURE OR PART THEREOF AT ANY TIME. EVERGREEN CLUB DISCLAIMS ANY WARRANTIES THAT ACCESS TO THE APPLICATION WILL BE UNINTERRUPTED OR ERROR-FREE; THAT THE APPLICATION WILL BE SECURE; THAT THE APPLICATION OR THE SERVER THAT MAKES THE APPLICATION AVAILABLE WILL BE VIRUS-FREE; OR THAT INFORMATION ON THE APPLICATION WILL BE CORRECT, ACCURATE, ADEQUATE, USEFUL, TIMELY, RELIABLE OR OTHERWISE COMPLETE. IF YOU DOWNLOAD ANY CONTENT FROM THIS APPLICATION, YOU DO SO AT YOUR OWN DISCRETION AND RISK. YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA THAT RESULTS FROM THE DOWNLOAD OF ANY SUCH CONTENT. NO ADVICE OR INFORMATION OBTAINED BY YOU FROM THE APPLICATION SHALL CREATE ANY WARRANTY OF ANY KIND. '
+		
+		+'9 .Contact US'
+		
+		+'In the event You have any complaints or concerns with respect to the GoHappy Club platform or our services or if You have any questions, please feel free to contact us on care@gohappyclub.in or reach out to our customer support via Call or WhatsApp on +917888384477 (between 9:00 am – 9 pm).'
 		var pp = 'GoHappy Club, a firm incorporated under the laws of India having registered office at B-306/19, Lane No5, Golden City ,Amritsar (143001),Punjab. ("Company" or "we" or "us" or "our"), provides Services (as defined in the Terms of Service) through its Mobile Application "GoHappy Club"at Google Play Store/Apple Play Store ( collectively referred to as "Platform"). Any Service availed by Users of the Platform (as defined in the Terms of Service) (hereinafter referred to as "you", "your" or "User") through the Platform is conditioned upon your acceptance of the terms and conditions contained in Terms of Service, as available on Platform and this privacy policy ("Privacy Policy"). THIS PRIVACY POLICY HAS BEEN DRAFTED AND PUBLISHED IN ACCORDANCE WITH THE INFORMATION TECHNOLOGY ACT 2000, THE INFORMATION TECHNOLOGY (AMENDMENT) ACT 2008, AND THE INFORMATION TECHNOLOGY (REASONABLE SECURITY PRACTICES AND PROCEDURES AND SENSITIVE PERSONAL DATA OR INFORMATION) RULES 2011. THIS PRIVACY POLICY CONSTITUTES A LEGAL AGREEMENT BETWEEN YOU, AS A USER OF THE PLATFORM AND US, AS THE OWNER OF THE PLATFORM. YOU MUST BE A NATURAL PERSON WHO IS AT LEAST 18 YEARS OF AGE. This privacy policy sets out how GoHappy Club Club uses and protects any information that you give GoHappy club when you use this Application. GoHappy Club is committed to ensuring that your privacy is protected. If we are asking you to provide certain information by which you can be identified while using this Application, then you can be assured that it will only be used in accordance with this privacy statement. GoHappy Club may change this policy from time to time by updating this page. You should check this page from time to time to ensure that you are satisfied with any changes. You undertake that you shall be solely responsible for the accuracy and truthfulness of the Personal Information you share with us.'
 	   +'GoHappy Club is committed to ensuring that your privacy is protected. While signing up, some personal information is collected from and about you. This privacy policy sets out the details of how GoHappy Club uses the personal information collected, the manner in which it is collected, by whom as well as the purposes for which it is used.'
 	   +'While registering, when you accept the terms of this Privacy Policy and your use of the App signifies your continued acceptance thereof. In order to use the App, you will be required to refer and accept the terms of the Privacy Policy as revised from time to time.'
@@ -382,7 +449,7 @@ class LoginScreen extends Component {
 	   
 	   +'If you have questions, concerns or grievances regarding this Privacy Policy, you can email us at our support email-address: support@gohappyclub.in';
 		if(type==0){
-			this.setState({conditionText:''});
+			this.setState({conditionText:tac});
 		}
 		else{
 			this.setState({conditionText:pp});
@@ -421,7 +488,7 @@ class LoginScreen extends Component {
 				source={require('../../images/logo.png')}
 				/>
 
-				<Text style={{marginLeft:'10%',fontWeight: 'normal',fontSize:50,color:'black',alignSelf:'flex-start'}}>LOGIN</Text>
+				<Text style={{marginLeft:'10%',fontWeight: 'normal',fontSize:30,color:'black',alignSelf:'flex-start'}}>LOGIN or SIGN UP</Text>
 					{ !this.state.confirmResult &&  
 						<View style={styles.page}>
 
@@ -444,14 +511,14 @@ class LoginScreen extends Component {
 							/>
 							<Text style={{width:'80%'}}>
 							<Text style={{paddingTop: 10,width:'80%',color:'grey',fontSize:12}}>
-								By signing up, I agree to the {" "}	
+								By signing up, I agree to the{" "}	
 							</Text>
 							<Text style={{color: 'blue',width:'80%',fontSize:12}}
 									onPress={this.showConditions.bind(this,0)}>
-								Terms of service  
+								Terms of service
 							</Text>
 							<Text style={{width:'80%',color:'grey',fontSize:12}}>
-							{" "} and {" "}
+							{" "}and{" "}
 							</Text>
 							<Text style={{color: 'blue',width:'80%',fontSize:12}}
 									onPress={this.showConditions.bind(this,1)}>

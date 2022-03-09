@@ -1,14 +1,16 @@
 import React, {Component, useState} from 'react';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Text,Pressable } from 'react-native';
 
 import axios from 'axios';
 import DatePicker from 'react-native-date-picker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AwesomeAlert from 'react-native-awesome-alerts';
-
+import { connect } from 'react-redux';
+import { setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
 import { Button } from 'react-native-elements';
 
-export default class AdditionalDetails extends Component {
+class AdditionalDetails extends Component {
 	constructor(props)
 	{
 		super(props);
@@ -31,6 +33,11 @@ export default class AdditionalDetails extends Component {
 	
 	componentDidMount(){
 		// this.getCurrentUserInfo();
+	}
+	setProfile(name,profileImage,plan,sessionsAttended) {
+		let { profile, actions } = this.props;
+		profile = {name:name,profileImage:profileImage,membership:plan,sessionsAttended:sessionsAttended};
+		actions.setProfile(profile);
 	}
 	getAge() {
 		var today = new Date();
@@ -72,6 +79,7 @@ export default class AdditionalDetails extends Component {
 				  AsyncStorage.setItem('profileImage',response.data.profileImage);
 				  AsyncStorage.setItem('token',response.data.token);
 				  // this.state.navigation.navigate('DrawerNavigator');
+				  this.setProfile(response.data.name,response.data.profileImage,response.data.membership,response.data.sessionsAttended)
 				  this.setState({loader:true});
 				  console.log('naviii',this.props.route.params);
 				  this.props.route.params.navigation.navigate('GoHappy Club');
@@ -97,66 +105,64 @@ export default class AdditionalDetails extends Component {
 			<View style={styles.container1}>
                 <Text style = {styles.title}>Add Information</Text>
 				<View style={styles.inputs}>
-                <TextInput style = {styles.input}
+                	<TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "name"
+                    placeholder = "Name *"
                     placeholderTextColor = "#000"
                     autoCapitalize = "none"
                     value={this.state.name}
                     onChangeText={(text) => this.setState({name:text})}
-                />
-                <TextInput style = {styles.input}
-                    underlineColorAndroid = "transparent"
-                    placeholder = "Email"
-                    placeholderTextColor = "#000"
-                    autoCapitalize = "none"
-                    value={this.state.email}
-                    onChangeText={(text) => this.setState({email:text})}
-                />      
-                <TextInput style = {styles.input}
-                    underlineColorAndroid = "transparent"
-                    placeholder = "Phone Number"
-                    placeholderTextColor = "#000"
-					editable={false}
-					selectTextOnFocus={false} 
-                    autoCapitalize = "none"
-                    value={this.state.phoneNumber}
-                    onChangeText={(text) => this.setState({phoneNumber:text})}
-                />      
-				<TextInput style = {styles.input}
-                    underlineColorAndroid = "transparent"
-                    placeholder = "Date Of Birth"
-					editable={false}
-                    placeholderTextColor = "#000"
-                    autoCapitalize = "none"
-                    value={this.state.date}
-					// onPress={() => this.setState({open:true})} 
-                />  
-				 <DateTimePickerModal
-					isVisible={open}
-					mode="date"
-					onConfirm={(date) => {
-						this.setState({open:false})
-						//this.setState({date:date})
-						console.log(this.state);
-						var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
-						this.setState({date:uiDate})
-						this.setState({uiDate:uiDate})}}
-					onCancel={() => this.setState({open:false})}
-				/>
+                	/>
+					<TextInput style = {styles.input}
+						underlineColorAndroid = "transparent"
+						placeholder = "Email"
+						placeholderTextColor = "#000"
+						autoCapitalize = "none"
+						value={this.state.email}
+						onChangeText={(text) => this.setState({email:text})}
+					/>      
+					<Pressable onPress={() => this.setState({open:true})} >
+						<View pointerEvents="none">
+							<TextInput style = {styles.input}
+								underlineColorAndroid = "transparent"
+								placeholder = "Date Of Birth *"
+								editable={false}
+								placeholderTextColor = "#000"
+								autoCapitalize = "none"
+								value={this.state.date}
+								
+								// onPress={() => this.setState({open:true})} 
+							/>  
+						</View>
+					</Pressable>
+					<DateTimePickerModal
+						isVisible={open}
+						mode="date"
+						onConfirm={(date) => {
+							this.setState({open:false})
+							//this.setState({date:date})
+							console.log(this.state);
+							var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
+							this.setState({date:uiDate})
+							this.setState({uiDate:uiDate})}}
+						onCancel={() => this.setState({open:false})}
+					/>
+					    
 				</View>
-				<Button  buttonStyle = {styles.dateInput} 
-					// buttonStyle={{backgroundColor:'#F4ECD4'}}
-					titleStyle={{color:'#3D5466'}}
-					title="Set Date of Birth" 
-					onPress={() => this.setState({open:true})} />
-                <Button outline style={ { marginTop: '30%' }}
+				<Button outline
                     title='Save'
 					loading={this.state.loadingButton}
-					buttonStyle={{backgroundColor:'#F4ECD4',marginTop:'30%'}}
-					titleStyle={{color:'#3D5466'}}
+					buttonStyle={{backgroundColor:'#f2f2f4',width: '100%'
+				}}
+					titleStyle={{color:'black'}}
                     onPress={this.updateDetails.bind(this)}>
-                </Button>      
+                </Button>  
+				{/* <Button  buttonStyle = {styles.dateInput} 
+					// buttonStyle={{backgroundColor:'#f2f2f4'}}
+					titleStyle={{color:'#73a3ef'}}
+					title="Set Date of Birth" 
+					onPress={() => this.setState({open:true})} /> */}
+                
 				<AwesomeAlert
 						show={this.state.showAlert}
 						showProgress={false}
@@ -203,12 +209,14 @@ const styles = StyleSheet.create({
 	},
 	inputs: {
 		marginTop:'15%',
+		flex:1,
+		flexDirection:'column'
 	},
 	dateInput: {
 		fontSize: 20,
 		marginTop:'5%',
 		alignSelf:'center',
-		backgroundColor:'#F4ECD4',
+		backgroundColor:'#f2f2f4',
         width:'40%'
 	},
 	btnContainer: {
@@ -301,3 +309,15 @@ const styles = StyleSheet.create({
 		marginTop: 50
 	  }
 });
+const mapStateToProps = state => ({
+	profile:state.profile
+  });
+
+  const ActionCreators = Object.assign(
+	{},
+	{setProfile}
+  );
+  const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(ActionCreators, dispatch),
+  });
+  export default connect(mapStateToProps, mapDispatchToProps)(AdditionalDetails)

@@ -4,7 +4,8 @@ import { FAB , PaperProvider} from 'react-native-paper';
 
 import { Text} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/auth';
 import { connect } from 'react-redux';
 import { changeCount, setProfile } from '../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
@@ -59,6 +60,7 @@ class Profile extends Component {
 		try {
 		//   await GoogleSignin.revokeAccess();
 		//   await GoogleSignin.signOut();
+		firebase.auth().signOut();
 		  AsyncStorage.clear();
 		  this.props.navigation.reset({
 			index: 0,
@@ -97,7 +99,7 @@ class Profile extends Component {
 	openWhatsApp = () => {
 		// let msg = this.state.message;
 		// let mobile = this.state.mobileNo;
-		let url = "https://chat.whatsapp.com/I8xONK4XQeIAkJQcyt3q0J";
+		let url = "https://chat.whatsapp.com/DKjqVwE9c7X4EgEBYE39yu";
 		Linking.openURL(url)
 			.then(data => {
 			console.log("WhatsApp Opened successfully " + data);
@@ -116,6 +118,22 @@ class Profile extends Component {
 		const title = 'Login';
 		const { count } = this.props;
 		const {profile} = this.props;
+		const now = new Date();
+		var days = Math.ceil((now.getTime() - Number(profile.dateOfJoining))/(1000 * 3600 * 24));
+		console.log((now.getTime()));
+		console.log(profile.dateOfJoining);
+
+		var dayString = "";
+		if(isNaN(days)){
+			days=0;
+			dayString="day"
+		}
+		else if(days<=1){
+			dayString="day";
+		}
+		else{
+			dayString="days";
+		}
 		console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
 		console.log(this.props);
 		console.log(this.state);
@@ -141,12 +159,15 @@ class Profile extends Component {
 					}}>
 						<Image
 						style={styles.cover}
-						source={{
-						uri: profile.profileImage,
-						}}
+						source={
+							{
+								uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
+								// require('../images/profile_image.jpeg')
+							}
+						}
 						/>
-						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '170%', alignItems: 'flex-start', justifyContent: 'center' }}>
-							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(61,84,102,0.9)',padding:4,color:'white',
+						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '160%', alignItems: 'flex-start', justifyContent: 'center' }}>
+							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(115,163,239,0.9)',padding:4,color:'white',
 									borderRadius:10}}>
 									{profile.name}
 							</Text>
@@ -161,7 +182,7 @@ class Profile extends Component {
 						</View>
 					</View>
 
-					<View style={{backgroundColor:'#3D5466', 
+					<View style={{backgroundColor:'#73a3ef', 
 						shadowColor: "black",
 						shadowOffset: { height: 2},
 						shadowOpacity: 0.3, borderRadius:10,
@@ -180,15 +201,18 @@ class Profile extends Component {
 								
 							</View>
 							<View style={{width: '33%',height:'100%',justifyContent:'center',borderColor:'#E0E0E0',borderRightWidth:1,alignContent:'center'}}>
-							<Text style={{...styles.cardText}}>Plan</Text>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>{profile.membership}</Text>
-								
+							<Text style={{...styles.cardText}}>Membership</Text>
+								{/* <Text style={{...styles.cardText,fontWeight: "bold"}}>{profile.membership}</Text> */}
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>Free</Text>
+
 							</View>
 							<View style={{width: '33%',height:'100%'
 							,justifyContent:'center',alignContent:'center'}}>
 								<Text style={{...styles.cardText}}>Member Since</Text>
-								<Text style={{...styles.cardText,fontWeight: "bold"}}>{count}</Text>
-								
+								{/* <Text style={{...styles.cardText,fontWeight: "bold"}}>{count}</Text> */}
+								<Text style={{...styles.cardText,fontWeight: "bold"}}>{days} {dayString}</Text>
+
+
 							</View>
 							
 						</View>
@@ -196,7 +220,7 @@ class Profile extends Component {
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={() => {this.props.navigation.navigate('Membership Details')}}>
 							<View>
-								<Text style={styles.optionList}>Subscriptions and Plans</Text>
+								<Text style={styles.optionList}>Contribute and Support Us</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
@@ -211,20 +235,6 @@ class Profile extends Component {
 						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.openWhatsApp}>
 							<View >
 								<Text style={styles.optionList}>Join Whatsapp Support Group</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this.incrementCount.bind(this)}>
-							<View >
-								<Text style={styles.optionList}>Privacy Policy</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View style={{width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity style={{width:'100%',borderTopWidth:1,borderColor:'#E0E0E0'}} onPress={this._onPressButton}>
-							<View >
-								<Text style={styles.optionList}>Terms & Conditions</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
@@ -266,7 +276,8 @@ const styles = StyleSheet.create({
 	cover:{
 		flex: 1,
     	justifyContent: "center",
-
+		// resizeMode: 'cover',
+		// marginLeft:'-58%'
 	},
 	cardText:{
 		textAlign:'center',
@@ -279,7 +290,7 @@ const styles = StyleSheet.create({
 		color:'#424242'
 	},
 	fab: {
-		backgroundColor:'#3D5466',
+		backgroundColor:'#73a3ef',
 		position: 'absolute',
 		margin: 16,
 		right: 0,

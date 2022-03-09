@@ -11,7 +11,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   return (
-    <Tab.Navigator initialRouteName="Home" barStyle={{backgroundColor:'#3D5466'}} shifting={false}
+    <Tab.Navigator initialRouteName="Home" barStyle={{backgroundColor:'#76a6f0'}} shifting={false}
   >
       <Tab.Screen name="Home" component={HomeScreen} 
       options={{
@@ -20,7 +20,9 @@ export default function BottomNavigator() {
           shadowOpacity: 0,
         tabBarIcon: ({ color }) => (
           <FontAwesomeIcon icon={ faHome } color={ 'white' } size={25} />
-      ),
+        ),
+        tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
       }}/>
       <Tab.Screen name="MySessions" component={MySessionsScreen}
       options={{

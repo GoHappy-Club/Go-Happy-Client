@@ -54,6 +54,7 @@ export default class HomeScreen extends Component {
 		this.setState({events:[]});
 		var url = SERVER_URL+"/event/getEventsByDate";
 		if(selectedDate==null){
+			console.log("seelcted date was null");
 			selectedDate=new Date().setHours(0,0,0,0);
 		}
 		console.log('date for events',selectedDate,url);
@@ -91,8 +92,8 @@ export default class HomeScreen extends Component {
 				
 				if(response.data=="SUCCESS"){
 					//EventNotification({channelId: 'events',event:item});
-					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)-1000*60*10),bigText:'Your Event Starts in 10 minutes.'});
-					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)),bigText:'Your Session has been started. Join Now!'});
+					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)-1000*60*10),bigText:'Your session starts in a few minutes.'});
+					EventReminderNotification({channelId: 'events',event:item,fireTime:new Date(parseInt(item.startTime)),bigText:'Your session has been started. Join Now!'});
 					var tempEvents = this.state.events;
 					for(var i=0;i<tempEvents.length;i++){
 						if(tempEvents[i].id==item.id){

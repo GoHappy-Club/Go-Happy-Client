@@ -54,7 +54,7 @@ export default function App() {
           headerTransparent: true,title:null,elevation: 0, 
           shadowOpacity: 0,headerShadowVisible: false,
           // headerStyle: {
-          //   backgroundColor: '#F4ECD4'
+          //   backgroundColor: '#f2f2f4'
           // },
         }}/>
         <Stack.Screen name="Session Details" component={HomeDetailsScreen} options = {({ navigation }) => ({

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
-import { RefreshControl,Modal,FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
+import { RefreshControl,Linking,Modal,FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView } from 'react-native';
 import { Text , Button} from 'react-native-elements';
 import {WebView} from 'react-native-webview';
 
@@ -22,6 +22,7 @@ export default class MySessions extends Component {
 			mySession: [],
 			refreshing:false,
 			videoVisible:false,
+			videoVisible1:false,
 			profileImage: 'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
 		}
 		this._retrieveData();
@@ -86,9 +87,11 @@ export default class MySessions extends Component {
 	}
 	videoPlayer(link){
 		console.log(link);
-		this.setState({videoVisible:true});
+		this.setState({videoVisible1:true,recordingLink:link});
+		return;
 	}
-	startEvent(item){
+	startEvent(item){console.log(item);
+
 		Linking.openURL(item.meetingLink);
 	}
 	render() {
@@ -112,43 +115,31 @@ export default class MySessions extends Component {
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
 							<Avatar.Image
-							source = {{
-								uri: this.state.profileImage
-							}}
+							source = {
+								// {
+								require('../images/profile_image.jpeg')
+								// uri: this.state.profileImage
+							// }
+						}
 							size={30}
 							/>
 							<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
 						{type=='ongoing' && <Button
-							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
+							disabled = {item.participantsList!=null && item.participantsList.includes(this.props.phoneNumber)?true:false}
 							title='Join'
+							buttonStyle={{backgroundColor:"#73a3ef"}}
 							onPress={this.startEvent.bind(this,item)}
 							loading={item.loadingButton}
 						/>}
 						{type=='expired' && <Button
-							disabled = {item.participantsList!=null && item.participantsList.includes(this.state.email)?true:false}
+							disabled = {item.participantsList!=null && item.participantsList.includes(this.props.phoneNumber)?true:false}
 							title='View Recording'
+							buttonStyle={{backgroundColor:"#73a3ef"}}
 							onPress={this.videoPlayer.bind(this,item.recordingLink)}
 							loading={item.loadingButton}
 						/>}
-						{item.recordingLink!=null && <Modal
-							style={{
-
-							}}
-							animationType="slide"
-							transparent={false}
-							visible={this.state.videoVisible}
-							onRequestClose={() => {
-								this.setState({videoVisible:false});
-							}}>
-								<WebView
-								javaScriptEnabled={true}
-								style={{flex:1, borderColor:'red', borderWidth:1, height:400, width:400}}
-								source={{
-									uri: item.recordingLink
-								}}
-								/>
-						</Modal>}
+						
 					</View>
 				</Cd.Content>
 				</TouchableOpacity>
@@ -199,6 +190,22 @@ export default class MySessions extends Component {
 					keyExtractor={item => item.id}
 				/>
 				</SafeAreaView>
+				<Modal
+					animationType="slide"
+					transparent={false}
+					visible={this.state.videoVisible1}
+					onRequestClose={() => {
+						this.setState({videoVisible1:false});
+					}}>
+						<WebView
+						allowsFullscreenVideo
+						javaScriptEnabled={true}
+						style={{flex:1, borderColor:'red', borderWidth:1}}
+						source={{
+							uri: this.state.recordingLink
+						}}
+						/>
+				</Modal>
 			</ScrollView>
 		);
 	}

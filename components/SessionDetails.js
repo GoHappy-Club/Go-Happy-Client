@@ -25,12 +25,28 @@ export default class SessionDetails extends Component {
 		console.log(props);
 	}	
 	getTitle(){
+		var currTime = Date.now();
+		if(this.props.type==null){
+
+			console.log(currTime);
+		}
 		if(this.props.type=='expired')
-		return "View Recording";
+			return "View Recording";
 		if(this.props.type=='ongoing')
-		return "Join";
-		if(this.state.event.participantList!=null && this.props.phoneNumber!=null && this.state.event.participantList.includes(this.props.phoneNumber))
-		return "Cancel Your Booking";
+			return "Join";
+		if(this.state.event.participantList!=null && this.props.phoneNumber!=null && this.state.event.participantList.includes(this.props.phoneNumber)){
+			if(currTime>this.state.event.endTime){
+				return "View Recording";
+			}
+			else if(currTime+600000<this.state.event.startTime){
+				return "Cancel Your Booking";
+			}
+			else{
+				return "Join";
+			}
+		}
+			
+		
 		return "Book";
 		
 	}
@@ -43,9 +59,13 @@ export default class SessionDetails extends Component {
 	}
 	sessionAction(){
 		if(this.getTitle()==='View Recording'){
-			console.log(this.props);
+			console.log(this.props+'fsdfsdfsdfdsfdfdfdfdsfdsfsfdsfdsf');
 			this.videoPlayer();
-			return;			;
+			return;
+		}
+		if(this.getTitle()==='Join'){
+			Linking.openURL(this.props.event.meetingLink);
+			return;
 		}
 		console.log('outside');
 		var output = this.props.sessionAction('book');
@@ -55,6 +75,7 @@ export default class SessionDetails extends Component {
 		}
 	}
 	videoPlayer(){
+		console.log('i am in video played');
 		this.setState({videoVisible:true});
 	}
 	render() {
@@ -127,9 +148,9 @@ export default class SessionDetails extends Component {
 						<View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop:10}}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
 								<Avatar.Image
-								source = {{
-									uri: this.state.profileImage
-								}}
+								source = {
+									require('../images/profile_image.jpeg')
+								}
 								size={30}
 								/>
 								<Title style={{color:'#404040',fontSize:13,paddingLeft:10}}>{item.expertName}</Title>
@@ -141,6 +162,7 @@ export default class SessionDetails extends Component {
 				
 				<View style={{margin:15}}>
 					<Button outline 
+					buttonStyle={{backgroundColor:"#73a3ef"}}
 						title={this.getTitle()}
 						loading={this.state.loadingButton}
 						onPress={this.sessionAction.bind(this)}>
@@ -159,12 +181,14 @@ export default class SessionDetails extends Component {
 					}}>
 						<WebView
 						javaScriptEnabled={true}
-						style={{flex:1, borderColor:'red', borderWidth:1, height:400, width:400}}
+						allowsFullscreenVideo
+						style={{flex:1, borderColor:'red', borderWidth:1}}
 						source={{
 							uri: item.recordingLink
 						}}
 						/>
-				</Modal>}
+				</Modal>
+				}
 
 			</View>
 

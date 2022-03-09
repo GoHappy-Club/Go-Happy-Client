@@ -31,12 +31,13 @@ class HomeDashboard extends Component {
 	{
 		super(props);
 		var today = new Date().toDateString();
+		var todayRaw = new Date().setHours(0,0,0,0);
 		this.state = {
 			loader:false,
 			selectedDate: today,
 			email: null,
 			bookingLoader:false,
-			selectedDateRaw:null,
+			selectedDateRaw:todayRaw,
 			profileImage: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg'
 		}
 		//console.log(props);
@@ -64,11 +65,15 @@ class HomeDashboard extends Component {
 	  };
 	changeSelectedDate = date => {
 		var select = new Date(Date.parse(date)).toDateString();
+		var tempDate = new Date(Date.parse(date)).setHours(0,0,0,0);
 		this.setState({
-		  selectedDate: select,
-		  selectedDateRaw:new Date(Date.parse(date)).setHours(0,0,0,0)
+		  selectedDate: select
 		 });
+		 this.setState({selectedDateRaw:tempDate})
 		 this.setState({events:[]});
+		 console.log('in change date',tempDate); 
+
+		 console.log('in change date',this.state.selectedDateRaw); 
 		this.props.loadEvents(new Date(Date.parse(date)).setHours(0,0,0,0));
 	  };
 	trimContent(text,cut){
@@ -80,7 +85,7 @@ class HomeDashboard extends Component {
 		this.setState({bookingLoader:true});
 		item.loadingButton=true;
 		var _this = this;
-		console.log('in update profile',this.props);
+		console.log('in update profile',this.state.selectedDateRaw);
 		this.props.bookEvent(item,this.props.profile.phoneNumber,this.state.selectedDateRaw);
 
 	}
@@ -104,14 +109,24 @@ class HomeDashboard extends Component {
 	loadCaller(){
 		this.props.loadEvents(this.state.selectedDateRaw);
 	}
+
+	sorry(){
+		return (
+			<Text  h4 style={{height:'100%',marginTop:'20%',alignSelf:'center',textAlign:'center',flex: 1,
+			justifyContent: 'center',
+			alignItems: 'center',color:'#2f2f31'}}>
+				No Sessions Available 😟
+			</Text>
+		)
+	}
 	
 	render() {
 
 		const {profile} = this.props;
 		const renderItem = ({ item }) => (
 
-			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#3D5466'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#3D5466'}} underlayColor={"#3D5466"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber,
+			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#73a3ef'}}>
+				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#73a3ef'}} underlayColor={"#73a3ef"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber,
 					onGoBack: () => this.loadCaller(),
 				  }
 				)}>
@@ -119,27 +134,30 @@ class HomeDashboard extends Component {
 				<Cd.Content>
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
-							<Badge value={item.category} badgeStyle={styles.badge} textStyle={{color:'#3D5466'}}/>
-							<Text style={{color:'#F4ECD4',fontSize:14, paddingLeft:4}}>
+							<Badge value={item.category} badgeStyle={styles.badge} textStyle={{color:'#2f2f31'}}/>
+							<Text style={{color:'white',fontSize:14, paddingLeft:4}}>
 								{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
 							</Text>
-							<Text style={{color:'#F4ECD4',fontSize:14, paddingLeft:4}}>
+							<Text style={{color:'white',fontSize:14, paddingLeft:4}}>
 								{item.seatsLeft} seats left
 							</Text>
 						</View>
 						{/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
 					</View>
-					<Title style={{color:'#F4ECD4',fontSize:20, padding:4}}>{this.trimContent(item.eventName,30)}</Title>
+					<Title style={{color:'white',fontSize:20, padding:4}}>{this.trimContent(item.eventName,30)}</Title>
 
 					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between',padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
 							<Avatar.Image
-							source = {{
-								uri: this.state.profileImage
-							}}
+							source = {
+								require('../images/profile_image.jpeg')
+								// {
+								// 	uri: this.state.profileImage
+								// }
+							}
 							size={30}
 							/>
-							<Title style={{color:'#F4ECD4',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
+							<Title style={{color:'white',fontSize:13,paddingLeft:10}}>{this.trimContent(item.expertName,17)}</Title>
 						</View>
 						{/* item.participantList!=null && item.participantList.includes(this.state.email) */}
 						<Button
@@ -147,8 +165,9 @@ class HomeDashboard extends Component {
 							title={item.status!=null || (item.participantList!=null && item.participantList.includes(profile.phoneNumber))?"Booked":"Book"}
 							onPress={this.updateEventBook.bind(this,item)}
 							loading={item.loadingButton}
-							buttonStyle={{backgroundColor:'#F4ECD4'}}
-							titleStyle={{color:'#3D5466'}}
+							loadingProps={{ size: 'small', color: 'black' }}
+							buttonStyle={{backgroundColor:'white'}}
+							titleStyle={{color:'#2f2f31'}}
 						/>
 					</View>
 				</Cd.Content>
@@ -158,16 +177,16 @@ class HomeDashboard extends Component {
 		  );
 		return ( 
 			
-			<View style={{marginTop:'10%',flex:1,backgroundColor:'#F4ECD4'}}>
+			<View style={{flex:1,backgroundColor:'#f2f2f4'}}>
 			<CalendarDays 
 				numberOfDays={15}
 				daysInView={4}
 				paginate={true}
 				onDateSelect={date => this.changeSelectedDate(date)}
 			/>
-			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15,color:'#3D5466'}}>{this.state.selectedDate}</Text>
-				{this.props.childLoader==true && <MaterialIndicator style={{marginTop:'10%'}} color='blue'/>}
-				{this.props.childLoader==false && 
+			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15,color:'#2f2f31'}}>{this.state.selectedDate}</Text>
+				{this.props.childLoader==true && <MaterialIndicator color='#73a3ef'/>}
+				{this.props.childLoader==false && this.props.events.length>0 && 
 				<SafeAreaView style={{flex:1}}>
 				
 					<FlatList contentContainerStyle={{ flexGrow: 1 }}
@@ -177,6 +196,8 @@ class HomeDashboard extends Component {
 					/>
 				
 				</SafeAreaView>}
+				{this.props.events.length==0 && this.props.childLoader==false 
+				&& this.sorry()}
 				{/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
 				</View>
 			
@@ -214,12 +235,12 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderRadius: 20,
 		borderWidth: 1,
-		borderColor: '#3D5466',
+		borderColor: '#73a3ef',
 	},
 	badge: {
-		backgroundColor:'#F4ECD4',
+		backgroundColor:'white',
 		alignSelf:'flex-start',
-		color:'#3D5466',
+		color:'#73a3ef',
 		// padding:4
 	},
 	fav: {
