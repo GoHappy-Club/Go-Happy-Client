@@ -167,7 +167,7 @@ class Profile extends Component {
 						}
 						/>
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '160%', alignItems: 'flex-start', justifyContent: 'center' }}>
-							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(115,163,239,0.9)',padding:4,color:'white',
+							<Text h3 style={{overflow:"hidden",backgroundColor:'rgba(41,191,194,0.9)',padding:4,color:'white',
 									borderRadius:10}}>
 									{profile.name}
 							</Text>
@@ -182,7 +182,7 @@ class Profile extends Component {
 						</View>
 					</View>
 
-					<View style={{backgroundColor:'#73a3ef', 
+					<View style={{backgroundColor:'#29BFC2', 
 						shadowColor: "black",
 						shadowOffset: { height: 2},
 						shadowOpacity: 0.3, borderRadius:10,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
 		color:'#424242'
 	},
 	fab: {
-		backgroundColor:'#73a3ef',
+		backgroundColor:'#29BFC2',
 		position: 'absolute',
 		margin: 16,
 		right: 0,

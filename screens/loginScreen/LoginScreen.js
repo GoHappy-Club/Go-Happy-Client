@@ -22,6 +22,7 @@ import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import LinearGradient from 'react-native-linear-gradient';
 
+
 const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
     const paddingToBottom = 20;
     return layoutMeasurement.height + contentOffset.y >=
@@ -44,24 +45,12 @@ class LoginScreen extends Component {
 			city:'',
 			conditionDialog: false,
 			conditionText:'',
-			dob:''
+			dob:'',
+			reachedBackendSignIn:false
 		}
 		this.getCurrentUserInfo();
 	}
-	conponentDidMount() {    
-		firebase.auth().onAuthStateChanged((user) => {
-					if (user) {
-						this.setState({ userId: user.user.uid })
-						try{
-							this._backendSignIn(user.user.uid,user.user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.user.phoneNumber);
-						} 
-						catch(error){
-							console.log(error);
-						}
-					}
-				});
-		}
-	
+
 	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended,dob,dateOfJoining) {
 		let { profile, actions } = this.props;
 		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended,dob:dob,dateOfJoining:dateOfJoining};
@@ -77,23 +66,45 @@ class LoginScreen extends Component {
 	}
 	handleSendCode = () => {
 		// Request to send OTP
-		console.log('in handle send code');
+		console.log('in handle send code',this.state.phoneNumber);
 		this.setState({ loadingButton:true })
 		if (this.validatePhoneNumber()) {
+			console.log('here1');
 		  firebase
 			.auth()
 			.signInWithPhoneNumber(this.state.phoneNumber)
 			.then(confirmResult => {
 				console.log('in handle send code inside');
 			  this.setState({ confirmResult })
+			  firebase.auth().onAuthStateChanged(user => {
+				if (user) {
+					console.log('this is user',user);
+					this.setState({ userId: user.uid })
+					try{
+						this._backendSignIn(user.uid,user.displayName,'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',user.phoneNumber);
+					} 
+					catch(error){
+						console.log(error);
+					}
+				}
+			});
 			  this.setState({ loadingButton:false })
 			})
 			.catch(error => {
-			  alert(error.message)
+				// if(JSON.stringify(error).includes('too-many')){
+				// 	alert(error);
+				// }
+				// else{
+				// 	alert(JSON.stringify(error));
+				// }
+				alert(error);
+				console.log(error);
+			
 			  this.setState({ loadingButton:false })
 			})
 		} else {
 		  alert('Invalid Phone Number')
+		  this.setState({ loadingButton:false })
 		}
 	  }
 	changePhoneNumber = () => {
@@ -107,6 +118,7 @@ class LoginScreen extends Component {
 	}
 	handleVerifyCode = () => {
 		const { confirmResult, verificationCode } = this.state
+		  
 		// Request for OTP verification
 		if(verificationCode.length==6){
 			this.setState({ loadingButton:true });
@@ -114,7 +126,7 @@ class LoginScreen extends Component {
 		else{
 			this.setState({showAlert:true});
 		}
-		console.log('fsddfssdfsdfdsfdsfsdfs');
+		console.log('fsddfssdfsdfdsfdsfsdfs',verificationCode);
 		if (verificationCode.length == 6) {
 		  confirmResult
 			.confirm(verificationCode)
@@ -131,13 +143,14 @@ class LoginScreen extends Component {
 			  console.log('fsddfssdfsdfdsfdsfrwerewrwerwerwerewrewrsdfs');
 			})
 			.catch(error => {
-			  alert(error.message)
-			  this.setState({ loadingButton:false })
+			//   alert(error.message)
+
+			  this.setState({ loadingButton:false,showAlert:true })
 
 			  console.log('fwrewrsdfs');
 			})
 		} else {
-		  alert('Please enter a 6 digit OTP code.')
+		//   alert('Please enter a 6 digit OTP code.')
 
 		  console.log('fwrewrsdfsOTP');
 		}
@@ -214,6 +227,12 @@ class LoginScreen extends Component {
 	  };
 	_backendSignIn(token,name,profileImage,phone){
 		console.log(token,name,profileImage,phone);
+		if(this.state.reachedBackendSignIn==false){
+			this.setState({reachedBackendSignIn:true});
+		}
+		else{
+			return;
+		}
 		if(name==null){
 			name='';
 		}
@@ -238,13 +257,14 @@ class LoginScreen extends Component {
 				  AsyncStorage.setItem('sessionsAttended',response.data.sessionsAttended);
 				  AsyncStorage.setItem('dob',response.data.dob);
 				  AsyncStorage.setItem('dateOfJoining',response.data.dateOfJoining);
-				  this.setProfile(response.data.name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob,response.data.dateOfJoining)
+				  this.setProfile(name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob,response.data.dateOfJoining)
 				  this.setState({name:response.data.name,email:response.data.email,
 						phoneNumber:response.data.phone,dob:response.data.dob});
 				  // this.props.navigation.navigate('DrawerNavigator');
 				  if(this.pending()){
-					this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:this.state.email,phoneNumber:this.state.phoneNumber,
-						name:this.state.name,state:this.state.state,city:this.state.city,dob:this.state.dob,dateOfJoining:response.data.dateOfJoining});
+					  console.log(this.state);
+					this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:response.data.email,phoneNumber:response.data.phone,
+						name:name,state:this.state.state,city:this.state.city,dob:response.data.dob,dateOfJoining:response.data.dateOfJoining});
 					return;
 				  }
 				  else{

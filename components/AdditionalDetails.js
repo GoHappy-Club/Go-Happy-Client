@@ -36,7 +36,9 @@ class AdditionalDetails extends Component {
 	}
 	setProfile(name,profileImage,plan,sessionsAttended) {
 		let { profile, actions } = this.props;
-		profile = {name:name,profileImage:profileImage,membership:plan,sessionsAttended:sessionsAttended};
+		console.log('this is oplf profile',profile);
+		profile = {dob:profile.dob,dateOfJoining:profile.dateOfJoining,name:name,email:profile.email,phoneNumber:profile.phoneNumber,token:profile.token,profileImage:profileImage,membership:plan,sessionsAttended:sessionsAttended};
+
 		actions.setProfile(profile);
 	}
 	getAge() {
@@ -152,14 +154,14 @@ class AdditionalDetails extends Component {
 				<Button outline
                     title='Save'
 					loading={this.state.loadingButton}
-					buttonStyle={{backgroundColor:'#f2f2f4',width: '100%'
+					buttonStyle={{backgroundColor:'white',width: '100%'
 				}}
 					titleStyle={{color:'black'}}
                     onPress={this.updateDetails.bind(this)}>
                 </Button>  
 				{/* <Button  buttonStyle = {styles.dateInput} 
-					// buttonStyle={{backgroundColor:'#f2f2f4'}}
-					titleStyle={{color:'#73a3ef'}}
+					// buttonStyle={{backgroundColor:'white'}}
+					titleStyle={{color:'#29BFC2'}}
 					title="Set Date of Birth" 
 					onPress={() => this.setState({open:true})} /> */}
                 
@@ -216,7 +218,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		marginTop:'5%',
 		alignSelf:'center',
-		backgroundColor:'#f2f2f4',
+		backgroundColor:'white',
         width:'40%'
 	},
 	btnContainer: {
@@ -310,7 +312,7 @@ const styles = StyleSheet.create({
 	  }
 });
 const mapStateToProps = state => ({
-	profile:state.profile
+	profile:state.profile.profile
   });
 
   const ActionCreators = Object.assign(

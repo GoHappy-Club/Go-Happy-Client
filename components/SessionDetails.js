@@ -74,11 +74,63 @@ export default class SessionDetails extends Component {
 			console.log(this.props);
 		}
 	}
+	loadDate(item) {
+		var dt = new Date(parseInt(item));
+var hours = dt.getHours() ; // gives the value in 24 hours format
+var AmOrPm = hours >= 12 ? 'pm' : 'am';
+hours = (hours % 12) || 12;
+var minutes = dt.getMinutes() ;
+if(hours<10){
+	hours="0"+hours;
+}
+if(minutes<10){
+	minutes="0"+minutes;
+}
+var finalTime = hours + ":" + minutes + " " + AmOrPm; 
+return finalTime;
+		// return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
+	}
 	videoPlayer(){
 		console.log('i am in video played');
 		this.setState({videoVisible:true});
 	}
+	getImage(){
+		var title = this.props.event.eventName;
+		// title = title.replaceAll(" ","_");
+		// title = '../images/'+title+'.png';
+		var randomVal = Math.floor(Math.random() * 2);
+
+		const images = {
+			antakshari: require('../images/sessions/antakshari_1.png'),
+			art: require('../images/sessions/art_1.png'),
+			craft: require('../images/sessions/craft_1.png'),
+			dance: require('../images/sessions/dance_1.png'),
+			englishlearning: require('../images/sessions/englishlearning_1.png'),
+			karaoke: require('../images/sessions/karaokesinging_1.png'),
+			laughteryoga: require('../images/sessions/laughteryoga_1.png'),
+			meditation: require('../images/sessions/meditationandvisualisation_1.png'),
+			mentalhealth: require('../images/sessions/mentalhealth_1.png'),
+			nutritionanddiet: require('../images/sessions/nutritionanddiet_1.png'),
+			openmic: require('../images/sessions/openmicdiscussions_1.png'),
+			quiz: require('../images/sessions/quiz_1.png'),
+			technology: require('../images/sessions/technologylearning_1.png'),
+			yoga: require('../images/sessions/yoga_2.png'),
+		
+		};
+		console.log(title);
+		var requiredImg=null;
+		Object.keys(images).forEach(function(key) {
+			console.log(key);
+			if(title.toLowerCase().includes(key)){
+				console.log('i am inside this if');
+				requiredImg=key;
+			}
+		  })
+		return images[requiredImg];
+		// return require('../images/sessions/antakshiri_1.png');
+	}
 	render() {
+		var cover = this.getImage();
 		if(this.state.loader==true){
 			// return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
 			return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
@@ -103,9 +155,12 @@ export default class SessionDetails extends Component {
 					}}>
 						<Image
 						style={styles.cover}
-						source={{
-						uri: item.coverImage,
-						}}
+						source={
+							
+								// cover
+							{uri:item.coverImage}
+							// require({cover})
+						}
 						/>
 						<View style={{ position: 'absolute', top: 0, paddingLeft:20, height: '180%', alignItems: 'flex-start', justifyContent: 'center' }}>
 							<Text style={{overflow:"hidden",backgroundColor:'white',padding:4,color:'black',
@@ -129,8 +184,8 @@ export default class SessionDetails extends Component {
 						style={{marginTop:20}}>
 						</FontAwesomeIcon>
 						<Text style={{color: "grey",marginTop:15,fontSize:15,marginLeft:5}}>
-							{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} -   
-							{(new Date(parseInt(item.endTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, " $1$3")}
+							{this.loadDate(item.startTime)} -   
+							{ } {this.loadDate(item.endTime)}
 						</Text>
 						</View>
 						<View style={{
@@ -162,7 +217,7 @@ export default class SessionDetails extends Component {
 				
 				<View style={{margin:15}}>
 					<Button outline 
-					buttonStyle={{backgroundColor:"#73a3ef"}}
+					buttonStyle={{backgroundColor:"#29BFC2"}}
 						title={this.getTitle()}
 						loading={this.state.loadingButton}
 						onPress={this.sessionAction.bind(this)}>
@@ -218,7 +273,9 @@ const styles = StyleSheet.create({
 	},
 	cover:{
 		flex: 1,
-    	justifyContent: "center",
+		resizeMode: 'cover',
+		// marginTop:'-10%',
+    	// justifyContent: "center",
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
 	},

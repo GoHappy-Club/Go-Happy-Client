@@ -86,6 +86,7 @@ class HomeDashboard extends Component {
 		item.loadingButton=true;
 		var _this = this;
 		console.log('in update profile',this.state.selectedDateRaw);
+		console.log('in update profile bookkkkk',this.props.profile);
 		this.props.bookEvent(item,this.props.profile.phoneNumber,this.state.selectedDateRaw);
 
 	}
@@ -119,14 +120,30 @@ class HomeDashboard extends Component {
 			</Text>
 		)
 	}
+	loadDate(item) {
+		var dt = new Date(parseInt(item.startTime));
+var hours = dt.getHours() ; // gives the value in 24 hours format
+var AmOrPm = hours >= 12 ? 'pm' : 'am';
+hours = (hours % 12) || 12;
+var minutes = dt.getMinutes() ;
+if(hours<10){
+	hours="0"+hours;
+}
+if(minutes<10){
+	minutes="0"+minutes;
+}
+var finalTime = hours + ":" + minutes + " " + AmOrPm; 
+return finalTime;
+		// return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
+	}
 	
 	render() {
 
 		const {profile} = this.props;
 		const renderItem = ({ item }) => (
 
-			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#73a3ef'}}>
-				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#73a3ef'}} underlayColor={"#73a3ef"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber,
+			<Cd style={{...styles.card,marginLeft:30,marginRight:30,marginBottom:15,backgroundColor: '#29BFC2'}}>
+				<TouchableOpacity style={{...styles.card,marginTop:10,backgroundColor:'#29BFC2'}} underlayColor={"#29BFC2"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,phoneNumber:profile.phoneNumber,
 					onGoBack: () => this.loadCaller(),
 				  }
 				)}>
@@ -136,7 +153,7 @@ class HomeDashboard extends Component {
 						<View style={{ flex: 1, flexDirection: 'row'}}>
 							<Badge value={item.category} badgeStyle={styles.badge} textStyle={{color:'#2f2f31'}}/>
 							<Text style={{color:'white',fontSize:14, paddingLeft:4}}>
-								{(new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")} | 
+								{this.loadDate(item)} | 
 							</Text>
 							<Text style={{color:'white',fontSize:14, paddingLeft:4}}>
 								{item.seatsLeft} seats left
@@ -177,15 +194,15 @@ class HomeDashboard extends Component {
 		  );
 		return ( 
 			
-			<View style={{flex:1,backgroundColor:'#f2f2f4'}}>
-			<CalendarDays 
+			<View style={{flex:1,backgroundColor:'white'}}>
+			<CalendarDays
 				numberOfDays={15}
-				daysInView={4}
+				daysInView={3}
 				paginate={true}
 				onDateSelect={date => this.changeSelectedDate(date)}
 			/>
 			<Text h4 style={{marginLeft:30,marginTop:20,marginBottom:15,color:'#2f2f31'}}>{this.state.selectedDate}</Text>
-				{this.props.childLoader==true && <MaterialIndicator color='#73a3ef'/>}
+				{this.props.childLoader==true && <MaterialIndicator color='#29BFC2'/>}
 				{this.props.childLoader==false && this.props.events.length>0 && 
 				<SafeAreaView style={{flex:1}}>
 				
@@ -235,12 +252,12 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderRadius: 20,
 		borderWidth: 1,
-		borderColor: '#73a3ef',
+		borderColor: '#29BFC2',
 	},
 	badge: {
 		backgroundColor:'white',
 		alignSelf:'flex-start',
-		color:'#73a3ef',
+		color:'#29BFC2',
 		// padding:4
 	},
 	fav: {

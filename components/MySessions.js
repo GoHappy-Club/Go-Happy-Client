@@ -67,23 +67,33 @@ export default class MySessions extends Component {
 		});
 	}
 
+	loadDate(item) {
+		var dt = new Date(parseInt(item));
+		var hours = dt.getHours() ; // gives the value in 24 hours format
+		var AmOrPm = hours >= 12 ? 'pm' : 'am';
+		hours = (hours % 12) || 12;
+		var minutes = dt.getMinutes() ;
+		if(hours<10){
+			hours="0"+hours;
+		}
+		if(minutes<10){
+			minutes="0"+minutes;
+		}
+		var finalTime = hours + ":" + minutes + " " + AmOrPm; 
+		return finalTime;
+		// return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
+	}
+
 	sorry(){
 		return (
 			<Text  h3 style={{height:'100%',marginTop:'20%',alignSelf:'center',textAlign:'center',flex: 1,
 			justifyContent: 'center',
 			alignItems: 'center'}}>
-				No Events Booked 😟
+				No Sessions Booked 😟
 			</Text>
 		)
 	}
 	loadCaller(){
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
-		console.log('ewfsdfdsfdsfdsfsdfdsfdsfds')
 	}
 	videoPlayer(link){
 		console.log(link);
@@ -101,7 +111,7 @@ export default class MySessions extends Component {
 				<TouchableOpacity style={{...styles.card,marginTop:10}} underlayColor={"grey"} onPress = {() => this.props.navigation.navigate('Session Details',{event:item,type:type,phoneNumber:this.props.phoneNumber,onGoBack: () => this.loadCaller()})}>
 
 				<Cd.Content>
-				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {(new Date(parseInt(item.startTime))).toLocaleTimeString()}</Text>     
+				<Text style={{padding:4}}>{(new Date(parseInt(item.startTime))).toDateString()} | {this.loadDate(item.startTime)}</Text>     
 
 				<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding:4 }}>
 						<View style={{ flex: 1, flexDirection: 'row'}}>
@@ -128,14 +138,14 @@ export default class MySessions extends Component {
 						{type=='ongoing' && <Button
 							disabled = {item.participantsList!=null && item.participantsList.includes(this.props.phoneNumber)?true:false}
 							title='Join'
-							buttonStyle={{backgroundColor:"#73a3ef"}}
+							buttonStyle={{backgroundColor:"#29BFC2"}}
 							onPress={this.startEvent.bind(this,item)}
 							loading={item.loadingButton}
 						/>}
 						{type=='expired' && <Button
 							disabled = {item.participantsList!=null && item.participantsList.includes(this.props.phoneNumber)?true:false}
 							title='View Recording'
-							buttonStyle={{backgroundColor:"#73a3ef"}}
+							buttonStyle={{backgroundColor:"#29BFC2"}}
 							onPress={this.videoPlayer.bind(this,item.recordingLink)}
 							loading={item.loadingButton}
 						/>}
