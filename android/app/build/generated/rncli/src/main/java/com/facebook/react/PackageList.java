@@ -25,6 +25,8 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 // @react-native-google-signin/google-signin
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
+// react-native-branch
+import io.branch.rnbranch.RNBranchPackage;
 // react-native-contacts
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // react-native-date-picker
@@ -49,6 +51,8 @@ import cl.json.RNSharePackage;
 import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
+// react-native-version-check
+import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 // react-native-video
 import com.brentvatne.react.ReactVideoPackage;
 // react-native-webview
@@ -105,6 +109,7 @@ public class PackageList {
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new RNGoogleSigninPackage(),
+      new RNBranchPackage(),
       new ReactNativeContacts(),
       new DatePickerPackage(),
       new RNGestureHandlerPackage(),
@@ -117,6 +122,7 @@ public class PackageList {
       new RNSharePackage(),
       new SvgPackage(),
       new VectorIconsPackage(),
+      new RNVersionCheckPackage(),
       new ReactVideoPackage(),
       new RNCWebViewPackage()
     ));

@@ -29,8 +29,17 @@ class AdditionalDetails extends Component {
 			dob:props.route.params.dob
 		}
         console.log('ffsefsdds',props.route.params);
+		if(this.pending()==false){
+			this.props.route.params.navigation.replace('GoHappy Club');
+		}
+		// this.pending();
 	}
-	
+	pending(){
+		console.log('state in pending',this.state);
+		if((this.state.phoneNumber==null || this.state.phoneNumber.length==0)||(this.state.name==null || this.state.name.length==0))
+			return true;
+		return false;
+	}
 	componentDidMount(){
 		// this.getCurrentUserInfo();
 	}
@@ -54,15 +63,16 @@ class AdditionalDetails extends Component {
 	}
 	
 	updateDetails(){
-		if(this.state.name==null || this.state.name=='' || this.state.uiDate=='' || this.state.uiDate==null){
+		//  || this.state.uiDate=='' || this.state.uiDate==null
+		if(this.state.name==null || this.state.name==''){
 			this.setState({showAlert:true.valueOf,alertMessage:'Mandatory details are missing'});
 			console.log(this.state);
 			return;
 		}
-		if(this.getAge() < 50){
-			this.setState({showAlert:true,alertMessage:'Your age is less than 50 years. You are not eligible to login. Thank you'});
-			return;
-		}
+		// if(this.getAge() < 50){
+		// 	this.setState({showAlert:true,alertMessage:'Your age is less than 50 years. You are not eligible to login. Thank you'});
+		// 	return;
+		// }
 		this.setState({loadingButton:true});
 		var url = SERVER_URL+"/user/update";
 		axios.post(url, {'email':this.state.email,'name':this.state.name,'state':this.state.state,'city':this.state.city,'phone':this.state.phoneNumber,'dob':this.state.date})
@@ -84,7 +94,7 @@ class AdditionalDetails extends Component {
 				  this.setProfile(response.data.name,response.data.profileImage,response.data.membership,response.data.sessionsAttended)
 				  this.setState({loader:true});
 				  console.log('naviii',this.props.route.params);
-				  this.props.route.params.navigation.navigate('GoHappy Club');
+				  this.props.route.params.navigation.replace('GoHappy Club');
 				  this.setState({loader:false});
 				}
 				else if(response.data=="ERROR"){
@@ -122,8 +132,16 @@ class AdditionalDetails extends Component {
 						autoCapitalize = "none"
 						value={this.state.email}
 						onChangeText={(text) => this.setState({email:text})}
-					/>      
-					<Pressable onPress={() => this.setState({open:true})} >
+					/>     
+					<Text style = {{fontSize: 14,
+						color:'black',
+						marginTop:'5%',
+						alignSelf:'center',
+						alignContent:'center',textAlign:'center',
+						paddingLeft:15,
+						}}>
+						GoHappy Club: An Initiative exclusively for aged 50 years and above.</Text> 
+					{/* <Pressable onPress={() => this.setState({open:true})} >
 						<View pointerEvents="none">
 							<TextInput style = {styles.input}
 								underlineColorAndroid = "transparent"
@@ -136,8 +154,8 @@ class AdditionalDetails extends Component {
 								// onPress={() => this.setState({open:true})} 
 							/>  
 						</View>
-					</Pressable>
-					<DateTimePickerModal
+					</Pressable> */}
+					{/* <DateTimePickerModal
 						isVisible={open}
 						mode="date"
 						onConfirm={(date) => {
@@ -148,7 +166,7 @@ class AdditionalDetails extends Component {
 							this.setState({date:uiDate})
 							this.setState({uiDate:uiDate})}}
 						onCancel={() => this.setState({open:false})}
-					/>
+					/> */}
 					    
 				</View>
 				<Button outline

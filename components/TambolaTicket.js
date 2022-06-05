@@ -163,6 +163,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffe0f0'
       },
       TableText: { 
-        margin: 10
+        alignSelf:'center'
       }
 });

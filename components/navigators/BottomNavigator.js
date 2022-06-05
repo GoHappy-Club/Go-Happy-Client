@@ -50,6 +50,14 @@ export default function BottomNavigator() {
         tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
       }}/>
+      <Tab.Screen name="Refer" component={ReferScreen}
+      options={{
+        tabBarLabel: 'Refer and Earn',
+        elevation: 0, // remove shadow on Android
+          shadowOpacity: 0,
+        tabBarIcon: ({ color }) => (
+          <FontAwesomeIcon icon={ faChild } color={ 'white' } size={25} />       ),
+      }} />
       <Tab.Screen name="MyProfile" component={MyProfileScreen}
       options={{
         tabBarLabel: 'My Profile',

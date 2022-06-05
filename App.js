@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import React, {useEffect} from 'react';
+import { StyleSheet, Text, View, Button, TouchableOpacity, Alert, Linking, BackHandler } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/loginScreen/LoginScreen'
@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as configData from "./config/cloud-dev/config.json";
 import Icon from 'react-native-vector-icons/Ionicons';
 import PushNotification from 'react-native-push-notification'
+import VersionCheck from 'react-native-version-check';
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -40,6 +41,30 @@ PushNotification.createChannel(
 
 export default function App() {
   AsyncStorage.getItem("token").then((out)=>{token=out});
+  useEffect(() => {
+    checkVersion();
+  }, []);
+
+  const checkVersion = async () => { try 
+    { 
+      let updateNeeded = await VersionCheck.needUpdate(); 
+      console.log('updateNeededupdateNeededupdateNeededupdateNeededupdateNeededupdateNeededupdateNeeded',updateNeeded);
+    if (updateNeeded && updateNeeded.isNeeded) { 
+      Alert.alert( 'Please Update', 'You will have to update your app to the latest version to continue using.', 
+    [
+      { 
+        text: 'Update',
+        onPress: () => { 
+          BackHandler.exitApp();
+          Linking.openURL(updateNeeded.storeUrl);
+    }
+    }], {cancelable: false}, ); } } catch (error) {} 
+  };
+
+
+
+
+
   return (
     <NavigationContainer>  
     <Stack.Navigator>

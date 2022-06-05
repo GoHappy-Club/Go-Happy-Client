@@ -211,8 +211,11 @@ class LoginScreen extends Component {
 				const dateOfJoining = await AsyncStorage.getItem('dateOfJoining');
 				
 				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended,dob,dateOfJoining);
-				this.props.navigation.replace('GoHappy Club');
+				// this.props.navigation.replace('GoHappy Club');
+
 				// this.setState({loader:false});
+				this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:email,phoneNumber:phoneNumber,
+					name:name,dob:dob,dateOfJoining:dateOfJoining});
 				return;
 			// }
 		  }
@@ -508,7 +511,7 @@ class LoginScreen extends Component {
 				source={require('../../images/logo.png')}
 				/>
 
-				<Text style={{marginLeft:'10%',fontWeight: 'normal',fontSize:30,color:'black',alignSelf:'flex-start'}}>LOGIN or SIGN UP</Text>
+				<Text style={{fontWeight: 'normal',fontSize:30,color:'black',alignSelf:'center'}}>LOGIN or SIGN UP</Text>
 					{ !this.state.confirmResult &&  
 						<View style={styles.page}>
 
@@ -717,11 +720,11 @@ const styles = StyleSheet.create({
 		color: 'white'
 	},
 	logo: {
-		width: 200,
-		height: 200,
-		alignSelf: 'flex-end',
-		marginTop: -20,
-		marginRight: -20
+		width: 250,
+		height: 250,
+		alignSelf: 'center',
+		// marginTop: -20,
+		// marginRight: -20
 	},
 	logoContainer: {
 		alignItems: 'center',
@@ -755,7 +758,7 @@ const styles = StyleSheet.create({
 	// width:600,height:'100%'
 	},
 	page: {
-		marginTop:'20%',
+		marginTop:'10%',
 		alignItems: 'center',
 		justifyContent: 'center',
 		// marginBottom: 200

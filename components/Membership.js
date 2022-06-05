@@ -33,7 +33,7 @@ class Membership extends Component {
 			textColor:'black',
 			amount:'',
 			success:false,
-			payType:'m',
+			payType:'o',
 			plans:{
 				selectedItem:'',
 				planDetails:[{
@@ -279,15 +279,15 @@ class Membership extends Component {
 						{/* <View> */}
 						<View style={{flexDirection:'row'}}>
 							{/* <View style={{flexDirection:'column',marginRight:30}}> */}
-							<RadioButton value="m" />
-							<Text style={{fontWeight:'bold',fontSize:20,marginRight:30,paddingTop:2}}>Monthly</Text>
+							{/* <RadioButton value="m" /> */}
+							{/* <Text style={{fontWeight:'bold',fontSize:20,marginRight:30,paddingTop:2}}>Monthly</Text> */}
 
 							{/* </View> */}
 						{/* </View>
 						<View> */}
 						{/* <View style={{flexDirection:'column',marginLeft:30}}> */}
-							<RadioButton value="o" />
-							<Text style={{fontWeight:'bold',fontSize:20,paddingTop:2}}>One Time</Text>
+							{/* <RadioButton value="o" /> */}
+							{/* <Text style={{fontWeight:'bold',fontSize:20,paddingTop:2}}>One Time</Text> */}
 
 							</View>
 							{/* </View> */}
@@ -350,10 +350,19 @@ class Membership extends Component {
 								<Text  style={{fontWeight:'bold',padding:5}}>₹ 1999</Text>
 						</TouchableOpacity>*/}
 					</View> 
-					{/* <Text style={{color:'grey'}}>Average contribution is Rs. 250</Text> */}
-					<Text style={{borderWidth:1,padding:10,borderColor:'rgba(0,0,0,0.2)',borderRadius:10,marginTop:'10%',color:'black',width:Dimensions.get('window').width*0.9,textAlign: 'justify',
-    lineHeight: 30,}}>Your generous contribution will enable this club to remain vibrant and become strong by funding experts, interns, and infrastructure.
-Additionally, it will help us to reach more seniors citizens to make their life happy and productive.</Text>
+					<Text style={{color:'black',fontWeight:'bold',fontSize:20}}>Yeh Shagun GoHappy Family ke Naam</Text>
+					<Text style={{borderWidth:1,padding:10,borderColor:'rgba(0,0,0,0.2)',borderRadius:10,marginTop:'5%',color:'black',width:Dimensions.get('window').width*0.9,textAlign: 'justify',
+					lineHeight: 22,}}><Text style={{fontWeight:'bold'}}>Why contribute?</Text> 
+					<Text>{'\n'}
+					It will help us make your life more vibrant and make you Go more Happy, as contributions from GoHappy Club members is the only source of revenue to fund experts, interns & infrastructure. </Text>
+					{/* <Text style={{fontWeight:'bold'}}>{'\n'}How? </Text> */}
+					{/* <Text>{'\n'}By funding experts, interns & infrastructure and let your contagious smile reach more  senior citizens. </Text> */}
+					<Text style={{fontWeight:'bold'}}>{'\n'}How much to contribute?</Text>
+					<Text>{'\n'}Financial support of any size help fund our mission.</Text>	
+					{/* <Text style={{fontWeight:'bold'}}>{'\n'}Compulsary to contribute?</Text>
+					<Text>{'\n'}Not at all!! It's your Choice
+					You will be still the precious member of our GoHappy Family.</Text> */}
+					</Text>
 					</View>
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity  
@@ -361,7 +370,7 @@ Additionally, it will help us to reach more seniors citizens to make their life 
 						 style={this.state.amount<1 && styles.checkoutButtonEnabled || styles.checkoutButtonEnabled}
 						 onPress={this.razorPay.bind(this)}>
 							<View>
-								<Text style={styles.optionList}>Click To Contribute</Text>
+								<Text style={styles.optionList}>Click To Pay</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
