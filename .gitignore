@@ -37,3 +37,6 @@ android/app/.DS_Store
 *.dex
 *.xml
 *.xml
+*.bin
+*.bin
+*.xml

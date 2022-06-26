@@ -43,10 +43,10 @@ class AdditionalDetails extends Component {
 	componentDidMount(){
 		// this.getCurrentUserInfo();
 	}
-	setProfile(name,profileImage,plan,sessionsAttended) {
+	setProfile(name,profileImage,plan,sessionsAttended,selfInviteCode) {
 		let { profile, actions } = this.props;
 		console.log('this is oplf profile',profile);
-		profile = {dob:profile.dob,dateOfJoining:profile.dateOfJoining,name:name,email:profile.email,phoneNumber:profile.phoneNumber,token:profile.token,profileImage:profileImage,membership:plan,sessionsAttended:sessionsAttended};
+		profile = {selfInviteCode: selfInviteCode,dob:profile.dob,dateOfJoining:profile.dateOfJoining,name:name,email:profile.email,phoneNumber:profile.phoneNumber,token:profile.token,profileImage:profileImage,membership:plan,sessionsAttended:sessionsAttended};
 
 		actions.setProfile(profile);
 	}
@@ -91,7 +91,7 @@ class AdditionalDetails extends Component {
 				  AsyncStorage.setItem('profileImage',response.data.profileImage);
 				  AsyncStorage.setItem('token',response.data.token);
 				  // this.state.navigation.navigate('DrawerNavigator');
-				  this.setProfile(response.data.name,response.data.profileImage,response.data.membership,response.data.sessionsAttended)
+				  this.setProfile(response.data.name,response.data.profileImage,response.data.membership,response.data.sessionsAttended,response.data.selfInviteCode);
 				  this.setState({loader:true});
 				  console.log('naviii',this.props.route.params);
 				  this.props.route.params.navigation.replace('GoHappy Club');

@@ -23,6 +23,8 @@ import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-firebase/auth
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
+// @react-native-firebase/dynamic-links
+import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 // @react-native-google-signin/google-signin
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // react-native-branch
@@ -108,6 +110,7 @@ public class PackageList {
       new RNDateTimePickerPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
+      new ReactNativeFirebaseDynamicLinksPackage(),
       new RNGoogleSigninPackage(),
       new RNBranchPackage(),
       new ReactNativeContacts(),

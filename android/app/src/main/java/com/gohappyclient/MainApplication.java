@@ -15,6 +15,8 @@ import java.util.List;
 import com.razorpay.rn.RazorpayPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+// import io.invertase.firebase.RNFirebaseLinksPackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -34,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
 //          packages.add(new RazorpayPackage());
 //          packages.add(new AsyncStoragePackage());
           // packages.add(new ReactNativeContacts());
+          // packages.add(new RNFirebaseLinksPackage());
             return packages;
         }
 

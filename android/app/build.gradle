@@ -215,7 +215,10 @@ dependencies {
     implementation project(':react-native-contacts')
     implementation 'io.branch.sdk.android:library:4.+'
 //    implementation project(':react-native-razorpay')
-//    implementation project(':@react-native-async-storage')
+//    implementation project(':@react-native-async-storage')    
+    implementation "com.google.firebase:firebase-dynamic-links:19.0.0"
+    implementation "com.google.firebase:firebase-invites:17.0.0" 
+
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

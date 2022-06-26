@@ -15,6 +15,7 @@ import * as configData from "./config/cloud-dev/config.json";
 import Icon from 'react-native-vector-icons/Ionicons';
 import PushNotification from 'react-native-push-notification'
 import VersionCheck from 'react-native-version-check';
+import firebase from '@react-native-firebase/app'
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -61,7 +62,10 @@ export default function App() {
     }], {cancelable: false}, ); } } catch (error) {} 
   };
 
-
+  const componentDidMount = async () => {
+    let url = await firebase.links().getInitialLink();
+    console.log('incoming url', url);
+  }
 
 
 

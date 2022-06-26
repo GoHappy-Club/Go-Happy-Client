@@ -21,13 +21,9 @@ import { connect } from 'react-redux';
 import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import LinearGradient from 'react-native-linear-gradient';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 
-const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
-};
 class LoginScreen extends Component {
 	constructor(props)
 	{
@@ -46,14 +42,24 @@ class LoginScreen extends Component {
 			conditionDialog: false,
 			conditionText:'',
 			dob:'',
-			reachedBackendSignIn:false
+			reachedBackendSignIn:false,
+			referralCode:'',
 		}
 		this.getCurrentUserInfo();
 	}
-
-	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended,dob,dateOfJoining) {
-		let { profile, actions } = this.props;
-		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended,dob:dob,dateOfJoining:dateOfJoining};
+	componentDidMount(){
+		dynamicLinks().onLink((url) => {
+			console.log('this is the url',url.url);
+			this.setState({referralCode: url.url.split('=')[1]});
+	 	});
+	  	dynamicLinks().getInitialLink().then((link) => {
+			console.log('this is the initial url',link);
+			this.setState({referralCode: url.url.split('=')[1]});
+		});
+	  }
+	setProfile(name,email,phoneNumber,profileImage,token,plan,sessionsAttended,dob,dateOfJoining,selfInviteCode) {
+		let { profile, actions } = this.props; 
+		profile = {name:name,email:email,phoneNumber:phoneNumber,profileImage:profileImage,token:token,membership:plan,sessionsAttended:sessionsAttended,dob:dob,dateOfJoining:dateOfJoining,selfInviteCode:selfInviteCode};
 		actions.setProfile(profile);
 	}
 	getCurrentUser = async () => {
@@ -209,8 +215,8 @@ class LoginScreen extends Component {
 				const sessionsAttended = await AsyncStorage.getItem('sessionsAttended');
 				const dob = await AsyncStorage.getItem('dob');
 				const dateOfJoining = await AsyncStorage.getItem('dateOfJoining');
-				
-				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended,dob,dateOfJoining);
+				const selfInviteCode = await AsyncStorage.getItem('selfInviteCode');
+				this.setProfile(name,email,phoneNumber,profileImage,token,membership,sessionsAttended,dob,dateOfJoining,selfInviteCode);
 				// this.props.navigation.replace('GoHappy Club');
 
 				// this.setState({loader:false});
@@ -228,8 +234,17 @@ class LoginScreen extends Component {
 		  }
 		}
 	  };
+	  async createDynamicReferralLink(name,phone){
+		const link1 = await firebase.dynamicLinks().buildShortLink({
+			link: 'https://gohappyclub.in/refer?idx='+name.substring(0,4)+phone.substring(2,4)+phone.substring(10,12),
+			domainUriPrefix: 'https://gohappyclub.page.link',
+		},dynamicLinks.ShortLinkType.UNGUESSABLE);
+		console.log(link1);
+		alert(link1);
+	  }
 	_backendSignIn(token,name,profileImage,phone){
 		console.log(token,name,profileImage,phone);
+		this.createDynamicReferralLink(name,phone);
 		if(this.state.reachedBackendSignIn==false){
 			this.setState({reachedBackendSignIn:true});
 		}
@@ -239,7 +254,7 @@ class LoginScreen extends Component {
 		if(name==null){
 			name='';
 		}
-		var url = SERVER_URL+"/auth/login";
+		var url = SERVER_URL+"/auth/login?id="+this.state.referralCode;
 		axios.post(url, {'token':token,'name':name,'profileImage':profileImage,'phone':phone.substr(1)})
 		.then(response => {
 			 console.log('backend sign in',response)
@@ -260,10 +275,9 @@ class LoginScreen extends Component {
 				  AsyncStorage.setItem('sessionsAttended',response.data.sessionsAttended);
 				  AsyncStorage.setItem('dob',response.data.dob);
 				  AsyncStorage.setItem('dateOfJoining',response.data.dateOfJoining);
-				  this.setProfile(name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob,response.data.dateOfJoining)
+				  this.setProfile(name,response.data.email,response.data.phone,response.data.profileImage,token,response.data.membership,response.data.sessionsAttended,response.data.dob,response.data.dateOfJoining,response.data.selfInviteCode)
 				  this.setState({name:response.data.name,email:response.data.email,
 						phoneNumber:response.data.phone,dob:response.data.dob});
-				  // this.props.navigation.navigate('DrawerNavigator');
 				  if(this.pending()){
 					  console.log(this.state);
 					this.props.navigation.replace('Additional Details',{navigation:this.props.navigation,email:response.data.email,phoneNumber:response.data.phone,

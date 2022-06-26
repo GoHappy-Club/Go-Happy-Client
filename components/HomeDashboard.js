@@ -1,26 +1,18 @@
 import React, {Component,useState, useEffect } from 'react';
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import { FlatList,SafeAreaView,ScrollView,TouchableOpacity,TouchableHighlight,TouchableWithoutFeedback, StyleSheet, View, TextInput, Image, KeyboardAvoidingView,Pressable } from 'react-native';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import { Text, Badge, Icon, withBadge, Button } from 'react-native-elements';
-import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 import { Card as Cd, Title, Paragraph,  Avatar} from 'react-native-paper';
-import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { Dimensions } from 'react-native';
-import { CirclesLoader, PulseLoader, TextLoader, DotsLoader } from 'react-native-indicator';
 import CalendarDays from 'react-native-calendar-slider-carousel';
-import { DefaultTheme } from '@react-navigation/native';
-import { faHome,faHistory,faHeart as test,faClipboardList } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import ListItemSwipeable from 'react-native-elements/dist/list/ListItemSwipeable';
 import {
   MaterialIndicator,
 } from 'react-native-indicators';
 
 import { connect } from 'react-redux';
-import { changeCount, setProfile } from '../redux/actions/counts.js';
+import { setProfile } from '../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
+import firebase from '@react-native-firebase/app'
 
 
 const { width: screenWidth } = Dimensions.get('window')
@@ -63,7 +55,18 @@ class HomeDashboard extends Component {
 		  //console.log('error here',error)
 		}
 	  };
+	  async createDynamicReferralLink(){
+		  let name="rakshit sharma";
+		  let phone="919888138824";
+		const link1 = await firebase.dynamicLinks().buildLink({
+			link: 'https://gohappyclub.in/refer?idx='+name.substring(0,4)+phone.substring(2,4)+phone.substring(10,12),
+			domainUriPrefix: 'https://gohappyclub.page.link',
+		  });
+		  console.log(link1);
+		  alert(link1);
+	  }
 	changeSelectedDate = date => {
+		this.createDynamicReferralLink();
 		var select = new Date(Date.parse(date)).toDateString();
 		var tempDate = new Date(Date.parse(date)).setHours(0,0,0,0);
 		this.setState({
@@ -97,16 +100,6 @@ class HomeDashboard extends Component {
 		 }
 		 else return null;
 	}
-	// componentDidMount() {
-
-	// 	this.props.navigation.addListener(
-	// 	  'focus',
-	// 	  payload => {
-	// 		this.props.loadEvents(this.state.selectedDateRaw);
-	// 	  }
-	// 	);
-	
-	// }
 	loadCaller(){
 		this.props.loadEvents(this.state.selectedDateRaw);
 	}
@@ -122,19 +115,18 @@ class HomeDashboard extends Component {
 	}
 	loadDate(item) {
 		var dt = new Date(parseInt(item.startTime));
-var hours = dt.getHours() ; // gives the value in 24 hours format
-var AmOrPm = hours >= 12 ? 'pm' : 'am';
-hours = (hours % 12) || 12;
-var minutes = dt.getMinutes() ;
-if(hours<10){
-	hours="0"+hours;
-}
-if(minutes<10){
-	minutes="0"+minutes;
-}
-var finalTime = hours + ":" + minutes + " " + AmOrPm; 
-return finalTime;
-		// return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
+		var hours = dt.getHours() ; // gives the value in 24 hours format
+		var AmOrPm = hours >= 12 ? 'pm' : 'am';
+		hours = (hours % 12) || 12;
+		var minutes = dt.getMinutes() ;
+		if(hours<10){
+			hours="0"+hours;
+		}
+		if(minutes<10){
+			minutes="0"+minutes;
+		}
+		var finalTime = hours + ":" + minutes + " " + AmOrPm; 
+		return finalTime;
 	}
 	
 	render() {
