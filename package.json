@@ -63,6 +63,7 @@
     "react-native-share": "^7.2.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^12.1.1",
+    "react-native-svg-uri": "^1.2.3",
     "react-native-table-component": "^1.2.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-version-check": "^3.4.2",
@@ -87,6 +88,7 @@
     "jest": "26.6.3",
     "metro-react-native-babel-preset": "0.64.0",
     "prettier": "2.7.1",
+    "react-native-svg-transformer": "^1.0.0",
     "react-test-renderer": "17.0.1"
   },
   "jest": {
