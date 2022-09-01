@@ -9,15 +9,18 @@ import {
   faHistory,
   faChild,
   faClipboardList,
-  faProjectDiagram,
+  faTrophy,
   faHandshake,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import MembershipScreen from "../../screens/myProfileScreen/MembershipScreen";
+import { useSelector } from "react-redux";
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
+  const profile = useSelector((state) => state.profile);
+  alert(JSON.stringify(profile));
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -26,7 +29,9 @@ export default function BottomNavigator() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        // component={HomeScreen}
+        children={(props) => <HomeScreen propProfile={profile} {...props} />}
+        // children={() => <HomeScreen propProfile={profile} {...props} />}
         options={{
           tabBarLabel: "Home",
           elevation: 0, // remove shadow on Android
@@ -40,9 +45,11 @@ export default function BottomNavigator() {
       />
       <Tab.Screen
         name="MySessions"
-        component={MySessionsScreen}
+        children={(props) => (
+          <MySessionsScreen propProfile={profile} {...props} />
+        )}
         options={{
-          tabBarLabel: "My Sessions",
+          tabBarLabel: "Sessions",
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon icon={faClipboardList} color={"white"} size={25} />
           ),
@@ -57,9 +64,11 @@ export default function BottomNavigator() {
       }} /> */}
       <Tab.Screen
         name="MembershipScreen"
-        component={MembershipScreen}
+        children={(props) => (
+          <MembershipScreen propProfile={profile} {...props} />
+        )}
         options={{
-          tabBarLabel: "Support Us",
+          tabBarLabel: "Support",
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
@@ -71,21 +80,23 @@ export default function BottomNavigator() {
       />
       <Tab.Screen
         name="Refer"
-        component={ReferScreen}
+        children={(props) => <ReferScreen propProfile={profile} {...props} />}
         options={{
           tabBarLabel: "Refer & Win",
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faChild} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faTrophy} color={"white"} size={25} />
           ),
         }}
       />
       <Tab.Screen
         name="MyProfile"
-        component={MyProfileScreen}
+        children={(props) => (
+          <MyProfileScreen propProfile={profile} {...props} />
+        )}
         options={{
-          tabBarLabel: "My Profile",
+          tabBarLabel: "Profile",
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (

@@ -1,15 +1,14 @@
-import { COUNTER_CHANGE } from '../constants';
-import { PROFILE_SET } from '../constants';
+import { COUNTER_CHANGE } from "../constants";
+import { PROFILE_SET } from "../constants";
 export function changeCount(count) {
-    return {
+  return {
     type: COUNTER_CHANGE,
-    payload: count
-    }
+    payload: count,
+  };
 }
 export function setProfile(profile) {
-    console.log("Settingggggggggggggggggggggggggggggggggggg",profile);
-    return {
+  return {
     type: PROFILE_SET,
-    payload: profile
-    }
+    payload: profile,
+  };
 }

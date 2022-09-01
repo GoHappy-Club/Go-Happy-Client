@@ -1,10 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   TouchableOpacity,
   Alert,
   Linking,
@@ -25,6 +23,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import VersionCheck from "react-native-version-check";
 import firebase from "@react-native-firebase/app";
+import { useSelector } from "react-redux";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -55,14 +54,11 @@ export default function App() {
   useEffect(() => {
     checkVersion();
   }, []);
+  const profile = useSelector((state) => state.profile);
 
   const checkVersion = async () => {
     try {
       let updateNeeded = await VersionCheck.needUpdate();
-      console.log(
-        "updateNeededupdateNeededupdateNeededupdateNeededupdateNeededupdateNeededupdateNeeded",
-        updateNeeded
-      );
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
           "Please Update",
@@ -84,7 +80,6 @@ export default function App() {
 
   const componentDidMount = async () => {
     let url = await firebase.links().getInitialLink();
-    console.log("incoming url", url);
   };
 
   return (
@@ -93,7 +88,10 @@ export default function App() {
         <>
           <Stack.Screen
             name="Login"
-            component={LoginScreen}
+            // component={LoginScreen}
+            children={(props) => (
+              <LoginScreen {...props} propProfile={profile} />
+            )}
             options={{
               headerLeft: () => <View></View>,
               headerShown: false,
@@ -101,7 +99,11 @@ export default function App() {
           />
           <Stack.Screen
             name="GoHappy Club"
-            component={BottomNavigator}
+            // component={BottomNavigator}
+
+            children={(props) => (
+              <BottomNavigator {...props} propProfile={profile} />
+            )}
             options={{
               headerLeft: () => <View></View>,
               headerTransparent: true,
@@ -116,7 +118,10 @@ export default function App() {
           />
           <Stack.Screen
             name="Session Details"
-            component={HomeDetailsScreen}
+            // component={HomeDetailsScreen}
+            children={(props) => (
+              <HomeDetailsScreen {...props} propProfile={profile} />
+            )}
             options={({ navigation }) => ({
               headerTransparent: true,
               title: null,
@@ -135,7 +140,10 @@ export default function App() {
           />
           <Stack.Screen
             name="Membership Details"
-            component={MembershipScreen}
+            // component={MembershipScreen}
+            children={(props) => (
+              <MembershipScreen {...props} propProfile={profile} />
+            )}
             options={({ navigation }) => ({
               headerTransparent: true,
               title: null,
@@ -154,7 +162,10 @@ export default function App() {
           />
           <Stack.Screen
             name="Additional Details"
-            component={AdditionalDetails}
+            // component={AdditionalDetails}
+            children={(props) => (
+              <AdditionalDetails {...props} propProfile={profile} />
+            )}
             options={{
               headerLeft: () => <View></View>,
               headerTransparent: true,
@@ -164,7 +175,8 @@ export default function App() {
           />
           <Stack.Screen
             name="About GoHappy Club"
-            component={About}
+            // component={About}
+            children={(props) => <About {...props} propProfile={profile} />}
             options={({ navigation }) => ({
               headerTransparent: true,
               title: null,

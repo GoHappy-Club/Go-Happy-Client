@@ -60,9 +60,9 @@ class LoginScreen extends Component {
       if (url === null) {
         return;
       }
-      alert("test1", url);
-      console.log("this is the url", url.url);
-      alert(JSON.stringify(url));
+      // alert("test1", url);
+
+      // alert(JSON.stringify(url));
       this.setState({ referralCode: url.url.split("=")[1] });
     });
     dynamicLinks()
@@ -72,10 +72,9 @@ class LoginScreen extends Component {
           return;
         }
 
-        console.log("this is the initial url", url);
         // alert(JSON.stringify(url));
         this.setState({ referralCode: url.url.split("=")[1] });
-        alert("test2" + this.state.referralCode);
+        // alert("test2" + this.state.referralCode);
       });
   }
   setProfile(
@@ -115,19 +114,16 @@ class LoginScreen extends Component {
   };
   handleSendCode = () => {
     // Request to send OTP
-    console.log("in handle send code", this.state.phoneNumber);
+
     this.setState({ loadingButton: true });
     if (this.validatePhoneNumber()) {
-      console.log("here1");
       firebase
         .auth()
         .signInWithPhoneNumber(this.state.phoneNumber)
         .then((confirmResult) => {
-          console.log("in handle send code inside");
           this.setState({ confirmResult });
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-              console.log("this is user", user);
               this.setState({ userId: user.uid });
               try {
                 this._backendSignIn(
@@ -136,14 +132,13 @@ class LoginScreen extends Component {
                   "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
                   user.phoneNumber
                 );
-              } catch (error) {
-                console.log(error);
-              }
+              } catch (error) {}
             }
           });
           this.setState({ loadingButton: false });
         })
         .catch((error) => {
+          console.log(error);
           // if(JSON.stringify(error).includes('too-many')){
           // 	alert(error);
           // }
@@ -151,7 +146,6 @@ class LoginScreen extends Component {
           // 	alert(JSON.stringify(error));
           // }
           alert(error);
-          console.log(error);
 
           this.setState({ loadingButton: false });
         });
@@ -182,7 +176,7 @@ class LoginScreen extends Component {
     } else {
       this.setState({ showAlert: true });
     }
-    console.log("fsddfssdfsdfdsfdsfsdfs", verificationCode);
+
     if (verificationCode.length == 6) {
       confirmResult
         .confirm(verificationCode)
@@ -195,23 +189,17 @@ class LoginScreen extends Component {
               "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
               user.user.phoneNumber
             );
-          } catch (error) {
-            console.log(error);
-          }
+          } catch (error) {}
           //   this.setState({ loadingButton:false });
-          console.log("fsddfssdfsdfdsfdsfrwerewrwerwerwerewrewrsdfs");
         })
         .catch((error) => {
+          console.log(error);
           //   alert(error.message)
 
           this.setState({ loadingButton: false, showAlert: true });
-
-          console.log("fwrewrsdfs");
         });
     } else {
       //   alert('Please enter a 6 digit OTP code.')
-
-      console.log("fwrewrsdfsOTP");
     }
   };
 
@@ -306,24 +294,7 @@ class LoginScreen extends Component {
       }
     }
   };
-  async createDynamicReferralLink(name, phone) {
-    const link1 = await firebase.dynamicLinks().buildShortLink(
-      {
-        link:
-          "https://gohappyclub.in/refer?idx=" +
-          name.substring(0, 4) +
-          phone.substring(2, 4) +
-          phone.substring(10, 12),
-        domainUriPrefix: "https://gohappyclub.page.link",
-      },
-      dynamicLinks.ShortLinkType.UNGUESSABLE
-    );
-    console.log(link1);
-    alert(link1);
-  }
   _backendSignIn(token, name, profileImage, phone) {
-    console.log(token, name, profileImage, phone);
-    this.createDynamicReferralLink(name, phone);
     if (this.state.reachedBackendSignIn == false) {
       this.setState({ reachedBackendSignIn: true });
     } else {
@@ -342,7 +313,6 @@ class LoginScreen extends Component {
         referralId: this.state.referralCode,
       })
       .then((response) => {
-        console.log("backend sign in", response);
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
           if (response.data.phone != null)
@@ -363,6 +333,7 @@ class LoginScreen extends Component {
           );
           AsyncStorage.setItem("dob", response.data.dob);
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
+          AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           this.setProfile(
             name,
             response.data.email,
@@ -382,7 +353,6 @@ class LoginScreen extends Component {
             dob: response.data.dob,
           });
           if (this.pending()) {
-            console.log(this.state);
             this.props.navigation.replace("Additional Details", {
               navigation: this.props.navigation,
               email: response.data.email,
@@ -403,12 +373,9 @@ class LoginScreen extends Component {
           this.setState({ showAlert: true, loader: false });
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }
   pending() {
-    console.log("state in pending", this.state);
     if (
       this.state.phoneNumber == null ||
       this.state.phoneNumber.length == 0 ||

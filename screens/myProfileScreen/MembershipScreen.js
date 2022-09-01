@@ -16,22 +16,21 @@ class MembershipScreen extends Component {
       loader: false,
       orderId: "",
     };
+    // alert(JSON.stringify(props));
   }
   getOrderId(amount) {
     var url = SERVER_URL + "/razorPay/pay";
-    console.log("right here");
+
     axios
       .post(url, { amount: amount })
       .then((response) => {
         if (response.data) {
-          console.log("this is response", response.data);
           this.setState({ orderId: response.data });
           return response.data;
         }
       })
       .catch((error) => {
         this.error = true;
-        console.log("Errwdqor while fetching the transactions from sms");
       });
   }
   setProfile(plan) {
@@ -41,7 +40,7 @@ class MembershipScreen extends Component {
   }
   setMembership(email, planName, _callback) {
     var url = SERVER_URL + "/user/setMembership";
-    console.log("setting membership of the user");
+
     axios
       .post(url, { email: email, planName: planName })
       .then((response) => {
@@ -53,7 +52,6 @@ class MembershipScreen extends Component {
       })
       .catch((error) => {
         this.error = true;
-        console.log("Errwdqor while fetching the transactions from sms");
       });
   }
   render() {

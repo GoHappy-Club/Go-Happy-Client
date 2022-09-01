@@ -24,15 +24,15 @@ class AdditionalDetails extends Component {
       showAlert: false,
       alertMessage: "",
       dob: props.route.params.dob,
+      age: props.route.params.age,
     };
-    console.log("ffsefsdds", props.route.params);
+
     if (this.pending() == false) {
       this.props.route.params.navigation.replace("GoHappy Club");
     }
     // this.pending();
   }
   pending() {
-    console.log("state in pending", this.state);
     if (
       this.state.phoneNumber == null ||
       this.state.phoneNumber.length == 0 ||
@@ -45,13 +45,14 @@ class AdditionalDetails extends Component {
   componentDidMount() {
     // this.getCurrentUserInfo();
   }
-  setProfile(name, profileImage, plan, sessionsAttended, selfInviteCode) {
+  setProfile(name, age, profileImage, plan, sessionsAttended, selfInviteCode) {
     let { profile, actions } = this.props;
-    console.log("this is oplf profile", profile);
+
     profile = {
       selfInviteCode: selfInviteCode,
       dob: profile.dob,
       dateOfJoining: profile.dateOfJoining,
+      age: age,
       name: name,
       email: profile.email,
       phoneNumber: profile.phoneNumber,
@@ -71,18 +72,31 @@ class AdditionalDetails extends Component {
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    console.log(age);
+
     return age;
   }
 
   updateDetails() {
     //  || this.state.uiDate=='' || this.state.uiDate==null
-    if (this.state.name == null || this.state.name == "") {
+    if (
+      this.state.name == null ||
+      this.state.name == "" ||
+      this.state.age == null ||
+      this.state.age == ""
+    ) {
       this.setState({
         showAlert: true.valueOf,
         alertMessage: "Mandatory details are missing",
       });
-      console.log(this.state);
+
+      return;
+    }
+    if (this.state.age < 50) {
+      this.setState({
+        showAlert: true,
+        alertMessage:
+          "GoHappy Club is an initiative exclusively for aged 50 years and above.",
+      });
       return;
     }
     // if(this.getAge() < 50){
@@ -99,9 +113,9 @@ class AdditionalDetails extends Component {
         city: this.state.city,
         phone: this.state.phoneNumber,
         dob: this.state.date,
+        age: this.state.age,
       })
       .then((response) => {
-        console.log("here", response);
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
           if (response.data.phoneNumber != null)
@@ -113,17 +127,20 @@ class AdditionalDetails extends Component {
             AsyncStorage.setItem("email", response.data.email);
           if (response.data.profileImage != null)
             AsyncStorage.setItem("profileImage", response.data.profileImage);
+          if (response.data.age != null)
+            AsyncStorage.setItem("age", response.data.age);
           AsyncStorage.setItem("token", response.data.token);
           // this.state.navigation.navigate('DrawerNavigator');
           this.setProfile(
             response.data.name,
+            response.data.age,
             response.data.profileImage,
             response.data.membership,
             response.data.sessionsAttended,
             response.data.selfInviteCode
           );
           this.setState({ loader: true });
-          console.log("naviii", this.props.route.params);
+
           this.props.route.params.navigation.replace("GoHappy Club");
           this.setState({ loader: false });
         } else if (response.data == "ERROR") {
@@ -132,13 +149,10 @@ class AdditionalDetails extends Component {
         this.setState({ loadingButton: false });
       })
       .catch((error) => {
-        console.log("Error while logging in", error);
         this.setState({ loadingButton: false });
       });
   }
-  setDate() {
-    console.log("in set date");
-  }
+  setDate() {}
 
   render() {
     var open = this.state.open;
@@ -154,6 +168,16 @@ class AdditionalDetails extends Component {
             autoCapitalize="none"
             value={this.state.name}
             onChangeText={(text) => this.setState({ name: text })}
+          />
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            keyboardType="numeric"
+            placeholder="Age *"
+            placeholderTextColor="#000"
+            autoCapitalize="none"
+            value={this.state.age}
+            onChangeText={(text) => this.setState({ age: text })}
           />
           <TextInput
             style={styles.input}
@@ -197,7 +221,7 @@ class AdditionalDetails extends Component {
 						onConfirm={(date) => {
 							this.setState({open:false})
 							//this.setState({date:date})
-							console.log(this.state);
+							
 							var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
 							this.setState({date:uiDate})
 							this.setState({uiDate:uiDate})}}

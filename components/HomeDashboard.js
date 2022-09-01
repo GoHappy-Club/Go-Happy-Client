@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  Linking,
 } from "react-native";
 import { Text, Badge, Button } from "react-native-elements";
 
@@ -16,7 +17,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
-import firebase from "@react-native-firebase/app";
+import { setSessionAttended } from "../services/events/EventService";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -34,7 +35,7 @@ class HomeDashboard extends Component {
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
     };
-    //console.log(props);
+    //
 
     this._retrieveData();
   }
@@ -45,16 +46,16 @@ class HomeDashboard extends Component {
       if (value !== null) {
         // We have data!!
         this.setState({ email: value });
-        //console.log('get async',value);
+        //
       }
       if (phoneNumber !== null) {
         // We have data!!
         this.setState({ phoneNumber: phoneNumber });
-        //console.log('get async',phoneNumber);
+        //
       }
     } catch (error) {
       // Error retrieving data
-      //console.log('error here',error)
+      //
     }
   };
 
@@ -66,21 +67,30 @@ class HomeDashboard extends Component {
     });
     this.setState({ selectedDateRaw: tempDate });
     this.setState({ events: [] });
-    console.log("in change date", tempDate);
 
-    console.log("in change date", this.state.selectedDateRaw);
     this.props.loadEvents(new Date(Date.parse(date)).setHours(0, 0, 0, 0));
   };
   trimContent(text, cut) {
     if (text.length < cut) return text;
     return text.substring(0, cut) + "...";
   }
+  isOngoingEvent(item) {
+    console.log(item.startTime, new Date().getTime());
+    if (item.startTime - 600000 <= new Date().getTime()) {
+      return true;
+    }
+    return false;
+  }
   updateEventBook(item) {
     this.setState({ bookingLoader: true });
+    setSessionAttended(this.props.profile.phoneNumber);
+    if (this.getTitle(item) == "Join") {
+      Linking.openURL(item.meetingLink);
+      return;
+    }
     item.loadingButton = true;
     var _this = this;
-    console.log("in update profile", this.state.selectedDateRaw);
-    console.log("in update profile bookkkkk", this.props.profile);
+
     this.props.bookEvent(
       item,
       this.props.profile.phoneNumber,
@@ -131,6 +141,40 @@ class HomeDashboard extends Component {
     var finalTime = hours + ":" + minutes + " " + AmOrPm;
     return finalTime;
   }
+  getTitle(item) {
+    const isOngoing = this.isOngoingEvent(item);
+    if (item.participantList == null) {
+      return "Book";
+    }
+    const isParticipant = item.participantList.includes(
+      this.props.profile.phoneNumber
+    );
+
+    console.log("this is item", isOngoing, isParticipant);
+    if (isOngoing && isParticipant) {
+      return "Join";
+    } else if (isParticipant) {
+      return "Booked";
+    } else {
+      return "Book";
+    }
+  }
+  isDisabled(item) {
+    const isOngoing = this.isOngoingEvent(item);
+    if (item.participantList == null) {
+      return false;
+    }
+
+    const isParticipant = item.participantList.includes(
+      this.props.profile.phoneNumber
+    );
+
+    if (isParticipant && !isOngoing) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   render() {
     const { profile } = this.props;
@@ -151,6 +195,7 @@ class HomeDashboard extends Component {
             this.props.navigation.navigate("Session Details", {
               event: item,
               phoneNumber: profile.phoneNumber,
+              profile: profile,
               onGoBack: () => this.loadCaller(),
             })
           }
@@ -208,21 +253,14 @@ class HomeDashboard extends Component {
                 </Title>
               </View>
               {/* item.participantList!=null && item.participantList.includes(this.state.email) */}
+              {/* <Text>
+                {item.startTime <= new Date().getTime()
+                  ? "rererer"
+                  : "fewrewfsdfsd"}
+              </Text> */}
               <Button
-                disabled={
-                  item.status != null ||
-                  (item.participantList != null &&
-                    item.participantList.includes(profile.phoneNumber))
-                    ? true
-                    : false
-                }
-                title={
-                  item.status != null ||
-                  (item.participantList != null &&
-                    item.participantList.includes(profile.phoneNumber))
-                    ? "Booked"
-                    : "Book"
-                }
+                disabled={this.isDisabled(item)}
+                title={this.getTitle(item)}
                 onPress={this.updateEventBook.bind(this, item)}
                 loading={item.loadingButton}
                 loadingProps={{ size: "small", color: "black" }}

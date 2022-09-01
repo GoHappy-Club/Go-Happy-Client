@@ -6,15 +6,18 @@ import {
   View,
   Image,
   ToastAndroid,
+  ScrollView,
 } from "react-native";
-import { Button, Text } from "react-native-elements";
-import { connect } from "react-redux";
+import { Text } from "react-native-elements";
+import { connect, useSelector } from "react-redux";
 import { setProfile } from "../redux/actions/counts";
 import { bindActionCreators } from "redux";
 import firebase from "@react-native-firebase/app";
-import { faInfoCircle, faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
+// import { refreshProfile } from "../services/profile/ProfileService";
 
 class Refer extends Component {
   constructor(props) {
@@ -35,26 +38,21 @@ class Refer extends Component {
     this._retrieveData();
   }
   shareMessage = () => {
-    //Here is the Share API
     Share.share({
       message:
-        "You're invited. Use my link to join GoHappy Club: " +
+        "Come and join my happy family, GoHappy Club and attend free sessions on Fitness,  Learning and Entertainment, carefully designed for the 50+ with a dedicated team to treate you with uttermost love and respect. \n Click on the link below to install the application using my referral link and attend FREE sessions. " +
         this.state.referralLink,
     })
-      //after successful share return result
-      .then((result) => console.log(result))
-      //If any thing goes wrong it comes here
-      .catch((errorMsg) => console.log(errorMsg));
+      .then((result) => {})
+      .catch((errorMsg) => {});
   };
   _retrieveData = async () => {
     try {
-      console.log("dsadadadadada", await AsyncStorage.getAllKeys());
       const email = await AsyncStorage.getItem("email");
       this.setState({ email: email });
     } catch (error) {
       // Error retrieving data
       //reverse a linked list
-      console.log("error here", error);
     }
   };
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -74,7 +72,6 @@ class Refer extends Component {
     this.setState({ refreshing: true });
     var _this = this;
     this.props.loadMySessions("", function () {
-      console.log("i am in callback");
       _this.setState({ refreshing: false });
     });
   }
@@ -84,40 +81,56 @@ class Refer extends Component {
     </View>
   );
   createDynamicReferralLink = async () => {
-    console.log(this.props.profile);
+    let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
     // alert('hi');
+    console.log(this.props.profile);
+    if (selfInviteCode == null) {
+      selfInviteCode = "test";
+    }
     const link1 = await firebase.dynamicLinks().buildShortLink(
       {
-        link: "https://gohappyclub.in/refer?idx=" + selfInviteCode,
-        domainUriPrefix: "https://gohappyclub.page.link",
+        link: FirebaseDynamicLinksProps().link + selfInviteCode,
+        domainUriPrefix: FirebaseDynamicLinksProps().domainUriPrefix,
         android: {
-          packageName: "com.gohappyclient",
+          packageName: FirebaseDynamicLinksProps().androidPackageName,
+          fallbackUrl: FirebaseDynamicLinksProps().androidFallBackUrl,
+        },
+        ios: {
+          bundleId: "com.gohappyclient",
           fallbackUrl:
             "https://play.google.com/store/apps/details?id=com.gohappyclient",
         },
       },
       firebase.dynamicLinks.ShortLinkType.SHORT
     );
-    console.log(link1);
+
     this.setState({ referralLink: link1 });
+
+    profile.referralLink = link1;
+    actions.setProfile(profile);
   };
   componentDidMount() {
+    // RefreshProfile
+
+    // alert(JSON.stringify(useSelector((state) => state.profile)));
     this.createDynamicReferralLink();
   }
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
-    console.log("sfasfsd", profile);
+
     return (
       <View style={{ backgroundColor: "white" }}>
-        <Text style={styles.title}>Refer & Win</Text>
-        <Text style={styles.subtitle}>
-          Refer and introduce the club to your contacts
-        </Text>
-        <View
+        <ScrollView>
+          <Text style={styles.title}>Refer & Win</Text>
+          <Text style={styles.subtitle}>
+            Members who will introduce atleast seven people (50+ of age) to join
+            our GoHappy Club will get exciting gifts delivered at their homes!!
+          </Text>
+          {/* <View
           style={{
-            marginLeft: "14%",
+            marginLeft: "8%",
             marginTop: "15%",
             display: "flex",
             flexDirection: "row",
@@ -125,92 +138,117 @@ class Refer extends Component {
         >
           <FontAwesomeIcon icon={faInfoCircle} color={"#ffc8c8"} size={20} />
           <Text style={styles.info}>How it works</Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignSelf: "center",
-            margin: "5%",
-          }}
-        >
-          <View style={styles.circleNumber}>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={styles.cicle}>
-                <Text style={styles.number}>1</Text>
-              </View>
-              <Text style={styles.dashes}>----</Text>
-            </View>
-            <Text
+        </View> */}
+          <Image
+            resizeMode="cover"
+            style={{
+              width: "100%",
+              height: 150,
+              // alignSelf: "center",
+              // paddingLeft: 200,
+              // paddingRight: 100,
+            }}
+            source={require("../images/1_2_3-Refer.png")}
+          />
+
+          <View style={styles.clip}>
+            <Text style={styles.link}>{referralLink}</Text>
+            <TouchableOpacity
               style={{
-                fontSize: 10,
-                width: "70%",
-                textAlign: "center",
-                marginLeft: -10,
+                ...styles.copyButton,
+                backgroundColor: "#2bbdc3",
               }}
+              underlayColor={"#2bbdc3"}
+              onPress={this.copyToClipboard.bind(this)}
             >
-              Invite your friends
-            </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+              >
+                Copy
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.circleNumber}>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={styles.cicle}>
-                <Text style={styles.number}>2</Text>
-              </View>
-              <Text style={styles.dashes}>----</Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 10,
-                width: "80%",
-                textAlign: "center",
-                marginLeft: -10,
-              }}
+          <View style={styles.messageBox}>
+            <Text style={styles.messageText}>
+              Share with your friends via SMS/Email/WhatsApp by clicking on the
+              refer now button below.
+            </Text>
+
+            <View
+              style={{ display: "flex", flexDirection: "row", margin: "3%" }}
             >
-              They join using your link
-            </Text>
-          </View>
-          <View style={styles.circleNumber}>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={styles.cicle}>
-                <Text style={styles.number}>3</Text>
-              </View>
+              <Image
+                resizeMode="contain"
+                style={{
+                  width: "15%",
+                  height: 40,
+                  // alignSelf: "center",
+                }}
+                source={require("../images/whatsapp.png")}
+              />
+              <Image
+                resizeMode="contain"
+                style={{
+                  // width: "100%",
+                  width: "15%",
+                  height: 40,
+                  // alignSelf: "center",
+                }}
+                source={require("../images/facebook.png")}
+              />
+              <Image
+                resizeMode="contain"
+                style={{
+                  // width: "100%",
+                  width: "15%",
+                  height: 40,
+                  // alignSelf: "center",
+                }}
+                source={require("../images/instagram.png")}
+              />
+              {/* <Image
+                resizeMode="contain"
+                style={{
+                  // width: "100%",
+                  width: "12%",
+                  height: 40,
+                  // alignSelf: "center",
+                }}
+                source={require("../images/sms.png")}
+              /> */}
             </View>
-            <Text style={{ fontSize: 10, width: "80%", textAlign: "center" }}>
-              You win a reward
-            </Text>
           </View>
-        </View>
-        <View style={styles.clip}>
-          <Text style={styles.link}>{referralLink}</Text>
-          <TouchableOpacity
-            style={{ ...styles.copyButton, backgroundColor: "#2bbdc3" }}
-            underlayColor={"#2bbdc3"}
-            onPress={this.copyToClipboard.bind(this)}
-          >
-            <Text style={{ color: "black", fontWeight: "bold" }}>Copy</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.messageBox}>
-          <Text style={styles.messageText}>
-            Share you referral link and invite your friends and win rewards.
-          </Text>
           <TouchableOpacity
             style={styles.referButton}
             underlayColor={"#2bbdc3"}
             onPress={this.shareMessage.bind(this)}
           >
-            <View style={{ display: "flex", flexDirection: "row" }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <FontAwesomeIcon icon={faShareAlt} size={20} />
               <Text style={styles.referButtonText}>REFER NOW</Text>
             </View>
           </TouchableOpacity>
-        </View>
-        <Image
-          resizeMode="center"
-          style={{ width: "100%", height: 300, alignSelf: "center" }}
-          source={require("../images/refer.png")}
-        />
+          <Image
+            resizeMode="cover"
+            style={{
+              width: "100%",
+              height: 220,
+              alignSelf: "center",
+              // marginLeft: "10%",
+              // marginRight: "10%",
+            }}
+            source={require("../images/refer.png")}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -238,12 +276,12 @@ const styles = StyleSheet.create({
   },
   referButton: {
     marginTop: "3%",
-    marginBottom: "3%",
     backgroundColor: "#ff8159",
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
     paddingRight: 16,
+    alignSelf: "center",
   },
   referButtonText: {
     fontWeight: "bold",
@@ -283,6 +321,8 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: "center",
     fontSize: 14,
+    marginLeft: 16,
+    marginRight: 16,
   },
   info: {
     marginLeft: "2%",
@@ -297,6 +337,7 @@ const styles = StyleSheet.create({
     width: "88%",
   },
   clip: {
+    marginTop: "-10%",
     display: "flex",
     flexDirection: "row",
     width: "90%",
@@ -308,7 +349,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   copyButton: {
-    height: "39%",
+    // height: "39%",
     marginTop: 40,
     padding: 5,
   },
