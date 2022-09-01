@@ -24,7 +24,7 @@ export default class HomeDetailsScreen extends Component {
       email: "",
     };
     this._retrieveData();
-    alert("ble;" + JSON.stringify(props));
+    // alert("ble;" + JSON.stringify(props));
   }
   _retrieveData = async () => {
     try {

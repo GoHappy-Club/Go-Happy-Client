@@ -38,7 +38,7 @@ export default class HomeScreen extends Component {
       error: true,
     };
     console.log(props.propProfile);
-    alert(JSON.stringify(props));
+    // alert(JSON.stringify(props));
   }
   render() {
     if (this.state.error == false) {
@@ -96,7 +96,7 @@ export default class HomeScreen extends Component {
         }
       })
       .catch((error) => {
-        alert("blablabla" + url + error);
+        // alert("blablabla" + url + error);
         this.error = true;
       });
   }

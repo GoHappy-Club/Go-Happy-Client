@@ -20,7 +20,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
-  alert(JSON.stringify(profile));
+  // alert(JSON.stringify(profile));
   return (
     <Tab.Navigator
       initialRouteName="Home"
