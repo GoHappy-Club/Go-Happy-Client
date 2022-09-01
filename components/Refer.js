@@ -163,7 +163,7 @@ class Refer extends Component {
             >
               <Text
                 style={{
-                  color: "black",
+                  color: "white",
                   fontWeight: "bold",
                 }}
               >
@@ -233,7 +233,7 @@ class Refer extends Component {
                 alignItems: "center",
               }}
             >
-              <FontAwesomeIcon icon={faShareAlt} size={20} />
+              <FontAwesomeIcon icon={faShareAlt} size={20} color="white" />
               <Text style={styles.referButtonText}>REFER NOW</Text>
             </View>
           </TouchableOpacity>
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   },
   referButton: {
     marginTop: "3%",
-    backgroundColor: "#ff8159",
+    backgroundColor: "#29BFC2",
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
   },
   referButtonText: {
     fontWeight: "bold",
+    color: "white",
     justifyContent: "center",
     alignSelf: "center",
     marginLeft: "10%",

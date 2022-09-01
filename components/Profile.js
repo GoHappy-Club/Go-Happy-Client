@@ -19,6 +19,7 @@ import { changeCount, setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 import {
   GoogleSignin,
@@ -55,6 +56,32 @@ class Profile extends Component {
     };
     this._retrieveData();
   }
+  componentDidUpdate() {
+    this.refreshProfile();
+  }
+
+  refreshProfile() {
+    var url = SERVER_URL + "/auth/login";
+    const redux_profile = this.props.profile;
+    axios
+      .post(url, {
+        phone: redux_profile.phoneNumber,
+      })
+      .then((response) => {
+        if (response.data && response.data != "ERROR") {
+          AsyncStorage.setItem(
+            "sessionsAttended",
+            response.data.sessionsAttended
+          );
+          redux_profile.sessionsAttended = response.data.sessionsAttended;
+          actions.setProfile(redux_profile);
+        }
+      })
+      .catch((error) => {
+        // alert(error);
+      });
+  }
+
   decrementCount() {
     let { count, actions } = this.props;
     count--;
@@ -124,6 +151,7 @@ class Profile extends Component {
     const title = "Login";
     const { count } = this.props;
     const { profile } = this.props;
+    // alert(JSON.stringify(profile));
     const now = new Date();
     var days = Math.ceil(
       (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
@@ -170,7 +198,8 @@ class Profile extends Component {
             <Image
               style={styles.cover}
               source={{
-                uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
+                uri: profile.profileImage,
+                // uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
                 // require('../images/profile_image.jpeg')
               }}
             />

@@ -335,7 +335,7 @@ class LoginScreen extends Component {
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
           AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           this.setProfile(
-            name,
+            response.data.name,
             response.data.email,
             response.data.phone,
             response.data.profileImage,

@@ -80,6 +80,7 @@ export default class MySessionsScreen extends Component {
         upcomingEvents={this.state.upcomingEvents}
         expiredEvents={this.state.expiredEvents}
         phoneNumber={this.state.phoneNumber}
+        profile={this.props.propProfile.profile}
       />
     );
   }

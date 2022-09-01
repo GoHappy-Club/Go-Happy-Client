@@ -148,47 +148,8 @@ export default class SessionDetails extends Component {
       .then((result) => {})
       .catch((errorMsg) => {});
   };
-  getImage() {
-    var title = this.props.event.eventName;
-    // title = title.replaceAll(" ","_");
-    // title = '../images/'+title+'.png';
-    var randomVal = Math.floor(Math.random() * 2);
-
-    const images = {
-      antakshari: require("../images/sessions/antakshari_1.png"),
-      art: require("../images/sessions/art_1.png"),
-      craft: require("../images/sessions/craft_1.png"),
-      dance: require("../images/sessions/dance_1.png"),
-      englishlearning: require("../images/sessions/englishlearning_1.png"),
-      karaoke: require("../images/sessions/karaokesinging_1.png"),
-      laughteryoga: require("../images/sessions/laughteryoga_1.png"),
-      meditation: require("../images/sessions/meditationandvisualisation_1.png"),
-      mentalhealth: require("../images/sessions/mentalhealth_1.png"),
-      nutritionanddiet: require("../images/sessions/nutritionanddiet_1.png"),
-      openmic: require("../images/sessions/openmicdiscussions_1.png"),
-      quiz: require("../images/sessions/quiz_1.png"),
-      technology: require("../images/sessions/technologylearning_1.png"),
-      yoga: require("../images/sessions/yoga_2.png"),
-    };
-
-    var requiredImg = null;
-    Object.keys(images).forEach(function (key) {
-      if (title.toLowerCase().includes(key)) {
-        requiredImg = key;
-      }
-    });
-    return images[requiredImg];
-    // return require('../images/sessions/antakshiri_1.png');
-  }
-  source = () => {
-    html: `
-  <p style='text-align:center;'>
-    Hello World!
-  </p>`;
-  };
 
   render() {
-    var cover = this.getImage();
     if (this.state.loader == true) {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
@@ -277,21 +238,21 @@ export default class SessionDetails extends Component {
               </View>
             </View>
 
-            <Text h5 style={{ color: "grey", marginTop: 5 }}>
+            {/* <Text h5 style={{ color: "grey", marginTop: 5 }}>
               {item.expertName}
-            </Text>
+            </Text> */}
             {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
             <View style={{ flexDirection: "row" }}>
               <FontAwesomeIcon
                 icon={faClock}
                 color={"grey"}
                 size={15}
-                style={{ marginTop: 20 }}
+                style={{ marginTop: "6%" }}
               ></FontAwesomeIcon>
               <Text
                 style={{
                   color: "grey",
-                  marginTop: 15,
+                  marginTop: "5%",
                   fontSize: 15,
                   marginLeft: 5,
                 }}
@@ -333,6 +294,13 @@ export default class SessionDetails extends Component {
             )}
             <View
               style={{
+                marginTop: "5%",
+                borderBottomColor: "grey",
+                borderBottomWidth: 1,
+              }}
+            />
+            <View
+              style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginTop: 10,
@@ -340,7 +308,13 @@ export default class SessionDetails extends Component {
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <Avatar.Image
-                  source={require("../images/profile_image.jpeg")}
+                  source={
+                    item.expertImage
+                      ? {
+                          uri: item.expertImage,
+                        }
+                      : require("../images/profile_image.jpeg")
+                  }
                   size={30}
                 />
                 <Title

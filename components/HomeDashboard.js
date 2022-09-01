@@ -239,10 +239,11 @@ class HomeDashboard extends Component {
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <Avatar.Image
                   source={
-                    require("../images/profile_image.jpeg")
-                    // {
-                    // 	uri: this.state.profileImage
-                    // }
+                    item.expertImage
+                      ? {
+                          uri: item.expertImage,
+                        }
+                      : require("../images/profile_image.jpeg")
                   }
                   size={30}
                 />
