@@ -65,6 +65,14 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
     // actions.setProfile(profile);
   };
+  isDisabled() {
+    var title = this.getTitle();
+    if (title == "Seats Full") {
+      return true;
+    } else {
+      return false;
+    }
+  }
   getTitle() {
     var currTime = Date.now();
     if (this.props.type == null) {
@@ -84,7 +92,9 @@ export default class SessionDetails extends Component {
         return "Join";
       }
     }
-
+    if (this.state.event.seatsLeft == 0) {
+      return "Seats Full";
+    }
     return "Book";
   }
 
@@ -333,6 +343,7 @@ export default class SessionDetails extends Component {
 
         <View style={{ margin: 15 }}>
           <Button
+            disabled={this.isDisabled()}
             outline
             buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}

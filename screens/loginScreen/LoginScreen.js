@@ -38,6 +38,8 @@ class LoginScreen extends Component {
       showAlert: false,
       loader: true,
       loadingButton: false,
+      loadingVerifyButton: false,
+      loadingResendButton: false,
       userInfo: null,
       confirmResult: null,
       verificationCode: "",
@@ -112,10 +114,14 @@ class LoginScreen extends Component {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     return regexp.test(this.state.phoneNumber);
   };
-  handleSendCode = () => {
+  handleSendCode = (resend) => {
     // Request to send OTP
-
-    this.setState({ loadingButton: true });
+    if (resend) {
+      this.setState({ loadingResendButton: true });
+    } else {
+      this.setState({ loadingButton: true });
+    }
+    console.log(this.state);
     if (this.validatePhoneNumber()) {
       firebase
         .auth()
@@ -135,7 +141,8 @@ class LoginScreen extends Component {
               } catch (error) {}
             }
           });
-          this.setState({ loadingButton: false });
+          if (resend) this.setState({ loadingResendButton: false });
+          else this.setState({ loadingButton: false });
         })
         .catch((error) => {
           console.log(error);
@@ -146,12 +153,13 @@ class LoginScreen extends Component {
           // 	alert(JSON.stringify(error));
           // }
           alert(error);
-
-          this.setState({ loadingButton: false });
+          if (resend) this.setState({ loadingResendButton: false });
+          else this.setState({ loadingButton: false });
         });
     } else {
       alert("Invalid Phone Number");
-      this.setState({ loadingButton: false });
+      if (resend) this.setState({ loadingResendButton: false });
+      else this.setState({ loadingButton: false });
     }
   };
   changePhoneNumber = () => {
@@ -165,14 +173,15 @@ class LoginScreen extends Component {
   resendOtp = () => {
     // this.loadingButton=true;
     //this.setState({ confirmResult: null, verificationCode: ''})
-    this.handleSendCode();
+    const resend = true;
+    this.handleSendCode(resend);
   };
   handleVerifyCode = () => {
     const { confirmResult, verificationCode } = this.state;
 
     // Request for OTP verification
     if (verificationCode.length == 6) {
-      this.setState({ loadingButton: true });
+      this.setState({ loadingVerifyButton: true });
     } else {
       this.setState({ showAlert: true });
     }
@@ -196,7 +205,7 @@ class LoginScreen extends Component {
           console.log(error);
           //   alert(error.message)
 
-          this.setState({ loadingButton: false, showAlert: true });
+          this.setState({ loadingVerifyButton: false, showAlert: true });
         });
     } else {
       //   alert('Please enter a 6 digit OTP code.')
@@ -219,7 +228,7 @@ class LoginScreen extends Component {
           outline
           style={[styles.themeButton, { paddingTop: 20 }]}
           title="Verify Code"
-          loading={this.state.loadingButton}
+          loading={this.state.loadingVerifyButton}
           onPress={this.handleVerifyCode}
           ViewComponent={LinearGradient}
           linearGradientProps={{
@@ -232,7 +241,7 @@ class LoginScreen extends Component {
         <Button
           type="clear"
           title="Resend OTP"
-          loading={this.state.loadingButton}
+          loading={this.state.loadingResendButton}
           onPress={this.resendOtp.bind(this)}
         ></Button>
         <Button
@@ -499,10 +508,12 @@ class LoginScreen extends Component {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       // return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
       return (
+        // <View style={{ backgroundColor: "white" }}>
         <Video
           source={require("../../images/logo_splash.mp4")}
           style={{
             position: "absolute",
+            backgroundColor: "white",
             top: 0,
             flex: 1,
             flexDirection: "column",
@@ -517,6 +528,7 @@ class LoginScreen extends Component {
           repeat={true}
           resizeMode="cover"
         />
+        // </View>
       );
     }
     const navigation = this.props.navigation;
@@ -626,7 +638,7 @@ class LoginScreen extends Component {
                 end: { x: 0.5, y: 1 },
                 locations: [0, 0.5, 0.6],
               }}
-              onPress={this.handleSendCode}
+              onPress={this.handleSendCode.bind(this, false)}
             ></Button>
           </View>
         )}

@@ -10,6 +10,7 @@ import {
   Image,
   Text,
   KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import axios from "axios";
@@ -54,6 +55,7 @@ export default class HomeScreen extends Component {
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
+        // <ScrollView style={{ backgroundColor: "white" }}>
         <Video
           source={require("../../images/logo_splash.mp4")}
           style={{
@@ -72,6 +74,7 @@ export default class HomeScreen extends Component {
           repeat={true}
           resizeMode="cover"
         />
+        // </ScrollView>
       );
     }
   }

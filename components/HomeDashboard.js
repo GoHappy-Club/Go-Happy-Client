@@ -83,8 +83,8 @@ class HomeDashboard extends Component {
   }
   updateEventBook(item) {
     this.setState({ bookingLoader: true });
-    setSessionAttended(this.props.profile.phoneNumber);
     if (this.getTitle(item) == "Join") {
+      setSessionAttended(this.props.profile.phoneNumber);
       Linking.openURL(item.meetingLink);
       return;
     }
@@ -150,11 +150,13 @@ class HomeDashboard extends Component {
       this.props.profile.phoneNumber
     );
 
-    console.log("this is item", isOngoing, isParticipant);
+    // console.log("this is item", isOngoing, isParticipant);
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {
       return "Booked";
+    } else if (item.seatsLeft == 0) {
+      return "Seats Full";
     } else {
       return "Book";
     }
@@ -170,6 +172,8 @@ class HomeDashboard extends Component {
     );
 
     if (isParticipant && !isOngoing) {
+      return true;
+    } else if (item.seatsLeft == 0) {
       return true;
     } else {
       return false;

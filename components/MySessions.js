@@ -53,7 +53,7 @@ export default class MySessions extends Component {
       profileImage:
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
     };
-    alert(JSON.stringify(props));
+    // alert(JSON.stringify(props));
     this._retrieveData();
   }
   componentDidMount() {
