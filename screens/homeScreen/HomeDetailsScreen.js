@@ -138,6 +138,9 @@ export default class HomeDetailsScreen extends Component {
         type={this.props.route.params.type}
         phoneNumber={this.props.route.params.phoneNumber}
         profile={this.props.route.params.profile}
+        alreadyBookedSameDayEvent={
+          this.props.route.params.alreadyBookedSameDayEvent
+        }
       />
     );
   }

@@ -151,12 +151,25 @@ class HomeDashboard extends Component {
     );
 
     // console.log("this is item", isOngoing, isParticipant);
+    console.log(item.sameDayEventId);
+    let isParticipantInSameEvent = false;
+    this.props.events.map((event) => {
+      if (!isParticipantInSameEvent) {
+        isParticipantInSameEvent =
+          event.sameDayEventId == item.sameDayEventId &&
+          event.participantList.includes(this.props.profile.phoneNumber);
+      }
+      console.log(isParticipantInSameEvent);
+    });
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {
       return "Booked";
     } else if (item.seatsLeft == 0) {
       return "Seats Full";
+    } else if (item.sameDayEventId != null && isParticipantInSameEvent) {
+      console.log(item.sameDayEventId);
+      return "Cannot Book";
     } else {
       return "Book";
     }
@@ -173,7 +186,7 @@ class HomeDashboard extends Component {
 
     if (isParticipant && !isOngoing) {
       return true;
-    } else if (item.seatsLeft == 0) {
+    } else if (item.seatsLeft == 0 || this.getTitle(item) == "Cannot Book") {
       return true;
     } else {
       return false;
@@ -201,6 +214,8 @@ class HomeDashboard extends Component {
               phoneNumber: profile.phoneNumber,
               profile: profile,
               onGoBack: () => this.loadCaller(),
+              alreadyBookedSameDayEvent:
+                this.getTitle(item) == "Cannot Book" ? true : false,
             })
           }
         >

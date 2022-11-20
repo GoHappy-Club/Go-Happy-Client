@@ -25,6 +25,7 @@ export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      alreadyBookedSameDayEvent: props.alreadyBookedSameDayEvent,
       event: props.event,
       modalVisible: false,
       profileImage:
@@ -67,7 +68,7 @@ export default class SessionDetails extends Component {
   };
   isDisabled() {
     var title = this.getTitle();
-    if (title == "Seats Full") {
+    if (title == "Seats Full" || title == "Cannot Book") {
       return true;
     } else {
       return false;
@@ -78,6 +79,9 @@ export default class SessionDetails extends Component {
     if (this.props.type == null) {
     }
     if (this.props.type == "expired") return "View Recording";
+    if (this.state.alreadyBookedSameDayEvent == true) {
+      return "Cannot Book";
+    }
     if (this.props.type == "ongoing") return "Join";
     if (
       this.state.event.participantList != null &&
