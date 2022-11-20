@@ -18,7 +18,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/cloud-dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import VersionCheck from "react-native-version-check";
