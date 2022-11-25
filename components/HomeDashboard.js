@@ -8,6 +8,7 @@ import {
   Linking,
 } from "react-native";
 import { Text, Badge, Button } from "react-native-elements";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 import { Card as Cd, Title, Avatar } from "react-native-paper";
 import { Dimensions } from "react-native";
@@ -32,6 +33,8 @@ class HomeDashboard extends Component {
       email: null,
       bookingLoader: false,
       selectedDateRaw: todayRaw,
+      showAlert: false,
+      alreadyBookedSameDayEvent: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
     };
@@ -81,7 +84,23 @@ class HomeDashboard extends Component {
     }
     return false;
   }
+  checkIsParticipantInSameEvent(item) {
+    let isParticipantInSameEvent = false;
+    this.props.events.map((event) => {
+      if (!isParticipantInSameEvent) {
+        isParticipantInSameEvent =
+          event.sameDayEventId == item.sameDayEventId &&
+          event.participantList.includes(this.props.profile.phoneNumber);
+      }
+      console.log(isParticipantInSameEvent);
+    });
+    return isParticipantInSameEvent;
+  }
   updateEventBook(item) {
+    if (this.checkIsParticipantInSameEvent(item)) {
+      this.setState({ showAlert: true });
+      return;
+    }
     this.setState({ bookingLoader: true });
     if (this.getTitle(item) == "Join") {
       setSessionAttended(this.props.profile.phoneNumber);
@@ -151,25 +170,12 @@ class HomeDashboard extends Component {
     );
 
     // console.log("this is item", isOngoing, isParticipant);
-    console.log(item.sameDayEventId);
-    let isParticipantInSameEvent = false;
-    this.props.events.map((event) => {
-      if (!isParticipantInSameEvent) {
-        isParticipantInSameEvent =
-          event.sameDayEventId == item.sameDayEventId &&
-          event.participantList.includes(this.props.profile.phoneNumber);
-      }
-      console.log(isParticipantInSameEvent);
-    });
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {
       return "Booked";
     } else if (item.seatsLeft == 0) {
       return "Seats Full";
-    } else if (item.sameDayEventId != null && isParticipantInSameEvent) {
-      console.log(item.sameDayEventId);
-      return "Cannot Book";
     } else {
       return "Book";
     }
@@ -215,7 +221,7 @@ class HomeDashboard extends Component {
               profile: profile,
               onGoBack: () => this.loadCaller(),
               alreadyBookedSameDayEvent:
-                this.getTitle(item) == "Cannot Book" ? true : false,
+                this.checkIsParticipantInSameEvent(item),
             })
           }
         >
@@ -328,6 +334,22 @@ class HomeDashboard extends Component {
           this.props.childLoader == false &&
           this.sorry()}
         {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
+        {this.state.showAlert && (
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error"
+            message="You have already booked the same session for this date. Please cancel your booking for the other session and try again."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Try Again"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({ showAlert: false });
+            }}
+          />
+        )}
       </View>
     );
   }

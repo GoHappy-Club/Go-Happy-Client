@@ -9,6 +9,8 @@ import {
   Share,
   TouchableOpacity,
 } from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+
 import { WebView } from "react-native-webview";
 import { Title, Avatar } from "react-native-paper";
 import { Text, Button } from "react-native-elements";
@@ -28,6 +30,7 @@ export default class SessionDetails extends Component {
       alreadyBookedSameDayEvent: props.alreadyBookedSameDayEvent,
       event: props.event,
       modalVisible: false,
+      showAlert: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       loadingButton: false,
@@ -68,7 +71,7 @@ export default class SessionDetails extends Component {
   };
   isDisabled() {
     var title = this.getTitle();
-    if (title == "Seats Full" || title == "Cannot Book") {
+    if (title == "Seats Full") {
       return true;
     } else {
       return false;
@@ -79,9 +82,6 @@ export default class SessionDetails extends Component {
     if (this.props.type == null) {
     }
     if (this.props.type == "expired") return "View Recording";
-    if (this.state.alreadyBookedSameDayEvent == true) {
-      return "Cannot Book";
-    }
     if (this.props.type == "ongoing") return "Join";
     if (
       this.state.event.participantList != null &&
@@ -109,6 +109,14 @@ export default class SessionDetails extends Component {
     return false;
   }
   sessionAction() {
+    console.log(this.getTitle(), this.state.alreadyBookedSameDayEvent);
+    if (
+      this.getTitle() === "Book" &&
+      this.state.alreadyBookedSameDayEvent == true
+    ) {
+      this.setState({ showAlert: true });
+      return;
+    }
     if (this.getTitle() === "View Recording") {
       this.videoPlayer();
       return;
@@ -375,6 +383,22 @@ export default class SessionDetails extends Component {
               }}
             />
           </Modal>
+        )}
+        {this.state.showAlert && (
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error"
+            message="You have already booked the same session for this date. Please cancel your booking for the other session and try again."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Try Again"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({ showAlert: false });
+            }}
+          />
         )}
       </View>
     );

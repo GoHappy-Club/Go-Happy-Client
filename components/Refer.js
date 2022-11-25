@@ -173,8 +173,8 @@ class Refer extends Component {
           </View>
           <View style={styles.messageBox}>
             <Text style={styles.messageText}>
-              Share with your friends via SMS/Email/WhatsApp by clicking on the
-              refer now button below.
+              Share with your friends via WhatsApp/Facebook personally and in
+              groups by clicking on the "Refer Now" button below.
             </Text>
 
             <View

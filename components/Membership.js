@@ -127,7 +127,7 @@ class Membership extends Component {
     if (this.state.payType == "m") {
       Linking.openURL("https://rzp.io/i/qoGMhiRx");
     } else {
-      Linking.openURL("https://pages.razorpay.com/pl_JLcnx5BJeiY41T/view");
+      Linking.openURL("https://pages.razorpay.com/ContributeUs");
     }
     // RazorpayCheckout.open(options).then((data) => {
     // 	// handle success
