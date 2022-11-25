@@ -31,7 +31,7 @@ class Refer extends Component {
       mySession: [],
       refreshing: false,
       DATA: [],
-      referralLink: String,
+      referralLink: "",
       profileImage:
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
     };
@@ -112,9 +112,13 @@ class Refer extends Component {
   };
   componentDidMount() {
     // RefreshProfile
-
+    let { profile } = this.props;
     // alert(JSON.stringify(useSelector((state) => state.profile)));
-    this.createDynamicReferralLink();
+    if (profile.referralLink == null || profile.referralLink.length == 0) {
+      this.createDynamicReferralLink();
+    } else {
+      this.setState({ referralLink: profile.referralLink });
+    }
   }
   render() {
     const { profile } = this.props;
