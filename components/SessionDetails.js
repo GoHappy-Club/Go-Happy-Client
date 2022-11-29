@@ -389,7 +389,7 @@ export default class SessionDetails extends Component {
             show={this.state.showAlert}
             showProgress={false}
             title="Error"
-            message="You have already booked the same session for this date. Please cancel your booking for the other session and try again."
+            message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showConfirmButton={true}

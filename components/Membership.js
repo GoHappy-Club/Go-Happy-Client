@@ -24,7 +24,7 @@ import {
 import { Card as Cd, Title, Paragraph, Avatar } from "react-native-paper";
 
 import { Text, Button } from "react-native-elements";
-import RazorpayCheckout from "react-native-razorpay";
+// import RazorpayCheckout from "react-native-razorpay";
 
 import Video from "react-native-video";
 

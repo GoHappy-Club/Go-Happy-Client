@@ -12,7 +12,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
-import com.razorpay.rn.RazorpayPackage;
+// import com.razorpay.rn.RazorpayPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // import io.invertase.firebase.RNFirebaseLinksPackage;

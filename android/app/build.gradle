@@ -145,8 +145,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 51
-        versionName "51"
+        versionCode 57
+        versionName "57"
     }
     splits {
         abi {
@@ -205,6 +205,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    // api files('libs/Branch-2.19.0.jar')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
