@@ -7,8 +7,11 @@ import {
   Image,
   ToastAndroid,
   ScrollView,
+  SafeAreaView,
+  useWindowDimensions,
+  Dimensions,
 } from "react-native";
-import { Text } from "react-native-elements";
+import { Text, BottomSheet, ListItem } from "react-native-elements";
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../redux/actions/counts";
 import { bindActionCreators } from "redux";
@@ -17,8 +20,11 @@ import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
+import RenderHtml from "react-native-render-html";
+
 // import { refreshProfile } from "../services/profile/ProfileService";
 
+const screenWidth = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +38,10 @@ class Refer extends Component {
       refreshing: false,
       DATA: [],
       referralLink: "",
+      conditionDialog: false,
+      htmlContentWidth: 0,
+      conditionText:
+        '<p style="text-align:center"><span style="font-size:16px"><strong>Follow these simple steps:</strong></span></p><ol><li>&nbsp;Share the referral link with&nbsp;your friends who are above&nbsp;50 years of age.</li><li>Ask them to click on the link, install the Evergreen Club app and register themselves in the app.</li><li>Once registered, ask them to book and attend any session they want.</li><li>Receive <strong>Thank You Gift</strong> from GoHappy Club delivered to your home once you have seven successful referrals.</li></ol>',
       profileImage:
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
     };
@@ -113,6 +123,7 @@ class Refer extends Component {
   componentDidMount() {
     // RefreshProfile
     let { profile } = this.props;
+    // this.setState({ htmlContentWidth: useContentWindowHook().width });
     // alert(JSON.stringify(useSelector((state) => state.profile)));
     if (profile.referralLink == null || profile.referralLink.length == 0) {
       this.createDynamicReferralLink();
@@ -120,10 +131,14 @@ class Refer extends Component {
       this.setState({ referralLink: profile.referralLink });
     }
   }
+
+  showConditions() {
+    var flag = !this.state.conditionDialog;
+    this.setState({ conditionDialog: flag });
+  }
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
-
     return (
       <View style={{ backgroundColor: "white" }}>
         <ScrollView>
@@ -225,6 +240,14 @@ class Refer extends Component {
               /> */}
             </View>
           </View>
+          {/* <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+            }}
+          > */}
           <TouchableOpacity
             style={styles.referButton}
             underlayColor={"#2bbdc3"}
@@ -241,6 +264,22 @@ class Refer extends Component {
               <Text style={styles.referButtonText}>REFER NOW</Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.rulesButton}
+            underlayColor={"#2bbdc3"}
+            onPress={this.showConditions.bind(this)}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.rulesButtonText}>Rules & Regulations</Text>
+            </View>
+          </TouchableOpacity>
+          {/* </View> */}
           <Image
             resizeMode="cover"
             style={{
@@ -252,6 +291,38 @@ class Refer extends Component {
             }}
             source={require("../images/refer.png")}
           />
+
+          <>
+            <BottomSheet modalProps={{}} isVisible={this.state.conditionDialog}>
+              {/* <Text style={styles.title}>Please Read Below</Text> */}
+              <ListItem key="1">
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <View style={{ flex: 1, maxWidth: screenWidth }}>
+                      <RenderHtml
+                        style={{ width: "100%" }}
+                        // contentWidth={screenWidth}
+                        source={{
+                          html: this.state.conditionText,
+                        }}
+                      />
+                    </View>
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                key="2"
+                containerStyle={{ backgroundColor: "#29BFC2" }}
+                onPress={this.showConditions.bind(this)}
+              >
+                <ListItem.Content>
+                  <ListItem.Title style={{ color: "white" }}>
+                    Close
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            </BottomSheet>
+          </>
         </ScrollView>
       </View>
     );
@@ -285,6 +356,18 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 16,
     paddingRight: 16,
+    alignSelf: "center",
+  },
+  rulesButton: {
+    marginLeft: "2%",
+    paddingTop: 8,
+    paddingBottom: 8,
+    alignSelf: "center",
+  },
+  rulesButtonText: {
+    fontWeight: "bold",
+    color: "#29BFC2",
+    justifyContent: "center",
     alignSelf: "center",
   },
   referButtonText: {

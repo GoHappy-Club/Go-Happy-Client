@@ -326,7 +326,9 @@ class HomeDashboard extends Component {
           <SafeAreaView style={{ flex: 1 }}>
             <FlatList
               contentContainerStyle={{ flexGrow: 1 }}
-              data={this.props.events}
+              data={this.props.events.filter(
+                (item) => item.endTime > Date.now()
+              )}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
             />
