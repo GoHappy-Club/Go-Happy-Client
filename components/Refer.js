@@ -41,7 +41,7 @@ class Refer extends Component {
       conditionDialog: false,
       htmlContentWidth: 0,
       conditionText:
-        '<p style="text-align:center"><span style="font-size:16px"><strong>Follow these simple steps:</strong></span></p><ol><li>&nbsp;Share the referral link with&nbsp;your friends who are above&nbsp;50 years of age.</li><li>Ask them to click on the link, install the Evergreen Club app and register themselves in the app.</li><li>Once registered, ask them to book and attend any session they want.</li><li>Receive <strong>Thank You Gift</strong> from GoHappy Club delivered to your home once you have seven successful referrals.</li></ol>',
+        '<p style="text-align:center"><span style="font-size:16px"><strong>Follow these simple steps:</strong></span></p><ol><li>&nbsp;Share the referral link with&nbsp;your friends who are above&nbsp;50 years of age.</li><li>Ask them to click on the link, install the GoHappy Club app and register themselves in the app.</li><li>Once registered, ask them to book and attend any session they want.</li><li>Receive <strong>Thank You Gift</strong> from GoHappy Club delivered to your home once you have seven successful referrals.</li></ol>',
       profileImage:
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
     };
