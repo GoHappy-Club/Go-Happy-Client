@@ -121,10 +121,7 @@ class Refer extends Component {
     actions.setProfile(profile);
   };
   componentDidMount() {
-    // RefreshProfile
     let { profile } = this.props;
-    // this.setState({ htmlContentWidth: useContentWindowHook().width });
-    // alert(JSON.stringify(useSelector((state) => state.profile)));
     if (profile.referralLink == null || profile.referralLink.length == 0) {
       this.createDynamicReferralLink();
     } else {
@@ -249,9 +246,14 @@ class Refer extends Component {
             }}
           > */}
           <TouchableOpacity
-            style={styles.referButton}
+            style={
+              referralLink.length == 0
+                ? styles.referButtonDisabled
+                : styles.referButton
+            }
             underlayColor={"#2bbdc3"}
             onPress={this.shareMessage.bind(this)}
+            disabled={referralLink.length == 0 ? true : false}
           >
             <View
               style={{
@@ -352,6 +354,15 @@ const styles = StyleSheet.create({
   referButton: {
     marginTop: "3%",
     backgroundColor: "#29BFC2",
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+    alignSelf: "center",
+  },
+  referButtonDisabled: {
+    marginTop: "3%",
+    backgroundColor: "#b1f2f4",
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
