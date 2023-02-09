@@ -15,6 +15,7 @@ import { WebView } from "react-native-webview";
 import { Title, Avatar } from "react-native-paper";
 import { Text, Button } from "react-native-elements";
 import TambolaTicket from "./TambolaTicket.js";
+import toUnicodeVariant from "./toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { setSessionAttended } from "../services/events/EventService";
@@ -152,25 +153,12 @@ export default class SessionDetails extends Component {
     this.setState({ videoVisible: true });
   }
   createShareMessage(item) {
-    const toBold = text =>{
-      const charSet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?', '.', ',', '"', "'"];
-      const targetCharSet = ['𝐚', '𝐛', '𝐜', '𝐝', '𝐞', '𝐟', '𝐠', '𝐡', '𝐢', '𝐣', '𝐤', '𝐥', '𝐦', '𝐧', '𝐨', '𝐩', '𝐪', '𝐫', '𝐬', '𝐭', '𝐮', '𝐯', '𝐰', '𝐱', '𝐲', '𝐳', '𝐀', '𝐁', '𝐂', '𝐃', '𝐄', '𝐅', '𝐆', '𝐇', '𝐈', '𝐉', '𝐊', '𝐋', '𝐌', '𝐍', '𝐎', '𝐏', '𝐐', '𝐑', '𝐒', '𝐓', '𝐔', '𝐕', '𝐖', '𝐗', '𝐘', '𝐙', '𝟎', '𝟏', '𝟐', '𝟑', '𝟒', '𝟓', '𝟔', '𝟕', '𝟖', '𝟗', '❗', '❓', '.', ',', '"', "'"];
-      const textArray = text.split('');
-      let boldText = '';
-      textArray.forEach((letter) => {
-        const index = charSet.findIndex((_letter) => _letter === letter);
-        if (index !== -1) {
-          boldText = boldText + targetCharSet[index];
-        } else {
-          boldText = boldText + letter;
-        }
-      });
-      return boldText;
-    }
     let template =
       'Namaste !! I am attending "😃 ' +
-      toBold(item.eventName) +
-      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of GoHappy Club, apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul FREE. \n \n Click on the link below: \n';
+      toUnicodeVariant(item.eventName, 'bold italic sans') +
+      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of '
+      + toUnicodeVariant('GoHappy Club', 'bold') + ', apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul '
+      + toUnicodeVariant('FREE', 'bold') + '. \n \n Click on the link below: \n';
     // template = template.replace;
     return template;
   }
