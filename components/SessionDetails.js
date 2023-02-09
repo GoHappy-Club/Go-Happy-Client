@@ -15,6 +15,7 @@ import { WebView } from "react-native-webview";
 import { Title, Avatar } from "react-native-paper";
 import { Text, Button } from "react-native-elements";
 import TambolaTicket from "./TambolaTicket.js";
+import toUnicodeVariant from "./toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { setSessionAttended } from "../services/events/EventService";
@@ -153,9 +154,11 @@ export default class SessionDetails extends Component {
   }
   createShareMessage(item) {
     let template =
-      'Namaste !! I am attending "' +
-      item.eventName +
-      '" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of GoHappy Club, apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul FREE. \n \n Click on the link below: \n';
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, 'bold italic sans') +
+      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of '
+      + toUnicodeVariant('GoHappy Club', 'bold') + ', apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul '
+      + toUnicodeVariant('FREE', 'bold') + '. \n \n Click on the link below: \n';
     // template = template.replace;
     return template;
   }

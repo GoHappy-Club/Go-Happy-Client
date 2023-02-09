@@ -21,6 +21,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
 import RenderHtml from "react-native-render-html";
+import toUnicodeVariant from "./toUnicodeVariant.js";
 
 // import { refreshProfile } from "../services/profile/ProfileService";
 
@@ -50,7 +51,11 @@ class Refer extends Component {
   shareMessage = () => {
     Share.share({
       message:
-        "Come and join my happy family, GoHappy Club and attend free sessions on Fitness,  Learning and Entertainment, carefully designed for the 50+ with a dedicated team to treate you with uttermost love and respect. \n Click on the link below to install the application using my referral link and attend FREE sessions. " +
+        "Come and join my happy family, " + toUnicodeVariant("GoHappy Club", "italic") 
+        + " and attend " + toUnicodeVariant("Free sessions", "bold") + " on " + toUnicodeVariant("Fitness,  Learning and Fun", "bold") 
+        + ", carefully designed for the 50+ with a dedicated team to treate you with uttermost love and respect. \n " 
+        + toUnicodeVariant("Click on the link below ", "bold italic") 
+        + "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
         this.state.referralLink,
     })
       .then((result) => {})
