@@ -302,12 +302,15 @@ class HomeDashboard extends Component {
     );
     return (
       <View style={{ flex: 1, backgroundColor: "white" }}>
-        <CalendarDays
+        <View style={{justifyContent: "center",
+      alignItems: "center" }}>
+        <CalendarDays 
           numberOfDays={15}
           daysInView={3}
           paginate={true}
           onDateSelect={(date) => this.changeSelectedDate(date)}
         />
+        </View>
         <Text
           h4
           style={{

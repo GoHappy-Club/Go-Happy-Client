@@ -116,18 +116,32 @@ export default class HomeScreen extends Component {
         if (response.data) {
           if (response.data == "SUCCESS") {
             //EventNotification({channelId: 'events',event:item});
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
-              bigText: "Your session starts in a few minutes.",
-            });
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime)),
-              bigText: "Your session has been started. Join Now!",
-            });
+            
+            
+            /*
+            Problematic part of code is below
+            GOH-14
+            */
+
+            // EventReminderNotification({
+            //   channelId: "events",
+            //   event: item,
+            //   fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
+            //   bigText: "Your session starts in a few minutes.",
+            // });
+            // EventReminderNotification({
+            //   channelId: "events",
+            //   event: item,
+            //   fireTime: new Date(parseInt(item.startTime)),
+            //   bigText: "Your session has been started. Join Now!",
+            // });
+            
+            /*
+            Problematic part of code is below
+            GOH-14
+            */
+
+
             var tempEvents = this.state.events;
             for (var i = 0; i < tempEvents.length; i++) {
               if (tempEvents[i].id == item.id) {
