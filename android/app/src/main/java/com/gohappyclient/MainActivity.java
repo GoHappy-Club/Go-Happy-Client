@@ -45,7 +45,7 @@ return alarmRemindersEnabled != null && alarmRemindersEnabled.contains(getPackag
 private void showNotificationPermissionDialog() {
 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 builder.setTitle("Allow Alarms & Reminders");
-builder.setMessage("Please kindly grant us access Alarms & Reminders to stay in touch with upcoming meeting that you booked. Please allow in the next screen.");
+builder.setMessage("Allow GoHHappyClub to remind you of ongoing events?");
 builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
 @Override
 public void onClick(DialogInterface dialog, int which) {
