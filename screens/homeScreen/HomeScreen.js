@@ -123,18 +123,18 @@ export default class HomeScreen extends Component {
             GOH-14
             */
 
-            // EventReminderNotification({
-            //   channelId: "events",
-            //   event: item,
-            //   fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
-            //   bigText: "Your session starts in a few minutes.",
-            // });
-            // EventReminderNotification({
-            //   channelId: "events",
-            //   event: item,
-            //   fireTime: new Date(parseInt(item.startTime)),
-            //   bigText: "Your session has been started. Join Now!",
-            // });
+            EventReminderNotification({
+              channelId: "events",
+              event: item,
+              fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
+              bigText: "Your session starts in a few minutes.",
+            });
+            EventReminderNotification({
+              channelId: "events",
+              event: item,
+              fireTime: new Date(parseInt(item.startTime)),
+              bigText: "Your session has been started. Join Now!",
+            });
             
             /*
             Problematic part of code is below
