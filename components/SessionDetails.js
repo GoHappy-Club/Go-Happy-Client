@@ -155,10 +155,10 @@ export default class SessionDetails extends Component {
   createShareMessage(item) {
     let template =
       'Namaste !! I am attending "😃 ' +
-      toUnicodeVariant(item.eventName, 'bold italic sans') +
+      toUnicodeVariant(item.eventName, 'bold italic') +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of '
       + toUnicodeVariant('GoHappy Club', 'bold') + ', apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul '
-      + toUnicodeVariant('FREE', 'bold') + '. \n \n Click on the link below: \n';
+      + toUnicodeVariant('FREE', 'bold') + '. \n \nClick on the link below: \n';
     // template = template.replace;
     return template;
   }

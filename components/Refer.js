@@ -52,8 +52,8 @@ class Refer extends Component {
     Share.share({
       message:
         "Come and join my happy family, " + toUnicodeVariant("GoHappy Club", "italic") 
-        + " and attend " + toUnicodeVariant("Free sessions", "bold") + " on " + toUnicodeVariant("Fitness,  Learning and Fun", "bold") 
-        + ", carefully designed for the 50+ with a dedicated team to treate you with uttermost love and respect. \n " 
+        + " and attend " + toUnicodeVariant("Free sessions", "bold") + " on " + toUnicodeVariant("Fitness, Learning and Fun", "bold") 
+        + ", carefully designed for the 50+ with a dedicated team to treat you with uttermost love and respect. \n\n" 
         + toUnicodeVariant("Click on the link below ", "bold italic") 
         + "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
         this.state.referralLink,
