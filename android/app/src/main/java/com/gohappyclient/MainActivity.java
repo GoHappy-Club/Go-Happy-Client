@@ -40,7 +40,7 @@ public class MainActivity extends ReactActivity {
     private void showNotificationPermissionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Allow Alarms & Reminders");
-        builder.setMessage("Allow GoHappyClub to remind you of ongoing events?");
+        builder.setMessage("Allow GoHappy Club to remind you of ongoing events?");
         builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
