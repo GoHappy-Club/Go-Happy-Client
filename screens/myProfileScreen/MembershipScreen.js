@@ -38,15 +38,14 @@ class MembershipScreen extends Component {
     profile.membership = plan;
     actions.setProfile(profile);
   }
-  setMembership(email, planName, _callback) {
-    var url = SERVER_URL + "/user/setMembership";
-
+  setPaymentData(phoneNumber, amount, _callback) {
+    var url = SERVER_URL + "/user/setPaymentData";
     axios
-      .post(url, { email: email, planName: planName })
+      .post(url, { phoneNumber: phoneNumber, amount: amount })
       .then((response) => {
         // if (response.data) {
-        AsyncStorage.setItem("membership", planName);
-        this.setProfile(planName);
+        AsyncStorage.setItem("amount", amount);
+        // this.setProfile(planName);
         _callback();
         // }
       })
@@ -70,7 +69,7 @@ class MembershipScreen extends Component {
       <Membership
         navigation={this.props.navigation}
         getOrderId={this.getOrderId.bind(this)}
-        setMembership={this.setMembership.bind(this)}
+        setPaymentData={this.setPaymentData.bind(this)}
       />
     );
   }

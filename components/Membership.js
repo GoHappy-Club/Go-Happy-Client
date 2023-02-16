@@ -24,7 +24,7 @@ import {
 import { Card as Cd, Title, Paragraph, Avatar } from "react-native-paper";
 
 import { Text, Button } from "react-native-elements";
-// import RazorpayCheckout from "react-native-razorpay";
+import RazorpayCheckout from "react-native-razorpay";
 
 import Video from "react-native-video";
 
@@ -104,8 +104,8 @@ class Membership extends Component {
     var options = {
       description: "GoHappy Contribution",
       currency: "INR",
-      key: "rzp_live_Gnecc7OCz1jsxK",
-      amount: this.state.amount * 100,
+      key: "rzp_test_nkOzuR6pQtO9xE",
+      amount: 10000,
       name: "Contribution",
       readonly: { email: true },
 
@@ -124,30 +124,38 @@ class Membership extends Component {
       theme: { color: "#53a20e" },
     };
     var _this = this;
-    if (this.state.payType == "m") {
-      Linking.openURL("https://rzp.io/i/qoGMhiRx");
-    } else {
-      Linking.openURL("https://pages.razorpay.com/ContributeUs");
-    }
-    // RazorpayCheckout.open(options).then((data) => {
-    // 	// handle success
-    // 	// if(data.razorpay_payment_id!=''){
-    // 	this.setState({success:true});
-    // 	// }
-    // 	// alert(`Success: ${data.razorpay_payment_id}`);
-    // 	var _this = this;
-    // 	this.props.setMembership(this.state.email,this.state.plans.planDetails[this.state.plans.selectedItem?this.state.plans.selectedItem:0].name,
-    // 		function(){
-    // 			_this.props.navigation.navigate('GoHappy Club')
+    // if (this.state.payType == "m") {
+    //   Linking.openURL("https://rzp.io/i/qoGMhiRx");
+    // } else {
+    //   Linking.openURL("https://pages.razorpay.com/ContributeUs");
+    // }
+    RazorpayCheckout.open(options).then((data) => {
+    	// handle success
+    	// if(data.razorpay_payment_id!=''){
+    	this.setState({success:true});
+      console.log('ffffffffffffffffffff');
+      console.log(this.props.profile);
+      console.log(data);
+      // alert(JSON.stringify(this.state.profile));
+    	// }
+    	// alert(`Success: ${data.razorpay_payment_id}`);
 
-    // 		});
-    // }).catch((error) => { alert(error);
-    // 	// handle failure
-    //
-    // 	ToastAndroid.show(
-    // 		"Payment could not be processed, please try again.",
-    // 		ToastAndroid.LONG
-    // )});
+      var _this = this;
+      if(data.razorpay_payment_id === ""){
+        this.props.setPaymentData(this.state.profile.phoneNumber,this.state.amount,
+          function(){
+            _this.props.navigation.navigate('GoHappy Club')
+          });
+      }
+      //if data.status_code is 200, then make below call
+    	
+    }).catch((error) => { alert(JSON.stringify(error));
+    	// handle failure
+    
+    	ToastAndroid.show(
+    		"Payment could not be processed, please try again.",
+    		ToastAndroid.LONG
+    )});
   }
   planSelected(plan, index) {
     var allPlans = this.state.plans;
@@ -297,105 +305,8 @@ class Membership extends Component {
           </View>
 
           <View style={{ justifyContent: "center", alignItems: "center" }}>
-            {/* <Text  style={{
-						height: 30,
-						marginTop:'10%',
-						width:Dimensions.get('window').width*0.9,
-						alignItems: "center",}}>
 
-							Contribute an amount of your choice
 
-					</Text> */}
-
-            {/* <TextInput 
-						placeholder='Enter your contribution amount'
-						style={styles.input}
-						keyboardType='numeric'
-						onChangeText={(text)=> this.checkValidAmount(text)}
-						value={this.state.amount.toString()}
-						maxLength={10}  
-						
-					/> */}
-            <View style={{ flexDirection: "column", marginTop: 50 }}>
-              <RadioButton.Group
-                onValueChange={(newValue) =>
-                  this.setState({ payType: newValue })
-                }
-                value={this.state.payType}
-              >
-                {/* <View> */}
-                <View style={{ flexDirection: "row" }}>
-                  {/* <View style={{flexDirection:'column',marginRight:30}}> */}
-                  {/* <RadioButton value="m" /> */}
-                  {/* <Text style={{fontWeight:'bold',fontSize:20,marginRight:30,paddingTop:2}}>Monthly</Text> */}
-
-                  {/* </View> */}
-                  {/* </View>
-						<View> */}
-                  {/* <View style={{flexDirection:'column',marginLeft:30}}> */}
-                  {/* <RadioButton value="o" /> */}
-                  {/* <Text style={{fontWeight:'bold',fontSize:20,paddingTop:2}}>One Time</Text> */}
-                </View>
-                {/* </View> */}
-                {/* </View> */}
-              </RadioButton.Group>
-              {/* 	<TouchableOpacity
-							style={{
-								margin:'2%',
-								borderWidth:1,
-								borderColor:'rgba(0,0,0,0.2)',
-								alignItems:'center',
-								justifyContent:'center',
-								backgroundColor:'#fff',
-								borderRadius:10,
-								}}
-								onPress={()=>{this.setState({amount:'249'})}}
-							>
-								<Text  style={{fontWeight:'bold',padding:5}}>₹ 249</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								margin:'2%',
-								borderWidth:1,
-								borderColor:'rgba(0,0,0,0.2)',
-								alignItems:'center',
-								justifyContent:'center',
-								backgroundColor:'#fff',
-								borderRadius:10,
-								}}
-								onPress={()=>{this.setState({amount:'499'})}}
-							>
-								<Text style={{fontWeight:'bold',padding:5}}>₹ 499</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								margin:'2%',
-								borderWidth:1,
-								borderColor:'rgba(0,0,0,0.2)',
-								alignItems:'center',
-								justifyContent:'center',
-								backgroundColor:'#fff',
-								borderRadius:10,
-								}}
-								onPress={()=>{this.setState({amount:'999'})}}
-							>
-								<Text  style={{fontWeight:'bold',padding:5}}>₹ 999</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							style={{
-								margin:'2%',
-								borderWidth:1,
-								borderColor:'rgba(0,0,0,0.2)',
-								alignItems:'center',
-								justifyContent:'center',
-								backgroundColor:'#fff',
-								borderRadius:10,
-								}}
-								onPress={()=>{this.setState({amount:'1999'})}}
-							>
-								<Text  style={{fontWeight:'bold',padding:5}}>₹ 1999</Text>
-						</TouchableOpacity>*/}
-            </View>
             <Text style={{ color: "black", fontWeight: "bold", fontSize: 20 }}>
               Yeh Shagun GoHappy Family ke Naam
             </Text>
@@ -432,6 +343,110 @@ class Membership extends Component {
 					You will be still the precious member of our GoHappy Family.</Text> */}
             </Text>
           </View>
+
+        <View style={{ justifyContent: "center", alignContent: "center"}}>
+        <Text  style={{
+						height: 30,
+						marginTop:'10%',
+						width:Dimensions.get('window').width*0.9,
+						alignItems: "center",}}>
+
+							Contribute an amount of your choice
+
+					</Text>
+
+            <TextInput 
+						placeholder='Enter your contribution amount'
+						style={styles.input}
+						keyboardType='numeric'
+						onChangeText={(text)=> this.checkValidAmount(text)}
+						value={this.state.amount.toString()}
+						maxLength={10}  
+						
+					/>
+          </View> 
+
+        <View style={{ flexDirection: "row", marginTop: 20 }}>
+            {/* <RadioButton.Group
+              onValueChange={(newValue) =>
+                this.setState({ payType: newValue })
+              }
+              value={this.state.payType}
+            >
+              <View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{flexDirection:'column',marginRight:30}}>
+                <RadioButton value="m" />
+                <Text style={{fontWeight:'bold',fontSize:20,marginRight:30,paddingTop:2}}>Monthly</Text>
+
+                </View>
+                </View>
+          <View>
+                <View style={{flexDirection:'column',marginLeft:30}}>
+                <RadioButton value="o" />
+                <Text style={{fontWeight:'bold',fontSize:20,paddingTop:2}}>One Time</Text>
+              </View>
+              </View>
+              </View>
+            </RadioButton.Group> */}
+              <TouchableOpacity
+            style={{
+              margin:'2%',
+              borderWidth:1,
+              borderColor:'rgba(0,0,0,0.2)',
+              alignItems:'center',
+              justifyContent:'center',
+              backgroundColor:'#fff',
+              borderRadius:10,
+              }}
+              onPress={()=>{this.setState({amount:'201'})}}
+            >
+              <Text  style={{fontWeight:'bold',padding:5}}>₹ 201</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              margin:'2%',
+              borderWidth:1,
+              borderColor:'rgba(0,0,0,0.2)',
+              alignItems:'center',
+              justifyContent:'center',
+              backgroundColor:'#fff',
+              borderRadius:10,
+              }}
+              onPress={()=>{this.setState({amount:'501'})}}
+            >
+              <Text style={{fontWeight:'bold',padding:5}}>₹ 501</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              margin:'2%',
+              borderWidth:1,
+              borderColor:'rgba(0,0,0,0.2)',
+              alignItems:'center',
+              justifyContent:'center',
+              backgroundColor:'#fff',
+              borderRadius:10,
+              }}
+              onPress={()=>{this.setState({amount:'1001'})}}
+            >
+              <Text  style={{fontWeight:'bold',padding:5}}>₹ 1001</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              margin:'2%',
+              borderWidth:1,
+              borderColor:'rgba(0,0,0,0.2)',
+              alignItems:'center',
+              justifyContent:'center',
+              backgroundColor:'#fff',
+              borderRadius:10,
+              }}
+              onPress={()=>{this.setState({amount:'2001'})}}
+            >
+              <Text  style={{fontWeight:'bold',padding:5}}>₹ 2001</Text>
+          </TouchableOpacity>
+          </View>
+
           <View
             style={{
               marginTop: 20,
