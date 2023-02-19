@@ -121,7 +121,7 @@ class LoginScreen extends Component {
     } else {
       this.setState({ loadingButton: true });
     }
-    console.log(this.state);
+    crashlytics().log(JSON.stringify(this.state));
     if (this.validatePhoneNumber()) {
       firebase
         .auth()
@@ -145,7 +145,7 @@ class LoginScreen extends Component {
           else this.setState({ loadingButton: false });
         })
         .catch((error) => {
-          console.log(error);
+          crashlytics().recordError(JSON.stringify(error));
           // if(JSON.stringify(error).includes('too-many')){
           // 	alert(error);
           // }
@@ -202,7 +202,7 @@ class LoginScreen extends Component {
           //   this.setState({ loadingButton:false });
         })
         .catch((error) => {
-          console.log(error);
+          crashlytics().recordError(JSON.stringify(error));
           //   alert(error.message)
 
           this.setState({ loadingVerifyButton: false, showAlert: true });
