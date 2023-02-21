@@ -56,6 +56,7 @@ export default function App() {
     token = out;
   });
   const [isConnected, setIsConnected] = useState(true);
+  const [isFreshUpdated, setIsFreshUpdated] = useState(true);
   useEffect(() => {
     recheck();
     checkVersion();
@@ -78,6 +79,7 @@ export default function App() {
   };
   const checkVersion = async () => {
     try {
+      const valueUpdated = await AsyncStorage.getItem('@MyApp:isFreshUpdated');
       let updateNeeded = await VersionCheck.needUpdate();
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
@@ -94,6 +96,17 @@ export default function App() {
           ],
           { cancelable: false }
         );
+        // after updating, save status
+        await AsyncStorage.setItem('@MyApp:isFreshUpdated', 'true');
+      }
+      else{
+        if (valueUpdated == 'true'){
+          Alert.alert('What\'s new!', 'You are able to do foo now.', [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ]);    
+          // after showing message once, reset status
+          await AsyncStorage.setItem('@MyApp:isFreshUpdated', 'false');
+        }
       }
     } catch (error) {
       console.log(error);
