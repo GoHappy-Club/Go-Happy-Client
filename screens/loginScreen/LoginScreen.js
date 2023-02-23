@@ -618,8 +618,8 @@ class LoginScreen extends Component {
                   onPress={this.showConditions.bind(this, 1)}
                 >
                   <ListItem.Content>
-                    <ListItem.Title style={{ color: "white" }}>
-                      Close
+                    <ListItem.Title style={styles.buttonBottomSheet}>
+                      Accept
                     </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
@@ -717,6 +717,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#136AC7",
     borderRadius: 5,
     padding: 10,
+  },
+
+  buttonBottomSheet: {
+    color: 'white',
+    alignSelf: "center",
   },
 
   buttonDisabled: {
