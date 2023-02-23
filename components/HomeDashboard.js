@@ -78,7 +78,9 @@ class HomeDashboard extends Component {
     return text.substring(0, cut) + "...";
   }
   isOngoingEvent(item) {
-    console.log(item.startTime, new Date().getTime());
+    crashlytics().log(
+      JSON.stringify(item.startTime) + JSON.stringify(new Date().getTime())
+    );
     if (item.startTime - 600000 <= new Date().getTime()) {
       return true;
     }
@@ -169,7 +171,7 @@ class HomeDashboard extends Component {
       this.props.profile.phoneNumber
     );
 
-    // console.log("this is item", isOngoing, isParticipant);
+    // crashlytics().log("this is item", isOngoing, isParticipant);
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {

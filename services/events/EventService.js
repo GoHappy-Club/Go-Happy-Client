@@ -6,6 +6,6 @@ export const setSessionAttended = (phone) => {
     .post(url, { phone: phone })
     .then((response) => {})
     .catch((error) => {
-      console.log(error);
+      crashlytics().recordError(JSON.stringify(error));
     });
 };
