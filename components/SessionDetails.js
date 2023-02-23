@@ -46,7 +46,7 @@ export default class SessionDetails extends Component {
   createDynamicReferralLink = async () => {
     let selfInviteCode = this.props.profile.selfInviteCode;
     // alert('hi');
-    console.log(this.props.profile);
+    crashlytics().log(JSON.stringify(this.props.profile));
     if (selfInviteCode == null) {
       selfInviteCode = "test";
     }
@@ -110,7 +110,10 @@ export default class SessionDetails extends Component {
     return false;
   }
   sessionAction() {
-    console.log(this.getTitle(), this.state.alreadyBookedSameDayEvent);
+    crashlytics().log(
+      JSON.stringify(this.getTitle()) +
+        JSON.stringify(this.state.alreadyBookedSameDayEvent)
+    );
     if (
       this.getTitle() === "Book" &&
       this.state.alreadyBookedSameDayEvent == true
@@ -155,10 +158,12 @@ export default class SessionDetails extends Component {
   createShareMessage(item) {
     let template =
       'Namaste !! I am attending "😃 ' +
-      toUnicodeVariant(item.eventName, 'bold italic') +
-      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of '
-      + toUnicodeVariant('GoHappy Club', 'bold') + ', apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul '
-      + toUnicodeVariant('FREE', 'bold') + '. \n \nClick on the link below: \n';
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
+      toUnicodeVariant("FREE", "bold") +
+      ". \n \nClick on the link below: \n";
     // template = template.replace;
     return template;
   }

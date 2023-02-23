@@ -65,7 +65,7 @@ export default class HomeDetailsScreen extends Component {
           }
         })
         .catch((error) => {
-          console.log(error);
+          crashlytics().recordError(JSON.stringify(error));
           this.error = true;
         });
     } else if (type == "ongoing") {
@@ -88,7 +88,7 @@ export default class HomeDetailsScreen extends Component {
           }
         })
         .catch((error) => {
-          console.log(error);
+          crashlytics().recordError(JSON.stringify(error));
           this.error = true;
         });
     } else if (type == "book") {
@@ -111,7 +111,7 @@ export default class HomeDetailsScreen extends Component {
           }
         })
         .catch((error) => {
-          console.log(error);
+          crashlytics().recordError(JSON.stringify(error));
           this.error = true;
 
           return false;
