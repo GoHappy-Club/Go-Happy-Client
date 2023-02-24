@@ -7,3 +7,10 @@ export const FirebaseDynamicLinksProps = () => {
       "https://play.google.com/store/apps/details?id=com.gohappyclient",
   };
 };
+
+export const WhatsNewMessage = () => {
+   return {
+    show:true,
+    message:"This is the update"
+  };
+ }

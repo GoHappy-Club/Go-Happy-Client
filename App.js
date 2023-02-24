@@ -28,6 +28,7 @@ import VersionCheck from "react-native-version-check";
 import firebase from "@react-native-firebase/app";
 import { useSelector } from "react-redux";
 import ErrorScreen from "./components/NoInternet";
+import { WhatsNewMessage } from "./config/CONSTANTS";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -79,6 +80,8 @@ export default function App() {
   };
   const checkVersion = async () => {
     try {
+      // showing updating content if this is newly update but not newly install
+      // it will only show once
       const valueUpdated = await AsyncStorage.getItem('@MyApp:isFreshUpdated');
       let updateNeeded = await VersionCheck.needUpdate();
       if (updateNeeded && updateNeeded.isNeeded) {
@@ -100,8 +103,8 @@ export default function App() {
         await AsyncStorage.setItem('@MyApp:isFreshUpdated', 'true');
       }
       else{
-        if (valueUpdated == 'true'){
-          Alert.alert('What\'s new!', 'You are able to do foo now.', [
+        if (valueUpdated == 'true' && WhatsNewMessage().show){
+          Alert.alert('What\'s new!', WhatsNewMessage().message, [
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ]);    
           // after showing message once, reset status
