@@ -403,11 +403,10 @@ class LoginScreen extends Component {
     
     if (type == 0) {
       const {width} = Dimensions.get('window');
-      console.log(width);
       this.setState({ conditionText: 
         <View style={{width: width*0.9,}}>
           <RenderHtml
-            contentWidth={width}
+            // contentWidth={width}
             source={TermOfUse}
           />
         </View>
