@@ -403,14 +403,7 @@ class LoginScreen extends Component {
     
     if (type == 0) {
       const {width} = Dimensions.get('window');
-      this.setState({ conditionText: 
-        <View style={{width: width*0.9,}}>
-          <RenderHtml
-            // contentWidth={width}
-            source={TermOfUse}
-          />
-        </View>
-      });
+      this.setState({ conditionText: TermOfUse });
     } else {
       this.setState({ conditionText: PrivacyPolicy });
     }
@@ -523,7 +516,14 @@ class LoginScreen extends Component {
                 <Text style={styles.title}>Please Read Below</Text>
                 <ListItem key="1">
                   <ListItem.Content>
-                    <ListItem.Title>{this.state.conditionText}</ListItem.Title>
+                    <ListItem.Title>
+                      <View style={{width: width*0.9,}}>
+                        <RenderHtml
+                          // contentWidth={width}
+                          source={this.state.conditionText}
+                        />
+                      </View>                    
+                    </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
                 <ListItem
