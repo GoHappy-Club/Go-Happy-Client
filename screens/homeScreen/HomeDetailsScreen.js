@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import PushNotification from 'react-native-push-notification';
+
 import {
   Linking,
   TouchableOpacity,
@@ -74,6 +76,7 @@ export default class HomeDetailsScreen extends Component {
       this.props.route.params.event.participantList != null &&
       this.props.route.params.event.participantList.includes(phoneNumber)
     ) {
+      //cancel a notification
       var url = SERVER_URL + "/event/cancelEvent";
       axios
         .post(url, {
@@ -82,6 +85,9 @@ export default class HomeDetailsScreen extends Component {
         })
         .then((response) => {
           if (response.data) {
+            PushNotification.cancelLocalNotifications({id: String(this.props.route.params.event.id)});
+            //recomended by Viual Studio
+            //PushNotification.cancelLocalNotification({id: String(this.props.route.params.event.id)});
             this.props.route.params.onGoBack();
             // this.props.navigation.state.params.onGoBack();
             this.props.navigation.goBack();
