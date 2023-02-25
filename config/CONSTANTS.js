@@ -11,6 +11,8 @@ export const FirebaseDynamicLinksProps = () => {
 export const WhatsNewMessage = () => {
    return {
     show:true,
-    message:"This is the update"
+    message:`<p style="text-align:justify"><strong>This is a new function.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$</strong></p>
+
+    <p style="text-align:justify">1. Try it.</p>`,
   };
  }
