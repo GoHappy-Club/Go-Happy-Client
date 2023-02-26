@@ -57,7 +57,7 @@ PushNotification.createChannel(
 
 export default function App() {
   // set up parameters for what's new function
-  var [justUpdated, setJustUpdated] = useState(true);
+  var [justUpdated, setJustUpdated] = useState(false);
   var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(WhatsNewMessage().show);
   const width = Dimensions.get("window").width;
 
@@ -138,7 +138,8 @@ export default function App() {
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
-            confirmButtonColor="navy"
+            confirmText="Close"
+            confirmButtonColor="deepskyblue"
             onConfirmPressed={() => {
               setJustUpdated(justUpdated=false);
               setShowWhatsNewMessage(showWhatsNewMessage=false);
