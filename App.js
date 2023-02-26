@@ -32,10 +32,12 @@ import ErrorScreen from "./components/NoInternet";
 import { WhatsNewMessage } from "./config/CONSTANTS";
 import AwesomeAlert from "react-native-awesome-alerts";
 import RenderHtml from "react-native-render-html";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
 global.SERVER_URL = configData.BACKEND.SERVER_URL;
+global.crashlytics = crashlytics;
 global.Icon = Icon;
 Icon.loadFont();
 
@@ -52,7 +54,7 @@ PushNotification.createChannel(
     importance: 4, // (optional) default: 4. Int value of the Android notification importance
     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
   },
-  (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+  (created) => crashlytics().log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
 );
 
 export default function App() {
@@ -69,13 +71,11 @@ export default function App() {
     recheck();
     checkVersion();
   }, []);
-
   const profile = useSelector((state) => state.profile);
 
   const recheck = async () => {
     try {
       const response = await fetch("https://www.google.com/");
-      console.log(response);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -83,7 +83,6 @@ export default function App() {
     } catch (error) {
       setIsConnected(false);
     }
-    console.log(isConnected);
   };
   const checkVersion = async () => {
     try {
@@ -117,7 +116,7 @@ export default function App() {
         }
       }
     } catch (error) {
-      console.log(error);
+      crashlytics().log(JSON.stringify(error));
     }
   };
 

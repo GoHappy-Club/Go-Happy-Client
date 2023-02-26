@@ -17,7 +17,7 @@ export const refreshProfile = (phone) => {
   //     actions.setProfile(response.data);
   //   })
   //   .catch((error) => {
-  //     console.log(error);
+  //     crashlytics().log(error);
   //   });
   // const getProfile = () => {
   //   return state.profile;

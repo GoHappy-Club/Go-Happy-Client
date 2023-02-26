@@ -38,7 +38,7 @@ export default class HomeScreen extends Component {
       events: [],
       error: true,
     };
-    console.log(props.propProfile);
+    crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
   }
   render() {
