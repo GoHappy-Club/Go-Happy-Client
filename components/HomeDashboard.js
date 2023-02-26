@@ -3,6 +3,7 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  ToastAndroid,
   StyleSheet,
   View,
   Linking,
@@ -19,6 +20,8 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
+import { strProps } from "../config/CONSTANTS.js";
+import Video from "react-native-video";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -34,6 +37,7 @@ class HomeDashboard extends Component {
       bookingLoader: false,
       selectedDateRaw: todayRaw,
       showAlert: false,
+      showPaymentAlert: false,
       alreadyBookedSameDayEvent: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
@@ -42,6 +46,73 @@ class HomeDashboard extends Component {
 
     this._retrieveData();
   }
+
+  async razorPay(item) {
+    var cost = item.cost;
+    var orderId = await this.props.getOrderId(cost);
+    var options = {
+      description: strProps().rp_description,
+      currency: "INR",
+      key: strProps().razorPayKey,
+      amount: cost * 100,
+      name: "Payment",
+      readonly: { email: true },
+
+      // plan_id:'plan_JA3o75RQvPfKXP',
+      // total_count:6,
+      // notes: {
+      // 	name: "Subscription A"
+      //   },
+
+      order_id: orderId, //Replace this with an order_id created using Orders API.
+      prefill: {
+        email: strProps().emailId,
+        contact: this.props.profile.phoneNumber,
+        name: this.props.profile.name,
+      },
+      theme: { color: "#53a20e" },
+    };
+    var _this = this;
+    // if (this.state.payType == "m") {
+    //   Linking.openURL("https://rzp.io/i/qoGMhiRx");
+    // } else {
+    //   Linking.openURL("https://pages.razorpay.com/ContributeUs");
+    // }
+    RazorpayCheckout.open(options).then((data) => {
+    	// handle success
+    	// if(data.razorpay_payment_id!=''){
+    	this.setState({success:true});
+      console.log('ffffffffffffffffffff');
+      console.log(this.props.profile);
+      console.log(data);
+      // alert(JSON.stringify(this.state.profile));
+    	// }
+    	// alert(`Success: ${data.razorpay_payment_id}`);
+
+      var _this = this;
+      if(data.razorpay_payment_id === ""){
+        this.props.setPaymentData(this.state.profile.phoneNumber,this.state.amount,
+          function(){
+            _this.props.navigation.navigate('GoHappy Club')
+          });
+       } else {
+        this.updateEventBook(item);
+        this.setState({ showPaymentAlert: true });
+       }
+
+      //if data.status_code is 200, then make below call
+
+    	
+    }).catch((error) => { alert(JSON.stringify(error));
+      console.log(error);
+    	// handle failure
+    
+    	ToastAndroid.show(
+    		"Payment could not be processed, please try again.",
+    		ToastAndroid.LONG
+    )});
+  }
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -247,7 +318,12 @@ class HomeDashboard extends Component {
                 </Text>
                 <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
                   {item.seatsLeft} seats left
+                </Text>        
+                {item.costType == "paid" &&
+                  <Text style={{ color: "white", fontSize: 14, paddingLeft: 4, position: 'absolute', right: 0}}>
+                  {'\u20B9'}
                 </Text>
+                }             
               </View>
               {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
@@ -285,16 +361,16 @@ class HomeDashboard extends Component {
                 {item.startTime <= new Date().getTime()
                   ? "rererer"
                   : "fewrewfsdfsd"}
-              </Text> */}
+              </Text> */}        
               <Button
-                disabled={this.isDisabled(item)}
-                title={this.getTitle(item)}
-                onPress={this.updateEventBook.bind(this, item)}
-                loading={item.loadingButton}
-                loadingProps={{ size: "small", color: "black" }}
-                buttonStyle={{ backgroundColor: "white" }}
-                titleStyle={{ color: "#2f2f31" }}
-              />
+              disabled={this.isDisabled(item)}
+              title={this.getTitle(item)}
+              onPress= {(item.costType == "paid" && this.getTitle(item) == "Book")  ? this.razorPay.bind(this, item) : this.updateEventBook.bind(this, item)}
+              loading={item.loadingButton}
+              loadingProps={{ size: "small", color: "black" }}
+              buttonStyle={{ backgroundColor: "white" }}
+              titleStyle={{ color: "#2f2f31" }}
+              /> 
             </View>
           </Cd.Content>
         </TouchableOpacity>
@@ -353,6 +429,22 @@ class HomeDashboard extends Component {
               this.setState({ showAlert: false });
             }}
           />
+        )}
+        {this.state.showPaymentAlert && (
+        <AwesomeAlert
+          show={this.state.showPaymentAlert}
+          showProgress={false}
+          title="Success"
+          message="Your Payment is Successful!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Try Again"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+          this.setState({ showAlert: false });
+          }}
+        />
         )}
       </View>
     );

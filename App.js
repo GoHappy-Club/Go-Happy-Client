@@ -24,7 +24,8 @@ import PushNotification from "react-native-push-notification";
 import VersionCheck from "react-native-version-check";
 import firebase from "@react-native-firebase/app";
 import { useSelector } from "react-redux";
-
+import RazorpayCheckout from "react-native-razorpay";
+global.RazorpayCheckout = RazorpayCheckout;
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
 global.SERVER_URL = configData.BACKEND.SERVER_URL;

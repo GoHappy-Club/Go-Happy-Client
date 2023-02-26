@@ -4,6 +4,7 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
+  ToastAndroid,
   View,
   Image,
   Share,
@@ -22,6 +23,8 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { strProps } from "../config/CONSTANTS.js";
+import Video from "react-native-video";
 
 export default class SessionDetails extends Component {
   constructor(props) {
@@ -31,6 +34,7 @@ export default class SessionDetails extends Component {
       event: props.event,
       modalVisible: false,
       showAlert: false,
+      showPaymentAlert: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       loadingButton: false,
@@ -38,6 +42,71 @@ export default class SessionDetails extends Component {
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
     };
+  }
+  async razorPay(item) {
+    var cost = item.cost;
+    var orderId = await this.props.getOrderId(cost);
+    var options = {
+      description: strProps().rp_description,
+      currency: "INR",
+      key: strProps().razorPayKey,
+      amount: cost * 100,
+      name: "Payment",
+      readonly: { email: true },
+
+      // plan_id:'plan_JA3o75RQvPfKXP',
+      // total_count:6,
+      // notes: {
+      // 	name: "Subscription A"
+      //   },
+
+      order_id: orderId, //Replace this with an order_id created using Orders API.
+      prefill: {
+        email: strProps().emailId,
+        contact: this.props.profile.phoneNumber,
+        name: this.props.profile.name,
+      },
+      theme: { color: "#53a20e" },
+    };
+    var _this = this;
+    // if (this.state.payType == "m") {
+    //   Linking.openURL("https://rzp.io/i/qoGMhiRx");
+    // } else {
+    //   Linking.openURL("https://pages.razorpay.com/ContributeUs");
+    // }
+    RazorpayCheckout.open(options).then((data) => {
+    	// handle success
+    	// if(data.razorpay_payment_id!=''){
+    	this.setState({success:true});
+      console.log('ffffffffffffffffffff');
+      console.log(this.props.profile);
+      console.log(data);
+      // alert(JSON.stringify(this.state.profile));
+    	// }
+    	// alert(`Success: ${data.razorpay_payment_id}`);
+
+      var _this = this;
+      if(data.razorpay_payment_id === ""){
+        this.props.setPaymentData(this.state.profile.phoneNumber,this.state.amount,
+          function(){
+            _this.props.navigation.navigate('GoHappy Club')
+          });
+       } else {
+        this.sessionAction();
+        this.setState({ showPaymentAlert: true });
+       }
+
+      //if data.status_code is 200, then make below call
+
+    	
+    }).catch((error) => { alert(JSON.stringify(error));
+      console.log(error);
+    	// handle failure
+    
+    	ToastAndroid.show(
+    		"Payment could not be processed, please try again.",
+    		ToastAndroid.LONG
+    )});
   }
   componentDidMount() {
     this.createDynamicReferralLink();
@@ -360,7 +429,7 @@ export default class SessionDetails extends Component {
             buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={this.sessionAction.bind(this)}
+            onPress= {(item.costType == "paid" && this.getTitle() == "Book") ? this.razorPay.bind(this, item) : this.sessionAction.bind(this)}
           ></Button>
         </View>
 
@@ -399,6 +468,22 @@ export default class SessionDetails extends Component {
               this.setState({ showAlert: false });
             }}
           />
+        )}
+        {this.state.showPaymentAlert && (
+        <AwesomeAlert
+          show={this.state.showPaymentAlert}
+          showProgress={false}
+          title="Success"
+          message="Your Payment is Successful!"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Try Again"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+          this.setState({ showAlert: false });
+          }}
+        />
         )}
       </View>
     );
