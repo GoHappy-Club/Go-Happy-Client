@@ -8,6 +8,7 @@ import {
   Alert,
   Linking,
   BackHandler,
+  Dimensions,
   // NetInfo,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -28,6 +29,9 @@ import VersionCheck from "react-native-version-check";
 import firebase from "@react-native-firebase/app";
 import { useSelector } from "react-redux";
 import ErrorScreen from "./components/NoInternet";
+import { WhatsNewMessage } from "./config/CONSTANTS";
+import AwesomeAlert from "react-native-awesome-alerts";
+import RenderHtml from "react-native-render-html";
 import crashlytics from "@react-native-firebase/crashlytics";
 
 global.axios = axios;
@@ -54,11 +58,15 @@ PushNotification.createChannel(
 );
 
 export default function App() {
+  // set up parameters for what's new function
+  var [justUpdated, setJustUpdated] = useState(false);
+  var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(WhatsNewMessage().show);
+  const width = Dimensions.get("window").width;
+
   AsyncStorage.getItem("token").then((out) => {
     token = out;
   });
   const [isConnected, setIsConnected] = useState(true);
-  const [isFreshUpdated, setIsFreshUpdated] = useState(true);
   useEffect(() => {
     recheck();
     checkVersion();
@@ -78,7 +86,9 @@ export default function App() {
   };
   const checkVersion = async () => {
     try {
-      const valueUpdated = await AsyncStorage.getItem('@MyApp:isFreshUpdated');
+      // showing updating content if this is newly update but not newly install
+      // it will only show once
+      const asyncJustUpdated = await AsyncStorage.getItem('@MyApp:isJustUpdated');
       let updateNeeded = await VersionCheck.needUpdate();
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
@@ -96,15 +106,13 @@ export default function App() {
           { cancelable: false }
         );
         // after updating, save status
-        await AsyncStorage.setItem('@MyApp:isFreshUpdated', 'true');
+        await AsyncStorage.setItem('@MyApp:isJustUpdated', 'true');
       }
       else{
-        if (valueUpdated == 'true'){
-          Alert.alert('What\'s new!', 'You are able to do foo now.', [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ]);    
+        if (asyncJustUpdated == 'true'){
+          setJustUpdated(true);
           // after showing message once, reset status
-          await AsyncStorage.setItem('@MyApp:isFreshUpdated', 'false');
+          await AsyncStorage.setItem('@MyApp:isJustUpdated', 'false');
         }
       }
     } catch (error) {
@@ -114,6 +122,30 @@ export default function App() {
 
   return (
     <>
+      {justUpdated && (
+        <AwesomeAlert
+            show={showWhatsNewMessage}
+            showProgress={false}
+            title="What's New!"
+            message={
+              <View style={{width: width*0.6,}}>
+                <RenderHtml
+                  source={{html: WhatsNewMessage().message,}}
+                />
+              </View>
+            }
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Close"
+            confirmButtonColor="deepskyblue"
+            onConfirmPressed={() => {
+              setJustUpdated(justUpdated=false);
+              setShowWhatsNewMessage(showWhatsNewMessage=false);
+            }}
+        />
+      )}
+
       {isConnected == true ? (
         <NavigationContainer>
           <Stack.Navigator>

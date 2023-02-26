@@ -13,6 +13,14 @@ export const FirebaseDynamicLinksProps = () => {
   };
 };
 
+export const WhatsNewMessage = () => {
+   return {
+    show:false,
+    message:`<p style="text-align:justify"><strong>This is a new function.</strong></p>
+
+    <p style="text-align:justify">Try it!</p>`,
+  };
+ }
 export const TermOfUse = {
   html: `<p>TERMS OF USE &nbsp;</p>
 
