@@ -36,6 +36,8 @@ export default class SessionDetails extends Component {
       modalVisible: false,
       showAlert: false,
       showPaymentAlert: false,
+      paymentAlertMessage: "Your Payment is Successful!",
+      paymentAlertTitle: "Success",
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       loadingButton: false,
@@ -52,7 +54,7 @@ export default class SessionDetails extends Component {
       currency: "INR",
       key: strProps().razorPayKey,
       amount: cost * 100,
-      name: "Payment",
+      name: strProps().rp_description,
       readonly: { email: true },
 
       // plan_id:'plan_JA3o75RQvPfKXP',
@@ -75,39 +77,50 @@ export default class SessionDetails extends Component {
     // } else {
     //   Linking.openURL("https://pages.razorpay.com/ContributeUs");
     // }
-    RazorpayCheckout.open(options).then((data) => {
-    	// handle success
-    	// if(data.razorpay_payment_id!=''){
-    	this.setState({success:true});
-      console.log('ffffffffffffffffffff');
-      console.log(this.props.profile);
-      console.log(data);
-      // alert(JSON.stringify(this.state.profile));
-    	// }
-    	// alert(`Success: ${data.razorpay_payment_id}`);
+    RazorpayCheckout.open(options)
+      .then((data) => {
+        // handle success
+        // if(data.razorpay_payment_id!=''){
+        this.setState({ success: true });
+        console.log("ffffffffffffffffffff");
+        console.log(this.props.profile);
+        console.log(data);
+        // alert(JSON.stringify(this.state.profile));
+        // }
+        // alert(`Success: ${data.razorpay_payment_id}`);
 
-      var _this = this;
-      if(data.razorpay_payment_id === ""){
-        this.props.setPaymentData(this.state.profile.phoneNumber,this.state.amount,
-          function(){
-            _this.props.navigation.navigate('GoHappy Club')
-          });
-       } else {
-        this.sessionAction();
+        var _this = this;
+        if (data.razorpay_payment_id === "") {
+          this.props.setPaymentData(
+            this.state.profile.phoneNumber,
+            this.state.amount,
+            function () {
+              _this.props.navigation.navigate("GoHappy Club");
+            }
+          );
+        } else {
+          this.sessionAction();
+          this.setState({ showPaymentAlert: true });
+        }
+
+        //if data.status_code is 200, then make below call
+      })
+      .catch((error) => {
+        this.setState({
+          paymentAlertMessage:
+            "Your payment could not be processed. Please try again later.",
+          paymentAlertTitle: "Oops!",
+        });
         this.setState({ showPaymentAlert: true });
-       }
+        // alert(JSON.stringify(error));
+        // console.log(error);
+        // handle failure
 
-      //if data.status_code is 200, then make below call
-
-    	
-    }).catch((error) => { alert(JSON.stringify(error));
-      console.log(error);
-    	// handle failure
-    
-    	ToastAndroid.show(
-    		"Payment could not be processed, please try again.",
-    		ToastAndroid.LONG
-    )});
+        // ToastAndroid.show(
+        //   "Payment could not be processed, please try again.",
+        //   ToastAndroid.LONG
+        // );
+      });
   }
   componentDidMount() {
     this.createDynamicReferralLink();
@@ -141,7 +154,10 @@ export default class SessionDetails extends Component {
   };
   isDisabled() {
     var title = this.getTitle();
-    if (title == "Seats Full") {
+    if (
+      title == "Seats Full" ||
+      (title == "Cancel Your Booking" && this.state.event.costType == "paid")
+    ) {
       return true;
     } else {
       return false;
@@ -437,7 +453,11 @@ export default class SessionDetails extends Component {
             buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress= {(item.costType == "paid" && this.getTitle() == "Book") ? this.razorPay.bind(this, item) : this.sessionAction.bind(this)}
+            onPress={
+              item.costType == "paid" && this.getTitle() == "Book"
+                ? this.razorPay.bind(this, item)
+                : this.sessionAction.bind(this)
+            }
           ></Button>
         </View>
 
@@ -478,20 +498,24 @@ export default class SessionDetails extends Component {
           />
         )}
         {this.state.showPaymentAlert && (
-        <AwesomeAlert
-          show={this.state.showPaymentAlert}
-          showProgress={false}
-          title="Success"
-          message="Your Payment is Successful!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Try Again"
-          confirmButtonColor="#DD6B55"
-          onConfirmPressed={() => {
-          this.setState({ showAlert: false });
-          }}
-        />
+          <AwesomeAlert
+            show={this.state.showPaymentAlert}
+            showProgress={false}
+            title={this.state.paymentAlertTitle}
+            message={this.state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
+            }}
+          />
         )}
       </View>
     );
