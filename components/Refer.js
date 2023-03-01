@@ -21,7 +21,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
 import RenderHtml from "react-native-render-html";
-
+import toUnicodeVariant from "./toUnicodeVariant.js";
 // import { refreshProfile } from "../services/profile/ProfileService";
 
 const screenWidth = Dimensions.get("window").width;
@@ -50,7 +50,15 @@ class Refer extends Component {
   shareMessage = () => {
     Share.share({
       message:
-        "Come and join my happy family, GoHappy Club and attend free sessions on Fitness,  Learning and Entertainment, carefully designed for the 50+ with a dedicated team to treate you with uttermost love and respect. \n Click on the link below to install the application using my referral link and attend FREE sessions. " +
+        "Come and join my happy family, " +
+        toUnicodeVariant("GoHappy Club", "italic") +
+        " and attend " +
+        toUnicodeVariant("Free sessions", "bold") +
+        " on " +
+        toUnicodeVariant("Fitness, Learning and Fun", "bold") +
+        ", carefully designed for the 50+ with a dedicated team to treat you with uttermost love and respect. \n\n" +
+        toUnicodeVariant("Click on the link below ", "bold italic") +
+        "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
         this.state.referralLink,
     })
       .then((result) => {})
@@ -94,7 +102,7 @@ class Refer extends Component {
     let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
     // alert('hi');
-    console.log(this.props.profile);
+    crashlytics().log(JSON.stringify(this.props.profile));
     if (selfInviteCode == null) {
       selfInviteCode = "test";
     }
@@ -121,10 +129,7 @@ class Refer extends Component {
     actions.setProfile(profile);
   };
   componentDidMount() {
-    // RefreshProfile
     let { profile } = this.props;
-    // this.setState({ htmlContentWidth: useContentWindowHook().width });
-    // alert(JSON.stringify(useSelector((state) => state.profile)));
     if (profile.referralLink == null || profile.referralLink.length == 0) {
       this.createDynamicReferralLink();
     } else {
@@ -249,9 +254,14 @@ class Refer extends Component {
             }}
           > */}
           <TouchableOpacity
-            style={styles.referButton}
+            style={
+              referralLink.length == 0
+                ? styles.referButtonDisabled
+                : styles.referButton
+            }
             underlayColor={"#2bbdc3"}
             onPress={this.shareMessage.bind(this)}
+            disabled={referralLink.length == 0 ? true : false}
           >
             <View
               style={{
@@ -352,6 +362,15 @@ const styles = StyleSheet.create({
   referButton: {
     marginTop: "3%",
     backgroundColor: "#29BFC2",
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+    alignSelf: "center",
+  },
+  referButtonDisabled: {
+    marginTop: "3%",
+    backgroundColor: "#b1f2f4",
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,

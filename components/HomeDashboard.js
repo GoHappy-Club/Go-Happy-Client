@@ -149,7 +149,9 @@ class HomeDashboard extends Component {
     return text.substring(0, cut) + "...";
   }
   isOngoingEvent(item) {
-    console.log(item.startTime, new Date().getTime());
+    crashlytics().log(
+      JSON.stringify(item.startTime) + JSON.stringify(new Date().getTime())
+    );
     if (item.startTime - 600000 <= new Date().getTime()) {
       return true;
     }
@@ -170,19 +172,17 @@ class HomeDashboard extends Component {
     return isParticipantInSameEvent;
   }
   updateEventBook(item) {
-    if (this.checkIsParticipantInSameEvent(item)) {
-      this.setState({ showAlert: true });
-      return;
-    }
     this.setState({ bookingLoader: true });
     if (this.getTitle(item) == "Join") {
       setSessionAttended(this.props.profile.phoneNumber);
       Linking.openURL(item.meetingLink);
       return;
     }
+    if (this.checkIsParticipantInSameEvent(item)) {
+      this.setState({ showAlert: true });
+      return;
+    }
     item.loadingButton = true;
-    var _this = this;
-
     this.props.bookEvent(
       item,
       this.props.profile.phoneNumber,
@@ -242,7 +242,7 @@ class HomeDashboard extends Component {
       this.props.profile.phoneNumber
     );
 
-    // console.log("this is item", isOngoing, isParticipant);
+    // crashlytics().log("this is item", isOngoing, isParticipant);
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {
@@ -265,7 +265,9 @@ class HomeDashboard extends Component {
 
     if (isParticipant && !isOngoing) {
       return true;
-    } else if (item.seatsLeft == 0 || this.getTitle(item) == "Cannot Book") {
+    } else if (isParticipant) {
+      return false;
+    } else if (item.seatsLeft == 0) {
       return true;
     } else {
       return false;
@@ -398,19 +400,22 @@ class HomeDashboard extends Component {
         {this.props.childLoader == true && (
           <MaterialIndicator color="#29BFC2" />
         )}
-        {this.props.childLoader == false && this.props.events.length > 0 && (
-          <SafeAreaView style={{ flex: 1 }}>
-            <FlatList
-              contentContainerStyle={{ flexGrow: 1 }}
-              data={this.props.events.filter(
-                (item) => item.endTime > Date.now()
-              )}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-            />
-          </SafeAreaView>
-        )}
-        {this.props.events.length == 0 &&
+        {this.props.childLoader == false &&
+          this.props.events.filter((item) => item.endTime > Date.now()).length >
+            0 && (
+            <SafeAreaView style={{ flex: 1 }}>
+              <FlatList
+                contentContainerStyle={{ flexGrow: 1 }}
+                data={this.props.events.filter(
+                  (item) => item.endTime > Date.now()
+                )}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+              />
+            </SafeAreaView>
+          )}
+        {this.props.events.filter((item) => item.endTime > Date.now()).length ==
+          0 &&
           this.props.childLoader == false &&
           this.sorry()}
         {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
