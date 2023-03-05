@@ -219,6 +219,7 @@ class LoginScreen extends Component {
     return (
       <View style={styles.verificationView}>
         <OTPInputView
+          testID="otpInput"
           style={{ width: "80%", height: 60, color: "#000" }}
           pinCount={6}
           codeInputFieldStyle={styles.underlineStyleBase}
@@ -228,6 +229,7 @@ class LoginScreen extends Component {
           }}
         />
         <Button
+          testID="confirmOtp"
           outline
           style={[styles.themeButton, { paddingTop: 20 }]}
           title="Verify Code"
@@ -400,9 +402,8 @@ class LoginScreen extends Component {
     return false;
   }
   showConditions(type) {
-    
     if (type == 0) {
-      const {width} = Dimensions.get('window');
+      const { width } = Dimensions.get("window");
       this.setState({ conditionText: TermOfUse });
     } else {
       this.setState({ conditionText: PrivacyPolicy });
@@ -461,6 +462,7 @@ class LoginScreen extends Component {
         {!this.state.confirmResult && (
           <View style={styles.page}>
             <PhoneInput
+              testID="phoneInput"
               style={styles.textInput}
               ref={this.state.phoneNumber}
               keyboardType="phone-pad"
@@ -517,12 +519,12 @@ class LoginScreen extends Component {
                 <ListItem key="1">
                   <ListItem.Content>
                     <ListItem.Title>
-                      <View style={{width: width*0.9,}}>
+                      <View style={{ width: width * 0.9 }}>
                         <RenderHtml
                           // contentWidth={width}
                           source={this.state.conditionText}
                         />
-                      </View>                    
+                      </View>
                     </ListItem.Title>
                   </ListItem.Content>
                 </ListItem>
@@ -541,6 +543,7 @@ class LoginScreen extends Component {
             </>
 
             <Button
+              testID="loginButton"
               outline
               style={[styles.themeButton, { paddingTop: 20 }]}
               title={"Login"}
@@ -634,7 +637,7 @@ const styles = StyleSheet.create({
   },
 
   buttonBottomSheet: {
-    color: 'white',
+    color: "white",
     alignSelf: "center",
   },
 
