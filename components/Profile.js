@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Linking,
+  PermissionsAndroid,
 } from "react-native";
 import { FAB, PaperProvider } from "react-native-paper";
 
@@ -20,12 +21,16 @@ import { bindActionCreators } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+
+import { launchImageLibrary } from "react-native-image-picker";
+const ImagePicker = require("react-native-image-picker");
+// import ImagePicker from "react-native-image-picker";
 
 GoogleSignin.configure({
   webClientId:
@@ -53,13 +58,75 @@ class Profile extends Component {
       membership: "",
       city: "",
       state: "",
+      image: null,
     };
     this._retrieveData();
   }
   componentDidUpdate() {
     this.refreshProfile();
   }
+  _handleSelectImage = async () => {
+    try {
+      // console.log("bla", launchImageLibrary());
 
+      const redux_profile = this.props.profile;
+      console.log("bla", redux_profile);
+      // const granted = await PermissionsAndroid.request(
+      //   PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      //   {
+      //     title: "App Camera Permission",
+      //     message: "App needs access to your camera ",
+      //     buttonNeutral: "Ask Me Later",
+      //     buttonNegative: "Cancel",
+      //     buttonPositive: "OK",
+      //   }
+      // );
+      var options = {
+        title: "Select Avatar",
+        mediaType: "photo",
+      };
+      await ImagePicker.launchImageLibrary(options, (response) => {
+        console.log(response);
+      });
+      console.log("bla", redux_profile);
+
+      // launchImageLibrary(
+      //   {
+      //     mediaType: "photo",
+      //     maxHeight: 1024,
+      //     maxWidth: 1024,
+      //     quality: 0.5,
+      //   },
+      //   () => {
+      //     console.log("nlenle");
+      //     if (response.didCancel) {
+      //       console.log("User cancelled image picker");
+      //     } else if (response.error) {
+      //       console.log("ImagePicker Error: ", response.error);
+      //     } else {
+      //       console.log("User cancelled image picker");
+      //       const base64Image = `data:${response.type};base64,${response.data}`;
+      //       var url = SERVER_URL + "/user/updateProfileImage";
+      //       axios
+      //         .post(url, {
+      //           phoneNumber: redux_profile.phoneNumber,
+      //           profileImage: base64Image,
+      //         })
+      //         .then((response) => {})
+      //         .catch((error) => {
+      //           // alert(error);
+      //         });
+      //       redux_profile.profileImage = base64Image;
+      //       this.setState({ image: base64Image });
+      //       // setImage(base64Image);
+      //       AsyncStorage.setItem("profileImage", base64Image);
+      //     }
+      //   }
+      // );
+    } catch (error) {
+      console.log("here", error);
+    }
+  };
   refreshProfile() {
     var url = SERVER_URL + "/auth/login";
     const redux_profile = this.props.profile;
@@ -203,6 +270,27 @@ class Profile extends Component {
                 // require('../images/profile_image.jpeg')
               }}
             />
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                top: "5%",
+                right: "5%",
+                // paddingRight: "5%",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                backgroundColor: "rgba(41,191,194,0.9)",
+                padding: 4,
+                borderRadius: 4,
+              }}
+              onPress={this._handleSelectImage.bind(this)}
+            >
+              <FontAwesomeIcon
+                icon={faEdit}
+                color={"white"}
+                size={20}
+                onPress={this._handleSelectImage.bind(this)}
+              />
+            </TouchableOpacity>
             <View
               style={{
                 position: "absolute",
@@ -315,9 +403,10 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={() => {
-                this.props.navigation.navigate("Membership Details");
-              }}
+              onPress={this._handleSelectImage.bind(this)}
+              // onPress={() => {
+              //   this.props.navigation.navigate("Membership Details");
+              // }}
             >
               <View>
                 <Text style={styles.optionList}>Contribute and Support Us</Text>
