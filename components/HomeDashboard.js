@@ -21,7 +21,6 @@ import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 import { strProps } from "../config/CONSTANTS.js";
-import Video from "react-native-video";
 
 const { width: screenWidth } = Dimensions.get("window");
 
