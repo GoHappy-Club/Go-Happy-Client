@@ -1,5 +1,4 @@
 
-<<<<<<< ours
 node_modules
 *.hpp
 *.ipp
@@ -7,7 +6,6 @@ node_modules
 ios/Pods/*
 *.h
 *.SUNWCCh
-*.lock
 *.so
 android/app/build/*
 *.apk
@@ -26,21 +24,18 @@ android/.gradle/7.0.2/javaCompile/classAnalysis.bin
 android/.gradle/7.0.2/fileHashes/resourceHashesCache.bin
 android/.idea/*
 android/app/.DS_Store
-*.xml
 *.bin
 *.txt
 *.dex
 *.bin
 *.bin
-*.xml
 *.properties
+local.properties
 *.dex
-*.xml
-*.xml
 *.bin
 *.bin
-*.xml
 *.bin
+<<<<<<< HEAD
 =======
 # Xcode
 #
@@ -98,4 +93,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
->>>>>>> theirs
