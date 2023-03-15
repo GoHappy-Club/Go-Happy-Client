@@ -4,7 +4,6 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
-  ToastAndroid,
   View,
   Image,
   Share,
@@ -25,7 +24,6 @@ import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { strProps } from "../config/CONSTANTS.js";
-import Video from "react-native-video";
 
 export default class SessionDetails extends Component {
   constructor(props) {
