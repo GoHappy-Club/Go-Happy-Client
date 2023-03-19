@@ -82,47 +82,38 @@ class Profile extends Component {
       //   }
       // );
       var options = {
-        title: "Select Avatar",
         mediaType: "photo",
+        maxHeight: 1024,
+        maxWidth: 1024,
+        quality: 0.5,
+        includeBase64: true,
       };
-      await ImagePicker.launchImageLibrary(options, (response) => {
-        console.log(response);
-      });
-      console.log("bla", redux_profile);
 
-      // launchImageLibrary(
-      //   {
-      //     mediaType: "photo",
-      //     maxHeight: 1024,
-      //     maxWidth: 1024,
-      //     quality: 0.5,
-      //   },
-      //   () => {
-      //     console.log("nlenle");
-      //     if (response.didCancel) {
-      //       console.log("User cancelled image picker");
-      //     } else if (response.error) {
-      //       console.log("ImagePicker Error: ", response.error);
-      //     } else {
-      //       console.log("User cancelled image picker");
-      //       const base64Image = `data:${response.type};base64,${response.data}`;
-      //       var url = SERVER_URL + "/user/updateProfileImage";
-      //       axios
-      //         .post(url, {
-      //           phoneNumber: redux_profile.phoneNumber,
-      //           profileImage: base64Image,
-      //         })
-      //         .then((response) => {})
-      //         .catch((error) => {
-      //           // alert(error);
-      //         });
-      //       redux_profile.profileImage = base64Image;
-      //       this.setState({ image: base64Image });
-      //       // setImage(base64Image);
-      //       AsyncStorage.setItem("profileImage", base64Image);
-      //     }
-      //   }
-      // );
+      launchImageLibrary(options, (response) => {
+        console.log("nlenle", response);
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.error) {
+          console.log("ImagePicker Error: ", response.error);
+        } else {
+          console.log("User cancelled image picker");
+          const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
+          var url = SERVER_URL + "/user/updateProfileImage";
+          axios
+            .post(url, {
+              phoneNumber: redux_profile.phoneNumber,
+              profileImage: base64Image,
+            })
+            .then((response1) => {})
+            .catch((error) => {
+              // alert(error);
+            });
+          redux_profile.profileImage = base64Image;
+          this.setState({ image: base64Image });
+          // setImage(base64Image);
+          AsyncStorage.setItem("profileImage", base64Image);
+        }
+      });
     } catch (error) {
       console.log("here", error);
     }
@@ -265,32 +256,14 @@ class Profile extends Component {
             <Image
               style={styles.cover}
               source={{
-                uri: profile.profileImage,
+                uri:
+                  this.state.image && this.state.image.length > 0
+                    ? this.state.image
+                    : profile.profileImage,
                 // uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
                 // require('../images/profile_image.jpeg')
               }}
             />
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                top: "5%",
-                right: "5%",
-                // paddingRight: "5%",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                backgroundColor: "rgba(41,191,194,0.9)",
-                padding: 4,
-                borderRadius: 4,
-              }}
-              onPress={this._handleSelectImage.bind(this)}
-            >
-              <FontAwesomeIcon
-                icon={faEdit}
-                color={"white"}
-                size={20}
-                onPress={this._handleSelectImage.bind(this)}
-              />
-            </TouchableOpacity>
             <View
               style={{
                 position: "absolute",
@@ -313,14 +286,6 @@ class Profile extends Component {
               >
                 {profile.name}
               </Text>
-              {/* <Text h3 style={{overflow:"hidden",paddingLeft:4,color:'black',
-							}}>
-								{this.state.name}
-							</Text> */}
-              {/* <Text style={{overflow:"hidden",paddingLeft:4,color:'white',
-								}}>
-								{this.state.city} {this.state.state}
-							</Text> */}
             </View>
           </View>
 
@@ -391,6 +356,7 @@ class Profile extends Component {
               </View>
             </View>
           </View>
+          {/* onPress={this._handleSelectImage.bind(this)} */}
           <View
             style={{
               marginTop: 20,
@@ -403,13 +369,26 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={this._handleSelectImage.bind(this)}
-              // onPress={() => {
-              //   this.props.navigation.navigate("Membership Details");
-              // }}
+              onPress={() => {
+                this.props.navigation.navigate("Membership Details");
+              }}
             >
               <View>
                 <Text style={styles.optionList}>Contribute and Support Us</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderColor: "#E0E0E0",
+              }}
+              onPress={this._handleSelectImage.bind(this)}
+            >
+              <View>
+                <Text style={styles.optionList}>Update Profile Picture</Text>
               </View>
             </TouchableOpacity>
           </View>
