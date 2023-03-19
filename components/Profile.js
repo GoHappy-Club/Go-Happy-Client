@@ -67,20 +67,7 @@ class Profile extends Component {
   }
   _handleSelectImage = async () => {
     try {
-      // console.log("bla", launchImageLibrary());
-
       const redux_profile = this.props.profile;
-      console.log("bla", redux_profile);
-      // const granted = await PermissionsAndroid.request(
-      //   PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      //   {
-      //     title: "App Camera Permission",
-      //     message: "App needs access to your camera ",
-      //     buttonNeutral: "Ask Me Later",
-      //     buttonNegative: "Cancel",
-      //     buttonPositive: "OK",
-      //   }
-      // );
       var options = {
         mediaType: "photo",
         maxHeight: 1024,
@@ -88,7 +75,6 @@ class Profile extends Component {
         quality: 0.5,
         includeBase64: true,
       };
-
       launchImageLibrary(options, (response) => {
         console.log("nlenle", response);
         if (response.didCancel) {
