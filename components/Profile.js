@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Linking,
+  PermissionsAndroid,
 } from "react-native";
 import { FAB, PaperProvider } from "react-native-paper";
 
@@ -20,12 +21,16 @@ import { bindActionCreators } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+
+import { launchImageLibrary } from "react-native-image-picker";
+const ImagePicker = require("react-native-image-picker");
+// import ImagePicker from "react-native-image-picker";
 
 GoogleSignin.configure({
   webClientId:
@@ -53,13 +58,52 @@ class Profile extends Component {
       membership: "",
       city: "",
       state: "",
+      image: null,
     };
     this._retrieveData();
   }
   componentDidUpdate() {
     this.refreshProfile();
   }
-
+  _handleSelectImage = async () => {
+    try {
+      const redux_profile = this.props.profile;
+      var options = {
+        mediaType: "photo",
+        maxHeight: 1024,
+        maxWidth: 1024,
+        quality: 0.5,
+        includeBase64: true,
+      };
+      launchImageLibrary(options, (response) => {
+        console.log("nlenle", response);
+        if (response.didCancel) {
+          console.log("User cancelled image picker");
+        } else if (response.error) {
+          console.log("ImagePicker Error: ", response.error);
+        } else {
+          console.log("User cancelled image picker");
+          const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
+          var url = SERVER_URL + "/user/updateProfileImage";
+          axios
+            .post(url, {
+              phoneNumber: redux_profile.phoneNumber,
+              profileImage: base64Image,
+            })
+            .then((response1) => {})
+            .catch((error) => {
+              // alert(error);
+            });
+          redux_profile.profileImage = base64Image;
+          this.setState({ image: base64Image });
+          // setImage(base64Image);
+          AsyncStorage.setItem("profileImage", base64Image);
+        }
+      });
+    } catch (error) {
+      console.log("here", error);
+    }
+  };
   refreshProfile() {
     var url = SERVER_URL + "/auth/login";
     const redux_profile = this.props.profile;
@@ -198,7 +242,10 @@ class Profile extends Component {
             <Image
               style={styles.cover}
               source={{
-                uri: profile.profileImage,
+                uri:
+                  this.state.image && this.state.image.length > 0
+                    ? this.state.image
+                    : profile.profileImage,
                 // uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
                 // require('../images/profile_image.jpeg')
               }}
@@ -225,14 +272,6 @@ class Profile extends Component {
               >
                 {profile.name}
               </Text>
-              {/* <Text h3 style={{overflow:"hidden",paddingLeft:4,color:'black',
-							}}>
-								{this.state.name}
-							</Text> */}
-              {/* <Text style={{overflow:"hidden",paddingLeft:4,color:'white',
-								}}>
-								{this.state.city} {this.state.state}
-							</Text> */}
             </View>
           </View>
 
@@ -303,6 +342,7 @@ class Profile extends Component {
               </View>
             </View>
           </View>
+          {/* onPress={this._handleSelectImage.bind(this)} */}
           <View
             style={{
               marginTop: 20,
@@ -321,6 +361,20 @@ class Profile extends Component {
             >
               <View>
                 <Text style={styles.optionList}>Contribute and Support Us</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderColor: "#E0E0E0",
+              }}
+              onPress={this._handleSelectImage.bind(this)}
+            >
+              <View>
+                <Text style={styles.optionList}>Update Profile Picture</Text>
               </View>
             </TouchableOpacity>
           </View>

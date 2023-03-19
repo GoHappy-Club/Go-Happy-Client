@@ -226,7 +226,7 @@ dependencies {
 //    implementation project(':@react-native-async-storage')    
     implementation "com.google.firebase:firebase-dynamic-links:19.0.0"
     implementation "com.google.firebase:firebase-invites:17.0.0" 
-
+    implementation project(':@react-native-camera-roll_camera-roll')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

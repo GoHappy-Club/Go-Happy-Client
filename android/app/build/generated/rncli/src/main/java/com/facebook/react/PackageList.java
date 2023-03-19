@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 // @react-native-async-storage/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+// @react-native-camera-roll/camera-roll
+import com.reactnativecommunity.cameraroll.CameraRollPackage;
 // @react-native-community/art
 import com.reactnativecommunity.art.ARTPackage;
 // @react-native-community/clipboard
@@ -39,6 +41,8 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.henninghall.date_picker.DatePickerPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+// react-native-image-picker
+import com.imagepicker.ImagePickerPackage;
 // react-native-linear-gradient
 import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-lottie-splash-screen
@@ -107,6 +111,7 @@ public class PackageList {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
+      new CameraRollPackage(),
       new ARTPackage(),
       new ClipboardPackage(),
       new RNDateTimePickerPackage(),
@@ -120,6 +125,7 @@ public class PackageList {
       new ReactNativeContacts(),
       new DatePickerPackage(),
       new RNGestureHandlerPackage(),
+      new ImagePickerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
       new ReactNativePushNotificationPackage(),
