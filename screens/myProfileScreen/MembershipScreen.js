@@ -1,25 +1,25 @@
-import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-import { MaterialIndicator } from "react-native-indicators";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import Membership from "../../components/Membership";
+import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
+import { MaterialIndicator } from 'react-native-indicators';
+import { connect } from 'react-redux';
+import { setProfile } from '../../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+import Membership from '../../components/Membership';
 
 class MembershipScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: "",
-      password: "",
+      phoneNumber: '',
+      password: '',
       showAlert: false,
       loader: false,
-      orderId: "",
+      orderId: '',
     };
     // alert(JSON.stringify(props));
   }
   getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
+    var url = SERVER_URL + '/razorPay/pay';
 
     axios
       .post(url, { amount: amount })
@@ -39,13 +39,13 @@ class MembershipScreen extends Component {
     actions.setProfile(profile);
   }
   setMembership(email, planName, _callback) {
-    var url = SERVER_URL + "/user/setMembership";
+    var url = SERVER_URL + '/user/setMembership';
 
     axios
       .post(url, { email: email, planName: planName })
       .then((response) => {
         // if (response.data) {
-        AsyncStorage.setItem("membership", planName);
+        AsyncStorage.setItem('membership', planName);
         this.setProfile(planName);
         _callback();
         // }
@@ -60,12 +60,12 @@ class MembershipScreen extends Component {
       return (
         <MaterialIndicator
           color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          style={{ backgroundColor: '#0A1045' }}
         />
       );
     }
     const navigation = this.props.navigation;
-    const title = "Login";
+    const title = 'Login';
     return (
       <Membership
         navigation={this.props.navigation}

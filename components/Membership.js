@@ -1,93 +1,93 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Card,
-  CardTitle,
-  CardContent,
   CardAction,
   CardButton,
+  CardContent,
   CardImage,
-} from "react-native-cards";
+  CardTitle,
+} from 'react-native-cards';
 import {
-  ToastAndroid,
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  TextInput,
+  Dimensions,
   Image,
   KeyboardAvoidingView,
-  Dimensions,
-} from "react-native";
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  ToastAndroid,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
-import { Card as Cd, Title, Paragraph, Avatar } from "react-native-paper";
+import { Avatar, Card as Cd, Paragraph, Title } from 'react-native-paper';
 
-import { Text, Button } from "react-native-elements";
+import { Button, Text } from 'react-native-elements';
 // import RazorpayCheckout from "react-native-razorpay";
 
-import Video from "react-native-video";
+import Video from 'react-native-video';
 
-import { connect } from "react-redux";
-import { setProfile } from "../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { Linking } from "react-native";
-import { RadioButton } from "react-native-paper";
+import { connect } from 'react-redux';
+import { setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+import { Linking } from 'react-native';
+import { RadioButton } from 'react-native-paper';
 
 class Membership extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: "",
-      password: "",
+      phoneNumber: '',
+      password: '',
       showAlert: false,
       loader: false,
       profileImage:
-        "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
-      name: "",
-      email: "",
-      membership: "",
-      city: "Pune",
-      state: "Maharashtra",
-      backgroundColor: "white",
-      textColor: "black",
-      amount: "",
+        'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+      name: '',
+      email: '',
+      membership: '',
+      city: 'Pune',
+      state: 'Maharashtra',
+      backgroundColor: 'white',
+      textColor: 'black',
+      amount: '',
       success: false,
-      payType: "o",
+      payType: 'o',
       plans: {
-        selectedItem: "",
+        selectedItem: '',
         planDetails: [
           {
             amount: 99,
-            duration: "1 month",
-            textColor: "black",
-            backgroundColor: "white",
+            duration: '1 month',
+            textColor: 'black',
+            backgroundColor: 'white',
             selected: false,
-            name: "Basic",
+            name: 'Basic',
           },
           {
             amount: 249,
-            duration: "3 months",
-            textColor: "black",
-            backgroundColor: "white",
+            duration: '3 months',
+            textColor: 'black',
+            backgroundColor: 'white',
             selected: false,
-            name: "Silver",
+            name: 'Silver',
           },
           {
             amount: 549,
-            duration: "6 months",
-            textColor: "black",
-            backgroundColor: "white",
+            duration: '6 months',
+            textColor: 'black',
+            backgroundColor: 'white',
             selected: false,
-            name: "Gold",
+            name: 'Gold',
           },
           {
             amount: 1099,
-            duration: "1 year",
-            textColor: "black",
-            backgroundColor: "white",
+            duration: '1 year',
+            textColor: 'black',
+            backgroundColor: 'white',
             selected: false,
-            name: "Premium",
+            name: 'Premium',
           },
         ],
       },
@@ -102,11 +102,11 @@ class Membership extends Component {
     );
 
     var options = {
-      description: "GoHappy Contribution",
-      currency: "INR",
-      key: "rzp_live_Gnecc7OCz1jsxK",
+      description: 'GoHappy Contribution',
+      currency: 'INR',
+      key: 'rzp_live_Gnecc7OCz1jsxK',
       amount: this.state.amount * 100,
-      name: "Contribution",
+      name: 'Contribution',
       readonly: { email: true },
 
       // plan_id:'plan_JA3o75RQvPfKXP',
@@ -117,17 +117,17 @@ class Membership extends Component {
 
       order_id: orderId, //Replace this with an order_id created using Orders API.
       prefill: {
-        email: "contributions@gohappyclub.co.in",
+        email: 'contributions@gohappyclub.co.in',
         contact: this.props.profile.phoneNumber,
         name: this.props.profile.name,
       },
-      theme: { color: "#53a20e" },
+      theme: { color: '#53a20e' },
     };
     var _this = this;
-    if (this.state.payType == "m") {
-      Linking.openURL("https://rzp.io/i/qoGMhiRx");
+    if (this.state.payType == 'm') {
+      Linking.openURL('https://rzp.io/i/qoGMhiRx');
     } else {
-      Linking.openURL("https://pages.razorpay.com/ContributeUs");
+      Linking.openURL('https://pages.razorpay.com/ContributeUs');
     }
     // RazorpayCheckout.open(options).then((data) => {
     // 	// handle success
@@ -151,25 +151,25 @@ class Membership extends Component {
   }
   planSelected(plan, index) {
     var allPlans = this.state.plans;
-    plan.backgroundColor = "blue";
-    plan.textColor = "white";
+    plan.backgroundColor = 'blue';
+    plan.textColor = 'white';
     allPlans.planDetails[index] = plan;
     allPlans.selectedItem = index;
     for (var i = 0; i < allPlans.planDetails.length; i++) {
       if (i == index) {
         continue;
       }
-      allPlans.planDetails[i].backgroundColor = "white";
-      allPlans.planDetails[i].textColor = "black";
+      allPlans.planDetails[i].backgroundColor = 'white';
+      allPlans.planDetails[i].textColor = 'black';
     }
     this.setState({ plans: allPlans });
   }
   _retrieveData = async () => {
     try {
-      const name = await AsyncStorage.getItem("name");
-      const email = await AsyncStorage.getItem("email");
-      const profileImage = await AsyncStorage.getItem("profileImage");
-      const membership = await AsyncStorage.getItem("membership");
+      const name = await AsyncStorage.getItem('name');
+      const email = await AsyncStorage.getItem('email');
+      const profileImage = await AsyncStorage.getItem('profileImage');
+      const membership = await AsyncStorage.getItem('membership');
       this.setState({ name: name });
       this.setState({ email: email });
       this.setState({ profileImage: profileImage });
@@ -181,23 +181,23 @@ class Membership extends Component {
 
   renderPlans(plan, key) {
     return (
-      <View style={{ width: "50%" }}>
+      <View style={{ width: '50%' }}>
         <TouchableOpacity
           style={{
             backgroundColor: plan.backgroundColor,
-            shadowColor: "black",
+            shadowColor: 'black',
             elevation: 10,
             shadowOffset: { height: 2 },
             shadowOpacity: 0.3,
             borderRadius: 10,
             height: 100,
             margin: 30,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
           onPress={this.planSelected.bind(this, plan, key)}
         >
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 30, color: plan.textColor }}>
               ₹{plan.amount}
             </Text>
@@ -220,16 +220,16 @@ class Membership extends Component {
       return (
         <MaterialIndicator
           color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          style={{ backgroundColor: '#0A1045' }}
         />
       );
     }
     const navigation = this.props.navigation;
-    const title = "Login";
+    const title = 'Login';
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           flex: 1,
         }}
       >
@@ -241,7 +241,7 @@ class Membership extends Component {
 				contentContainerStyle={{justifyContent: 'center',
 				alignItems: 'center'}}
 				>
-					
+
 					<Text h1 style={{fontWeight:'bold',marginTop:'25%'}}>Choose your plan</Text>
 					<View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
 						{
@@ -260,35 +260,35 @@ class Membership extends Component {
 							</View>
 						</TouchableOpacity>
 					</View>
-					
-					
-					
+
+
+
 				</ScrollView> */}
 
         {/* ------------------------------------------------------------------------------------ */}
         <ScrollView
           style={{
-            backgroundColor: "white",
-            height: "100%",
+            backgroundColor: 'white',
+            height: '100%',
           }}
           contentContainerStyle={{
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <Text h3 style={{ fontWeight: "bold", marginTop: "10%" }}>
+          <Text h3 style={{ fontWeight: 'bold', marginTop: '10%' }}>
             Contribute & Support Us
           </Text>
-          <View style={{ flex: 1, flexDirection: "row", marginTop: "5%" }}>
+          <View style={{ flex: 1, flexDirection: 'row', marginTop: '5%' }}>
             <Image
               style={{ height: 40, width: 40 }}
-              source={require("../images/secured.png")}
+              source={require('../images/secured.png')}
             />
             <Text
               style={{
-                alignSelf: "center",
+                alignSelf: 'center',
                 paddingLeft: 10,
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 fontSize: 16,
               }}
             >
@@ -296,7 +296,7 @@ class Membership extends Component {
             </Text>
           </View>
 
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             {/* <Text  style={{
 						height: 30,
 						marginTop:'10%',
@@ -307,16 +307,16 @@ class Membership extends Component {
 
 					</Text> */}
 
-            {/* <TextInput 
+            {/* <TextInput
 						placeholder='Enter your contribution amount'
 						style={styles.input}
 						keyboardType='numeric'
 						onChangeText={(text)=> this.checkValidAmount(text)}
 						value={this.state.amount.toString()}
-						maxLength={10}  
-						
+						maxLength={10}
+
 					/> */}
-            <View style={{ flexDirection: "column", marginTop: 50 }}>
+            <View style={{ flexDirection: 'column', marginTop: 50 }}>
               <RadioButton.Group
                 onValueChange={(newValue) =>
                   this.setState({ payType: newValue })
@@ -324,7 +324,7 @@ class Membership extends Component {
                 value={this.state.payType}
               >
                 {/* <View> */}
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: 'row' }}>
                   {/* <View style={{flexDirection:'column',marginRight:30}}> */}
                   {/* <RadioButton value="m" /> */}
                   {/* <Text style={{fontWeight:'bold',fontSize:20,marginRight:30,paddingTop:2}}>Monthly</Text> */}
@@ -396,36 +396,36 @@ class Membership extends Component {
 								<Text  style={{fontWeight:'bold',padding:5}}>₹ 1999</Text>
 						</TouchableOpacity>*/}
             </View>
-            <Text style={{ color: "black", fontWeight: "bold", fontSize: 20 }}>
+            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 20 }}>
               Yeh Shagun GoHappy Family ke Naam
             </Text>
             <Text
               style={{
                 borderWidth: 1,
                 padding: 10,
-                borderColor: "rgba(0,0,0,0.2)",
+                borderColor: 'rgba(0,0,0,0.2)',
                 borderRadius: 10,
-                marginTop: "5%",
-                color: "black",
-                width: Dimensions.get("window").width * 0.9,
-                textAlign: "justify",
+                marginTop: '5%',
+                color: 'black',
+                width: Dimensions.get('window').width * 0.9,
+                textAlign: 'justify',
                 lineHeight: 22,
               }}
             >
-              <Text style={{ fontWeight: "bold" }}>Why contribute?</Text>
+              <Text style={{ fontWeight: 'bold' }}>Why contribute?</Text>
               <Text>
-                {"\n"}
+                {'\n'}
                 It will help us make your life more vibrant and make you Go more
                 Happy, as contributions from GoHappy Club members is the only
-                source of revenue to fund experts, interns & infrastructure.{" "}
+                source of revenue to fund experts, interns & infrastructure.{' '}
               </Text>
               {/* <Text style={{fontWeight:'bold'}}>{'\n'}How? </Text> */}
               {/* <Text>{'\n'}By funding experts, interns & infrastructure and let your contagious smile reach more  senior citizens. </Text> */}
-              <Text style={{ fontWeight: "bold" }}>
-                {"\n"}How much to contribute?
+              <Text style={{ fontWeight: 'bold' }}>
+                {'\n'}How much to contribute?
               </Text>
               <Text>
-                {"\n"}Financial support of any size help fund our mission.
+                {'\n'}Financial support of any size help fund our mission.
               </Text>
               {/* <Text style={{fontWeight:'bold'}}>{'\n'}Compulsary to contribute?</Text>
 					<Text>{'\n'}Not at all!! It's your Choice
@@ -435,7 +435,7 @@ class Membership extends Component {
           <View
             style={{
               marginTop: 20,
-              width: Dimensions.get("window").width * 0.9,
+              width: Dimensions.get('window').width * 0.9,
             }}
           >
             <TouchableOpacity
@@ -453,14 +453,14 @@ class Membership extends Component {
           </View>
           {this.state.success && (
             <Video
-              source={require("../images/success_anim.mp4")}
+              source={require('../images/success_anim.mp4')}
               style={{
-                position: "absolute",
+                position: 'absolute',
                 // top: 0,
                 flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
                 // left: 0,
                 // right: 0,
                 // bottom: 0,
@@ -482,30 +482,30 @@ class Membership extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: '#0A1045',
   },
   cover: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   cardText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 10,
   },
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: "white",
+    color: 'white',
   },
   checkoutButtonDisabled: {
     opacity: 0.5,
-    alignItems: "center",
-    backgroundColor: "#29BFC2",
+    alignItems: 'center',
+    backgroundColor: '#29BFC2',
     padding: 10,
   },
   checkoutButtonEnabled: {
-    alignItems: "center",
-    backgroundColor: "#29BFC2",
+    alignItems: 'center',
+    backgroundColor: '#29BFC2',
     padding: 10,
   },
   input: {
@@ -515,8 +515,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     // marginTop:'20%',
-    width: Dimensions.get("window").width * 0.9,
-    alignItems: "center",
+    width: Dimensions.get('window').width * 0.9,
+    alignItems: 'center',
   },
 });
 
