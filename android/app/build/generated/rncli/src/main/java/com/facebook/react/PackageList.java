@@ -13,8 +13,6 @@ import java.util.ArrayList;
 
 // @react-native-async-storage/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-// @react-native-camera-roll/camera-roll
-import com.reactnativecommunity.cameraroll.CameraRollPackage;
 // @react-native-community/art
 import com.reactnativecommunity.art.ARTPackage;
 // @react-native-community/clipboard
@@ -111,7 +109,6 @@ public class PackageList {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
-      new CameraRollPackage(),
       new ARTPackage(),
       new ClipboardPackage(),
       new RNDateTimePickerPackage(),
