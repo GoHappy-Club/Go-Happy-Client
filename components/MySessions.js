@@ -1,49 +1,49 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Card,
-  CardTitle,
-  CardContent,
   CardAction,
   CardButton,
+  CardContent,
   CardImage,
-} from "react-native-cards";
+  CardTitle,
+} from 'react-native-cards';
 import {
-  RefreshControl,
-  Linking,
-  Modal,
   FlatList,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  TextInput,
   Image,
   KeyboardAvoidingView,
-} from "react-native";
-import { Text, Button } from "react-native-elements";
-import { WebView } from "react-native-webview";
+  Linking,
+  Modal,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import { WebView } from 'react-native-webview';
 
 import {
-  Card as Cd,
-  Title,
-  Paragraph,
   Avatar,
   Caption,
+  Card as Cd,
   Drawer,
-  TouchableRipple,
+  Paragraph,
   Switch,
-} from "react-native-paper";
+  Title,
+  TouchableRipple,
+} from 'react-native-paper';
 
 export default class MySessions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: "",
-      email: "",
-      password: "",
+      phoneNumber: '',
+      email: '',
+      password: '',
       showAlert: false,
       loader: false,
       mySession: [],
@@ -51,19 +51,19 @@ export default class MySessions extends Component {
       videoVisible: false,
       videoVisible1: false,
       profileImage:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
+        'https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg',
     };
     // alert(JSON.stringify(props));
     this._retrieveData();
   }
   componentDidMount() {
-    this.props.navigation.addListener("focus", (payload) => {
+    this.props.navigation.addListener('focus', (payload) => {
       this._onRefresh();
     });
   }
   _retrieveData = async () => {
     try {
-      const email = await AsyncStorage.getItem("email");
+      const email = await AsyncStorage.getItem('email');
       this.setState({ email: email });
     } catch (error) {
       // Error retrieving data
@@ -72,16 +72,20 @@ export default class MySessions extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.mySessions !== prevState.mySessions) {
       return { mySessions: nextProps.mySessions };
-    } else return null;
+    } else {
+      return null;
+    }
   }
   trimContent(text, cut) {
-    if (text.length < cut) return text;
-    return text.substring(0, cut) + "...";
+    if (text.length < cut) {
+      return text;
+    }
+    return text.substring(0, cut) + '...';
   }
   _onRefresh() {
     this.setState({ refreshing: true });
     var _this = this;
-    this.props.loadMySessions("", function () {
+    this.props.loadMySessions('', function () {
       _this.setState({ refreshing: false });
     });
   }
@@ -89,16 +93,16 @@ export default class MySessions extends Component {
   loadDate(item) {
     var dt = new Date(parseInt(item));
     var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
+    var AmOrPm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12 || 12;
     var minutes = dt.getMinutes();
     if (hours < 10) {
-      hours = "0" + hours;
+      hours = '0' + hours;
     }
     if (minutes < 10) {
-      minutes = "0" + minutes;
+      minutes = '0' + minutes;
     }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
+    var finalTime = hours + ':' + minutes + ' ' + AmOrPm;
     return finalTime;
     // return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
   }
@@ -108,13 +112,13 @@ export default class MySessions extends Component {
       <Text
         h3
         style={{
-          height: "100%",
-          marginTop: "20%",
-          alignSelf: "center",
-          textAlign: "center",
+          height: '100%',
+          marginTop: '20%',
+          alignSelf: 'center',
+          textAlign: 'center',
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         No Sessions Booked 😟
@@ -137,14 +141,14 @@ export default class MySessions extends Component {
           marginLeft: 10,
           marginRight: 10,
           marginBottom: 10,
-          backgroundColor: "white",
+          backgroundColor: 'white',
         }}
       >
         <TouchableOpacity
           style={{ ...styles.card, marginTop: 10 }}
-          underlayColor={"grey"}
+          underlayColor={'grey'}
           onPress={() =>
-            this.props.navigation.navigate("Session Details", {
+            this.props.navigation.navigate('Session Details', {
               event: item,
               type: type,
               phoneNumber: this.props.phoneNumber,
@@ -155,21 +159,21 @@ export default class MySessions extends Component {
         >
           <Cd.Content>
             <Text style={{ padding: 4 }}>
-              {new Date(parseInt(item.startTime)).toDateString()} |{" "}
+              {new Date(parseInt(item.startTime)).toDateString()} |{' '}
               {this.loadDate(item.startTime)}
             </Text>
 
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 padding: 4,
               }}
             >
-              <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Text
-                  style={{ color: "#404040", fontSize: 14, fontWeight: "700" }}
+                  style={{ color: '#404040', fontSize: 14, fontWeight: '700' }}
                 >
                   {this.trimContent(item.eventName, 30)}
                 </Text>
@@ -179,28 +183,28 @@ export default class MySessions extends Component {
             <View
               style={{
                 flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 padding: 4,
               }}
             >
-              <View style={{ flex: 1, flexDirection: "row" }}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
                 <Avatar.Image
                   source={
                     // {
-                    require("../images/profile_image.jpeg")
+                    require('../images/profile_image.jpeg')
                     // uri: this.state.profileImage
                     // }
                   }
                   size={30}
                 />
                 <Title
-                  style={{ color: "#404040", fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: '#404040', fontSize: 13, paddingLeft: 10 }}
                 >
                   {this.trimContent(item.expertName, 17)}
                 </Title>
               </View>
-              {type == "ongoing" && (
+              {type == 'ongoing' && (
                 <Button
                   disabled={
                     item.participantsList != null &&
@@ -209,12 +213,12 @@ export default class MySessions extends Component {
                       : false
                   }
                   title="Join"
-                  buttonStyle={{ backgroundColor: "#29BFC2" }}
+                  buttonStyle={{ backgroundColor: '#29BFC2' }}
                   onPress={this.startEvent.bind(this, item)}
                   loading={item.loadingButton}
                 />
               )}
-              {type == "expired" && (
+              {type == 'expired' && (
                 <Button
                   disabled={
                     item.participantsList != null &&
@@ -223,7 +227,7 @@ export default class MySessions extends Component {
                       : false
                   }
                   title="View Recording"
-                  buttonStyle={{ backgroundColor: "#29BFC2" }}
+                  buttonStyle={{ backgroundColor: '#29BFC2' }}
                   onPress={this.videoPlayer.bind(this, item.recordingLink)}
                   loading={item.loadingButton}
                 />
@@ -265,7 +269,7 @@ export default class MySessions extends Component {
         <SafeAreaView style={styles.container}>
           <FlatList
             data={this.props.ongoingEvents}
-            renderItem={(item) => renderItem(item, "ongoing")}
+            renderItem={(item) => renderItem(item, 'ongoing')}
             keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
@@ -288,7 +292,7 @@ export default class MySessions extends Component {
           <FlatList
             horizontal={true}
             data={this.props.upcomingEvents}
-            renderItem={(item) => renderItem(item, "upcoming")}
+            renderItem={(item) => renderItem(item, 'upcoming')}
             keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
@@ -310,7 +314,7 @@ export default class MySessions extends Component {
         <SafeAreaView style={styles.container}>
           <FlatList
             data={this.props.expiredEvents}
-            renderItem={(item) => renderItem(item, "expired")}
+            renderItem={(item) => renderItem(item, 'expired')}
             keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
@@ -325,7 +329,7 @@ export default class MySessions extends Component {
           <WebView
             allowsFullscreenVideo
             javaScriptEnabled={true}
-            style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
+            style={{ flex: 1, borderColor: 'red', borderWidth: 1 }}
             source={{
               uri: this.state.recordingLink,
             }}
@@ -338,82 +342,82 @@ export default class MySessions extends Component {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: '#fff',
   },
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: '#0A1045',
   },
   input: {
-    width: "90%",
-    backgroundColor: "white",
+    width: '90%',
+    backgroundColor: 'white',
     padding: 15,
     marginBottom: 10,
   },
   btnContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   userBtn: {
-    backgroundColor: "#f0ad4e",
+    backgroundColor: '#f0ad4e',
     paddingVertical: 15,
     height: 60,
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: "center",
-    color: "black",
-    fontWeight: "700",
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: '700',
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
   },
   welcome: {
     fontSize: 30,
-    textAlign: "center",
+    textAlign: 'center',
     margin: 10,
-    color: "white",
+    color: 'white',
   },
   logo: {
     width: 150,
     height: 150,
   },
   logoContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   formContainer: {},
   title: {
-    color: "white",
+    color: 'white',
     marginTop: 10,
     width: 160,
     opacity: 0.9,
-    textAlign: "center",
+    textAlign: 'center',
   },
   newinput: {
     height: 50,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: 'rgba(255,255,255,0.2)',
     marginBottom: 10,
-    color: "white",
+    color: 'white',
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: "white",
-    marginTop: "30%",
+    color: 'white',
+    marginTop: '30%',
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 30,
   },
 });

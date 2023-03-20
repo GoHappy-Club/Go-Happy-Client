@@ -5,22 +5,22 @@
 
 export const FirebaseDynamicLinksProps = () => {
   return {
-    link: "https://gohappyclub.in/refer?idx=",
-    domainUriPrefix: "https://gohappyclub.page.link",
-    androidPackageName: "com.gohappyclient",
+    link: 'https://gohappyclub.in/refer?idx=',
+    domainUriPrefix: 'https://gohappyclub.page.link',
+    androidPackageName: 'com.gohappyclient',
     androidFallBackUrl:
-      "https://play.google.com/store/apps/details?id=com.gohappyclient",
+      'https://play.google.com/store/apps/details?id=com.gohappyclient',
   };
 };
 
 export const WhatsNewMessage = () => {
-   return {
-    show:false,
-    message:`<p style="text-align:justify"><strong>This is a new function.</strong></p>
+  return {
+    show: false,
+    message: `<p style="text-align:justify"><strong>This is a new function.</strong></p>
 
     <p style="text-align:justify">Try it!</p>`,
   };
- }
+};
 export const TermOfUse = {
   html: `<p>TERMS OF USE &nbsp;</p>
 
@@ -297,9 +297,8 @@ export const TermOfUse = {
   <p>In the event You have any complaints or concerns with respect to the<br />
   GoHappy Club platform or our services or if You have any questions, please<br />
   feel free to contact us on care@gohappyclub.in or reach out to our customer support via Call or WhatsApp on +917888384477 (between 9:00 am &ndash; 9 pm).</p>
-  `
+  `,
 };
-
 
 export const PrivacyPolicy = {
   html: `
@@ -420,5 +419,5 @@ export const PrivacyPolicy = {
 <p style="text-align:justify">&nbsp; &nbsp; &nbsp; <strong>CONTACT US</strong></p>
 
 <p style="text-align:justify">&nbsp; &nbsp; &nbsp; If you have questions, concerns or grievances regarding this Privacy Policy, you can email us at our support email-address: support@gohappyclub.in</p>
-`
+`,
 };

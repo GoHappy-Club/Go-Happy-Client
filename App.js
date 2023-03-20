@@ -1,38 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import NetInfo from "@react-native-community/network-info";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
   Alert,
-  Linking,
   BackHandler,
   Dimensions,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
   // NetInfo,
-} from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "./screens/loginScreen/LoginScreen";
-import BottomNavigator from "./components/navigators/BottomNavigator";
-import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
-import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
-import AdditionalDetails from "./components/AdditionalDetails";
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginScreen from './screens/loginScreen/LoginScreen';
+import BottomNavigator from './components/navigators/BottomNavigator';
+import HomeDetailsScreen from './screens/homeScreen/HomeDetailsScreen';
+import MembershipScreen from './screens/myProfileScreen/MembershipScreen';
+import AdditionalDetails from './components/AdditionalDetails';
 // import NoInternet from "./components/NoInternet";
-import About from "./components/About";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud-dev/config.json";
-import Icon from "react-native-vector-icons/Ionicons";
-import PushNotification from "react-native-push-notification";
-import VersionCheck from "react-native-version-check";
-import firebase from "@react-native-firebase/app";
-import { useSelector } from "react-redux";
-import ErrorScreen from "./components/NoInternet";
-import { WhatsNewMessage } from "./config/CONSTANTS";
-import AwesomeAlert from "react-native-awesome-alerts";
-import RenderHtml from "react-native-render-html";
-import crashlytics from "@react-native-firebase/crashlytics";
+import About from './components/About';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as configData from './config/cloud-dev/config.json';
+import Icon from 'react-native-vector-icons/Ionicons';
+import PushNotification from 'react-native-push-notification';
+import VersionCheck from 'react-native-version-check';
+import firebase from '@react-native-firebase/app';
+import { useSelector } from 'react-redux';
+import ErrorScreen from './components/NoInternet';
+import { WhatsNewMessage } from './config/CONSTANTS';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import RenderHtml from 'react-native-render-html';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -42,15 +42,15 @@ global.Icon = Icon;
 Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
-var token = "";
+var token = '';
 
 PushNotification.createChannel(
   {
-    channelId: "events", // (required)
-    channelName: "My channel", // (required)
-    channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+    channelId: 'events', // (required)
+    channelName: 'My channel', // (required)
+    channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
     playSound: false, // (optional) default: true
-    soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
     importance: 4, // (optional) default: 4. Int value of the Android notification importance
     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
   },
@@ -63,9 +63,9 @@ export default function App() {
   var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
     WhatsNewMessage().show
   );
-  const width = Dimensions.get("window").width;
+  const width = Dimensions.get('window').width;
 
-  AsyncStorage.getItem("token").then((out) => {
+  AsyncStorage.getItem('token').then((out) => {
     token = out;
   });
   const [isConnected, setIsConnected] = useState(true);
@@ -77,9 +77,9 @@ export default function App() {
 
   const recheck = async () => {
     try {
-      const response = await fetch("https://www.google.com/");
+      const response = await fetch('https://www.google.com/');
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
       setIsConnected(true);
     } catch (error) {
@@ -91,16 +91,16 @@ export default function App() {
       // showing updating content if this is newly update but not newly install
       // it will only show once
       const asyncJustUpdated = await AsyncStorage.getItem(
-        "@MyApp:isJustUpdated"
+        '@MyApp:isJustUpdated'
       );
       let updateNeeded = await VersionCheck.needUpdate();
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
-          "Please Update",
-          "You will have to update your app to the latest version to continue using.",
+          'Please Update',
+          'You will have to update your app to the latest version to continue using.',
           [
             {
-              text: "Update",
+              text: 'Update',
               onPress: () => {
                 BackHandler.exitApp();
                 Linking.openURL(updateNeeded.storeUrl);
@@ -110,12 +110,12 @@ export default function App() {
           { cancelable: false }
         );
         // after updating, save status
-        await AsyncStorage.setItem("@MyApp:isJustUpdated", "true");
+        await AsyncStorage.setItem('@MyApp:isJustUpdated', 'true');
       } else {
-        if (asyncJustUpdated == "true") {
+        if (asyncJustUpdated == 'true') {
           setJustUpdated(true);
           // after showing message once, reset status
-          await AsyncStorage.setItem("@MyApp:isJustUpdated", "false");
+          await AsyncStorage.setItem('@MyApp:isJustUpdated', 'false');
         }
       }
     } catch (error) {
@@ -158,7 +158,7 @@ export default function App() {
                   <LoginScreen {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerShown: false,
                 }}
               />
@@ -170,7 +170,7 @@ export default function App() {
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerTransparent: true,
                   title: null,
                   elevation: 0,
@@ -190,11 +190,11 @@ export default function App() {
                 options={({ navigation }) => ({
                   headerTransparent: true,
                   title: null,
-                  headerBackTitle: "back",
+                  headerBackTitle: 'back',
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                      onPress={() => navigation.navigate('GoHappy Club')}
                       underlayColor="#fff"
                     >
                       <Text style={styles.backText}>back</Text>
@@ -212,11 +212,11 @@ export default function App() {
                 options={({ navigation }) => ({
                   headerTransparent: true,
                   title: null,
-                  headerBackTitle: "back",
+                  headerBackTitle: 'back',
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                      onPress={() => navigation.navigate('GoHappy Club')}
                       underlayColor="#fff"
                     >
                       <Text style={styles.backText}>back</Text>
@@ -232,7 +232,7 @@ export default function App() {
                   <AdditionalDetails {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerTransparent: true,
                   title: null,
                   headerShadowVisible: false,
@@ -245,11 +245,11 @@ export default function App() {
                 options={({ navigation }) => ({
                   headerTransparent: true,
                   title: null,
-                  headerBackTitle: "back",
+                  headerBackTitle: 'back',
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                      onPress={() => navigation.navigate('GoHappy Club')}
                       underlayColor="#fff"
                     >
                       <Text style={styles.backText}>back</Text>
@@ -271,17 +271,17 @@ export default function App() {
 const styles = StyleSheet.create({
   backButton: {
     padding: 4,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#fff",
-    shadowColor: "black",
+    borderColor: '#fff',
+    shadowColor: 'black',
     elevation: 10,
     shadowOffset: { height: 2 },
     shadowOpacity: 0.3,
   },
   backText: {
-    color: "#000",
-    textAlign: "center",
+    color: '#000',
+    textAlign: 'center',
   },
 });

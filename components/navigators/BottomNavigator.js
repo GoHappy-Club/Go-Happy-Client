@@ -1,20 +1,20 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import HomeScreen from "../../screens/homeScreen/HomeScreen";
-import MySessionsScreen from "../../screens/mySessionsScreen/MySessionsScreen";
-import MyProfileScreen from "../../screens/myProfileScreen/MyProfileScreen";
-import ReferScreen from "../../screens/ReferScreen/ReferScreen";
-import React, { Component } from "react";
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import HomeScreen from '../../screens/homeScreen/HomeScreen';
+import MySessionsScreen from '../../screens/mySessionsScreen/MySessionsScreen';
+import MyProfileScreen from '../../screens/myProfileScreen/MyProfileScreen';
+import ReferScreen from '../../screens/ReferScreen/ReferScreen';
+import React, { Component } from 'react';
 import {
-  faHome,
-  faHistory,
   faChild,
   faClipboardList,
-  faTrophy,
   faHandshake,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import MembershipScreen from "../../screens/myProfileScreen/MembershipScreen";
-import { useSelector } from "react-redux";
+  faHistory,
+  faHome,
+  faTrophy,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import MembershipScreen from '../../screens/myProfileScreen/MembershipScreen';
+import { useSelector } from 'react-redux';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,7 +24,7 @@ export default function BottomNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      barStyle={{ backgroundColor: "#38434D" }}
+      barStyle={{ backgroundColor: '#38434D' }}
       shifting={false}
     >
       <Tab.Screen
@@ -33,14 +33,14 @@ export default function BottomNavigator() {
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         // children={() => <HomeScreen propProfile={profile} {...props} />}
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: 'Home',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHome} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faHome} color={'white'} size={25} />
           ),
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
         }}
       />
       <Tab.Screen
@@ -49,9 +49,9 @@ export default function BottomNavigator() {
           <MySessionsScreen propProfile={profile} {...props} />
         )}
         options={{
-          tabBarLabel: "Sessions",
+          tabBarLabel: 'Sessions',
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faClipboardList} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faClipboardList} color={'white'} size={25} />
           ),
         }}
       />
@@ -68,25 +68,25 @@ export default function BottomNavigator() {
           <MembershipScreen propProfile={profile} {...props} />
         )}
         options={{
-          tabBarLabel: "Support",
+          tabBarLabel: 'Support',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHandshake} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faHandshake} color={'white'} size={25} />
           ),
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
         }}
       />
       <Tab.Screen
         name="Refer"
         children={(props) => <ReferScreen propProfile={profile} {...props} />}
         options={{
-          tabBarLabel: "Refer & Win",
+          tabBarLabel: 'Refer & Win',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faTrophy} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faTrophy} color={'white'} size={25} />
           ),
         }}
       />
@@ -96,11 +96,11 @@ export default function BottomNavigator() {
           <MyProfileScreen propProfile={profile} {...props} />
         )}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: 'Profile',
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faChild} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faChild} color={'white'} size={25} />
           ),
         }}
       />

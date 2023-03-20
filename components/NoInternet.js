@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faWifi } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "react-native-elements";
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faWifi } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'react-native-elements';
 
 class ErrorScreen extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class ErrorScreen extends Component {
           buttonStyle={styles.button}
           title="Try Again"
           onPress={this.props.recheck}
-        ></Button>
+        />
       </View>
     );
   }
@@ -36,29 +36,29 @@ class ErrorScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   icon: {
-    color: "#000",
+    color: '#000',
     marginBottom: 20,
   },
   errorText: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: "center",
-    color: "#000",
+    textAlign: 'center',
+    color: '#000',
   },
   subtext: {
     fontSize: 14,
     marginBottom: 20,
-    textAlign: "center",
-    color: "#000",
+    textAlign: 'center',
+    color: '#000',
   },
   button: {
-    backgroundColor: "#38434D",
+    backgroundColor: '#38434D',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
