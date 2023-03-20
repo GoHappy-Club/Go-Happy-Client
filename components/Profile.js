@@ -29,8 +29,6 @@ import {
 } from "@react-native-google-signin/google-signin";
 
 import { launchImageLibrary } from "react-native-image-picker";
-const ImagePicker = require("react-native-image-picker");
-// import ImagePicker from "react-native-image-picker";
 
 GoogleSignin.configure({
   webClientId:

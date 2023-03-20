@@ -146,8 +146,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 63
-        versionName "63"
+        versionCode 65
+        versionName "65"
     }
     splits {
         abi {
@@ -226,7 +226,6 @@ dependencies {
 //    implementation project(':@react-native-async-storage')    
     implementation "com.google.firebase:firebase-dynamic-links:19.0.0"
     implementation "com.google.firebase:firebase-invites:17.0.0" 
-    implementation project(':@react-native-camera-roll_camera-roll')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
