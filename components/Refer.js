@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
   Dimensions,
 } from "react-native";
-import { Text, BottomSheet, ListItem } from "react-native-elements";
+import { Text, BottomSheet, ListItem, Button } from "react-native-elements";
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../redux/actions/counts";
 import { bindActionCreators } from "redux";
@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
 import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "./toUnicodeVariant.js";
+import PBA from "./ProgressBarAnimated";
 // import { refreshProfile } from "../services/profile/ProfileService";
 
 const screenWidth = Dimensions.get("window").width;
@@ -29,6 +30,10 @@ class Refer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      referrals: {},
+      showReferralsStatus: false,
+      showReferralsButton: true,
+      numberReferrals: -1,
       phoneNumber: "",
       email: "",
       password: "",
@@ -141,6 +146,40 @@ class Refer extends Component {
     var flag = !this.state.conditionDialog;
     this.setState({ conditionDialog: flag });
   }
+
+  requestReferrals() {
+    var output = this.props.requestReferrals((responseData) => {
+      console.log('in callback function');
+      console.log(JSON.stringify(responseData));
+      //save to state
+      var countReferrals = 0;
+      for (let i=0; i<Object.keys(responseData.referrals).length; i++){
+        if (responseData.referrals[i].hasAttendedSession == true){
+          countReferrals ++;
+        }
+      }
+      this.setState({
+        numberReferrals: countReferrals,
+        referrals: responseData
+      });
+    });
+  }
+  onPressReferralsButton() {
+    this.requestReferrals();
+    this.setState({
+      showReferralsStatus: true, 
+      showReferralsButton: false,
+    });
+
+  }
+/*   {"referrals":[{
+    "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+    "from":"911234554321",
+    "referralId":"OPxuoI",
+    "to":"918850102929",
+    "time":"1667613120113",
+    "hasAttendedSession":true}]} */
+
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
@@ -289,6 +328,23 @@ class Refer extends Component {
               <Text style={styles.rulesButtonText}>Rules & Regulations</Text>
             </View>
           </TouchableOpacity>
+
+          <View>
+
+            {this.state.showReferralsButton && <Button
+              title="Check your referrals"
+              color="#841584"
+              onPress={
+                this.onPressReferralsButton.bind(this)
+              }
+            />}
+            {this.state.showReferralsStatus && <PBA
+                responseData={this.state.responseData}
+                numberReferrals={this.state.numberReferrals}
+                referrals={this.state.referrals}
+              />}
+          </View>
+
           {/* </View> */}
           <Image
             resizeMode="cover"

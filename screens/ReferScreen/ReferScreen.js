@@ -10,12 +10,16 @@ import {
   Image,
   Text,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
+import { connect, useSelector } from "react-redux";
+import { setProfile } from "../../redux/actions/counts";
+import { bindActionCreators } from "redux";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
 import Refer from "../../components/Refer";
 
-export default class ReferScreen extends Component {
+class ReferScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,7 +62,22 @@ export default class ReferScreen extends Component {
       })
       .catch((error) => {
         this.error = true;
-      });
+      });   
+  }
+  requestReferrals (_callback) {
+      // fetching refferals
+      //console.log("In requestReferrals api");
+      axios
+      .post(SERVER_URL + "/user/referralsList", { from: this.props.profile.phoneNumber })
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        _callback(response.data);
+        //console.log("api call ends successfully.")
+      })
+      .catch((error) => {
+        crashlytics().recordError(JSON.stringify(error));
+        this.error = true;
+      }); 
   }
   render() {
     if (this.state.loader == true) {
@@ -75,6 +94,7 @@ export default class ReferScreen extends Component {
     return (
       <Refer
         loadMySessions={this.loadMySessions.bind(this)}
+        requestReferrals={this.requestReferrals.bind(this)}        
         navigation={this.props.navigation}
         ongoingEvents={this.state.ongoingEvents}
         upcomingEvents={this.state.upcomingEvents}
@@ -158,3 +178,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+});
+
+const ActionCreators = Object.assign({}, { setProfile });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ReferScreen);
