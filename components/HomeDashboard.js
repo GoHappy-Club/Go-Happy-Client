@@ -347,7 +347,7 @@ class HomeDashboard extends Component {
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
-            title="Error"
+            title="Oops!"
             message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
