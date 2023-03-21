@@ -14,39 +14,40 @@ import ProgressBarAnimated from 'react-native-progress-bar-animated';
 export default class PBA extends React.Component {
  
   state = {
-    progressWithOnComplete: 0,
-    friendsReferred: 0,
-  }
- 
-  increase = (key, value) => {
-    if (this.state[key] + value <= 100) {
-      this.setState({
-        [key]: this.state[key] + value,
-      });
-    }
-    else {
-      this.setState({
-        [key]: 100,
-      });
-    }
+    referralComplete: 7,
+    referralProgressInPercentage: 0,
   }
 
-  increase2 = (key) => {
-    this.setState({
-      [key]: this.state[key] + 1,
-    });
+  componentDidUpdate(prevProps, prevState){
+    //console.log("before modification percentage:")
+    //console.log(this.state.referralProgressInPercentage);
+    //console.log(this.props.numberReferrals);
+    if (
+      this.props.numberReferrals !== prevProps.numberReferrals ||
+      this.state.referralProgressInPercentage !== prevState.referralProgressInPercentage
+    ){
+      if (this.props.numberReferrals <= 6 && this.props.numberReferrals >= 0) {
+        this.setState({referralProgressInPercentage: this.props.numberReferrals*15})
+      }
+      else if (this.props.numberReferrals >= 7) {
+        this.setState({referralProgressInPercentage: 100})
+      }
+      else {
+        this.setState({referralProgressInPercentage: 0})
+      }
+    //console.log("modified percentage:")
+    //console.log(this.state.referralProgressInPercentage);
+    }
   }
  
   render() {
+    //this.referralProgressNumberToPercentage.bind(this);
     const barWidth = Dimensions.get('screen').width*0.5;
     const progressCustomStyles = {
       backgroundColor: 'white', 
       borderRadius: 10,
       borderColor: 'white',
       flex: 1,
-    };
-    var referred = () => {
-
     };
     // var [chestOpened, setChestOpened] = useState(false);
     var chestClosed = <Image
@@ -81,35 +82,14 @@ export default class PBA extends React.Component {
               <ProgressBarAnimated
                   {...progressCustomStyles}
                   width={barWidth}
-                  value={this.state.progressWithOnComplete}
+                  value={this.state.referralProgressInPercentage}
                   backgroundColorOnComplete="white"
                   // onComplete={() => {
                   //  Alert.alert('Congrats!', 'You finished the referring quest!');
                   // }}
               />
-              {this.state.progressWithOnComplete==100 && chestOpened 
-              || this.state.progressWithOnComplete!=100 && chestClosed}
-          </View>
-
-          <View style={styles.buttonContainer}>
-            <View style={styles.buttonInner}>
-              <Button
-                title="Increase 50%"
-                onPress={ 
-                  this.increase.bind(this, "progressWithOnComplete", 15)
-                  // this.increase2.bind(this, "friendsReferred")
-                }
-                //onPressIn={ this.increase2.bind(this, "friendsReferred") }
-              />
-              <Button
-                title="Increase 50%"
-                onPress={ 
-                  //this.increase.bind(this, "progressWithOnComplete", 15)
-                  this.increase2.bind(this, "friendsReferred")
-                }
-                //onPressIn={ this.increase2.bind(this, "friendsReferred") }
-              />
-            </View>
+              {this.props.numberReferrals==this.state.referralComplete && chestOpened 
+              || this.props.numberReferrals!=this.state.referralComplete && chestClosed}
           </View>
         </View>
       </View>

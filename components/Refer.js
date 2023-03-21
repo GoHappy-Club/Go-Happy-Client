@@ -33,7 +33,7 @@ class Refer extends Component {
       referrals: {},
       showReferralsStatus: false,
       showReferralsButton: true,
-      numberReferrals: -1,
+      numberReferrals: 0,
       phoneNumber: "",
       email: "",
       password: "",
@@ -149,8 +149,8 @@ class Refer extends Component {
 
   requestReferrals() {
     var output = this.props.requestReferrals((responseData) => {
-      console.log('in callback function');
-      console.log(JSON.stringify(responseData));
+      // console.log('in callback function');
+      // console.log(JSON.stringify(responseData));
       //save to state
       var countReferrals = 0;
       for (let i=0; i<Object.keys(responseData.referrals).length; i++){
@@ -330,16 +330,19 @@ class Refer extends Component {
           </TouchableOpacity>
 
           <View>
-
             {this.state.showReferralsButton && <Button
-              title="Check your referrals"
-              color="#841584"
+              buttonStyle={{
+                fontWeight: "bold",
+                backgroundColor: "#29BFC2",
+                justifyContent: "center",
+                alignSelf: "center",
+              }}
+              title="Click Here to See Your Referral Status"
               onPress={
                 this.onPressReferralsButton.bind(this)
               }
             />}
             {this.state.showReferralsStatus && <PBA
-                responseData={this.state.responseData}
                 numberReferrals={this.state.numberReferrals}
                 referrals={this.state.referrals}
               />}
