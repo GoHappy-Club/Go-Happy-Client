@@ -168,25 +168,26 @@ class Refer extends Component {
           countReferrals ++;
         }
       }
+      countReferrals = 7;
       this.setState({
         numberReferrals: countReferrals,
         referrals: referralsWithTitles,
       });
     });
+    // this.referralsPercentagesCalculate();
   }
   
   onPressReferralsButton() {
     this.requestReferrals();
-    this.referralsPercentagesCalculate();
     this.setState({
       showReferralsStatus: true, 
     });
   }
 
-  referralsPercentagesCalculate() { 
+/*   referralsPercentagesCalculate() { 
     console.log("Beginning of cal percentage");
     if (this.state.numberReferrals <= 6 && this.state.numberReferrals >= 0) {
-      this.setState({referralsPercentages: this.state.numberReferrals*15})
+      this.setState({referralsPercentages: 60})
     }
     else if (this.state.numberReferrals >= 7) {
       this.setState({referralsPercentages: 100})
@@ -196,7 +197,7 @@ class Refer extends Component {
     }
     console.log("end of cal percentage");
     console.log(this.state.referralsPercentages);
-  }
+  } */
   /*   {"referrals":[{
     "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
     "from":"911234554321",

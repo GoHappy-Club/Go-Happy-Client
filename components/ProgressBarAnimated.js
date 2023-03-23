@@ -9,36 +9,12 @@ import {
   Text,
   Image,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
- 
-import ProgressBarAnimated from 'react-native-progress-bar-animated';
+import * as Progress from 'react-native-progress';
  
 export default class PBA extends React.Component {
  
   state = {
     referralComplete: 7,
-  }
-
-  componentDidUpdate(prevProps, prevState){
-    //console.log("before modification percentage:")
-    //console.log(this.state.referralProgressInPercentage);
-    //console.log(this.props.numberReferrals);
-    if (
-      this.props.numberReferrals !== prevProps.numberReferrals ||
-      this.state.referralProgressInPercentage !== prevState.referralProgressInPercentage
-    ){
-      if (this.props.numberReferrals <= 6 && this.props.numberReferrals >= 0) {
-        this.setState({referralProgressInPercentage: this.props.numberReferrals*15})
-      }
-      else if (this.props.numberReferrals >= 7) {
-        this.setState({referralProgressInPercentage: 100})
-      }
-      else {
-        this.setState({referralProgressInPercentage: 0})
-      }
-    //console.log("modified percentage:")
-    //console.log(this.state.referralProgressInPercentage);
-    }
   }
  
   render() {
@@ -74,16 +50,11 @@ export default class PBA extends React.Component {
             {console.log(this.props.referralsPercentages)}
             <View style={{flexDirection: 'row'}}>
               <View>
-                <Text style={styles.label}>Referred and Attended: {"\n"} {this.props.numberReferrals} / 7</Text>
-                <ProgressBarAnimated
-                    {...progressCustomStyles}
-                    width={barWidth}
-                    value={this.props.referralsPercentages}
-                    backgroundColorOnComplete="white"
-                    // onComplete={() => {
-                    //  Alert.alert('Congrats!', 'You finished the referring quest!');
-                    // }}
-                />
+                <Text style={styles.label}>Referred and Attended:</Text>
+                <Text style={styles.label1}>{this.props.numberReferrals} / 7</Text>
+                <Progress.Bar 
+                  color="black" borderColor="black"
+                  progress={this.props.numberReferrals/7} width={barWidth} />
               </View>
               {chest}
             </View>
@@ -105,6 +76,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
+  },
+  label1: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    alignSelf: "center",
   },
 });
