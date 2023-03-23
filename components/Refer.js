@@ -23,6 +23,7 @@ import Clipboard from "@react-native-community/clipboard";
 import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import PBA from "./ProgressBarAnimated";
+import { FlatList } from 'react-native-gesture-handler';
 // import { refreshProfile } from "../services/profile/ProfileService";
 
 const screenWidth = Dimensions.get("window").width;
@@ -30,9 +31,9 @@ class Refer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      referrals: {},
+      referrals: [],
+      referralsPercentages: 0,
       showReferralsStatus: false,
-      showReferralsButton: true,
       numberReferrals: 0,
       phoneNumber: "",
       email: "",
@@ -98,11 +99,11 @@ class Refer extends Component {
       _this.setState({ refreshing: false });
     });
   }
-  Item = ({ title }) => (
+/*   Item = ({ title }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
     </View>
-  );
+  ); */
   createDynamicReferralLink = async () => {
     let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
@@ -147,32 +148,58 @@ class Refer extends Component {
     this.setState({ conditionDialog: flag });
   }
 
+  closeShowReferralsStatus() {
+    this.setState({ showReferralsStatus: false });
+  }
+
   requestReferrals() {
     var output = this.props.requestReferrals((responseData) => {
       // console.log('in callback function');
       // console.log(JSON.stringify(responseData));
       //save to state
       var countReferrals = 0;
+      // insert title to json object
+      var referralsWithTitles = [{
+        "to": "Referred", "hasAttendedSession": "Attended",
+      }];
       for (let i=0; i<Object.keys(responseData.referrals).length; i++){
+        referralsWithTitles.push(responseData.referrals[i])
         if (responseData.referrals[i].hasAttendedSession == true){
           countReferrals ++;
         }
       }
+      // use state to save referrals for later use
       this.setState({
         numberReferrals: countReferrals,
-        referrals: responseData
+        referrals: referralsWithTitles,
       });
     });
+    // calculate referrals percentage
+    // this.referralsPercentagesCalculate();
   }
+  
   onPressReferralsButton() {
     this.requestReferrals();
     this.setState({
       showReferralsStatus: true, 
-      showReferralsButton: false,
     });
-
   }
-/*   {"referrals":[{
+
+  referralsPercentagesCalculate(){ 
+    console.log("Beginning of cal percentage");
+    if (this.state.numberReferrals <= 6 && this.state.numberReferrals >= 0) {
+      this.setState({referralsPercentages: this.state.numberReferrals*15})
+    }
+    else if (this.state.numberReferrals >= 7) {
+      this.setState({referralsPercentages: 100})
+    }
+    else {
+      this.setState({referralsPercentages: 0})
+    }
+    console.log("end of cal percentage");
+    console.log(this.state.referralsPercentages);
+  }
+  /*   {"referrals":[{
     "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
     "from":"911234554321",
     "referralId":"OPxuoI",
@@ -183,6 +210,19 @@ class Refer extends Component {
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
+    // for use of referrals list
+    const ItemTo = ({title}) => (
+      <View style={styles.referralsItem}>
+        <Text style={styles.referralsTitle}>{title.to}</Text>
+      </View>
+    );
+    const ItemAttend = ({title}) => (
+      <View style={styles.referralsItem}>
+        {title.hasAttendedSession=="Attended" && <Text style={styles.referralsTitle}>Attended </Text> ||
+         title.hasAttendedSession && <Text style={styles.referralsTitle}>Yes </Text>
+        }
+      </View>
+    );
     return (
       <View style={{ backgroundColor: "white" }}>
         <ScrollView>
@@ -330,7 +370,7 @@ class Refer extends Component {
           </TouchableOpacity>
 
           <View>
-            {this.state.showReferralsButton && <Button
+            <Button
               buttonStyle={{
                 fontWeight: "bold",
                 backgroundColor: "#29BFC2",
@@ -341,11 +381,7 @@ class Refer extends Component {
               onPress={
                 this.onPressReferralsButton.bind(this)
               }
-            />}
-            {this.state.showReferralsStatus && <PBA
-                numberReferrals={this.state.numberReferrals}
-                referrals={this.state.referrals}
-              />}
+            />
           </View>
 
           {/* </View> */}
@@ -383,6 +419,53 @@ class Refer extends Component {
                 key="2"
                 containerStyle={{ backgroundColor: "#29BFC2" }}
                 onPress={this.showConditions.bind(this)}
+              >
+                <ListItem.Content>
+                  <ListItem.Title style={{ color: "white" }}>
+                    Close
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            </BottomSheet>
+          </>
+          <>
+            <BottomSheet modalProps={{}} isVisible={this.state.showReferralsStatus}>
+              {/* <Text style={styles.title}>Please Read Below</Text> */}
+              <ListItem key="1">
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <View style={{ flex: 1, maxWidth: screenWidth }}>
+                      <PBA numberReferrals={this.state.numberReferrals}
+                          referrals={this.state.referrals}
+                          referralsPercentages={this.state.referralsPercentages}
+                      />
+                      <View>
+                        <SafeAreaView style={styles.referralsList}>
+                          <FlatList 
+                            data={this.state.referrals}
+                            renderItem={({item}) => (<ItemTo title={item}/>)}
+                          />
+                          {/*   {"referrals":[{
+                            "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+                            "from":"911234554321",
+                            "referralId":"OPxuoI",
+                            "to":"918850102929",
+                            "time":"1667613120113",
+                            "hasAttendedSession":true}]} */}
+                          <FlatList
+                            data={this.state.referrals}
+                            renderItem={({item}) => (<ItemAttend title={item}/>)}
+                          />
+                        </SafeAreaView>
+                      </View>
+                    </View>
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                key="2"
+                containerStyle={{ backgroundColor: "#29BFC2" }}
+                onPress={this.closeShowReferralsStatus.bind(this)}
               >
                 <ListItem.Content>
                   <ListItem.Title style={{ color: "white" }}>
@@ -518,6 +601,24 @@ const styles = StyleSheet.create({
     // height: "39%",
     marginTop: 40,
     padding: 5,
+  },
+  referralsListTitle: {
+    flex: 1,
+    flexDirection: 'row',
+    // justifyContent: 'center',
+  },
+  referralsList: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  referralsItem: {
+    backgroundColor: 'white',
+    // marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  referralsTitle: {
+    fontSize: 10,
   },
 });
 const mapStateToProps = (state) => ({
