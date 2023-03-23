@@ -168,24 +168,22 @@ class Refer extends Component {
           countReferrals ++;
         }
       }
-      // use state to save referrals for later use
       this.setState({
         numberReferrals: countReferrals,
         referrals: referralsWithTitles,
       });
     });
-    // calculate referrals percentage
-    // this.referralsPercentagesCalculate();
   }
   
   onPressReferralsButton() {
     this.requestReferrals();
+    this.referralsPercentagesCalculate();
     this.setState({
       showReferralsStatus: true, 
     });
   }
 
-  referralsPercentagesCalculate(){ 
+  referralsPercentagesCalculate() { 
     console.log("Beginning of cal percentage");
     if (this.state.numberReferrals <= 6 && this.state.numberReferrals >= 0) {
       this.setState({referralsPercentages: this.state.numberReferrals*15})
@@ -213,13 +211,15 @@ class Refer extends Component {
     // for use of referrals list
     const ItemTo = ({title}) => (
       <View style={styles.referralsItem}>
-        <Text style={styles.referralsTitle}>{title.to}</Text>
+        {title.to=="Referred" && <Text style={styles.referralsTitle}>{title.to}</Text> ||
+         title.to!="Referred" && <Text style={styles.referralsContents}>{title.to}</Text>
+        }
       </View>
     );
     const ItemAttend = ({title}) => (
       <View style={styles.referralsItem}>
         {title.hasAttendedSession=="Attended" && <Text style={styles.referralsTitle}>Attended </Text> ||
-         title.hasAttendedSession && <Text style={styles.referralsTitle}>Yes </Text>
+         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text>
         }
       </View>
     );
@@ -434,7 +434,7 @@ class Refer extends Component {
               <ListItem key="1">
                 <ListItem.Content>
                   <ListItem.Title>
-                    <View style={{ flex: 1, maxWidth: screenWidth }}>
+                    <View style={{ flex: 1, maxWidth: screenWidth, backgroundColor: "white" }}>
                       <PBA numberReferrals={this.state.numberReferrals}
                           referrals={this.state.referrals}
                           referralsPercentages={this.state.referralsPercentages}
@@ -444,6 +444,7 @@ class Refer extends Component {
                           <FlatList 
                             data={this.state.referrals}
                             renderItem={({item}) => (<ItemTo title={item}/>)}
+                            style={{fontSize: 50}}
                           />
                           {/*   {"referrals":[{
                             "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
@@ -602,12 +603,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
     padding: 5,
   },
-  referralsListTitle: {
-    flex: 1,
-    flexDirection: 'row',
-    // justifyContent: 'center',
-  },
   referralsList: {
+    marginTop: 10,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -618,9 +615,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   referralsTitle: {
-    fontSize: 10,
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  referralsContents: {
+    fontSize: 15,
   },
 });
+
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
 });

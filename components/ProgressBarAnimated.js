@@ -57,10 +57,10 @@ export default class PBA extends React.Component {
       ? require('../images/chest-closed.png')
       : require('../images/chest-opened.png');
     var chest = <Image 
-      //resizeMode="cover"
+      // resizeMode="cover"
       style={{
-        width: "8%",
-        height: "8%",
+        width: "25%",
+        height: "25%",
         aspectRatio: 1/1,
         marginLeft: "5%",
         // marginRight: "10%",
@@ -70,18 +70,21 @@ export default class PBA extends React.Component {
     return (
       <View style={styles.container}>
         <View>
+            {console.log("in PBA")} 
             {console.log(this.props.referralsPercentages)}
-            <Text style={styles.label}>Referred and Attended: {this.props.numberReferrals} / 7</Text>
             <View style={{flexDirection: 'row'}}>
-              <ProgressBarAnimated
-                  {...progressCustomStyles}
-                  width={barWidth}
-                  value={this.props.referralsPercentages}
-                  backgroundColorOnComplete="white"
-                  // onComplete={() => {
-                  //  Alert.alert('Congrats!', 'You finished the referring quest!');
-                  // }}
-              />
+              <View>
+                <Text style={styles.label}>Referred and Attended: {"\n"} {this.props.numberReferrals} / 7</Text>
+                <ProgressBarAnimated
+                    {...progressCustomStyles}
+                    width={barWidth}
+                    value={this.props.referralsPercentages}
+                    backgroundColorOnComplete="white"
+                    // onComplete={() => {
+                    //  Alert.alert('Congrats!', 'You finished the referring quest!');
+                    // }}
+                />
+              </View>
               {chest}
             </View>
         </View>
@@ -95,11 +98,8 @@ const styles = StyleSheet.create({
     // flex: 1,
     // backgroundColor: '#2bbdc3',
     // marginTop: 50,
-    padding: 15,
+    // padding: 5,
     //alignSelf: "center",
-  },
-  buttonContainer: {
-    marginTop: 15,
   },
   label: {
     color: 'black',
