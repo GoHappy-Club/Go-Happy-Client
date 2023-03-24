@@ -39,6 +39,7 @@ export default class PBA extends React.Component {
         height: "25%",
         aspectRatio: 1/1,
         marginLeft: "5%",
+        alignSelf: "center",
         // marginRight: "10%",
       }}
       source={chestType} />;
@@ -46,8 +47,6 @@ export default class PBA extends React.Component {
     return (
       <View style={styles.container}>
         <View>
-            {console.log("in PBA")} 
-            {console.log(this.props.referralsPercentages)}
             <View style={{flexDirection: 'row'}}>
               <View>
                 <Text style={styles.label}>Referred and Attended:</Text>

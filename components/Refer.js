@@ -22,7 +22,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-community/clipboard";
 import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "./toUnicodeVariant.js";
-import PBA from "./ProgressBarAnimated";
+import ReferralsStatus from "./ReferralsStatus";
 import { FlatList } from 'react-native-gesture-handler';
 // import { refreshProfile } from "../services/profile/ProfileService";
 
@@ -32,7 +32,6 @@ class Refer extends Component {
     super(props);
     this.state = {
       referrals: [],
-      referralsPercentages: 0,
       showReferralsStatus: false,
       numberReferrals: 0,
       phoneNumber: "",
@@ -368,21 +367,22 @@ class Refer extends Component {
               <Text style={styles.rulesButtonText}>Rules & Regulations</Text>
             </View>
           </TouchableOpacity>
-
-          <View>
-            <Button
-              buttonStyle={{
-                fontWeight: "bold",
-                backgroundColor: "#29BFC2",
-                justifyContent: "center",
-                alignSelf: "center",
+          
+          <TouchableOpacity
+            style={styles.rulesButton}
+            underlayColor={"#2bbdc3"}
+            onPress={this.onPressReferralsButton.bind(this)}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-              title="Click Here to See Your Referral Status"
-              onPress={
-                this.onPressReferralsButton.bind(this)
-              }
-            />
-          </View>
+            >
+              <Text style={styles.rulesButtonText}>Click Here to See Your Referral Status</Text>
+            </View>
+          </TouchableOpacity>
 
           {/* </View> */}
           <Image
@@ -435,9 +435,8 @@ class Refer extends Component {
                 <ListItem.Content>
                   <ListItem.Title>
                     <View style={{ flex: 1, maxWidth: screenWidth, backgroundColor: "white" }}>
-                      <PBA numberReferrals={this.state.numberReferrals}
+                      <ReferralsStatus numberReferrals={this.state.numberReferrals}
                           referrals={this.state.referrals}
-                          referralsPercentages={this.state.referralsPercentages}
                       />
                       <View>
                         <SafeAreaView style={styles.referralsList}>
