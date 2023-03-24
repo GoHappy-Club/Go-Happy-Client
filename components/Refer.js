@@ -218,7 +218,8 @@ class Refer extends Component {
     const ItemAttend = ({title}) => (
       <View style={styles.referralsItem}>
         {title.hasAttendedSession=="Attended" && <Text style={styles.referralsTitle}>Attended </Text> ||
-         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text>
+         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text> ||
+         !title.hasAttendedSession && <Text style={styles.referralsContents}>Not Yet </Text>
         }
       </View>
     );
@@ -443,7 +444,6 @@ class Refer extends Component {
                           <FlatList 
                             data={this.state.referrals}
                             renderItem={({item}) => (<ItemTo title={item}/>)}
-                            style={{fontSize: 50}}
                           />
                           {/*   {"referrals":[{
                             "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
