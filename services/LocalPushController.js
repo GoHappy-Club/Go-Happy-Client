@@ -1,8 +1,8 @@
-import PushNotification from "react-native-push-notification";
+import PushNotification from 'react-native-push-notification';
 
 PushNotification.configure({
   onNotification: function (notification) {
-    crashlytics().log("LOCAL NOTIFICATION ==>" + JSON.stringify(notification));
+    crashlytics().log('LOCAL NOTIFICATION ==>' + JSON.stringify(notification));
   },
 
   popInitialNotification: true,
@@ -14,14 +14,14 @@ export const EventNotification = (event) => {
   PushNotification.localNotification({
     autoCancel: true,
     bigText: event.event.description,
-    subText: "Thank you for booking this session.",
+    subText: 'Thank you for booking this session.',
     title: event.event.eventName,
-    message: "Click here for more details",
-    channelId: "events",
+    message: 'Click here for more details',
+    channelId: 'events',
     vibrate: true,
     vibration: 300,
     playSound: true,
-    soundName: "default",
+    soundName: 'default',
     actions: '["Yes", "No"]',
   });
 };
@@ -31,14 +31,14 @@ export const EventReminderNotification = (event) => {
     autoCancel: true,
     bigText: event.bigText,
     date: event.fireTime, // in 30 secs,
-    subText: "Thank you for booking this session.",
+    subText: 'Thank you for booking this session.',
     title: event.event.eventName,
-    message: "Click here for more details",
-    channelId: "events",
+    message: 'Click here for more details',
+    channelId: 'events',
     vibrate: true,
     vibration: 300,
     playSound: true,
-    soundName: "default",
+    soundName: 'default',
     actions: '["Yes", "No"]',
   });
 };

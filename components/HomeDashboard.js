@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import {
   FlatList,
+  Linking,
   SafeAreaView,
   TouchableOpacity,
-  ToastAndroid,
   StyleSheet,
+  TouchableOpacity,
   View,
-  Linking,
 } from "react-native";
-import { Text, Badge, Button } from "react-native-elements";
+import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
 
-import { Card as Cd, Title, Avatar } from "react-native-paper";
+import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
 import { MaterialIndicator } from "react-native-indicators";
@@ -153,7 +153,9 @@ class HomeDashboard extends Component {
     this.props.loadEvents(new Date(Date.parse(date)).setHours(0, 0, 0, 0));
   };
   trimContent(text, cut) {
-    if (text.length < cut) return text;
+    if (text.length < cut) {
+      return text;
+    }
     return text.substring(0, cut) + "...";
   }
   isOngoingEvent(item) {
@@ -201,7 +203,9 @@ class HomeDashboard extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.events !== prevState.events) {
       return { events: nextProps.events };
-    } else return null;
+    } else {
+      return null;
+    }
   }
   loadCaller() {
     this.props.loadEvents(this.state.selectedDateRaw);
@@ -443,7 +447,7 @@ class HomeDashboard extends Component {
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
-            title="Error"
+            title="Oops!"
             message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}

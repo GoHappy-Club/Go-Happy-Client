@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TextInput, Text } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import axios from "axios";
-import AwesomeAlert from "react-native-awesome-alerts";
-import { connect } from "react-redux";
-import { setProfile } from "../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { Button } from "react-native-elements";
+import axios from 'axios';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import { connect } from 'react-redux';
+import { setProfile } from '../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+import { Button } from 'react-native-elements';
 
 class AdditionalDetails extends Component {
   constructor(props) {
@@ -20,15 +20,15 @@ class AdditionalDetails extends Component {
       loadingButton: false,
       date: new Date(),
       open: false,
-      uiDate: "",
+      uiDate: '',
       showAlert: false,
-      alertMessage: "",
+      alertMessage: '',
       dob: props.route.params.dob,
       age: props.route.params.age,
     };
 
     if (this.pending() == false) {
-      this.props.route.params.navigation.replace("GoHappy Club");
+      this.props.route.params.navigation.replace('GoHappy Club');
     }
     // this.pending();
   }
@@ -38,8 +38,9 @@ class AdditionalDetails extends Component {
       this.state.phoneNumber.length == 0 ||
       this.state.name == null ||
       this.state.name.length == 0
-    )
+    ) {
       return true;
+    }
     return false;
   }
   componentDidMount() {
@@ -80,13 +81,13 @@ class AdditionalDetails extends Component {
     //  || this.state.uiDate=='' || this.state.uiDate==null
     if (
       this.state.name == null ||
-      this.state.name == "" ||
+      this.state.name == '' ||
       this.state.age == null ||
-      this.state.age == ""
+      this.state.age == ''
     ) {
       this.setState({
         showAlert: true.valueOf,
-        alertMessage: "Mandatory details are missing",
+        alertMessage: 'Mandatory details are missing',
       });
 
       return;
@@ -95,7 +96,7 @@ class AdditionalDetails extends Component {
       this.setState({
         showAlert: true,
         alertMessage:
-          "GoHappy Club is an initiative exclusively for aged 50 years and above.",
+          'GoHappy Club is an initiative exclusively for aged 50 years and above.',
       });
       return;
     }
@@ -104,7 +105,7 @@ class AdditionalDetails extends Component {
     // 	return;
     // }
     this.setState({ loadingButton: true });
-    var url = SERVER_URL + "/user/update";
+    var url = SERVER_URL + '/user/update';
     axios
       .post(url, {
         email: this.state.email,
@@ -116,20 +117,25 @@ class AdditionalDetails extends Component {
         age: this.state.age,
       })
       .then((response) => {
-        if (response.data && response.data != "ERROR") {
+        if (response.data && response.data != 'ERROR') {
           // this.setState({fullName: userInfo.fullName});
-          if (response.data.phoneNumber != null)
-            AsyncStorage.setItem("phoneNumber", response.data.phoneNumber);
+          if (response.data.phoneNumber != null) {
+            AsyncStorage.setItem('phoneNumber', response.data.phoneNumber);
+          }
           // AsyncStorage.setItem('fullName',response.data.fullName);
-          if (response.data.name != null)
-            AsyncStorage.setItem("name", response.data.name);
-          if (response.data.email != null)
-            AsyncStorage.setItem("email", response.data.email);
-          if (response.data.profileImage != null)
-            AsyncStorage.setItem("profileImage", response.data.profileImage);
-          if (response.data.age != null)
-            AsyncStorage.setItem("age", response.data.age);
-          AsyncStorage.setItem("token", response.data.token);
+          if (response.data.name != null) {
+            AsyncStorage.setItem('name', response.data.name);
+          }
+          if (response.data.email != null) {
+            AsyncStorage.setItem('email', response.data.email);
+          }
+          if (response.data.profileImage != null) {
+            AsyncStorage.setItem('profileImage', response.data.profileImage);
+          }
+          if (response.data.age != null) {
+            AsyncStorage.setItem('age', response.data.age);
+          }
+          AsyncStorage.setItem('token', response.data.token);
           // this.state.navigation.navigate('DrawerNavigator');
           this.setProfile(
             response.data.name,
@@ -141,9 +147,9 @@ class AdditionalDetails extends Component {
           );
           this.setState({ loader: true });
 
-          this.props.route.params.navigation.replace("GoHappy Club");
+          this.props.route.params.navigation.replace('GoHappy Club');
           this.setState({ loader: false });
-        } else if (response.data == "ERROR") {
+        } else if (response.data == 'ERROR') {
           this.setState({ showAlert: true, loader: false });
         }
         this.setState({ loadingButton: false });
@@ -191,11 +197,11 @@ class AdditionalDetails extends Component {
           <Text
             style={{
               fontSize: 14,
-              color: "black",
-              marginTop: "5%",
-              alignSelf: "center",
-              alignContent: "center",
-              textAlign: "center",
+              color: 'black',
+              marginTop: '5%',
+              alignSelf: 'center',
+              alignContent: 'center',
+              textAlign: 'center',
               paddingLeft: 15,
             }}
           >
@@ -210,9 +216,9 @@ class AdditionalDetails extends Component {
 								placeholderTextColor = "#000"
 								autoCapitalize = "none"
 								value={this.state.date}
-								
-								// onPress={() => this.setState({open:true})} 
-							/>  
+
+								// onPress={() => this.setState({open:true})}
+							/>
 						</View>
 					</Pressable> */}
           {/* <DateTimePickerModal
@@ -221,7 +227,7 @@ class AdditionalDetails extends Component {
 						onConfirm={(date) => {
 							this.setState({open:false})
 							//this.setState({date:date})
-							
+
 							var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
 							this.setState({date:uiDate})
 							this.setState({uiDate:uiDate})}}
@@ -232,14 +238,14 @@ class AdditionalDetails extends Component {
           outline
           title="Save"
           loading={this.state.loadingButton}
-          buttonStyle={{ backgroundColor: "white", width: "100%" }}
-          titleStyle={{ color: "black" }}
+          buttonStyle={{ backgroundColor: 'white', width: '100%' }}
+          titleStyle={{ color: 'black' }}
           onPress={this.updateDetails.bind(this)}
-        ></Button>
-        {/* <Button  buttonStyle = {styles.dateInput} 
+        />
+        {/* <Button  buttonStyle = {styles.dateInput}
 					// buttonStyle={{backgroundColor:'white'}}
 					titleStyle={{color:'#29BFC2'}}
-					title="Set Date of Birth" 
+					title="Set Date of Birth"
 					onPress={() => this.setState({open:true})} /> */}
 
         <AwesomeAlert
@@ -264,126 +270,126 @@ class AdditionalDetails extends Component {
 const styles = StyleSheet.create({
   title: {
     fontSize: 25,
-    fontWeight: "bold",
-    color: "black",
-    marginTop: "15%",
-    alignSelf: "center",
+    fontWeight: 'bold',
+    color: 'black',
+    marginTop: '15%',
+    alignSelf: 'center',
   },
   container1: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    backgroundColor: '#fffaf1',
   },
   input: {
     fontSize: 20,
-    color: "black",
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: "white",
+    color: 'black',
+    marginTop: '5%',
+    alignSelf: 'center',
+    backgroundColor: 'white',
     paddingLeft: 15,
-    borderColor: "black",
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 5,
-    width: "70%",
+    width: '70%',
   },
   inputs: {
-    marginTop: "15%",
+    marginTop: '15%',
     flex: 1,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   dateInput: {
     fontSize: 20,
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: "white",
-    width: "40%",
+    marginTop: '5%',
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    width: '40%',
   },
   btnContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   userBtn: {
-    backgroundColor: "#f0ad4e",
+    backgroundColor: '#f0ad4e',
     paddingVertical: 15,
     height: 60,
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: "center",
-    color: "black",
-    fontWeight: "700",
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: '700',
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
   },
   welcome: {
     fontSize: 30,
-    textAlign: "center",
+    textAlign: 'center',
     margin: 10,
-    color: "white",
+    color: 'white',
   },
   logo: {
     width: 250,
     height: 250,
   },
   logoContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 
   newinput: {
     height: 50,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: 'rgba(255,255,255,0.2)',
     marginBottom: 10,
-    color: "white",
+    color: 'white',
     paddingHorizontal: 10,
   },
   container2: {
     flex: 1,
-    backgroundColor: "#aaa",
+    backgroundColor: '#aaa',
   },
   title2: {
-    color: "black",
-    marginTop: "30%",
+    color: 'black',
+    marginTop: '30%',
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 30,
   },
   page: {
-    marginTop: "20%",
-    alignItems: "center",
-    justifyContent: "center",
+    marginTop: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textInput: {
-    width: "90%",
+    width: '90%',
     height: 40,
-    borderColor: "#555",
+    borderColor: '#555',
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
   themeButton: {
-    width: "100%",
+    width: '100%',
     height: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
 
     borderRadius: 5,
   },
   themeButtonTitle: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
+    fontWeight: 'bold',
+    color: '#fff',
   },
   verificationView: {
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
     marginTop: 50,
   },
 });

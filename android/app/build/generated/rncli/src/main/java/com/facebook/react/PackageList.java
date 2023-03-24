@@ -39,6 +39,8 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.henninghall.date_picker.DatePickerPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+// react-native-image-picker
+import com.imagepicker.ImagePickerPackage;
 // react-native-linear-gradient
 import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-lottie-splash-screen
@@ -122,6 +124,7 @@ public class PackageList {
       new ReactNativeContacts(),
       new DatePickerPackage(),
       new RNGestureHandlerPackage(),
+      new ImagePickerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
       new ReactNativePushNotificationPackage(),

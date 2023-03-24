@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import {
-  Modal,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  View,
   Image,
+  Linking,
+  Modal,
+  ScrollView,
   Share,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 
 import { WebView } from "react-native-webview";
-import { Title, Avatar } from "react-native-paper";
-import { Text, Button } from "react-native-elements";
+import { Avatar, Title } from "react-native-paper";
+import { Button, Text } from "react-native-elements";
 import TambolaTicket from "./TambolaTicket.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -24,7 +24,6 @@ import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { strProps } from "../config/CONSTANTS.js";
-
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -165,8 +164,12 @@ export default class SessionDetails extends Component {
     var currTime = Date.now();
     if (this.props.type == null) {
     }
-    if (this.props.type == "expired") return "View Recording";
-    if (this.props.type == "ongoing") return "Join";
+    if (this.props.type == "expired") {
+      return "View Recording";
+    }
+    if (this.props.type == "ongoing") {
+      return "Join";
+    }
     if (
       this.state.event.participantList != null &&
       this.props.phoneNumber != null &&
@@ -361,7 +364,7 @@ export default class SessionDetails extends Component {
                 color={"grey"}
                 size={15}
                 style={{ marginTop: "6%" }}
-              ></FontAwesomeIcon>
+              />
               <Text
                 style={{
                   color: "grey",
@@ -483,7 +486,7 @@ export default class SessionDetails extends Component {
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
-            title="Error"
+            title="Oops!"
             message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
