@@ -168,7 +168,6 @@ class Refer extends Component {
           countReferrals ++;
         }
       }
-      countReferrals = 7;
       this.setState({
         numberReferrals: countReferrals,
         referrals: referralsWithTitles,
