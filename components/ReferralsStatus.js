@@ -8,6 +8,7 @@ import {
   Alert,
   Text,
   Image,
+  FlatList,
 } from 'react-native';
 import * as Progress from 'react-native-progress';
  
@@ -19,6 +20,7 @@ export default class PBA extends React.Component {
  
   render() {
     //this.referralProgressNumberToPercentage.bind(this);
+    const barHeight = 29;
     const barWidth = Dimensions.get('screen').width*0.5;
     const openedChestCount = Math.floor(this.props.numberReferrals/7);
     const currentCount = this.props.numberReferrals - (openedChestCount*7);
@@ -46,12 +48,27 @@ export default class PBA extends React.Component {
             style={{borderRadius: 30,}}
             //animated={false}
             color="black" borderColor="black"
-            progress={1.0} width={barWidth} height={29} />
+            progress={1.0} width={barWidth} height={barHeight} />
           {chestOpened}
           <Text style={styles.label2}>7/7</Text>
         </View>
       );
     }
+    const ItemTo = ({title}) => (
+      <View style={styles.referralsItem}>
+        {title.to==this.props.trivialTitle1 && <Text style={styles.referralsTitle}>{title.to}</Text> ||
+         title.to!=this.props.trivialTitle1 && <Text style={styles.referralsContents}>{title.to}</Text>
+        }
+      </View>
+    );
+    const ItemAttend = ({title}) => (
+      <View style={styles.referralsItem}>
+        {title.hasAttendedSession==this.props.trivialTitle2 && <Text style={styles.referralsTitle}>Attended </Text> ||
+         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text> ||
+         !title.hasAttendedSession && <Text style={styles.referralsContents}>Not Yet </Text>
+        }
+      </View>
+    );
  
     return (
       <View style={styles.container}>
@@ -62,11 +79,24 @@ export default class PBA extends React.Component {
             <Progress.Bar 
               style={{borderRadius: 30,}}
               color="black" borderColor="black"
-              progress={currentCount/7} width={barWidth} height={29} />
+              // indeterminateAnimationDuration={10000}
+              progress={currentCount/7} width={barWidth} height={barHeight} />
             {chest}
             <Text style={styles.label2}>{currentCount}/7</Text>
           </View>
-        </View>
+          <View>
+            <SafeAreaView style={styles.referralsList}>
+              <FlatList 
+                data={this.props.referrals}
+                renderItem={({item}) => (<ItemTo title={item}/>)}
+              />
+              <FlatList
+                data={this.props.referrals}
+                renderItem={({item}) => (<ItemAttend title={item}/>)}
+              />
+            </SafeAreaView>
+          </View>
+            </View>
       </View>
     );
   }
@@ -106,5 +136,23 @@ const styles = StyleSheet.create({
     aspectRatio: 1/1,
     marginLeft: "5%",
     alignSelf: "center",
-  }
+  },
+  referralsList: {
+    marginTop: 10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  referralsItem: {
+    backgroundColor: 'white',
+    // marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  referralsTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  referralsContents: {
+    fontSize: 15,
+  },
 });
