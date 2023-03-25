@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
@@ -20,8 +19,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
-import { strProps } from "../config/CONSTANTS.js";
-
+import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -48,79 +46,40 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-  async razorPay(item) {
-    var cost = item.cost;
-    var orderId = await this.props.getOrderId(cost);
-    var options = {
-      description: strProps().rp_description,
-      currency: "INR",
-      key: strProps().razorPayKey,
-      amount: cost * 100,
-      name: strProps().rp_description,
-      readonly: { email: true },
-
-      // plan_id:'plan_JA3o75RQvPfKXP',
-      // total_count:6,
-      // notes: {
-      // 	name: "Subscription A"
-      //   },
-
-      order_id: orderId, //Replace this with an order_id created using Orders API.
-      prefill: {
-        email: strProps().emailId,
-        contact: this.props.profile.phoneNumber,
-        name: this.props.profile.name,
-      },
-      theme: { color: "#53a20e" },
+  async razorPayWrapper(item) {
+    const prefill = {
+      email: this.props.profile.email
+        ? this.props.profile.email
+        : PaymentConstants.emailId,
+      contact: this.props.profile.phoneNumber,
+      name: this.props.profile.name,
     };
-    var _this = this;
-    // if (this.state.payType == "m") {
-    //   Linking.openURL("https://rzp.io/i/qoGMhiRx");
-    // } else {
-    //   Linking.openURL("https://pages.razorpay.com/ContributeUs");
-    // }
-    RazorpayCheckout.open(options)
-      .then((data) => {
-        // handle success
-        // if(data.razorpay_payment_id!=''){
-        this.setState({ success: true });
-        console.log("ffffffffffffffffffff");
-        console.log(this.props.profile);
-        console.log(data);
-        // alert(JSON.stringify(this.state.profile));
-        // }
-        // alert(`Success: ${data.razorpay_payment_id}`);
+    const _callback = (data) => {
+      this.setState({ success: true });
 
-        var _this = this;
-        if (data.razorpay_payment_id === "") {
-          this.props.setPaymentData(
-            this.state.profile.phoneNumber,
-            this.state.amount,
-            function () {
-              _this.props.navigation.navigate("GoHappy Club");
-            }
-          );
-        } else {
-          this.updateEventBook(item);
-          this.setState({ showPaymentAlert: true });
-        }
-
-        //if data.status_code is 200, then make below call
-      })
-      .catch((error) => {
-        this.setState({
-          paymentAlertMessage:
-            "Your payment could not be processed. Please try again later.",
-          paymentAlertTitle: "Oops!",
-        });
+      var _this = this;
+      if (data.razorpay_payment_id === "") {
+        this.props.setPaymentData(
+          this.state.profile.phoneNumber,
+          this.state.amount,
+          function () {
+            _this.props.navigation.navigate("GoHappy Club");
+          }
+        );
+      } else {
+        this.updateEventBook(item);
         this.setState({ showPaymentAlert: true });
-        // ToastAndroid.show(
-        //   "Payment could not be processed, please try again.",
-        //   ToastAndroid.LONG
-        // );
+      }
+    };
+    const _errorHandler = (error) => {
+      this.setState({
+        paymentAlertMessage: PaymentError.message,
+        paymentAlertTitle: "Oops!",
       });
+      this.setState({ showPaymentAlert: true });
+    };
+    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
   }
-
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -323,7 +282,7 @@ class HomeDashboard extends Component {
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <Badge
-                  value={item.category}
+                  value={item.costType == "paid" ? "Workshop" : item.category}
                   badgeStyle={styles.badge}
                   textStyle={{ color: "#2f2f31" }}
                 />
@@ -344,6 +303,7 @@ class HomeDashboard extends Component {
                     }}
                   >
                     {"\u20B9"}
+                    {item.cost}
                   </Text>
                 )}
               </View>
@@ -389,7 +349,7 @@ class HomeDashboard extends Component {
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.razorPay.bind(this, item)
+                    ? this.razorPayWrapper.bind(this, item)
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
