@@ -15,10 +15,27 @@ export const FirebaseDynamicLinksProps = () => {
 
 export const WhatsNewMessage = () => {
   return {
-    show: false,
-    message: `<p style="text-align:justify"><strong>This is a new function.</strong></p>
+    show: true,
+    message: `<p>You can upload your own image in your profile now.</p>
 
-    <p style="text-align:justify">Try it!</p>`,
+    <p><em>Follow the steps below:</em></p>
+    
+    <ul>
+      <li>Go to&nbsp;<strong>Profile</strong></li>
+      <li>Click on <strong>Update Profile Picture</strong></li>
+      <li>Choose the Profile Picture of your choice.</li>
+    </ul>
+    
+    <div id="highlighter--hover-tools" style="display:none">
+    <div id="highlighter--hover-tools--container">
+    <div class="highlighter--icon highlighter--icon-copy" title="Copy">&nbsp;</div>
+    
+    <div class="highlighter--icon highlighter--icon-change-color" title="Change Color">&nbsp;</div>
+    
+    <div class="highlighter--icon highlighter--icon-delete" title="Delete">&nbsp;</div>
+    </div>
+    </div>
+    `,
   };
 };
 export const TermOfUse = {
