@@ -31,7 +31,96 @@ class Refer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // testing state responseData
+      responseData: {"referrals":[
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"234567",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"345678",
+          "time":"1667613120113",
+          "hasAttendedSession":true},   
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"456789",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"567890",
+          "time":"1667613120113",
+          "hasAttendedSession":true}, 
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"678901",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"789012",
+          "time":"1667613120113",
+          "hasAttendedSession":false}, 
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},       
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},   
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},   
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},   
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},   
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"890123",
+          "time":"1667613120113",
+          "hasAttendedSession":true},    
+      ]},
       referrals: [],
+      trivialTitle1: "Referred",
+      trivialTitle2: "Attended",
       showReferralsStatus: false,
       numberReferrals: 0,
       phoneNumber: "",
@@ -159,7 +248,32 @@ class Refer extends Component {
       var countReferrals = 0;
       // insert title to json object
       var referralsWithTitles = [{
-        "to": "Referred", "hasAttendedSession": "Attended",
+        "to": this.state.trivialTitle1, "hasAttendedSession": this.state.trivialTitle2,
+      }];
+      for (let i=0; i<Object.keys(responseData.referrals).length; i++){
+        referralsWithTitles.push(responseData.referrals[i])
+        if (responseData.referrals[i].hasAttendedSession == true){
+          countReferrals ++;
+        }
+      }
+      this.setState({
+        numberReferrals: countReferrals,
+        referrals: referralsWithTitles,
+      });
+    });
+    // this.referralsPercentagesCalculate();
+  }
+
+  requestReferralsTest() {
+    var output = this.props.requestReferrals((responseData) => {
+      // console.log('in callback function');
+      // console.log(JSON.stringify(responseData));
+      //save to state
+      responseData = this.state.responseData;
+      var countReferrals = 0;
+      // insert title to json object
+      var referralsWithTitles = [{
+        "to": this.state.trivialTitle1, "hasAttendedSession": this.state.trivialTitle2,
       }];
       for (let i=0; i<Object.keys(responseData.referrals).length; i++){
         referralsWithTitles.push(responseData.referrals[i])
@@ -176,7 +290,9 @@ class Refer extends Component {
   }
   
   onPressReferralsButton() {
-    this.requestReferrals();
+    //this.requestReferrals();
+    // *** manual test
+    this.requestReferralsTest();
     this.setState({
       showReferralsStatus: true, 
     });
@@ -208,7 +324,7 @@ class Refer extends Component {
     const { profile } = this.props;
     const { referralLink } = this.state;
     // for use of referrals list
-    const ItemTo = ({title}) => (
+/*     const ItemTo = ({title}) => (
       <View style={styles.referralsItem}>
         {title.to=="Referred" && <Text style={styles.referralsTitle}>{title.to}</Text> ||
          title.to!="Referred" && <Text style={styles.referralsContents}>{title.to}</Text>
@@ -222,7 +338,7 @@ class Refer extends Component {
          !title.hasAttendedSession && <Text style={styles.referralsContents}>Not Yet </Text>
         }
       </View>
-    );
+    ); */
     return (
       <View style={{ backgroundColor: "white" }}>
         <ScrollView>
@@ -432,32 +548,28 @@ class Refer extends Component {
           <>
             <BottomSheet modalProps={{}} isVisible={this.state.showReferralsStatus}>
               {/* <Text style={styles.title}>Please Read Below</Text> */}
-              <ListItem key="1">
-                <ListItem.Content>
-                  <ListItem.Title>
-                    <View style={{ flex: 1, maxWidth: screenWidth, backgroundColor: "white" }}>
-                      <ReferralsStatus numberReferrals={this.state.numberReferrals}
+              <ListItem key="1" containerStyle={styles.BSContainer}>
+                <ListItem.Content containerStyle={styles.BSContainer}>
+                  <ListItem.Title containerStyle={styles.BSContainer}>
+                    <View style={{ flex: 1, maxWidth: screenWidth, backgroundColor: "#29BFC2" }}>
+                      <ReferralsStatus  
+                          numberReferrals={this.state.numberReferrals}
                           referrals={this.state.referrals}
+                          trivialTitle1={this.state.trivialTitle1}
+                          trivialTitle2={this.state.trivialTitle2}
                       />
-                      <View>
+{/*                       <View>
                         <SafeAreaView style={styles.referralsList}>
                           <FlatList 
                             data={this.state.referrals}
                             renderItem={({item}) => (<ItemTo title={item}/>)}
                           />
-                          {/*   {"referrals":[{
-                            "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
-                            "from":"911234554321",
-                            "referralId":"OPxuoI",
-                            "to":"918850102929",
-                            "time":"1667613120113",
-                            "hasAttendedSession":true}]} */}
                           <FlatList
                             data={this.state.referrals}
                             renderItem={({item}) => (<ItemAttend title={item}/>)}
                           />
                         </SafeAreaView>
-                      </View>
+                      </View> */}
                     </View>
                   </ListItem.Title>
                 </ListItem.Content>
@@ -619,6 +731,9 @@ const styles = StyleSheet.create({
   },
   referralsContents: {
     fontSize: 15,
+  },
+  BSContainer: {
+    backgroundColor: "#29BFC2",
   },
 });
 
