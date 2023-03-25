@@ -10,8 +10,10 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import { BackgroundImage } from 'react-native-elements/dist/config';
 import * as Progress from 'react-native-progress';
  
+const screenWidth = Dimensions.get("window").width;
 export default class PBA extends React.Component {
  
   state = {
@@ -45,60 +47,74 @@ export default class PBA extends React.Component {
       chestComponents.push(
         <View style={{flexDirection: 'row', marginBottom: 10}}>
           <Progress.Bar 
-            style={{borderRadius: 30,}}
+            style={styles.progressBar}
             //animated={false}
-            color="black" borderColor="black"
+            color="#b1f2f4" borderColor="#b1f2f4"
             progress={1.0} width={barWidth} height={barHeight} />
           {chestOpened}
           <Text style={styles.label2}>7/7</Text>
         </View>
       );
     }
+    const ItemProfile = ({title}) => (
+      <View style={styles.referralsItem}>
+        {title.to!=this.props.trivialTitle1 
+          &&<Image style={styles.profilePic} source={require('../images/profile_image-transparent.png')}/>}
+      </View>
+    );
     const ItemTo = ({title}) => (
       <View style={styles.referralsItem}>
         {title.to==this.props.trivialTitle1 && <Text style={styles.referralsTitle}>{title.to}</Text> ||
-         title.to!=this.props.trivialTitle1 && <Text style={styles.referralsContents}>{title.to}</Text>
+         title.to!=this.props.trivialTitle1 && 
+          <Text style={styles.referralsContents}>{title.to} {"\n"}{title.time}</Text>
         }
       </View>
     );
     const ItemAttend = ({title}) => (
       <View style={styles.referralsItem}>
         {title.hasAttendedSession==this.props.trivialTitle2 && <Text style={styles.referralsTitle}>Attended </Text> ||
-         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text> ||
-         !title.hasAttendedSession && <Text style={styles.referralsContents}>Not Yet </Text>
+         title.hasAttendedSession && 
+          <Image style={{height: 15, width: 15,}} source={require('../images/tick-icon.png')}></Image> 
+          ||
+         !title.hasAttendedSession && 
+          <Image style={{height: 15, width: 15,}} source={require('../images/hourglass.png')}></Image>
         }
       </View>
     );
  
     return (
-      <View style={styles.container}>
-        <View> 
-          <Text style={styles.label}>Referral Quest {"\n"} ({this.props.numberReferrals} completed)</Text>
-          {chestComponents}  
-          <View style={{flexDirection: 'row'}}>
-            <Progress.Bar 
-              style={{borderRadius: 30,}}
-              color="black" borderColor="black"
-              // indeterminateAnimationDuration={10000}
-              progress={currentCount/7} width={barWidth} height={barHeight} />
-            {chest}
-            <Text style={styles.label2}>{currentCount}/7</Text>
+      <View>
+          <View style={styles.questContainer}>
+            <Text style={styles.label}>Referral Quest</Text>
+            <Text style={{fontSize: 15, marginLeft: 20, marginBottom: 5}}>
+              ({openedChestCount} quest(s) completed)</Text>
+            {/*chestComponents*/}  
+            <View style={{flexDirection: 'row'}}>
+              <Progress.Bar 
+                style={styles.progressBar}
+                color="#b1f2f4" borderColor="#b1f2f4"
+                // indeterminateAnimationDuration={10000}
+                progress={currentCount/7} width={barWidth} height={barHeight} />
+              {chest}
+              <Text style={styles.label2}>{currentCount}/7</Text>
+            </View>
           </View>
-          <View style={styles.FLStyle}>
+          <View style={styles.statusListContainer}>
             <SafeAreaView style={styles.referralsList}>
               <FlatList 
-                style={styles.FLStyle}
+                data={this.props.referrals}
+                renderItem={({item}) => (<ItemProfile title={item}/>)}
+              />
+              <FlatList 
                 data={this.props.referrals}
                 renderItem={({item}) => (<ItemTo title={item}/>)}
               />
               <FlatList
-
                 data={this.props.referrals}
                 renderItem={({item}) => (<ItemAttend title={item}/>)}
               />
             </SafeAreaView>
           </View>
-            </View>
       </View>
     );
   }
@@ -112,11 +128,18 @@ const styles = StyleSheet.create({
     // padding: 5,
     //alignSelf: "center",
   },
+  progressBar: {
+    borderRadius: 30,
+    marginTop: 10,
+    marginLeft: 20,
+    marginBottom: 10,
+  },
   label: {
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginTop: 10,
+    marginLeft: 20,
   },
   label1: {
     color: 'black',
@@ -139,16 +162,23 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     alignSelf: "center",
   },
+  profilePic: {
+    width: 40,
+    height: 40,
+    alignSelf: "center",
+  },
   referralsList: {
-    backgroundColor: "#29BFC2",
     marginTop: 10,
+    marginLeft: 10,
+    marginBottom: 10,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   referralsItem: {
-    backgroundColor: '#29BFC2',
+    // backgroundColor: '#29BFC2',
     // marginVertical: 8,
+    height: 60,
     marginHorizontal: 16,
   },
   referralsTitle: {
@@ -158,7 +188,15 @@ const styles = StyleSheet.create({
   referralsContents: {
     fontSize: 15,
   },
-  FLStyle: {
+  questContainer: {
     backgroundColor: "#29BFC2",
+    width: screenWidth*0.9,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  statusListContainer: {
+    backgroundColor: "#29BFC2",
+    width: screenWidth*0.9,
+    borderRadius: 20,
   },
 });
