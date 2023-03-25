@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Image,
   Linking,
@@ -8,22 +8,22 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-} from 'react-native';
-import AwesomeAlert from 'react-native-awesome-alerts';
+} from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
 
-import { WebView } from 'react-native-webview';
-import { Avatar, Title } from 'react-native-paper';
-import { Button, Text } from 'react-native-elements';
-import TambolaTicket from './TambolaTicket.js';
-import toUnicodeVariant from './toUnicodeVariant.js';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { setSessionAttended } from '../services/events/EventService';
-import { faShareAlt } from '@fortawesome/free-solid-svg-icons';
-import RenderHtml from 'react-native-render-html';
-import firebase from '@react-native-firebase/app';
-import { FirebaseDynamicLinksProps } from '../config/CONSTANTS';
-
+import { WebView } from "react-native-webview";
+import { Avatar, Title } from "react-native-paper";
+import { Button, Text } from "react-native-elements";
+import TambolaTicket from "./TambolaTicket.js";
+import toUnicodeVariant from "./toUnicodeVariant.js";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { setSessionAttended } from "../services/events/EventService";
+import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import RenderHtml from "react-native-render-html";
+import firebase from "@react-native-firebase/app";
+import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -32,13 +32,51 @@ export default class SessionDetails extends Component {
       event: props.event,
       modalVisible: false,
       showAlert: false,
+      showPaymentAlert: false,
+      paymentAlertMessage: "Your Payment is Successful!",
+      paymentAlertTitle: "Success",
       profileImage:
-        'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+        "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       loadingButton: false,
       videoVisible: false,
       defaultCoverImage:
-        'https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg',
+        "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
     };
+  }
+
+  async razorPayWrapper(item) {
+    const prefill = {
+      email: this.props.profile.email
+        ? this.props.profile.email
+        : PaymentConstants.emailId,
+      contact: this.props.profile.phoneNumber,
+      name: this.props.profile.name,
+    };
+    const _callback = (data) => {
+      this.setState({ success: true });
+
+      var _this = this;
+      if (data.razorpay_payment_id === "") {
+        this.props.setPaymentData(
+          this.state.profile.phoneNumber,
+          this.state.amount,
+          function () {
+            _this.props.navigation.navigate("GoHappy Club");
+          }
+        );
+      } else {
+        this.sessionAction();
+        this.setState({ showPaymentAlert: true });
+      }
+    };
+    const _errorHandler = (error) => {
+      this.setState({
+        paymentAlertMessage: PaymentError,
+        paymentAlertTitle: "Oops!",
+      });
+      this.setState({ showPaymentAlert: true });
+    };
+    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
   }
   componentDidMount() {
     this.createDynamicReferralLink();
@@ -48,7 +86,7 @@ export default class SessionDetails extends Component {
     // alert('hi');
     crashlytics().log(JSON.stringify(this.props.profile));
     if (selfInviteCode == null) {
-      selfInviteCode = 'test';
+      selfInviteCode = "test";
     }
     const link1 = await firebase.dynamicLinks().buildShortLink(
       {
@@ -59,9 +97,9 @@ export default class SessionDetails extends Component {
           fallbackUrl: FirebaseDynamicLinksProps().androidFallBackUrl,
         },
         ios: {
-          bundleId: 'com.gohappyclient',
+          bundleId: "com.gohappyclient",
           fallbackUrl:
-            'https://play.google.com/store/apps/details?id=com.gohappyclient',
+            "https://play.google.com/store/apps/details?id=com.gohappyclient",
         },
       },
       firebase.dynamicLinks.ShortLinkType.SHORT
@@ -72,7 +110,10 @@ export default class SessionDetails extends Component {
   };
   isDisabled() {
     var title = this.getTitle();
-    if (title == 'Seats Full') {
+    if (
+      title == "Seats Full" ||
+      (title == "Cancel Your Booking" && this.state.event.costType == "paid")
+    ) {
       return true;
     } else {
       return false;
@@ -82,11 +123,11 @@ export default class SessionDetails extends Component {
     var currTime = Date.now();
     if (this.props.type == null) {
     }
-    if (this.props.type == 'expired') {
-      return 'View Recording';
+    if (this.props.type == "expired") {
+      return "View Recording";
     }
-    if (this.props.type == 'ongoing') {
-      return 'Join';
+    if (this.props.type == "ongoing") {
+      return "Join";
     }
     if (
       this.state.event.participantList != null &&
@@ -94,21 +135,21 @@ export default class SessionDetails extends Component {
       this.state.event.participantList.includes(this.props.phoneNumber)
     ) {
       if (currTime > this.state.event.endTime) {
-        return 'View Recording';
+        return "View Recording";
       } else if (currTime + 600000 < this.state.event.startTime) {
-        return 'Cancel Your Booking';
+        return "Cancel Your Booking";
       } else {
-        return 'Join';
+        return "Join";
       }
     }
     if (this.state.event.seatsLeft == 0) {
-      return 'Seats Full';
+      return "Seats Full";
     }
-    return 'Book';
+    return "Book";
   }
 
   checkTambola() {
-    if (this.props.event.eventName.contains('Tambola')) {
+    if (this.props.event.eventName.contains("Tambola")) {
       return true;
     }
     return false;
@@ -119,40 +160,40 @@ export default class SessionDetails extends Component {
         JSON.stringify(this.state.alreadyBookedSameDayEvent)
     );
     if (
-      this.getTitle() === 'Book' &&
+      this.getTitle() === "Book" &&
       this.state.alreadyBookedSameDayEvent == true
     ) {
       this.setState({ showAlert: true });
       return;
     }
-    if (this.getTitle() === 'View Recording') {
+    if (this.getTitle() === "View Recording") {
       this.videoPlayer();
       return;
     }
-    if (this.getTitle() === 'Join') {
+    if (this.getTitle() === "Join") {
       setSessionAttended(this.props.phoneNumber);
       Linking.openURL(this.props.event.meetingLink);
       return;
     }
 
-    var output = this.props.sessionAction('book');
+    var output = this.props.sessionAction("book");
     this.setState({ loadingButton: true });
-    if (output == 'SUCCESS') {
+    if (output == "SUCCESS") {
     }
   }
   loadDate(item) {
     var dt = new Date(parseInt(item));
     var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? 'pm' : 'am';
+    var AmOrPm = hours >= 12 ? "pm" : "am";
     hours = hours % 12 || 12;
     var minutes = dt.getMinutes();
     if (hours < 10) {
-      hours = '0' + hours;
+      hours = "0" + hours;
     }
     if (minutes < 10) {
-      minutes = '0' + minutes;
+      minutes = "0" + minutes;
     }
-    var finalTime = hours + ':' + minutes + ' ' + AmOrPm;
+    var finalTime = hours + ":" + minutes + " " + AmOrPm;
     return finalTime;
     // return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
   }
@@ -162,12 +203,12 @@ export default class SessionDetails extends Component {
   createShareMessage(item) {
     let template =
       'Namaste !! I am attending "😃 ' +
-      toUnicodeVariant(item.eventName, 'bold italic') +
+      toUnicodeVariant(item.eventName, "bold italic") +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
-      toUnicodeVariant('GoHappy Club', 'bold') +
-      ', apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul ' +
-      toUnicodeVariant('FREE', 'bold') +
-      '. \n \nClick on the link below: \n';
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
+      toUnicodeVariant("FREE", "bold") +
+      ". \n \nClick on the link below: \n";
     // template = template.replace;
     return template;
   }
@@ -189,7 +230,7 @@ export default class SessionDetails extends Component {
       return (
         <MaterialIndicator
           color="white"
-          style={{ backgroundColor: '#0A1045' }}
+          style={{ backgroundColor: "#0A1045" }}
         />
       );
     }
@@ -197,26 +238,26 @@ export default class SessionDetails extends Component {
     return (
       <View
         style={{
-          backgroundColor: 'white',
+          backgroundColor: "white",
           flex: 1,
         }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{
-            backgroundColor: 'white',
+            backgroundColor: "white",
           }}
         >
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
               borderRadius: 50,
-              shadowColor: 'black',
+              shadowColor: "black",
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
-              width: '100%',
+              width: "100%",
               height: 300,
-              justifyContent: 'center',
+              justifyContent: "center",
             }}
           >
             <Image
@@ -229,20 +270,20 @@ export default class SessionDetails extends Component {
             />
             <View
               style={{
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 paddingLeft: 20,
-                height: '180%',
-                alignItems: 'flex-start',
-                justifyContent: 'center',
+                height: "180%",
+                alignItems: "flex-start",
+                justifyContent: "center",
               }}
             >
               <Text
                 style={{
-                  overflow: 'hidden',
-                  backgroundColor: 'white',
+                  overflow: "hidden",
+                  backgroundColor: "white",
                   padding: 4,
-                  color: 'black',
+                  color: "black",
                   borderRadius: 4,
                 }}
               >
@@ -252,20 +293,20 @@ export default class SessionDetails extends Component {
           </View>
 
           <View style={{ margin: 20 }}>
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
-              <Text h3 style={{ fontWeight: 'bold', marginRight: '10%' }}>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <Text h3 style={{ fontWeight: "bold", marginRight: "10%" }}>
                 {item.eventName}
               </Text>
               <View
                 style={{
-                  marginLeft: 'auto',
-                  marginTop: '3%',
+                  marginLeft: "auto",
+                  marginTop: "3%",
                 }}
               >
                 <TouchableOpacity onPress={this.shareMessage.bind(this, item)}>
                   <FontAwesomeIcon
                     icon={faShareAlt}
-                    color={'black'}
+                    color={"black"}
                     size={25}
                   />
                 </TouchableOpacity>
@@ -276,44 +317,44 @@ export default class SessionDetails extends Component {
               {item.expertName}
             </Text> */}
             {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: "row" }}>
               <FontAwesomeIcon
                 icon={faClock}
-                color={'grey'}
+                color={"grey"}
                 size={15}
-                style={{ marginTop: '6%' }}
+                style={{ marginTop: "6%" }}
               />
               <Text
                 style={{
-                  color: 'grey',
-                  marginTop: '5%',
+                  color: "grey",
+                  marginTop: "5%",
                   fontSize: 15,
                   marginLeft: 5,
                 }}
               >
-                {this.loadDate(item.startTime)} -{}{' '}
+                {this.loadDate(item.startTime)} -{}{" "}
                 {this.loadDate(item.endTime)}
               </Text>
             </View>
             <View
               style={{
                 marginTop: 2,
-                borderBottomColor: 'grey',
+                borderBottomColor: "grey",
                 borderBottomWidth: 1,
               }}
             />
             <Text
               style={{
                 fontSize: 17,
-                color: 'grey',
+                color: "grey",
                 marginTop: 20,
-                fontWeight: 'bold',
+                fontWeight: "bold",
               }}
             >
               About
             </Text>
             {item.description && (
-              <Text style={{ fontSize: 17, color: 'grey', marginTop: 10 }}>
+              <Text style={{ fontSize: 17, color: "grey", marginTop: 10 }}>
                 {item.description}
               </Text>
             )}
@@ -328,31 +369,31 @@ export default class SessionDetails extends Component {
             )}
             <View
               style={{
-                marginTop: '5%',
-                borderBottomColor: 'grey',
+                marginTop: "5%",
+                borderBottomColor: "grey",
                 borderBottomWidth: 1,
               }}
             />
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 marginTop: 10,
               }}
             >
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
                 <Avatar.Image
                   source={
                     item.expertImage
                       ? {
                           uri: item.expertImage,
                         }
-                      : require('../images/profile_image.jpeg')
+                      : require("../images/profile_image.jpeg")
                   }
                   size={30}
                 />
                 <Title
-                  style={{ color: '#404040', fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: "#404040", fontSize: 13, paddingLeft: 10 }}
                 >
                   {item.expertName}
                 </Title>
@@ -369,11 +410,15 @@ export default class SessionDetails extends Component {
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: '#29BFC2' }}
+            buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={this.sessionAction.bind(this)}
-          />
+            onPress={
+              item.costType == "paid" && this.getTitle() == "Book"
+                ? this.razorPayWrapper.bind(this, item)
+                : this.sessionAction.bind(this)
+            }
+          ></Button>
         </View>
 
         {item.recordingLink != null && (
@@ -389,7 +434,7 @@ export default class SessionDetails extends Component {
             <WebView
               javaScriptEnabled={true}
               allowsFullscreenVideo
-              style={{ flex: 1, borderColor: 'red', borderWidth: 1 }}
+              style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
               source={{
                 uri: item.recordingLink,
               }}
@@ -412,6 +457,26 @@ export default class SessionDetails extends Component {
             }}
           />
         )}
+        {this.state.showPaymentAlert && (
+          <AwesomeAlert
+            show={this.state.showPaymentAlert}
+            showProgress={false}
+            title={this.state.paymentAlertTitle}
+            message={this.state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
+            }}
+          />
+        )}
       </View>
     );
   }
@@ -420,26 +485,26 @@ export default class SessionDetails extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: '#0A1045',
+    backgroundColor: "#0A1045",
   },
   input: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     padding: 15,
     marginBottom: 10,
   },
   btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   userBtn: {
-    backgroundColor: '#f0ad4e',
+    backgroundColor: "#f0ad4e",
     paddingVertical: 15,
     height: 60,
   },
   cover: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     // marginTop:'-10%',
     // justifyContent: "center",
     borderBottomLeftRadius: 20,
@@ -447,59 +512,59 @@ const styles = StyleSheet.create({
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: '700',
+    textAlign: "center",
+    color: "black",
+    fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
   welcome: {
     fontSize: 30,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-    color: 'white',
+    color: "white",
   },
   logo: {
     width: 150,
     height: 150,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   formContainer: {},
   title: {
-    color: 'white',
+    color: "white",
     marginTop: 10,
     width: 160,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
   },
   newinput: {
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: 'white',
+    color: "white",
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: 'white',
-    marginTop: '30%',
+    color: "white",
+    marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
   },
   backgroundVideo: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,

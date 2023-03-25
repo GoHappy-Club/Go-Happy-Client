@@ -1,26 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   FlatList,
   Linking,
   SafeAreaView,
-  StyleSheet,
   TouchableOpacity,
+  StyleSheet,
   View,
-} from 'react-native';
-import { Badge, Button, Text } from 'react-native-elements';
-import AwesomeAlert from 'react-native-awesome-alerts';
+} from "react-native";
+import { Badge, Button, Text } from "react-native-elements";
+import AwesomeAlert from "react-native-awesome-alerts";
 
-import { Avatar, Card as Cd, Title } from 'react-native-paper';
-import { Dimensions } from 'react-native';
-import CalendarDays from 'react-native-calendar-slider-carousel';
-import { MaterialIndicator } from 'react-native-indicators';
+import { Avatar, Card as Cd, Title } from "react-native-paper";
+import { Dimensions } from "react-native";
+import CalendarDays from "react-native-calendar-slider-carousel";
+import { MaterialIndicator } from "react-native-indicators";
 
-import { connect } from 'react-redux';
-import { setProfile } from '../redux/actions/counts.js';
-import { bindActionCreators } from 'redux';
-import { setSessionAttended } from '../services/events/EventService';
-
-const { width: screenWidth } = Dimensions.get('window');
+import { connect } from "react-redux";
+import { setProfile } from "../redux/actions/counts.js";
+import { bindActionCreators } from "redux";
+import { setSessionAttended } from "../services/events/EventService";
+import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
+const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
   constructor(props) {
@@ -34,18 +34,56 @@ class HomeDashboard extends Component {
       bookingLoader: false,
       selectedDateRaw: todayRaw,
       showAlert: false,
+      paymentAlertMessage: "Your Payment is Successful!",
+      paymentAlertTitle: "Success",
+      showPaymentAlert: false,
       alreadyBookedSameDayEvent: false,
       profileImage:
-        'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+        "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
     };
     //
 
     this._retrieveData();
   }
+
+  async razorPayWrapper(item) {
+    const prefill = {
+      email: this.props.profile.email
+        ? this.props.profile.email
+        : PaymentConstants.emailId,
+      contact: this.props.profile.phoneNumber,
+      name: this.props.profile.name,
+    };
+    const _callback = (data) => {
+      this.setState({ success: true });
+
+      var _this = this;
+      if (data.razorpay_payment_id === "") {
+        this.props.setPaymentData(
+          this.state.profile.phoneNumber,
+          this.state.amount,
+          function () {
+            _this.props.navigation.navigate("GoHappy Club");
+          }
+        );
+      } else {
+        this.updateEventBook(item);
+        this.setState({ showPaymentAlert: true });
+      }
+    };
+    const _errorHandler = (error) => {
+      this.setState({
+        paymentAlertMessage: PaymentError.message,
+        paymentAlertTitle: "Oops!",
+      });
+      this.setState({ showPaymentAlert: true });
+    };
+    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
+  }
   _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem('email');
-      const phoneNumber = await AsyncStorage.getItem('phoneNumber');
+      const value = await AsyncStorage.getItem("email");
+      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
       if (value !== null) {
         // We have data!!
         this.setState({ email: value });
@@ -77,7 +115,7 @@ class HomeDashboard extends Component {
     if (text.length < cut) {
       return text;
     }
-    return text.substring(0, cut) + '...';
+    return text.substring(0, cut) + "...";
   }
   isOngoingEvent(item) {
     crashlytics().log(
@@ -104,7 +142,7 @@ class HomeDashboard extends Component {
   }
   updateEventBook(item) {
     this.setState({ bookingLoader: true });
-    if (this.getTitle(item) == 'Join') {
+    if (this.getTitle(item) == "Join") {
       setSessionAttended(this.props.profile.phoneNumber);
       Linking.openURL(item.meetingLink);
       return;
@@ -137,14 +175,14 @@ class HomeDashboard extends Component {
       <Text
         h4
         style={{
-          height: '100%',
-          marginTop: '20%',
-          alignSelf: 'center',
-          textAlign: 'center',
+          height: "100%",
+          marginTop: "20%",
+          alignSelf: "center",
+          textAlign: "center",
           flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: '#2f2f31',
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#2f2f31",
         }}
       >
         No Sessions Available 😟
@@ -154,22 +192,22 @@ class HomeDashboard extends Component {
   loadDate(item) {
     var dt = new Date(parseInt(item.startTime));
     var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? 'pm' : 'am';
+    var AmOrPm = hours >= 12 ? "pm" : "am";
     hours = hours % 12 || 12;
     var minutes = dt.getMinutes();
     if (hours < 10) {
-      hours = '0' + hours;
+      hours = "0" + hours;
     }
     if (minutes < 10) {
-      minutes = '0' + minutes;
+      minutes = "0" + minutes;
     }
-    var finalTime = hours + ':' + minutes + ' ' + AmOrPm;
+    var finalTime = hours + ":" + minutes + " " + AmOrPm;
     return finalTime;
   }
   getTitle(item) {
     const isOngoing = this.isOngoingEvent(item);
     if (item.participantList == null) {
-      return 'Book';
+      return "Book";
     }
     const isParticipant = item.participantList.includes(
       this.props.profile.phoneNumber
@@ -177,13 +215,13 @@ class HomeDashboard extends Component {
 
     // crashlytics().log("this is item", isOngoing, isParticipant);
     if (isOngoing && isParticipant) {
-      return 'Join';
+      return "Join";
     } else if (isParticipant) {
-      return 'Booked';
+      return "Booked";
     } else if (item.seatsLeft == 0) {
-      return 'Seats Full';
+      return "Seats Full";
     } else {
-      return 'Book';
+      return "Book";
     }
   }
   isDisabled(item) {
@@ -216,14 +254,14 @@ class HomeDashboard extends Component {
           marginLeft: 30,
           marginRight: 30,
           marginBottom: 15,
-          backgroundColor: '#29BFC2',
+          backgroundColor: "#29BFC2",
         }}
       >
         <TouchableOpacity
-          style={{ ...styles.card, marginTop: 10, backgroundColor: '#29BFC2' }}
-          underlayColor={'#29BFC2'}
+          style={{ ...styles.card, marginTop: 10, backgroundColor: "#29BFC2" }}
+          underlayColor={"#29BFC2"}
           onPress={() =>
-            this.props.navigation.navigate('Session Details', {
+            this.props.navigation.navigate("Session Details", {
               event: item,
               phoneNumber: profile.phoneNumber,
               profile: profile,
@@ -237,51 +275,65 @@ class HomeDashboard extends Component {
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 padding: 4,
               }}
             >
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
                 <Badge
-                  value={item.category}
+                  value={item.costType == "paid" ? "Workshop" : item.category}
                   badgeStyle={styles.badge}
-                  textStyle={{ color: '#2f2f31' }}
+                  textStyle={{ color: "#2f2f31" }}
                 />
-                <Text style={{ color: 'white', fontSize: 14, paddingLeft: 4 }}>
+                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
                   {this.loadDate(item)} |
                 </Text>
-                <Text style={{ color: 'white', fontSize: 14, paddingLeft: 4 }}>
+                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
                   {item.seatsLeft} seats left
                 </Text>
+                {item.costType == "paid" && (
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 14,
+                      paddingLeft: 4,
+                      position: "absolute",
+                      right: 0,
+                    }}
+                  >
+                    {"\u20B9"}
+                    {item.cost}
+                  </Text>
+                )}
               </View>
               {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
-            <Title style={{ color: 'white', fontSize: 20, padding: 4 }}>
+            <Title style={{ color: "white", fontSize: 20, padding: 4 }}>
               {this.trimContent(item.eventName, 30)}
             </Title>
 
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 padding: 4,
               }}
             >
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, flexDirection: "row" }}>
                 <Avatar.Image
                   source={
                     item.expertImage
                       ? {
                           uri: item.expertImage,
                         }
-                      : require('../images/profile_image.jpeg')
+                      : require("../images/profile_image.jpeg")
                   }
                   size={30}
                 />
                 <Title
-                  style={{ color: 'white', fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: "white", fontSize: 13, paddingLeft: 10 }}
                 >
                   {this.trimContent(item.expertName, 17)}
                 </Title>
@@ -295,11 +347,15 @@ class HomeDashboard extends Component {
               <Button
                 disabled={this.isDisabled(item)}
                 title={this.getTitle(item)}
-                onPress={this.updateEventBook.bind(this, item)}
+                onPress={
+                  item.costType == "paid" && this.getTitle(item) == "Book"
+                    ? this.razorPayWrapper.bind(this, item)
+                    : this.updateEventBook.bind(this, item)
+                }
                 loading={item.loadingButton}
-                loadingProps={{ size: 'small', color: 'black' }}
-                buttonStyle={{ backgroundColor: 'white' }}
-                titleStyle={{ color: '#2f2f31' }}
+                loadingProps={{ size: "small", color: "black" }}
+                buttonStyle={{ backgroundColor: "white" }}
+                titleStyle={{ color: "#2f2f31" }}
               />
             </View>
           </Cd.Content>
@@ -307,7 +363,7 @@ class HomeDashboard extends Component {
       </Cd>
     );
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <CalendarDays
           numberOfDays={15}
           daysInView={3}
@@ -320,7 +376,7 @@ class HomeDashboard extends Component {
             marginLeft: 30,
             marginTop: 20,
             marginBottom: 15,
-            color: '#2f2f31',
+            color: "#2f2f31",
           }}
         >
           {this.state.selectedDate}
@@ -363,6 +419,26 @@ class HomeDashboard extends Component {
             }}
           />
         )}
+        {this.state.showPaymentAlert && (
+          <AwesomeAlert
+            show={this.state.showPaymentAlert}
+            showProgress={false}
+            title={this.state.paymentAlertTitle}
+            message={this.state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
+            }}
+          />
+        )}
       </View>
     );
   }
@@ -376,17 +452,17 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
   },
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   contentContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'lightgrey',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "lightgrey",
     paddingBottom: 50,
     margin: 40,
   },
@@ -394,23 +470,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#29BFC2',
+    borderColor: "#29BFC2",
   },
   badge: {
-    backgroundColor: 'white',
-    alignSelf: 'flex-start',
-    color: '#29BFC2',
+    backgroundColor: "white",
+    alignSelf: "flex-start",
+    color: "#29BFC2",
     // padding:4
   },
   fav: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   bookButton: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
 });
 

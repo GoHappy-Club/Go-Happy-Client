@@ -47,6 +47,8 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+// react-native-razorpay
+import com.razorpay.rn.RazorpayPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -126,6 +128,7 @@ public class PackageList {
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
       new ReactNativePushNotificationPackage(),
+      new RazorpayPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSharePackage(),

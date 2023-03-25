@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Button,
   Image,
@@ -11,28 +11,28 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { Avatar } from 'react-native-paper';
-import axios from 'axios';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import { MaterialIndicator } from 'react-native-indicators';
-import HomeDashboard from '../../components/HomeDashboard.js';
+} from "react-native";
+import { Avatar } from "react-native-paper";
+import axios from "axios";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { MaterialIndicator } from "react-native-indicators";
+import HomeDashboard from "../../components/HomeDashboard.js";
 
 // var tambola = require('tambola-generator');
-import tambola from 'tambola';
-import Video from 'react-native-video';
+import tambola from "tambola";
+import Video from "react-native-video";
 import {
   EventNotification,
   EventReminderNotification,
-} from '../../services/LocalPushController';
+} from "../../services/LocalPushController";
 
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      phoneNumber: '',
-      password: '',
+      phoneNumber: "",
+      password: "",
       showAlert: false,
       childLoader: false,
       events: [],
@@ -41,6 +41,35 @@ export default class HomeScreen extends Component {
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
   }
+  setPaymentData(phoneNumber, amount, _callback) {
+    var url = SERVER_URL + "/user/setPaymentData";
+    axios
+      .post(url, { phoneNumber: phoneNumber, amount: amount })
+      .then((response) => {
+        // if (response.data) {
+        AsyncStorage.setItem("amount", amount);
+        // this.setProfile(planName);
+        _callback();
+        // }
+      })
+      .catch((error) => {
+        this.error = true;
+      });
+  }
+
+  async getOrderId(amount) {
+    var url = SERVER_URL + "/razorPay/pay";
+    try {
+      const response = await axios.post(url, { amount: amount });
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      this.error = true;
+      // throw new Error("Error getting order ID");
+    }
+  }
+
   render() {
     if (this.state.error == false) {
       return (
@@ -50,6 +79,8 @@ export default class HomeScreen extends Component {
           bookEvent={this.bookEvent.bind(this)}
           loadEvents={this.loadEvents.bind(this)}
           navigation={this.props.navigation}
+          getOrderId={this.getOrderId.bind(this)}
+          setPaymentData={this.setPaymentData.bind(this)}
         />
       );
     } else {
@@ -57,14 +88,14 @@ export default class HomeScreen extends Component {
       return (
         // <ScrollView style={{ backgroundColor: "white" }}>
         <Video
-          source={require('../../images/logo_splash.mp4')}
+          source={require("../../images/logo_splash.mp4")}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
             left: 0,
             right: 0,
             bottom: 0,
@@ -81,7 +112,7 @@ export default class HomeScreen extends Component {
   loadEvents(selectedDate) {
     this.setState({ childLoader: true });
     this.setState({ events: [] });
-    var url = SERVER_URL + '/event/getEventsByDate';
+    var url = SERVER_URL + "/event/getEventsByDate";
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
@@ -108,32 +139,32 @@ export default class HomeScreen extends Component {
     let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 
     var id = item.id;
-    var url = SERVER_URL + '/event/bookEvent';
+    var url = SERVER_URL + "/event/bookEvent";
 
     axios
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
       .then((response) => {
         if (response.data) {
-          if (response.data == 'SUCCESS') {
+          if (response.data == "SUCCESS") {
             //EventNotification({channelId: 'events',event:item});
             EventReminderNotification({
-              channelId: 'events',
+              channelId: "events",
               event: item,
               fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
-              bigText: 'Your session starts in a few minutes.',
+              bigText: "Your session starts in a few minutes.",
             });
             EventReminderNotification({
-              channelId: 'events',
+              channelId: "events",
               event: item,
               fireTime: new Date(parseInt(item.startTime)),
-              bigText: 'Your session has been started. Join Now!',
+              bigText: "Your session has been started. Join Now!",
             });
             var tempEvents = this.state.events;
             for (var i = 0; i < tempEvents.length; i++) {
               if (tempEvents[i].id == item.id) {
                 tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
                 tempEvents[i].loadingButton = false;
-                tempEvents[i].status = 'Booked';
+                tempEvents[i].status = "Booked";
                 this.setState({ events: tempEvents });
                 break;
               }
@@ -160,74 +191,74 @@ export default class HomeScreen extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: '#0A1045',
+    backgroundColor: "#0A1045",
   },
   input: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     padding: 15,
     marginBottom: 10,
   },
   btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   userBtn: {
-    backgroundColor: '#f0ad4e',
+    backgroundColor: "#f0ad4e",
     paddingVertical: 15,
     height: 60,
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: '700',
+    textAlign: "center",
+    color: "black",
+    fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
   welcome: {
     fontSize: 30,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-    color: 'white',
+    color: "white",
   },
   logo: {
     width: 150,
     height: 150,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   formContainer: {},
   title: {
-    color: 'white',
+    color: "white",
     marginTop: 10,
     width: 160,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
   },
   newinput: {
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: 'white',
+    color: "white",
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: 'white',
-    marginTop: '30%',
+    color: "white",
+    marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
   },
 });
