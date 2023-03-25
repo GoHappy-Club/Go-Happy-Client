@@ -84,13 +84,15 @@ export default class PBA extends React.Component {
             {chest}
             <Text style={styles.label2}>{currentCount}/7</Text>
           </View>
-          <View>
+          <View style={styles.FLStyle}>
             <SafeAreaView style={styles.referralsList}>
               <FlatList 
+                style={styles.FLStyle}
                 data={this.props.referrals}
                 renderItem={({item}) => (<ItemTo title={item}/>)}
               />
               <FlatList
+
                 data={this.props.referrals}
                 renderItem={({item}) => (<ItemAttend title={item}/>)}
               />
@@ -138,13 +140,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   referralsList: {
+    backgroundColor: "#29BFC2",
     marginTop: 10,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   referralsItem: {
-    backgroundColor: 'white',
+    backgroundColor: '#29BFC2',
     // marginVertical: 8,
     marginHorizontal: 16,
   },
@@ -154,5 +157,8 @@ const styles = StyleSheet.create({
   },
   referralsContents: {
     fontSize: 15,
+  },
+  FLStyle: {
+    backgroundColor: "#29BFC2",
   },
 });
