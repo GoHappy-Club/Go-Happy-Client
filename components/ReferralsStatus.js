@@ -64,20 +64,24 @@ export default class PBA extends React.Component {
     );
     const ItemTo = ({title}) => (
       <View style={styles.referralsItem}>
-        {title.to==this.props.trivialTitle1 && <Text style={styles.referralsTitle}>{title.to}</Text> ||
-         title.to!=this.props.trivialTitle1 && 
-          <Text style={styles.referralsContents}>{title.to} {"\n"}{title.time}</Text>
-        }
+        {title.to==this.props.trivialTitle1 ? (
+          <Text style={styles.referralsTitle}>{title.to}</Text>
+        ) : (
+          <>
+            <Text style={styles.referralsContents}>{title.to}</Text>
+            <Text style={styles.referralsTime}>{title.time}</Text>
+          </>
+        )}
       </View>
     );
     const ItemAttend = ({title}) => (
       <View style={styles.referralsItem}>
         {title.hasAttendedSession==this.props.trivialTitle2 && <Text style={styles.referralsTitle}>Attended </Text> ||
          title.hasAttendedSession && 
-          <Image style={{height: 15, width: 15,}} source={require('../images/tick-icon.png')}></Image> 
+          <Image style={{height: 15, width: 15, alignSelf: "center"}} source={require('../images/tick-icon.png')}></Image> 
           ||
          !title.hasAttendedSession && 
-          <Image style={{height: 15, width: 15,}} source={require('../images/hourglass.png')}></Image>
+          <Image style={{height: 15, width: 15, alignSelf: "center"}} source={require('../images/hourglass.png')}></Image>
         }
       </View>
     );
@@ -101,18 +105,24 @@ export default class PBA extends React.Component {
           </View>
           <View style={styles.statusListContainer}>
             <SafeAreaView style={styles.referralsList}>
-              <FlatList 
-                data={this.props.referrals}
-                renderItem={({item}) => (<ItemProfile title={item}/>)}
-              />
-              <FlatList 
-                data={this.props.referrals}
-                renderItem={({item}) => (<ItemTo title={item}/>)}
-              />
-              <FlatList
-                data={this.props.referrals}
-                renderItem={({item}) => (<ItemAttend title={item}/>)}
-              />
+              <View style={{flex:2}}>
+                <FlatList 
+                  data={this.props.referrals}
+                  renderItem={({item}) => (<ItemProfile title={item}/>)}
+                />
+              </View>
+              <View style={{flex:5}}>
+                <FlatList 
+                  data={this.props.referrals}
+                  renderItem={({item}) => (<ItemTo title={item}/>)}
+                />
+              </View>
+              <View style={{flex:2}}>
+                <FlatList
+                  data={this.props.referrals}
+                  renderItem={({item}) => (<ItemAttend title={item}/>)}
+                />
+              </View>
             </SafeAreaView>
           </View>
       </View>
@@ -168,9 +178,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   referralsList: {
-    marginTop: 10,
-    marginLeft: 10,
+    marginTop: 20,
     marginBottom: 10,
+    marginRight: 10,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -178,8 +188,8 @@ const styles = StyleSheet.create({
   referralsItem: {
     // backgroundColor: '#29BFC2',
     // marginVertical: 8,
-    height: 60,
-    marginHorizontal: 16,
+    height: 50,
+    marginHorizontal: 0,
   },
   referralsTitle: {
     fontSize: 17,
@@ -187,6 +197,10 @@ const styles = StyleSheet.create({
   },
   referralsContents: {
     fontSize: 15,
+    fontWeight: "bold",
+  },
+  referralsTime: {
+    fontSize: 10,
   },
   questContainer: {
     backgroundColor: "#29BFC2",
