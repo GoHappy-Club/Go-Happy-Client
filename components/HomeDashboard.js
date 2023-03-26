@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import {
   FlatList,
+  Linking,
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   View,
-  Linking,
 } from "react-native";
-import { Text, Badge, Button } from "react-native-elements";
+import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
 
-import { Card as Cd, Title, Avatar } from "react-native-paper";
+import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
 import { MaterialIndicator } from "react-native-indicators";
@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
-
+import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -34,6 +34,9 @@ class HomeDashboard extends Component {
       bookingLoader: false,
       selectedDateRaw: todayRaw,
       showAlert: false,
+      paymentAlertMessage: "Your Payment is Successful!",
+      paymentAlertTitle: "Success",
+      showPaymentAlert: false,
       alreadyBookedSameDayEvent: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
@@ -41,6 +44,41 @@ class HomeDashboard extends Component {
     //
 
     this._retrieveData();
+  }
+
+  async razorPayWrapper(item) {
+    const prefill = {
+      email: this.props.profile.email
+        ? this.props.profile.email
+        : PaymentConstants.emailId,
+      contact: this.props.profile.phoneNumber,
+      name: this.props.profile.name,
+    };
+    const _callback = (data) => {
+      this.setState({ success: true });
+
+      var _this = this;
+      if (data.razorpay_payment_id === "") {
+        this.props.setPaymentData(
+          this.state.profile.phoneNumber,
+          this.state.amount,
+          function () {
+            _this.props.navigation.navigate("GoHappy Club");
+          }
+        );
+      } else {
+        this.updateEventBook(item);
+        this.setState({ showPaymentAlert: true });
+      }
+    };
+    const _errorHandler = (error) => {
+      this.setState({
+        paymentAlertMessage: PaymentError.message,
+        paymentAlertTitle: "Oops!",
+      });
+      this.setState({ showPaymentAlert: true });
+    };
+    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
   }
   _retrieveData = async () => {
     try {
@@ -74,7 +112,9 @@ class HomeDashboard extends Component {
     this.props.loadEvents(new Date(Date.parse(date)).setHours(0, 0, 0, 0));
   };
   trimContent(text, cut) {
-    if (text.length < cut) return text;
+    if (text.length < cut) {
+      return text;
+    }
     return text.substring(0, cut) + "...";
   }
   isOngoingEvent(item) {
@@ -122,7 +162,9 @@ class HomeDashboard extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.events !== prevState.events) {
       return { events: nextProps.events };
-    } else return null;
+    } else {
+      return null;
+    }
   }
   loadCaller() {
     this.props.loadEvents(this.state.selectedDateRaw);
@@ -240,7 +282,7 @@ class HomeDashboard extends Component {
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <Badge
-                  value={item.category}
+                  value={item.costType == "paid" ? "Workshop" : item.category}
                   badgeStyle={styles.badge}
                   textStyle={{ color: "#2f2f31" }}
                 />
@@ -250,6 +292,20 @@ class HomeDashboard extends Component {
                 <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
                   {item.seatsLeft} seats left
                 </Text>
+                {item.costType == "paid" && (
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 14,
+                      paddingLeft: 4,
+                      position: "absolute",
+                      right: 0,
+                    }}
+                  >
+                    {"\u20B9"}
+                    {item.cost}
+                  </Text>
+                )}
               </View>
               {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
@@ -291,7 +347,11 @@ class HomeDashboard extends Component {
               <Button
                 disabled={this.isDisabled(item)}
                 title={this.getTitle(item)}
-                onPress={this.updateEventBook.bind(this, item)}
+                onPress={
+                  item.costType == "paid" && this.getTitle(item) == "Book"
+                    ? this.razorPayWrapper.bind(this, item)
+                    : this.updateEventBook.bind(this, item)
+                }
                 loading={item.loadingButton}
                 loadingProps={{ size: "small", color: "black" }}
                 buttonStyle={{ backgroundColor: "white" }}
@@ -347,7 +407,7 @@ class HomeDashboard extends Component {
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
-            title="Error"
+            title="Oops!"
             message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -356,6 +416,26 @@ class HomeDashboard extends Component {
             confirmButtonColor="#DD6B55"
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
+            }}
+          />
+        )}
+        {this.state.showPaymentAlert && (
+          <AwesomeAlert
+            show={this.state.showPaymentAlert}
+            showProgress={false}
+            title={this.state.paymentAlertTitle}
+            message={this.state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
             }}
           />
         )}

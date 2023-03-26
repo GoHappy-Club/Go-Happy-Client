@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 // import NetInfo from "@react-native-community/network-info";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
   Alert,
-  Linking,
   BackHandler,
   Dimensions,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
   // NetInfo,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -60,7 +60,9 @@ PushNotification.createChannel(
 export default function App() {
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
-  var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(WhatsNewMessage().show);
+  var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
+    WhatsNewMessage().show
+  );
   const width = Dimensions.get("window").width;
 
   AsyncStorage.getItem("token").then((out) => {
@@ -88,7 +90,9 @@ export default function App() {
     try {
       // showing updating content if this is newly update but not newly install
       // it will only show once
-      const asyncJustUpdated = await AsyncStorage.getItem('@MyApp:isJustUpdated');
+      const asyncJustUpdated = await AsyncStorage.getItem(
+        "@MyApp:isJustUpdated"
+      );
       let updateNeeded = await VersionCheck.needUpdate();
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
@@ -106,13 +110,12 @@ export default function App() {
           { cancelable: false }
         );
         // after updating, save status
-        await AsyncStorage.setItem('@MyApp:isJustUpdated', 'true');
-      }
-      else{
-        if (asyncJustUpdated == 'true'){
+        await AsyncStorage.setItem("@MyApp:isJustUpdated", "true");
+      } else {
+        if (asyncJustUpdated == "true") {
           setJustUpdated(true);
           // after showing message once, reset status
-          await AsyncStorage.setItem('@MyApp:isJustUpdated', 'false');
+          await AsyncStorage.setItem("@MyApp:isJustUpdated", "false");
         }
       }
     } catch (error) {
@@ -124,25 +127,23 @@ export default function App() {
     <>
       {justUpdated && (
         <AwesomeAlert
-            show={showWhatsNewMessage}
-            showProgress={false}
-            title="What's New!"
-            message={
-              <View style={{width: width*0.6,}}>
-                <RenderHtml
-                  source={{html: WhatsNewMessage().message,}}
-                />
-              </View>
-            }
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Close"
-            confirmButtonColor="deepskyblue"
-            onConfirmPressed={() => {
-              setJustUpdated(justUpdated=false);
-              setShowWhatsNewMessage(showWhatsNewMessage=false);
-            }}
+          show={showWhatsNewMessage}
+          showProgress={false}
+          title="What's New!"
+          message={
+            <View style={{ width: width * 0.6 }}>
+              <RenderHtml source={{ html: WhatsNewMessage().message }} />
+            </View>
+          }
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Close"
+          confirmButtonColor="deepskyblue"
+          onConfirmPressed={() => {
+            setJustUpdated((justUpdated = false));
+            setShowWhatsNewMessage((showWhatsNewMessage = false));
+          }}
         />
       )}
 
@@ -157,7 +158,7 @@ export default function App() {
                   <LoginScreen {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerShown: false,
                 }}
               />
@@ -169,7 +170,7 @@ export default function App() {
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerTransparent: true,
                   title: null,
                   elevation: 0,
@@ -231,7 +232,7 @@ export default function App() {
                   <AdditionalDetails {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View></View>,
+                  headerLeft: () => <View />,
                   headerTransparent: true,
                   title: null,
                   headerShadowVisible: false,

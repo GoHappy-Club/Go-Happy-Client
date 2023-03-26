@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import {
-  TouchableOpacity,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
   Button,
-  TextInput,
   Image,
-  Text,
   KeyboardAvoidingView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import axios from "axios";
@@ -41,6 +41,35 @@ export default class HomeScreen extends Component {
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
   }
+  setPaymentData(phoneNumber, amount, _callback) {
+    var url = SERVER_URL + "/user/setPaymentData";
+    axios
+      .post(url, { phoneNumber: phoneNumber, amount: amount })
+      .then((response) => {
+        // if (response.data) {
+        AsyncStorage.setItem("amount", amount);
+        // this.setProfile(planName);
+        _callback();
+        // }
+      })
+      .catch((error) => {
+        this.error = true;
+      });
+  }
+
+  async getOrderId(amount) {
+    var url = SERVER_URL + "/razorPay/pay";
+    try {
+      const response = await axios.post(url, { amount: amount });
+      if (response.data) {
+        return response.data;
+      }
+    } catch (error) {
+      this.error = true;
+      // throw new Error("Error getting order ID");
+    }
+  }
+
   render() {
     if (this.state.error == false) {
       return (
@@ -50,6 +79,8 @@ export default class HomeScreen extends Component {
           bookEvent={this.bookEvent.bind(this)}
           loadEvents={this.loadEvents.bind(this)}
           navigation={this.props.navigation}
+          getOrderId={this.getOrderId.bind(this)}
+          setPaymentData={this.setPaymentData.bind(this)}
         />
       );
     } else {

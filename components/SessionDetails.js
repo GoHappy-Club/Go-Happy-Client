@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import {
-  Modal,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  View,
   Image,
+  Linking,
+  Modal,
+  ScrollView,
   Share,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 
 import { WebView } from "react-native-webview";
-import { Title, Avatar } from "react-native-paper";
-import { Text, Button } from "react-native-elements";
+import { Avatar, Title } from "react-native-paper";
+import { Button, Text } from "react-native-elements";
 import TambolaTicket from "./TambolaTicket.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -23,7 +23,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
-
+import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +32,9 @@ export default class SessionDetails extends Component {
       event: props.event,
       modalVisible: false,
       showAlert: false,
+      showPaymentAlert: false,
+      paymentAlertMessage: "Your Payment is Successful!",
+      paymentAlertTitle: "Success",
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       loadingButton: false,
@@ -39,6 +42,41 @@ export default class SessionDetails extends Component {
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
     };
+  }
+
+  async razorPayWrapper(item) {
+    const prefill = {
+      email: this.props.profile.email
+        ? this.props.profile.email
+        : PaymentConstants.emailId,
+      contact: this.props.profile.phoneNumber,
+      name: this.props.profile.name,
+    };
+    const _callback = (data) => {
+      this.setState({ success: true });
+
+      var _this = this;
+      if (data.razorpay_payment_id === "") {
+        this.props.setPaymentData(
+          this.state.profile.phoneNumber,
+          this.state.amount,
+          function () {
+            _this.props.navigation.navigate("GoHappy Club");
+          }
+        );
+      } else {
+        this.sessionAction();
+        this.setState({ showPaymentAlert: true });
+      }
+    };
+    const _errorHandler = (error) => {
+      this.setState({
+        paymentAlertMessage: PaymentError,
+        paymentAlertTitle: "Oops!",
+      });
+      this.setState({ showPaymentAlert: true });
+    };
+    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
   }
   componentDidMount() {
     this.createDynamicReferralLink();
@@ -72,7 +110,10 @@ export default class SessionDetails extends Component {
   };
   isDisabled() {
     var title = this.getTitle();
-    if (title == "Seats Full") {
+    if (
+      title == "Seats Full" ||
+      (title == "Cancel Your Booking" && this.state.event.costType == "paid")
+    ) {
       return true;
     } else {
       return false;
@@ -82,8 +123,12 @@ export default class SessionDetails extends Component {
     var currTime = Date.now();
     if (this.props.type == null) {
     }
-    if (this.props.type == "expired") return "View Recording";
-    if (this.props.type == "ongoing") return "Join";
+    if (this.props.type == "expired") {
+      return "View Recording";
+    }
+    if (this.props.type == "ongoing") {
+      return "Join";
+    }
     if (
       this.state.event.participantList != null &&
       this.props.phoneNumber != null &&
@@ -278,7 +323,7 @@ export default class SessionDetails extends Component {
                 color={"grey"}
                 size={15}
                 style={{ marginTop: "6%" }}
-              ></FontAwesomeIcon>
+              />
               <Text
                 style={{
                   color: "grey",
@@ -368,7 +413,11 @@ export default class SessionDetails extends Component {
             buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={this.sessionAction.bind(this)}
+            onPress={
+              item.costType == "paid" && this.getTitle() == "Book"
+                ? this.razorPayWrapper.bind(this, item)
+                : this.sessionAction.bind(this)
+            }
           ></Button>
         </View>
 
@@ -396,7 +445,7 @@ export default class SessionDetails extends Component {
           <AwesomeAlert
             show={this.state.showAlert}
             showProgress={false}
-            title="Error"
+            title="Oops!"
             message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -405,6 +454,26 @@ export default class SessionDetails extends Component {
             confirmButtonColor="#DD6B55"
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
+            }}
+          />
+        )}
+        {this.state.showPaymentAlert && (
+          <AwesomeAlert
+            show={this.state.showPaymentAlert}
+            showProgress={false}
+            title={this.state.paymentAlertTitle}
+            message={this.state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="#DD6B55"
+            onConfirmPressed={() => {
+              this.setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
             }}
           />
         )}

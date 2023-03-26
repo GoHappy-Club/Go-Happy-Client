@@ -14,13 +14,30 @@ export const FirebaseDynamicLinksProps = () => {
 };
 
 export const WhatsNewMessage = () => {
-   return {
-    show:false,
-    message:`<p style="text-align:justify"><strong>This is a new function.</strong></p>
+  return {
+    show: true,
+    message: `<p>You can upload your own image in your profile now.</p>
 
-    <p style="text-align:justify">Try it!</p>`,
+    <p><em>Follow the steps below:</em></p>
+    
+    <ul>
+      <li>Go to&nbsp;<strong>Profile</strong></li>
+      <li>Click on <strong>Update Profile Picture</strong></li>
+      <li>Choose the Profile Picture of your choice.</li>
+    </ul>
+    
+    <div id="highlighter--hover-tools" style="display:none">
+    <div id="highlighter--hover-tools--container">
+    <div class="highlighter--icon highlighter--icon-copy" title="Copy">&nbsp;</div>
+    
+    <div class="highlighter--icon highlighter--icon-change-color" title="Change Color">&nbsp;</div>
+    
+    <div class="highlighter--icon highlighter--icon-delete" title="Delete">&nbsp;</div>
+    </div>
+    </div>
+    `,
   };
- }
+};
 export const TermOfUse = {
   html: `<p>TERMS OF USE &nbsp;</p>
 
@@ -297,9 +314,8 @@ export const TermOfUse = {
   <p>In the event You have any complaints or concerns with respect to the<br />
   GoHappy Club platform or our services or if You have any questions, please<br />
   feel free to contact us on care@gohappyclub.in or reach out to our customer support via Call or WhatsApp on +917888384477 (between 9:00 am &ndash; 9 pm).</p>
-  `
+  `,
 };
-
 
 export const PrivacyPolicy = {
   html: `
@@ -420,5 +436,5 @@ export const PrivacyPolicy = {
 <p style="text-align:justify">&nbsp; &nbsp; &nbsp; <strong>CONTACT US</strong></p>
 
 <p style="text-align:justify">&nbsp; &nbsp; &nbsp; If you have questions, concerns or grievances regarding this Privacy Policy, you can email us at our support email-address: support@gohappyclub.in</p>
-`
+`,
 };

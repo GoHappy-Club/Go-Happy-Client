@@ -1,8 +1,8 @@
-import axios from "axios";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { useSelector } from "react-redux";
+import axios from 'axios';
+import { setProfile } from '../../redux/actions/counts.js';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const refreshProfile = (phone) => {
   // function getProfile() {
