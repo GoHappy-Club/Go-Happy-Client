@@ -49,7 +49,7 @@ export default class PBA extends React.Component {
           <Progress.Bar 
             style={styles.progressBar}
             //animated={false}
-            color="#b1f2f4" borderColor="#b1f2f4"
+            color="#29BFC2" borderColor="#29BFC2"
             progress={1.0} width={barWidth} height={barHeight} />
           {chestOpened}
           <Text style={styles.label2}>7/7</Text>
@@ -89,14 +89,14 @@ export default class PBA extends React.Component {
     return (
       <View>
           <View style={styles.questContainer}>
-            <Text style={styles.label}>Referral Quest</Text>
+            <Text style={styles.label}>Referral Level</Text>
             <Text style={{fontSize: 15, marginLeft: 20, marginBottom: 5}}>
-              ({openedChestCount} quest(s) completed)</Text>
+              ({openedChestCount} level(s) completed)</Text>
             {/*chestComponents*/}  
             <View style={{flexDirection: 'row'}}>
               <Progress.Bar 
                 style={styles.progressBar}
-                color="#b1f2f4" borderColor="#b1f2f4"
+                color="#29BFC2" borderColor="#29BFC2"
                 // indeterminateAnimationDuration={10000}
                 progress={currentCount/7} width={barWidth} height={barHeight} />
               {chest}
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   questContainer: {
-    backgroundColor: "#29BFC2",
+    backgroundColor: "white",
     width: screenWidth*0.9,
     borderRadius: 20,
     marginBottom: 20,
   },
   statusListContainer: {
-    backgroundColor: "#29BFC2",
+    backgroundColor: "white",
     width: screenWidth*0.9,
     borderRadius: 20,
   },

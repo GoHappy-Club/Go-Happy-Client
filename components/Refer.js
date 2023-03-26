@@ -282,12 +282,15 @@ class Refer extends Component {
       // console.log('in callback function');
       // console.log(JSON.stringify(responseData));
       //save to state
+      responseData = this.state.responseData;
       var countReferrals = 0;
       // insert title to json object
       var referralsWithTitles = [{
         "to": this.state.trivialTitle1, "hasAttendedSession": this.state.trivialTitle2,
       }];
       for (let i=0; i<Object.keys(responseData.referrals).length; i++){
+        var dt = new Date(Number(responseData.referrals[i].time));
+        responseData.referrals[i].time = dt.toDateString();
         referralsWithTitles.push(responseData.referrals[i])
         if (responseData.referrals[i].hasAttendedSession == true){
           countReferrals ++;
