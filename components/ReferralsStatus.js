@@ -21,12 +21,10 @@ export default class PBA extends React.Component {
   }
  
   render() {
-    //this.referralProgressNumberToPercentage.bind(this);
     const barHeight = 29;
     const barWidth = Dimensions.get('screen').width*0.5;
     const openedChestCount = Math.floor(this.props.numberReferrals/7);
     const currentCount = this.props.numberReferrals - (openedChestCount*7);
-    // var [chestOpened, setChestOpened] = useState(false);
     var chestType = (
       currentCount < this.state.referralComplete
       )
@@ -40,8 +38,8 @@ export default class PBA extends React.Component {
       // resizeMode="cover"
       style={styles.chest}
       source={require('../images/chest-opened.png')} />;    
-    // getting number of rounds
 
+    // for creating repetitive chests
     const chestComponents = [];
     for (let i=0; i < openedChestCount; i++){
       chestComponents.push(
@@ -52,7 +50,7 @@ export default class PBA extends React.Component {
             color="#29BFC2" borderColor="#29BFC2"
             progress={1.0} width={barWidth} height={barHeight} />
           {chestOpened}
-          <Text style={styles.label2}>7/7</Text>
+          <Text style={styles.label1}>7/7</Text>
         </View>
       );
     }
@@ -100,7 +98,7 @@ export default class PBA extends React.Component {
                 // indeterminateAnimationDuration={10000}
                 progress={currentCount/7} width={barWidth} height={barHeight} />
               {chest}
-              <Text style={styles.label2}>{currentCount}/7</Text>
+              <Text style={styles.label1}>{currentCount}/7</Text>
             </View>
           </View>
           <View style={styles.statusListContainer}>
@@ -131,13 +129,6 @@ export default class PBA extends React.Component {
 }
  
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // backgroundColor: '#2bbdc3',
-    // marginTop: 50,
-    // padding: 5,
-    //alignSelf: "center",
-  },
   progressBar: {
     borderRadius: 30,
     marginTop: 10,
@@ -152,13 +143,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   label1: {
-    color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 0,
-    alignSelf: "center",
-  },
-  label2: {
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
@@ -186,8 +170,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   referralsItem: {
-    // backgroundColor: '#29BFC2',
-    // marginVertical: 8,
     height: 50,
     marginHorizontal: 0,
   },

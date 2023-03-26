@@ -279,10 +279,8 @@ class Refer extends Component {
 
   requestReferrals() {
     var output = this.props.requestReferrals((responseData) => {
-      // console.log('in callback function');
-      // console.log(JSON.stringify(responseData));
-      //save to state
-      responseData = this.state.responseData;
+      // for testing
+      // responseData = this.state.responseData;
       var countReferrals = 0;
       // insert title to json object
       var referralsWithTitles = [{
@@ -301,59 +299,14 @@ class Refer extends Component {
         referrals: referralsWithTitles,
       });
     });
-    // this.referralsPercentagesCalculate();
-  }
-
-  requestReferralsTest() {
-    var output = this.props.requestReferrals((responseData) => {
-      // console.log('in callback function');
-      // console.log(JSON.stringify(responseData));
-      //save to state
-      responseData = this.state.responseData;
-      var countReferrals = 0;
-      // insert title to json object
-      var referralsWithTitles = [{
-        "to": this.state.trivialTitle1, "hasAttendedSession": this.state.trivialTitle2,
-      }];
-      for (let i=0; i<Object.keys(responseData.referrals).length; i++){
-        var dt = new Date(Number(responseData.referrals[i].time));
-        responseData.referrals[i].time = dt.toDateString();
-        referralsWithTitles.push(responseData.referrals[i])
-        if (responseData.referrals[i].hasAttendedSession == true){
-          countReferrals ++;
-        }
-      }
-      this.setState({
-        numberReferrals: countReferrals,
-        referrals: referralsWithTitles,
-      });
-    });
-    // this.referralsPercentagesCalculate();
   }
   
   onPressReferralsButton() {
-    //this.requestReferrals();
-    // *** manual test
-    this.requestReferralsTest();
+    this.requestReferrals();
     this.setState({
       showReferralsStatus: true, 
     });
   }
-
-/*   referralsPercentagesCalculate() { 
-    console.log("Beginning of cal percentage");
-    if (this.state.numberReferrals <= 6 && this.state.numberReferrals >= 0) {
-      this.setState({referralsPercentages: 60})
-    }
-    else if (this.state.numberReferrals >= 7) {
-      this.setState({referralsPercentages: 100})
-    }
-    else {
-      this.setState({referralsPercentages: 0})
-    }
-    console.log("end of cal percentage");
-    console.log(this.state.referralsPercentages);
-  } */
   /*   {"referrals":[{
     "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
     "from":"911234554321",
@@ -365,22 +318,6 @@ class Refer extends Component {
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
-    // for use of referrals list
-/*     const ItemTo = ({title}) => (
-      <View style={styles.referralsItem}>
-        {title.to=="Referred" && <Text style={styles.referralsTitle}>{title.to}</Text> ||
-         title.to!="Referred" && <Text style={styles.referralsContents}>{title.to}</Text>
-        }
-      </View>
-    );
-    const ItemAttend = ({title}) => (
-      <View style={styles.referralsItem}>
-        {title.hasAttendedSession=="Attended" && <Text style={styles.referralsTitle}>Attended </Text> ||
-         title.hasAttendedSession && <Text style={styles.referralsContents}>Yes </Text> ||
-         !title.hasAttendedSession && <Text style={styles.referralsContents}>Not Yet </Text>
-        }
-      </View>
-    ); */
     return (
       <View style={{ backgroundColor: "white" }}>
         <ScrollView>
@@ -600,18 +537,6 @@ class Refer extends Component {
                           trivialTitle1={this.state.trivialTitle1}
                           trivialTitle2={this.state.trivialTitle2}
                       />
-{/*                       <View>
-                        <SafeAreaView style={styles.referralsList}>
-                          <FlatList 
-                            data={this.state.referrals}
-                            renderItem={({item}) => (<ItemTo title={item}/>)}
-                          />
-                          <FlatList
-                            data={this.state.referrals}
-                            renderItem={({item}) => (<ItemAttend title={item}/>)}
-                          />
-                        </SafeAreaView>
-                      </View> */}
                     </View>
                   </ListItem.Title>
                 </ListItem.Content>
@@ -676,7 +601,7 @@ const styles = StyleSheet.create({
   rulesButton: {
     marginLeft: "2%",
     paddingTop: 8,
-    paddingBottom: 8,
+    paddingBottom: 2,
     alignSelf: "center",
   },
   rulesButtonText: {
@@ -755,24 +680,6 @@ const styles = StyleSheet.create({
     // height: "39%",
     marginTop: 40,
     padding: 5,
-  },
-  referralsList: {
-    marginTop: 10,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  referralsItem: {
-    backgroundColor: 'white',
-    // marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  referralsTitle: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  referralsContents: {
-    fontSize: 15,
   },
   BSContainer: {
     backgroundColor: "#b1f2f4",
