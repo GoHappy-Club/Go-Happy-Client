@@ -41,21 +41,6 @@ export default class HomeScreen extends Component {
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
   }
-  setPaymentData(phoneNumber, amount, _callback) {
-    var url = SERVER_URL + "/user/setPaymentData";
-    axios
-      .post(url, { phoneNumber: phoneNumber, amount: amount })
-      .then((response) => {
-        // if (response.data) {
-        AsyncStorage.setItem("amount", amount);
-        // this.setProfile(planName);
-        _callback();
-        // }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
 
   async getOrderId(amount) {
     var url = SERVER_URL + "/razorPay/pay";
@@ -80,7 +65,6 @@ export default class HomeScreen extends Component {
           loadEvents={this.loadEvents.bind(this)}
           navigation={this.props.navigation}
           getOrderId={this.getOrderId.bind(this)}
-          setPaymentData={this.setPaymentData.bind(this)}
         />
       );
     } else {

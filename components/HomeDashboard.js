@@ -59,13 +59,7 @@ class HomeDashboard extends Component {
 
       var _this = this;
       if (data.razorpay_payment_id === "") {
-        this.props.setPaymentData(
-          this.state.profile.phoneNumber,
-          this.state.amount,
-          function () {
-            _this.props.navigation.navigate("GoHappy Club");
-          }
-        );
+        _this.props.navigation.navigate("GoHappy Club");
       } else {
         this.updateEventBook(item);
         this.setState({ showPaymentAlert: true });
@@ -78,7 +72,14 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
+    razorPay(
+      item,
+      item.cost,
+      prefill,
+      "Workshop Payment",
+      _callback,
+      _errorHandler
+    );
   }
   _retrieveData = async () => {
     try {

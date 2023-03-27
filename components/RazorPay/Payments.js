@@ -2,8 +2,8 @@ import { getOrderId } from "../../services/RazorPay/PaymentServices";
 import RazorpayCheckout from "react-native-razorpay";
 
 export const PaymentConstants = {
-  razorPayKey: "rzp_test_6j26r9Y9hFXUWl",
-  //   razorPayKey: "rzp_live_Gnecc7OCz1jsxK",
+  // razorPayKey: "rzp_test_6j26r9Y9hFXUWl",
+  razorPayKey: "rzp_live_Gnecc7OCz1jsxK",
   emailId: "contributions@gohappyclub.co.in",
 };
 
@@ -13,14 +13,14 @@ export const PaymentError = {
 
 export async function razorPay(
   item,
+  amount,
   prefill,
   description,
   _callback,
   _errorHandler
 ) {
-  var cost = item.cost;
+  var cost = amount;
   var orderId = await getOrderId(cost * 100);
-  console.log("item is ", item);
   var options = {
     description: description,
     currency: "INR",

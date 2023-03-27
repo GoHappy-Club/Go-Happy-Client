@@ -54,16 +54,8 @@ export default class SessionDetails extends Component {
     };
     const _callback = (data) => {
       this.setState({ success: true });
-
-      var _this = this;
       if (data.razorpay_payment_id === "") {
-        this.props.setPaymentData(
-          this.state.profile.phoneNumber,
-          this.state.amount,
-          function () {
-            _this.props.navigation.navigate("GoHappy Club");
-          }
-        );
+        this.props.navigation.navigate("GoHappy Club");
       } else {
         this.sessionAction();
         this.setState({ showPaymentAlert: true });
@@ -71,12 +63,19 @@ export default class SessionDetails extends Component {
     };
     const _errorHandler = (error) => {
       this.setState({
-        paymentAlertMessage: PaymentError,
+        paymentAlertMessage: PaymentError.message,
         paymentAlertTitle: "Oops!",
       });
       this.setState({ showPaymentAlert: true });
     };
-    razorPay(item, prefill, "Workshop Payment", _callback, _errorHandler);
+    razorPay(
+      item,
+      item.cost,
+      prefill,
+      "Workshop Payment",
+      _callback,
+      _errorHandler
+    );
   }
   componentDidMount() {
     this.createDynamicReferralLink();
