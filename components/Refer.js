@@ -11,7 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { BottomSheet, ListItem, Text } from 'react-native-elements';
+import { BottomSheet, ListItem, Text, Button } from 'react-native-elements';
 import { connect, useSelector } from 'react-redux';
 import { setProfile } from '../redux/actions/counts';
 import { bindActionCreators } from 'redux';
@@ -22,6 +22,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Clipboard from '@react-native-community/clipboard';
 import RenderHtml from 'react-native-render-html';
 import toUnicodeVariant from './toUnicodeVariant.js';
+import ReferralsStatus from "./ReferralsStatus";
+import { FlatList } from 'react-native-gesture-handler';
 // import { refreshProfile } from "../services/profile/ProfileService";
 
 const screenWidth = Dimensions.get('window').width;
@@ -29,9 +31,138 @@ class Refer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '',
-      email: '',
-      password: '',
+      // testing state responseData
+      responseData: {"referrals":[
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+          { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"918850102929",
+          "time":"1667613120113",
+          "hasAttendedSession":false},
+        { "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+          "from":"911234554321",
+          "referralId":"OPxuoI",
+          "to":"123456",
+          "time":"1667613120113",
+          "hasAttendedSession":true},
+  
+      ]},
+      referrals: [],
+      trivialTitle1: "Referred",
+      trivialTitle2: "Attended",
+      showReferralsStatus: false,
+      numberReferrals: 0,
+      phoneNumber: "",
+      email: "",
+      password: "",
       showAlert: false,
       loader: false,
       mySession: [],
@@ -97,11 +228,11 @@ class Refer extends Component {
       _this.setState({ refreshing: false });
     });
   }
-  Item = ({ title }) => (
+/*   Item = ({ title }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
     </View>
-  );
+  ); */
   createDynamicReferralLink = async () => {
     let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
@@ -145,6 +276,49 @@ class Refer extends Component {
     var flag = !this.state.conditionDialog;
     this.setState({ conditionDialog: flag });
   }
+
+  closeShowReferralsStatus() {
+    this.setState({ showReferralsStatus: false });
+  }
+
+  requestReferrals() {
+    var output = this.props.requestReferrals((responseData) => {
+      // for testing
+      // responseData = this.state.responseData;
+      var countReferrals = 0;
+      // insert title to json object
+      var referralsWithTitles = [{
+        "to": this.state.trivialTitle1, "hasAttendedSession": this.state.trivialTitle2,
+      }];
+      for (let i=0; i<Object.keys(responseData.referrals).length; i++){
+        var dt = new Date(Number(responseData.referrals[i].time));
+        responseData.referrals[i].time = dt.toDateString();
+        referralsWithTitles.push(responseData.referrals[i])
+        if (responseData.referrals[i].hasAttendedSession == true){
+          countReferrals ++;
+        }
+      }
+      this.setState({
+        numberReferrals: countReferrals,
+        referrals: referralsWithTitles,
+      });
+    });
+  }
+  
+  onPressReferralsButton() {
+    this.requestReferrals();
+    this.setState({
+      showReferralsStatus: true, 
+    });
+  }
+  /*   {"referrals":[{
+    "id":"392f5cc0-7f18-4113-8a41-41f40cb50974",
+    "from":"911234554321",
+    "referralId":"OPxuoI",
+    "to":"918850102929",
+    "time":"1667613120113",
+    "hasAttendedSession":true}]} */
+
   render() {
     const { profile } = this.props;
     const { referralLink } = this.state;
@@ -293,6 +467,23 @@ class Refer extends Component {
               <Text style={styles.rulesButtonText}>Rules & Regulations</Text>
             </View>
           </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={styles.rulesButton}
+            underlayColor={"#2bbdc3"}
+            onPress={this.onPressReferralsButton.bind(this)}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.rulesButtonText}>Click Here to See Your Referral Status</Text>
+            </View>
+          </TouchableOpacity>
+
           {/* </View> */}
           <Image
             resizeMode="cover"
@@ -331,6 +522,66 @@ class Refer extends Component {
               >
                 <ListItem.Content>
                   <ListItem.Title style={{ color: 'white' }}>
+                    Close
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            </BottomSheet>
+          </>
+          <>
+            <BottomSheet modalProps={{}} isVisible={this.state.showReferralsStatus}>
+              {/* <Text style={styles.title}>Please Read Below</Text> */}
+              <ListItem key="1" containerStyle={styles.BSContainer}>
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <View style={{ flex: 1, }}>
+                      <ReferralsStatus  
+                          numberReferrals={this.state.numberReferrals}
+                          referrals={this.state.referrals}
+                          trivialTitle1={this.state.trivialTitle1}
+                          trivialTitle2={this.state.trivialTitle2}
+                      />
+                    </View>
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                key="2"
+                containerStyle={{ backgroundColor: "#29BFC2" }}
+                onPress={this.closeShowReferralsStatus.bind(this)}
+              >
+                <ListItem.Content>
+                  <ListItem.Title style={{ color: "white" }}>
+                    Close
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+            </BottomSheet>
+          </>
+          <>
+            <BottomSheet modalProps={{}} isVisible={this.state.showReferralsStatus}>
+              {/* <Text style={styles.title}>Please Read Below</Text> */}
+              <ListItem key="1" containerStyle={styles.BSContainer}>
+                <ListItem.Content>
+                  <ListItem.Title>
+                    <View style={{ flex: 1, }}>
+                      <ReferralsStatus  
+                          numberReferrals={this.state.numberReferrals}
+                          referrals={this.state.referrals}
+                          trivialTitle1={this.state.trivialTitle1}
+                          trivialTitle2={this.state.trivialTitle2}
+                      />
+                    </View>
+                  </ListItem.Title>
+                </ListItem.Content>
+              </ListItem>
+              <ListItem
+                key="2"
+                containerStyle={{ backgroundColor: "#29BFC2" }}
+                onPress={this.closeShowReferralsStatus.bind(this)}
+              >
+                <ListItem.Content>
+                  <ListItem.Title style={{ color: "white" }}>
                     Close
                   </ListItem.Title>
                 </ListItem.Content>
@@ -384,8 +635,8 @@ const styles = StyleSheet.create({
   rulesButton: {
     marginLeft: '2%',
     paddingTop: 8,
-    paddingBottom: 8,
-    alignSelf: 'center',
+    paddingBottom: 2,
+    alignSelf: "center",
   },
   rulesButtonText: {
     fontWeight: 'bold',
@@ -464,7 +715,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
     padding: 5,
   },
+  BSContainer: {
+    backgroundColor: "#b1f2f4",
+  },
 });
+
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
 });

@@ -237,6 +237,7 @@ class LoginScreen extends Component {
           }}
         />
         <Button
+          testID="confirmOtp"
           outline
           style={[styles.themeButton, { paddingTop: 20 }]}
           title="Verify Code"
@@ -474,6 +475,7 @@ class LoginScreen extends Component {
         {!this.state.confirmResult && (
           <View style={styles.page}>
             <PhoneInput
+              testID="phoneInput"
               style={styles.textInput}
               ref={this.state.phoneNumber}
               keyboardType="phone-pad"
@@ -554,6 +556,7 @@ class LoginScreen extends Component {
             </>
 
             <Button
+              testID="loginButton"
               outline
               style={[styles.themeButton, { paddingTop: 20 }]}
               title={'Login'}
