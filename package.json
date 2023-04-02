@@ -81,7 +81,8 @@
     "redux-thunk": "2.4.1",
     "remote-redux-devtools": "0.5.16",
     "tambola": "3.0.3",
-    "tambola-generator": "1.0.0"
+    "tambola-generator": "1.0.0",
+    "react-native-progress": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",
