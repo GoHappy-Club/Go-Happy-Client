@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Dimensions,
   Image,
@@ -7,37 +7,37 @@ import {
   Text,
   View,
   useWindowDimensions,
-} from 'react-native';
-import axios from 'axios';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import PhoneInput from 'react-native-phone-number-input';
+} from "react-native";
+import axios from "axios";
+import AwesomeAlert from "react-native-awesome-alerts";
+import PhoneInput from "react-native-phone-number-input";
 
-import Video from 'react-native-video';
+import Video from "react-native-video";
 
 import {
   GoogleSignin,
   statusCodes,
-} from '@react-native-google-signin/google-signin';
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import { Button } from 'react-native-elements';
-import { BottomSheet, ListItem } from 'react-native-elements';
-import OTPInputView from '@bherila/react-native-otp-input';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connect } from 'react-redux';
-import { setProfile } from '../../redux/actions/counts.js';
-import { bindActionCreators } from 'redux';
-import LinearGradient from 'react-native-linear-gradient';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
-import RenderHtml from 'react-native-render-html';
-import { PrivacyPolicy, TermOfUse } from '../../config/CONSTANTS.js';
+} from "@react-native-google-signin/google-signin";
+import firebase from "@react-native-firebase/app";
+import "@react-native-firebase/auth";
+import { Button } from "react-native-elements";
+import { BottomSheet, ListItem } from "react-native-elements";
+import OTPInputView from "@bherila/react-native-otp-input";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { connect } from "react-redux";
+import { setProfile } from "../../redux/actions/counts.js";
+import { bindActionCreators } from "redux";
+import LinearGradient from "react-native-linear-gradient";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
+import RenderHtml from "react-native-render-html";
+import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '',
-      password: '',
+      phoneNumber: "",
+      password: "",
       showAlert: false,
       loader: true,
       loadingButton: false,
@@ -45,18 +45,18 @@ class LoginScreen extends Component {
       loadingResendButton: false,
       userInfo: null,
       confirmResult: null,
-      verificationCode: '',
-      userId: '',
-      email: '',
-      name: '',
-      state: '',
-      city: '',
+      verificationCode: "",
+      userId: "",
+      email: "",
+      name: "",
+      state: "",
+      city: "",
       conditionDialog: false,
-      conditionText: '',
-      dob: '',
+      conditionText: "",
+      dob: "",
       reachedBackendSignIn: false,
-      referralCode: '',
-      copiedText: '',
+      referralCode: "",
+      copiedText: "",
     };
     this.getCurrentUserInfo();
   }
@@ -68,7 +68,7 @@ class LoginScreen extends Component {
       // alert("test1", url);
 
       // alert(JSON.stringify(url));
-      this.setState({ referralCode: url.url.split('=')[1] });
+      this.setState({ referralCode: url.url.split("=")[1] });
     });
     dynamicLinks()
       .getInitialLink()
@@ -78,7 +78,7 @@ class LoginScreen extends Component {
         }
 
         // alert(JSON.stringify(url));
-        this.setState({ referralCode: url.url.split('=')[1] });
+        this.setState({ referralCode: url.url.split("=")[1] });
         // alert("test2" + this.state.referralCode);
       });
   }
@@ -90,7 +90,7 @@ class LoginScreen extends Component {
     token,
     plan,
     sessionsAttended,
-    dob,
+    // dob,
     dateOfJoining,
     selfInviteCode
   ) {
@@ -103,7 +103,7 @@ class LoginScreen extends Component {
       token: token,
       membership: plan,
       sessionsAttended: sessionsAttended,
-      dob: dob,
+      // dob: dob,
       dateOfJoining: dateOfJoining,
       selfInviteCode: selfInviteCode,
     };
@@ -138,7 +138,7 @@ class LoginScreen extends Component {
                 this._backendSignIn(
                   user.uid,
                   user.displayName,
-                  'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',
+                  "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
                   user.phoneNumber
                 );
               } catch (error) {}
@@ -166,7 +166,7 @@ class LoginScreen extends Component {
           }
         });
     } else {
-      alert('Invalid Phone Number');
+      alert("Invalid Phone Number");
       if (resend) {
         this.setState({ loadingResendButton: false });
       } else {
@@ -178,7 +178,7 @@ class LoginScreen extends Component {
     // this.loadingButton=true;
     this.setState({
       confirmResult: null,
-      verificationCode: '',
+      verificationCode: "",
       phoneNumber: null,
     });
   };
@@ -207,7 +207,7 @@ class LoginScreen extends Component {
             this._backendSignIn(
               user.user.uid,
               user.user.displayName,
-              'https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png',
+              "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
               user.user.phoneNumber
             );
           } catch (error) {}
@@ -228,7 +228,7 @@ class LoginScreen extends Component {
     return (
       <View style={styles.verificationView}>
         <OTPInputView
-          style={{ width: '80%', height: 60, color: '#000' }}
+          style={{ width: "80%", height: 60, color: "#000" }}
           pinCount={6}
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
@@ -244,7 +244,7 @@ class LoginScreen extends Component {
           onPress={this.handleVerifyCode}
           ViewComponent={LinearGradient}
           linearGradientProps={{
-            colors: ['#4c669f', '#3b5998', '#192f6a'],
+            colors: ["#4c669f", "#3b5998", "#192f6a"],
             start: { x: 0, y: 0.25 },
             end: { x: 0.5, y: 1 },
             locations: [0, 0.5, 0.6],
@@ -267,19 +267,19 @@ class LoginScreen extends Component {
   };
   getCurrentUserInfo = async () => {
     try {
-      const token1 = await AsyncStorage.getItem('token');
+      const token1 = await AsyncStorage.getItem("token");
 
       if (token1 != null) {
-        const name = await AsyncStorage.getItem('name');
-        const email = await AsyncStorage.getItem('email');
-        const profileImage = await AsyncStorage.getItem('profileImage');
-        const token = await AsyncStorage.getItem('token');
-        const membership = await AsyncStorage.getItem('membership');
-        const phoneNumber = await AsyncStorage.getItem('phoneNumber');
-        const sessionsAttended = await AsyncStorage.getItem('sessionsAttended');
-        const dob = await AsyncStorage.getItem('dob');
-        const dateOfJoining = await AsyncStorage.getItem('dateOfJoining');
-        const selfInviteCode = await AsyncStorage.getItem('selfInviteCode');
+        const name = await AsyncStorage.getItem("name");
+        const email = await AsyncStorage.getItem("email");
+        const profileImage = await AsyncStorage.getItem("profileImage");
+        const token = await AsyncStorage.getItem("token");
+        const membership = await AsyncStorage.getItem("membership");
+        const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+        const sessionsAttended = await AsyncStorage.getItem("sessionsAttended");
+        // const dob = await AsyncStorage.getItem("dob");
+        const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
+        const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
         this.setProfile(
           name,
           email,
@@ -288,19 +288,19 @@ class LoginScreen extends Component {
           token,
           membership,
           sessionsAttended,
-          dob,
+          // dob,
           dateOfJoining,
           selfInviteCode
         );
         // this.props.navigation.replace('GoHappy Club');
 
         // this.setState({loader:false});
-        this.props.navigation.replace('Additional Details', {
+        this.props.navigation.replace("Additional Details", {
           navigation: this.props.navigation,
           email: email,
           phoneNumber: phoneNumber,
           name: name,
-          dob: dob,
+          // dob: dob,
           dateOfJoining: dateOfJoining,
         });
         return;
@@ -322,9 +322,9 @@ class LoginScreen extends Component {
       return;
     }
     if (name == null) {
-      name = '';
+      name = "";
     }
-    var url = SERVER_URL + '/auth/login';
+    var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {
         token: token,
@@ -334,31 +334,31 @@ class LoginScreen extends Component {
         referralId: this.state.referralCode,
       })
       .then((response) => {
-        if (response.data && response.data != 'ERROR') {
+        if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
           if (response.data.phone != null) {
-            AsyncStorage.setItem('phoneNumber', response.data.phone);
+            AsyncStorage.setItem("phoneNumber", response.data.phone);
           }
           // AsyncStorage.setItem('fullName',response.data.fullName);
 
           if (response.data.name != null) {
-            AsyncStorage.setItem('name', response.data.name);
+            AsyncStorage.setItem("name", response.data.name);
           }
           if (response.data.email != null) {
-            AsyncStorage.setItem('email', response.data.email);
+            AsyncStorage.setItem("email", response.data.email);
           }
           if (response.data.profileImage != null) {
-            AsyncStorage.setItem('profileImage', response.data.profileImage);
+            AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
-          AsyncStorage.setItem('token', token);
-          AsyncStorage.setItem('membership', response.data.membership);
+          AsyncStorage.setItem("token", token);
+          AsyncStorage.setItem("membership", response.data.membership);
           AsyncStorage.setItem(
-            'sessionsAttended',
+            "sessionsAttended",
             response.data.sessionsAttended
           );
-          AsyncStorage.setItem('dob', response.data.dob);
-          AsyncStorage.setItem('dateOfJoining', response.data.dateOfJoining);
-          AsyncStorage.setItem('selfInviteCode', response.data.selfInviteCode);
+          // AsyncStorage.setItem("dob", response.data.dob);
+          AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
+          AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           this.setProfile(
             response.data.name,
             response.data.email,
@@ -367,7 +367,7 @@ class LoginScreen extends Component {
             token,
             response.data.membership,
             response.data.sessionsAttended,
-            response.data.dob,
+            // response.data.dob,
             response.data.dateOfJoining,
             response.data.selfInviteCode
           );
@@ -375,39 +375,42 @@ class LoginScreen extends Component {
             name: response.data.name,
             email: response.data.email,
             phoneNumber: response.data.phone,
-            dob: response.data.dob,
+            // dob: response.data.dob,
           });
           if (this.pending()) {
-            this.props.navigation.replace('Additional Details', {
+            this.props.navigation.replace("Additional Details", {
               navigation: this.props.navigation,
               email: response.data.email,
               phoneNumber: response.data.phone,
               name: name,
               state: this.state.state,
               city: this.state.city,
-              dob: response.data.dob,
+              // dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
             return;
           } else {
             this.setState({ loader: true });
-            this.props.navigation.replace('GoHappy Club');
+            this.props.navigation.replace("GoHappy Club");
             this.setState({ loader: false });
           }
-        } else if (response.data == 'ERROR') {
+        } else if (response.data == "ERROR") {
           this.setState({ showAlert: true, loader: false });
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
   }
   pending() {
     if (
       this.state.phoneNumber == null ||
       this.state.phoneNumber.length == 0 ||
       this.state.name == null ||
-      this.state.name.length == 0 ||
-      this.state.dob == null ||
-      this.state.dob.length == 0
+      this.state.name.length == 0
+      //  ||
+      // this.state.dob == null ||
+      // this.state.dob.length == 0
     ) {
       return true;
     }
@@ -415,7 +418,7 @@ class LoginScreen extends Component {
   }
   showConditions(type) {
     if (type == 0) {
-      const { width } = Dimensions.get('window');
+      const { width } = Dimensions.get("window");
       this.setState({ conditionText: TermOfUse });
     } else {
       this.setState({ conditionText: PrivacyPolicy });
@@ -430,15 +433,15 @@ class LoginScreen extends Component {
       return (
         // <View style={{ backgroundColor: "white" }}>
         <Video
-          source={require('../../images/logo_splash.mp4')}
+          source={require("../../images/logo_splash.mp4")}
           style={{
-            position: 'absolute',
-            backgroundColor: 'white',
+            position: "absolute",
+            backgroundColor: "white",
             top: 0,
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
             left: 0,
             right: 0,
             bottom: 0,
@@ -452,21 +455,21 @@ class LoginScreen extends Component {
       );
     }
     const navigation = this.props.navigation;
-    const title = 'Login';
+    const title = "Login";
     return (
       <View style={styles.container}>
         <Image
           resizeMode="contain"
           style={styles.logo}
-          source={require('../../images/logo.png')}
+          source={require("../../images/logo.png")}
         />
 
         <Text
           style={{
-            fontWeight: 'normal',
+            fontWeight: "normal",
             fontSize: 30,
-            color: 'black',
-            alignSelf: 'center',
+            color: "black",
+            alignSelf: "center",
           }}
         >
           LOGIN or SIGN UP
@@ -489,34 +492,34 @@ class LoginScreen extends Component {
               withShadow
               autoFocus
             />
-            <Text style={{ width: '80%' }}>
+            <Text style={{ width: "80%" }}>
               <Text
                 style={{
                   paddingTop: 10,
-                  width: '80%',
-                  color: 'grey',
+                  width: "80%",
+                  color: "grey",
                   fontSize: 12,
                 }}
               >
-                By signing up, I agree to the{' '}
+                By signing up, I agree to the{" "}
               </Text>
               <Text
-                style={{ color: 'blue', width: '80%', fontSize: 12 }}
+                style={{ color: "blue", width: "80%", fontSize: 12 }}
                 onPress={this.showConditions.bind(this, 0)}
               >
                 Terms of Use
               </Text>
-              <Text style={{ width: '80%', color: 'grey', fontSize: 12 }}>
-                {' '}
-                and{' '}
+              <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
+                {" "}
+                and{" "}
               </Text>
               <Text
-                style={{ color: 'blue', width: '80%', fontSize: 12 }}
+                style={{ color: "blue", width: "80%", fontSize: 12 }}
                 onPress={this.showConditions.bind(this, 1)}
               >
                 Privacy Policy
               </Text>
-              <Text style={{ width: '80%', color: 'grey', fontSize: 12 }}>
+              <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
                 , including usage of cookies.
               </Text>
             </Text>
@@ -541,7 +544,7 @@ class LoginScreen extends Component {
                 </ListItem>
                 <ListItem
                   key="2"
-                  containerStyle={{ backgroundColor: 'blue' }}
+                  containerStyle={{ backgroundColor: "blue" }}
                   onPress={this.showConditions.bind(this, 1)}
                 >
                   <ListItem.Content>
@@ -556,11 +559,11 @@ class LoginScreen extends Component {
             <Button
               outline
               style={[styles.themeButton, { paddingTop: 20 }]}
-              title={'Login'}
+              title={"Login"}
               loading={this.state.loadingButton}
               ViewComponent={LinearGradient}
               linearGradientProps={{
-                colors: ['#4c669f', '#3b5998', '#192f6a'],
+                colors: ["#4c669f", "#3b5998", "#192f6a"],
                 start: { x: 0, y: 0.25 },
                 end: { x: 0.5, y: 1 },
                 locations: [0, 0.5, 0.6],
@@ -575,7 +578,7 @@ class LoginScreen extends Component {
         <ImageBackground
           resizeMode="contain"
           style={styles.cover}
-          source={require('../../images/login_bg.png')}
+          source={require("../../images/login_bg.png")}
         />
         {/* <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
         <AwesomeAlert
@@ -596,19 +599,19 @@ class LoginScreen extends Component {
     );
   }
 }
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-    marginTop: '30%',
-    alignSelf: 'center',
+    fontWeight: "bold",
+    color: "white",
+    marginTop: "30%",
+    alignSelf: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: '#fffaf1',
+    backgroundColor: "#fffaf1",
   },
   containerX: {
     marginTop: 20,
@@ -617,7 +620,7 @@ const styles = StyleSheet.create({
   },
   titleX: {
     fontSize: 22,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   tcP: {
     marginTop: 10,
@@ -641,117 +644,117 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#136AC7',
+    backgroundColor: "#136AC7",
     borderRadius: 5,
     padding: 10,
   },
 
   buttonBottomSheet: {
-    color: 'white',
-    alignSelf: 'center',
+    color: "white",
+    alignSelf: "center",
   },
 
   buttonDisabled: {
-    backgroundColor: '#999',
+    backgroundColor: "#999",
     borderRadius: 5,
     padding: 10,
   },
 
   buttonLabel: {
     fontSize: 14,
-    color: '#FFF',
-    alignSelf: 'center',
+    color: "#FFF",
+    alignSelf: "center",
   },
   container1: {
     flex: 1,
-    backgroundColor: '#fffaf1',
-    justifyContent: 'space-around',
+    backgroundColor: "#fffaf1",
+    justifyContent: "space-around",
   },
   input: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     padding: 15,
     marginBottom: 10,
   },
   btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   userBtn: {
-    backgroundColor: '#f0ad4e',
+    backgroundColor: "#f0ad4e",
     paddingVertical: 15,
     height: 60,
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: '700',
+    textAlign: "center",
+    color: "black",
+    fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
   welcome: {
     fontSize: 30,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-    color: 'white',
+    color: "white",
   },
   logo: {
     width: 250,
     height: 250,
-    alignSelf: 'center',
+    alignSelf: "center",
     // marginTop: -20,
     // marginRight: -20
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 
   newinput: {
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: 'white',
+    color: "white",
     paddingHorizontal: 10,
   },
   container2: {
     flex: 1,
-    backgroundColor: '#aaa',
+    backgroundColor: "#aaa",
   },
   title2: {
-    color: 'white',
-    marginTop: '30%',
+    color: "white",
+    marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
   },
   cover: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginBottom: -10,
     // width:600,height:'100%'
   },
   page: {
-    marginTop: '10%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: "10%",
+    alignItems: "center",
+    justifyContent: "center",
     // marginBottom: 200
   },
   textInput: {
-    width: '90%',
+    width: "90%",
     height: 40,
-    borderColor: '#555',
+    borderColor: "#555",
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   themeButton: {
@@ -762,21 +765,21 @@ const styles = StyleSheet.create({
   },
   themeButtonTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
   },
   verificationView: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     // marginTop: 50
   },
   underlineStyleBase: {
-    borderColor: 'black',
-    color: 'black',
+    borderColor: "black",
+    color: "black",
   },
 
   underlineStyleHighLighted: {
-    borderColor: 'black',
+    borderColor: "black",
   },
 });
 

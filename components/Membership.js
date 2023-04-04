@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef } from "react";
 import {
   Card,
   CardAction,
@@ -39,6 +39,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 class Membership extends Component {
   constructor(props) {
     super(props);
+    this.inputRef = React.createRef();
     this.state = {
       phoneNumber: "",
       password: "",
@@ -331,7 +332,10 @@ class Membership extends Component {
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <View style={{ flexDirection: "column", marginTop: "5%" }}>
               <View>
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    this.inputRef.current.focus();
+                  }}
                   style={{
                     ...styles.paymentContainer,
                     // width:
@@ -342,14 +346,15 @@ class Membership extends Component {
                 >
                   <Text style={styles.currencySymbol}>₹</Text>
                   <TextInput
+                    ref={this.inputRef}
                     style={styles.paymentInput}
                     value={this.state.amount.toString()}
                     onChangeText={(text) => this.checkValidAmount(text)}
                     placeholder="0"
                     keyboardType="numeric"
-                    autoFocus={true}
+                    // autoFocus={true}
                   />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
                     style={styles.button}

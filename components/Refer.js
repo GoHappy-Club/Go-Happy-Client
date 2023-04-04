@@ -9,6 +9,7 @@ import {
   ToastAndroid,
   TouchableOpacity,
   View,
+  BackHandler,
   useWindowDimensions,
 } from "react-native";
 import { BottomSheet, ListItem, Text, Button } from "react-native-elements";
@@ -53,6 +54,7 @@ class Refer extends Component {
     };
     this._retrieveData();
   }
+
   shareMessage = () => {
     Share.share({
       message:
@@ -399,8 +401,14 @@ class Refer extends Component {
           </>
           <>
             <BottomSheet
-              modalProps={{ fullScreen: true }}
+              modalProps={{
+                fullScreen: true,
+                onRequestClose: () =>
+                  this.setState({ showReferralsStatus: false }),
+              }}
               isVisible={this.state.showReferralsStatus}
+              onClose={() => this.setState({ showReferralsStatus: false })}
+              // enablePanDownToClose={true}
             >
               {/* <ListItem
                 key="2"

@@ -15,7 +15,7 @@ export const FirebaseDynamicLinksProps = () => {
 
 export const WhatsNewMessage = () => {
   return {
-    show: true,
+    show: false,
     message: `<p>You can upload your own image in your profile now.</p>
 
     <p><em>Follow the steps below:</em></p>
