@@ -1,31 +1,16 @@
-import React, { Component, useRef } from "react";
-import {
-  Card,
-  CardAction,
-  CardButton,
-  CardContent,
-  CardImage,
-  CardTitle,
-} from "react-native-cards";
+import React, { Component } from "react";
 import {
   Dimensions,
   Image,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   TextInput,
-  ToastAndroid,
-  TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 
-import { Avatar, Card as Cd, Paragraph, Title } from "react-native-paper";
-
-import { Button, Text } from "react-native-elements";
-// import RazorpayCheckout from "react-native-razorpay";
+import { Text } from "react-native-elements";
 
 import Video from "react-native-video";
 
@@ -33,7 +18,6 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
-import { RadioButton } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 
 class Membership extends Component {

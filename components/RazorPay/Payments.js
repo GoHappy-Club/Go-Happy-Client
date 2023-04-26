@@ -31,6 +31,11 @@ export async function razorPay(
     order_id: orderId, //Replace this with an order_id created using Orders API.
     prefill: prefill,
     theme: { color: "#53a20e" },
+    notes: {
+      name: prefill.name,
+      contact: prefill.contact,
+      email: prefill.email,
+    },
   };
   console.log("options", options, orderId);
   var _this = this;
