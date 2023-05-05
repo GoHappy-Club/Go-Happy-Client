@@ -20,6 +20,7 @@ class HomeScreen extends Component {
       childLoader: false,
       events: [],
       error: true,
+      whatsappLink: "",
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
@@ -43,11 +44,12 @@ class HomeScreen extends Component {
     const redux_profile = this.props.profile;
     try {
       const response = await axios.get(url);
-      const properties = response.data.properties;
       if (response.data) {
-        if (properties && properties.length > 0) {
+        const properties = response.data.properties;
+        if (properties && properties.length > 0 && redux_profile) {
           redux_profile.properties = properties[0];
           actions.setProfile(redux_profile);
+          this.setState({ whatsappLink: properties[0].whatsappLink });
         }
       }
     } catch (error) {
@@ -68,7 +70,13 @@ class HomeScreen extends Component {
             navigation={this.props.navigation}
             getOrderId={this.getOrderId.bind(this)}
           />
-          <WhatsAppFAB url={this.props.profile.properties.whatsappLink} />
+          <WhatsAppFAB
+            url={
+              this.props.profile.properties
+                ? this.props.profile.properties.whatsappLink
+                : this.state.whatsappLink
+            }
+          />
         </>
       );
     } else {
@@ -116,10 +124,12 @@ class HomeScreen extends Component {
           this.setState({ error: false });
           this.setState({ childLoader: false });
         }
+        this.getProperties();
       })
       .catch((error) => {
         // alert("blablabla" + url + error);
         this.error = true;
+        this.getProperties();
       });
   }
 
@@ -173,7 +183,7 @@ class HomeScreen extends Component {
   }
   componentDidMount() {
     this.loadEvents(new Date().setHours(0, 0, 0, 0));
-    this.getProperties();
+    // this.getProperties();
   }
 }
 
