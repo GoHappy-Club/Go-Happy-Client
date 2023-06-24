@@ -78,10 +78,12 @@ export default function App() {
   const recheck = async () => {
     try {
       const response = await fetch("https://www.google.com/");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      console.log("this is response", JSON.stringify(response));
+      if (response.ok) {
+        setIsConnected(true);
+      } else {
+        setIsConnected(false);
       }
-      setIsConnected(true);
     } catch (error) {
       setIsConnected(false);
     }
