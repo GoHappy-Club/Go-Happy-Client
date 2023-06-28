@@ -67,8 +67,8 @@ class LoginScreen extends Component {
         return;
       }
       // alert("test1", url);
-      const url = new URL(url.url);
-      const searchParams = new URLSearchParams(url.search);
+      const urlObj = new URL(url.url);
+      const searchParams = new URLSearchParams(urlObj.search);
 
       const id = searchParams.get("id");
       const source = searchParams.get("source");
@@ -87,8 +87,8 @@ class LoginScreen extends Component {
         if (url === null) {
           return;
         }
-        const url = new URL(url.url);
-        const searchParams = new URLSearchParams(url.search);
+        const urlObj = new URL(url.url);
+        const searchParams = new URLSearchParams(urlObj.search);
 
         const id = searchParams.get("id");
         const source = searchParams.get("source");
