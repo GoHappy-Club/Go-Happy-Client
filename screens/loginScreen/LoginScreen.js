@@ -56,6 +56,7 @@ class LoginScreen extends Component {
       dob: "",
       reachedBackendSignIn: false,
       referralCode: "",
+      source: "",
       copiedText: "",
     };
     this.getCurrentUserInfo();
@@ -66,9 +67,19 @@ class LoginScreen extends Component {
         return;
       }
       // alert("test1", url);
+      const url = new URL(url.url);
+      const searchParams = new URLSearchParams(url.search);
 
-      // alert(JSON.stringify(url));
-      this.setState({ referralCode: url.url.split("=")[1] });
+      const id = searchParams.get("id");
+      const source = searchParams.get("source");
+
+      console.log("ID:", id);
+      console.log("Source:", source);
+      if (source == "google_ads") {
+        this.setState({ source: source });
+      } else {
+        this.setState({ referralCode: url.url.split("=")[1] });
+      }
     });
     dynamicLinks()
       .getInitialLink()
@@ -76,9 +87,19 @@ class LoginScreen extends Component {
         if (url === null) {
           return;
         }
+        const url = new URL(url.url);
+        const searchParams = new URLSearchParams(url.search);
 
-        // alert(JSON.stringify(url));
-        this.setState({ referralCode: url.url.split("=")[1] });
+        const id = searchParams.get("id");
+        const source = searchParams.get("source");
+
+        console.log("ID:", id);
+        console.log("Source:", source);
+        if (source == "google_ads") {
+          this.setState({ source: source });
+        } else {
+          this.setState({ referralCode: url.url.split("=")[1] });
+        }
         // alert("test2" + this.state.referralCode);
       });
   }
@@ -332,6 +353,7 @@ class LoginScreen extends Component {
         profileImage: profileImage,
         phone: phone.substr(1),
         referralId: this.state.referralCode,
+        source: this.state.source,
       })
       .then((response) => {
         if (response.data && response.data != "ERROR") {
