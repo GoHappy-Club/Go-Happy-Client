@@ -96,14 +96,14 @@ class Membership extends Component {
     var _this = this;
     const _callback = (data) => {
       _this.setState({ success: true });
-      console.log("this is data", data);
+      //console.log("this is data", data);
 
       // _this.setState({
       //   showPaymentAlert: true,
       //   paymentAlertMessage: "Your Payment is Successful!",
       //   paymentAlertTitle: "Success",
       // });
-      console.log("this is data", data);
+      //console.log("this is data", data);
       _this.props.setPaymentData(
         _this.props.profile.phoneNumber,
         _this.state.amount,
