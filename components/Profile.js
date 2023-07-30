@@ -74,13 +74,13 @@ class Profile extends Component {
         includeBase64: true,
       };
       launchImageLibrary(options, (response) => {
-        console.log("nlenle", response);
+        //console.log("nlenle", response);
         if (response.didCancel) {
-          console.log("User cancelled image picker");
+          //console.log("User cancelled image picker");
         } else if (response.error) {
-          console.log("ImagePicker Error: ", response.error);
+          //console.log("ImagePicker Error: ", response.error);
         } else {
-          console.log("User cancelled image picker");
+          //console.log("User cancelled image picker");
           const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
           var url = SERVER_URL + "/user/updateProfileImage";
           axios
@@ -99,7 +99,7 @@ class Profile extends Component {
         }
       });
     } catch (error) {
-      console.log("here", error);
+      //console.log("here", error);
     }
   };
   refreshProfile() {

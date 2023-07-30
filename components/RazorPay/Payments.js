@@ -37,7 +37,7 @@ export async function razorPay(
       email: prefill.email,
     },
   };
-  console.log("options", options, orderId);
+  //console.log("options", options, orderId);
   var _this = this;
   RazorpayCheckout.open(options)
     .then((data) => {

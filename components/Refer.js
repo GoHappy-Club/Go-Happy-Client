@@ -146,7 +146,7 @@ class Refer extends Component {
   }
 
   requestReferrals() {
-    console.log("requestReferrals");
+    //console.log("requestReferrals");
     var output = this.props.requestReferrals((responseData) => {
       // for testing
       // responseData = this.state.responseData;

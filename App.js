@@ -22,7 +22,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud-dev/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import VersionCheck from "react-native-version-check";
@@ -33,6 +33,7 @@ import { WhatsNewMessage } from "./config/CONSTANTS";
 import AwesomeAlert from "react-native-awesome-alerts";
 import RenderHtml from "react-native-render-html";
 import crashlytics from "@react-native-firebase/crashlytics";
+import TripsScreen from "./screens/Trips/TripsScreen";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -77,7 +78,7 @@ export default function App() {
 
   const recheck = async () => {
     try {
-      const response = await fetch("https://www.google.com/");
+      const response = await fetch("https://go-happy-322816.nw.r.appspot.com");
       console.log("this is response", JSON.stringify(response));
       if (response.ok) {
         setIsConnected(true);
@@ -95,7 +96,10 @@ export default function App() {
       const asyncJustUpdated = await AsyncStorage.getItem(
         "@MyApp:isJustUpdated"
       );
-      let updateNeeded = await VersionCheck.needUpdate();
+      let updateNeeded = null;
+      try {
+        updateNeeded = await VersionCheck.needUpdate();
+      } catch {}
       if (updateNeeded && updateNeeded.isNeeded) {
         Alert.alert(
           "Please Update",
@@ -252,6 +256,28 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("GoHappy Club")}
+                      underlayColor="#fff"
+                    >
+                      <Text style={styles.backText}>back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                })}
+              />
+              <Stack.Screen
+                name="Trips"
+                // component={HomeDetailsScreen}
+                children={(props) => (
+                  <TripsScreen {...props} propProfile={profile} />
+                )}
+                options={({ navigation }) => ({
+                  headerTransparent: true,
+                  title: null,
+                  headerBackTitle: "back",
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.backButton}
+                      onPress={() => navigation.navigate("OverviewScreen")}
                       underlayColor="#fff"
                     >
                       <Text style={styles.backText}>back</Text>

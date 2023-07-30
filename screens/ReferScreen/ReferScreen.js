@@ -70,12 +70,12 @@ class ReferScreen extends Component {
         from: this.props.profile.phoneNumber,
       })
       .then((response) => {
-        console.log("referrals", JSON.stringify(response.data));
+        //console.log("referrals", JSON.stringify(response.data));
         _callback(response.data);
         //console.log("api call ends successfully.")
       })
       .catch((error) => {
-        console.log("referrals failed");
+        //console.log("referrals failed");
         crashlytics().recordError(JSON.stringify(error));
         this.error = true;
       });

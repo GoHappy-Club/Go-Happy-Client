@@ -183,7 +183,6 @@ class HomeScreen extends Component {
   }
   componentDidMount() {
     this.loadEvents(new Date().setHours(0, 0, 0, 0));
-    // this.getProperties();
   }
 }
 

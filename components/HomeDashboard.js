@@ -364,7 +364,7 @@ class HomeDashboard extends Component {
       </Cd>
     );
     return (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1, backgroundColor: "#f0f0f0" }}>
         <CalendarDays
           numberOfDays={15}
           daysInView={3}
