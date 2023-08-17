@@ -49,6 +49,8 @@ export default class PromotionSection extends Component {
                   }}
                 >
                   <Card.Cover
+                    borderRadius={8}
+                    resizeMode="stretch"
                     source={{
                       uri: item.image,
                     }}
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
   card: {
     width: "48%",
     margin: "1%",
+    borderRadius: 8,
   },
 
   image: {

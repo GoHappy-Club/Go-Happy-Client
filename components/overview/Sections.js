@@ -108,30 +108,31 @@ export default class Sections extends Component {
             );
           })}
         </View>
-        <View style={{ ...styles.sectionsContainer, marginTop: "3%" }}>
-          {this.data2.map((item) => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.type && item.type == "external") {
-                    console.log("this", this.state.whatsappLink);
-                    Linking.openURL(this.state.whatsappLink);
-                    return;
-                  }
-                  //console.log(JSON.stringify(item), JSON.stringify(this.props));
-                  return this.props.navigation.navigate(item.link);
-                }}
-              >
-                <View style={styles.container}>
-                  <Image source={{ uri: item.imgUrl }} style={styles.image} />
-                  {/* <View style={styles.subContainer}> */}
-                  <Text style={styles.text}>{item.title}</Text>
-                  {/* </View> */}
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        {this.data2.length > 0 && (
+          <View style={{ ...styles.sectionsContainer, marginTop: "3%" }}>
+            {this.data2.map((item) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (item.type && item.type == "external") {
+                      console.log("this", this.state.whatsappLink);
+                      Linking.openURL(this.state.whatsappLink);
+                      return;
+                    }
+                    return this.props.navigation.navigate(item.link);
+                  }}
+                >
+                  <View style={styles.container}>
+                    <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                    {/* <View style={styles.subContainer}> */}
+                    <Text style={styles.text}>{item.title}</Text>
+                    {/* </View> */}
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
       </View>
     );
   }
@@ -172,21 +173,23 @@ const styles = StyleSheet.create({
     // borderColor: "grey",
     // borderWidth: 0.2,
     margin: 0,
-    width: 100,
+    flex: 1,
+    height: "100%",
+    // width: "100%",
   },
   sectionsContainer: {
     flexDirection: "row",
-    // margin: "5%",
-    // marginTop: "0%",
-    // marginBottom: "0%",
+    justifyContent: "space-between",
+    marginLeft: "4%",
+    marginRight: "4%",
   },
 
   image: {
-    width: 60,
-    height: 60,
     borderRadius: 80,
     resizeMode: "cover",
     alignSelf: "center",
+    width: 60,
+    height: 60,
   },
 
   text: {

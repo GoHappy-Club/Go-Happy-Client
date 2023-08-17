@@ -22,7 +22,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/cloud-dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import VersionCheck from "react-native-version-check";
@@ -34,6 +34,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import RenderHtml from "react-native-render-html";
 import crashlytics from "@react-native-firebase/crashlytics";
 import TripsScreen from "./screens/Trips/TripsScreen";
+import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -248,6 +249,28 @@ export default function App() {
                 name="About GoHappy Club"
                 // component={About}
                 children={(props) => <About {...props} propProfile={profile} />}
+                options={({ navigation }) => ({
+                  headerTransparent: true,
+                  title: null,
+                  headerBackTitle: "back",
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.backButton}
+                      onPress={() => navigation.navigate("GoHappy Club")}
+                      underlayColor="#fff"
+                    >
+                      <Text style={styles.backText}>back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                })}
+              />
+              <Stack.Screen
+                name="PastSessions"
+                // component={About}
+                children={(props) => (
+                  <MySessionsScreen {...props} propProfile={profile} />
+                )}
                 options={({ navigation }) => ({
                   headerTransparent: true,
                   title: null,

@@ -17,10 +17,6 @@ export default class TopBanner extends Component {
     this.state = {};
   }
 
-  openAppPage(page) {
-    this.props.navigation.navigate(page);
-  }
-
   CarouselCardItem = ({ item, index }) => {
     console.log("imageimage", item);
     return (
@@ -30,13 +26,17 @@ export default class TopBanner extends Component {
         onPress={() => {
           if (item.isExternal == true) {
             Linking.openURL(item.url);
-          } else {
+          } else if (item.isExternal == false && item.url.length > 0) {
             console.log(this);
-            this.props.navigation.navigate("HomeScreen");
+            this.props.navigation.navigate(item.url);
           }
         }}
       >
-        <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        <Image
+          source={{ uri: item.imageUrl }}
+          style={styles.image}
+          resizeMode="contain"
+        />
         {/* <Text style={styles.header}>{item.title}</Text>
         <Text style={styles.body}>{item.body}</Text> */}
       </TouchableOpacity>
@@ -48,20 +48,22 @@ export default class TopBanner extends Component {
     data.sort((a, b) => a.order - b.order);
     const activePosters = data.filter((item) => item.isActive);
     return (
-      <Carousel
-        // layout="tinder"
-        // layoutCardOffset={9}
-        autoplay={true}
-        data={activePosters}
-        renderItem={this.CarouselCardItem}
-        sliderWidth={SLIDER_WIDTH}
-        itemWidth={ITEM_WIDTH}
-        inactiveSlideShift={0}
-        useScrollView={true}
-        ref={(c) => {
-          this._carousel = c;
-        }}
-      />
+      <View style={styles.outsideContainer}>
+        <Carousel
+          // layout="tinder"
+          // layoutCardOffset={9}
+          autoplay={true}
+          data={activePosters}
+          renderItem={this.CarouselCardItem}
+          sliderWidth={SLIDER_WIDTH}
+          itemWidth={ITEM_WIDTH}
+          inactiveSlideShift={0}
+          useScrollView={true}
+          ref={(c) => {
+            this._carousel = c;
+          }}
+        />
+      </View>
     );
   }
 }
@@ -70,6 +72,10 @@ const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
 
 const styles = StyleSheet.create({
+  outsideContainer: {
+    // padding: "3%",
+    width: "100%",
+  },
   container: {
     marginTop: "5%",
     backgroundColor: "white",
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: ITEM_WIDTH,
-    height: 200,
+    height: 170,
     borderRadius: 8,
   },
   header: {

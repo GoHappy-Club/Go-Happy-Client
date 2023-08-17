@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Button,
   Image,
@@ -10,29 +10,29 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
+} from "react-native";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
-import { MaterialIndicator } from 'react-native-indicators';
-import MySessions from '../../components/MySessions';
+import { MaterialIndicator } from "react-native-indicators";
+import MySessions from "../../components/MySessions";
 
 export default class MySessionsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '',
-      password: '',
+      phoneNumber: "",
+      password: "",
       showAlert: false,
       loader: false,
       ongoingEvents: [],
       expiredEvents: [],
       upcomingEvents: [],
-      email: '',
+      email: "",
     };
     this._retrieveData();
   }
   _retrieveData = async () => {
     try {
-      const phoneNumber = await AsyncStorage.getItem('phoneNumber');
+      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
       this.setState({ phoneNumber: phoneNumber });
       this.loadMySessions(this.state.phoneNumber);
     } catch (error) {
@@ -41,7 +41,7 @@ export default class MySessionsScreen extends Component {
   };
   loadMySessions(phoneNumber, _callback) {
     phoneNumber = this.state.phoneNumber;
-    var url = SERVER_URL + '/event/mySessions';
+    var url = SERVER_URL + "/event/mySessions";
     axios
       .post(url, { phoneNumber: phoneNumber })
       .then((response) => {
@@ -66,18 +66,18 @@ export default class MySessionsScreen extends Component {
       return (
         <MaterialIndicator
           color="white"
-          style={{ backgroundColor: '#0A1045' }}
+          style={{ backgroundColor: "#0A1045" }}
         />
       );
     }
     const navigation = this.props.navigation;
-    const title = 'Login';
+    const title = "Login";
     return (
       <MySessions
         loadMySessions={this.loadMySessions.bind(this)}
         navigation={this.props.navigation}
-        ongoingEvents={this.state.ongoingEvents}
-        upcomingEvents={this.state.upcomingEvents}
+        ongoingEvents={[]}
+        upcomingEvents={[]}
         expiredEvents={this.state.expiredEvents}
         phoneNumber={this.state.phoneNumber}
         profile={this.props.propProfile.profile}
@@ -92,74 +92,74 @@ export default class MySessionsScreen extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: '#0A1045',
+    backgroundColor: "#0A1045",
   },
   input: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     padding: 15,
     marginBottom: 10,
   },
   btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
   },
   userBtn: {
-    backgroundColor: '#f0ad4e',
+    backgroundColor: "#f0ad4e",
     paddingVertical: 15,
     height: 60,
   },
   btnTxt: {
     fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: '700',
+    textAlign: "center",
+    color: "black",
+    fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
   welcome: {
     fontSize: 30,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-    color: 'white',
+    color: "white",
   },
   logo: {
     width: 150,
     height: 150,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   formContainer: {},
   title: {
-    color: 'white',
+    color: "white",
     marginTop: 10,
     width: 160,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
   },
   newinput: {
     height: 50,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: 'white',
+    color: "white",
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: 'white',
-    marginTop: '30%',
+    color: "white",
+    marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30,
   },
 });

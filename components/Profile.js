@@ -386,6 +386,20 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
+              onPress={() => this.props.navigation.navigate("PastSessions")}
+            >
+              <View>
+                <Text style={styles.optionList}>Check Past Sessions</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderColor: "#E0E0E0",
+              }}
               onPress={() => {
                 this.props.navigation.navigate("About GoHappy Club");
               }}
