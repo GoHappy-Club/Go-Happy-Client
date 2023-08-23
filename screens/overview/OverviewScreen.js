@@ -94,7 +94,6 @@ class OverviewScreen extends Component {
   componentWillMount() {
     this.getOverviewData();
   }
-
   render() {
     if (this.state.error == true) {
       return (
@@ -140,13 +139,15 @@ class OverviewScreen extends Component {
                   : this.state.whatsappLink
               }
             />
-            <TrendingSessions
-              navigation={this.props.navigation}
-              trendingSessions={this.state.trendingSessions}
-            />
             <UpcomingWorkshops
               navigation={this.props.navigation}
               upcomingWorkshops={this.state.upcomingWorkshops}
+              reloadOverview={this.getOverviewData.bind(this)}
+            />
+            <TrendingSessions
+              navigation={this.props.navigation}
+              trendingSessions={this.state.trendingSessions}
+              reloadOverview={this.getOverviewData.bind(this)}
             />
             <PromotionSection navigation={this.props.navigation} />
           </ScrollView>

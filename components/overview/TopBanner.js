@@ -14,7 +14,9 @@ import Carousel from "react-native-snap-carousel";
 export default class TopBanner extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      imageDimensions: { width: 0, height: 0 },
+    };
   }
 
   CarouselCardItem = ({ item, index }) => {
@@ -23,12 +25,12 @@ export default class TopBanner extends Component {
       <TouchableOpacity
         style={styles.container}
         key={index}
-        onPress={() => {
+        onPress={async () => {
           if (item.isExternal == true) {
             Linking.openURL(item.url);
           } else if (item.isExternal == false && item.url.length > 0) {
             console.log(this);
-            this.props.navigation.navigate(item.url);
+            this.props.navigation.navigate(item.url, JSON.parse(item.params));
           }
         }}
       >
@@ -69,7 +71,7 @@ export default class TopBanner extends Component {
 }
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 
 const styles = StyleSheet.create({
   outsideContainer: {
@@ -92,8 +94,8 @@ const styles = StyleSheet.create({
     elevation: 7,
   },
   image: {
-    width: ITEM_WIDTH,
-    height: 170,
+    width: "100%",
+    height: 130,
     borderRadius: 8,
   },
   header: {

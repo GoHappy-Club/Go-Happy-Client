@@ -55,6 +55,7 @@ export default class SessionDetails extends Component {
     const _callback = (data) => {
       this.setState({ success: true });
       if (data.razorpay_payment_id === "") {
+        this.props.route.params.onGoBack();
         this.props.navigation.navigate("GoHappy Club");
       } else {
         this.sessionAction();

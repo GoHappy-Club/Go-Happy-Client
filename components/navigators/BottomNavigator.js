@@ -118,7 +118,7 @@ export default function BottomNavigator() {
         name="Refer"
         children={(props) => <ReferScreen propProfile={profile} {...props} />}
         options={{
-          tabBarLabel: "Refer & Win",
+          tabBarLabel: "Refer",
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (

@@ -83,7 +83,7 @@ class TripsScreen extends Component {
             resizeMode="cover"
           >
             <View style={styles.textContainer}>
-              <Text style={styles.coverTitle}>My trips</Text>
+              <Text style={styles.coverTitle}>Trips</Text>
             </View>
           </ImageBackground>
           <Tab

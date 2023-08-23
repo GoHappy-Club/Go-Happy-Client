@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
 import PhoneInput from "react-native-phone-number-input";
+import analytics from "@react-native-firebase/analytics";
 
 import Video from "react-native-video";
 
@@ -355,7 +356,7 @@ class LoginScreen extends Component {
         referralId: this.state.referralCode,
         source: this.state.source,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
           if (response.data.phone != null) {
@@ -412,6 +413,11 @@ class LoginScreen extends Component {
             });
             return;
           } else {
+            await analytics().logEvent("login_click", {
+              phoneNumber: this.state.phoneNumber,
+              email: this.state.email,
+              name: this.state.name,
+            });
             this.setState({ loader: true });
             this.props.navigation.replace("GoHappy Club");
             this.setState({ loader: false });

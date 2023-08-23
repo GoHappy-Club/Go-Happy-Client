@@ -8,8 +8,12 @@ import {
   Image,
   ScrollView,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { Skeleton } from "@rneui/themed";
+import { connect } from "react-redux";
+import { setProfile } from "../../redux/actions/counts.js";
+import { bindActionCreators } from "redux";
 
 const data = [
   {
@@ -49,7 +53,7 @@ const data = [
       "https://images.pexels.com/photos/3314294/pexels-photo-3314294.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
   },
 ];
-export default class UpcomingWorkshops extends Component {
+class UpcomingWorkshops extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -95,19 +99,47 @@ export default class UpcomingWorkshops extends Component {
     return text.substring(0, cut) + "...";
   }
 
+  checkIsParticipantInSameEvent(item) {
+    let isParticipantInSameEvent = false;
+    if (item.sameDayEventId === null) {
+      return false;
+    }
+    this.props.trendingSessions.map((trend) => {
+      var session = trend.value;
+      if (!isParticipantInSameEvent) {
+        isParticipantInSameEvent =
+          session.sameDayEventId == item.sameDayEventId &&
+          session.participantList.includes(this.props.profile.phoneNumber);
+      }
+    });
+    return isParticipantInSameEvent;
+  }
+
   // Render each row of items
   renderRow = ({ item, index }) => (
-    <View style={styles.container}>
-      <Image source={{ uri: item.value.coverImage }} style={styles.image} />
-      <View style={styles.subContainer}>
-        <Text style={styles.text}>
-          {this.trimContent(item.value.eventName, 13)}
-        </Text>
-        <Text style={styles.subText}>
-          {this.loadDate(item.value.eventDate)}
-        </Text>
+    <TouchableOpacity
+      onPress={() =>
+        this.props.navigation.navigate("Session Details", {
+          event: item,
+          phoneNumber: this.props.profile.phoneNumber,
+          profile: this.props.profile,
+          onGoBack: () => {
+            this.props.reloadOverview();
+          },
+          alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(item),
+        })
+      }
+    >
+      <View style={styles.container}>
+        <Image source={{ uri: item.coverImage }} style={styles.image} />
+        <View style={styles.subContainer}>
+          <Text style={styles.text}>
+            {this.trimContent(item.eventName, 13)}
+          </Text>
+          <Text style={styles.subText}>{this.loadDate(item.eventDate)}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
   render() {
     return (
@@ -200,10 +232,19 @@ const styles = StyleSheet.create({
   text: {
     marginHorizontal: 10,
     fontSize: 14,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   subText: {
     marginHorizontal: 10,
     fontSize: 12,
   },
 });
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+});
+
+const ActionCreators = Object.assign({}, { setProfile });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(UpcomingWorkshops);

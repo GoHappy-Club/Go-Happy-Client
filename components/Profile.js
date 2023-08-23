@@ -344,7 +344,7 @@ class Profile extends Component {
             </View>
           </View>
           {/* onPress={this._handleSelectImage.bind(this)} */}
-          <View
+          {/* <View
             style={{
               marginTop: 20,
               width: Dimensions.get("window").width * 0.9,
@@ -364,8 +364,13 @@ class Profile extends Component {
                 <Text style={styles.optionList}>Contribute and Support Us</Text>
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+          </View> */}
+          <View
+            style={{
+              width: Dimensions.get("window").width * 0.9,
+              marginTop: 20,
+            }}
+          >
             <TouchableOpacity
               style={{
                 width: "100%",

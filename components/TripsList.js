@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Card, Divider } from "react-native-paper";
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   ImageBackground,
@@ -10,6 +9,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { Text } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
@@ -38,12 +38,29 @@ class TripsList extends Component {
   render() {
     return (
       <View style={styles.scrollContainer}>
-        <FlatList
-          data={this.props.trips}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={this.renderRow.bind(this)}
-          nestedScrollEnabled={true}
-        />
+        {this.props.trips.length > 0 ? (
+          <FlatList
+            data={this.props.trips}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={this.renderRow.bind(this)}
+            nestedScrollEnabled={true}
+          />
+        ) : (
+          <Text
+            h4
+            style={{
+              height: "100%",
+              marginTop: "20%",
+              alignSelf: "center",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#2f2f31",
+            }}
+          >
+            No Upcoming Trips 😟
+          </Text>
+        )}
       </View>
     );
   }

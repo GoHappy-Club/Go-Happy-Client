@@ -24,9 +24,9 @@ export default class Sections extends Component {
 
   data1 = [
     {
-      title: "Book Sessions",
+      title: "Book Now",
       imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/sessions_section_pill.jpg",
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
     },
     // {
@@ -38,11 +38,11 @@ export default class Sections extends Component {
     {
       title: "Contribute",
       imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.png",
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
       link: "MembershipScreen",
     },
     {
-      title: "Refer",
+      title: "Refer & Win",
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_section_pill.jpg",
       link: "Refer",
@@ -50,7 +50,7 @@ export default class Sections extends Component {
     {
       title: "Get Help",
       imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_section_pill.jpeg",
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
       link: this.props.helpUrl,
       type: "external",
     },
@@ -99,7 +99,11 @@ export default class Sections extends Component {
                 }}
               >
                 <View style={styles.container}>
-                  <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                  <Image
+                    source={{ uri: item.imgUrl }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
                   {/* <View style={styles.subContainer}> */}
                   <Text style={styles.text}>{item.title}</Text>
                   {/* </View> */}
@@ -186,7 +190,6 @@ const styles = StyleSheet.create({
 
   image: {
     borderRadius: 80,
-    resizeMode: "cover",
     alignSelf: "center",
     width: 60,
     height: 60,

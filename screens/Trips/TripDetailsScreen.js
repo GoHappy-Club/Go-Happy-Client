@@ -34,23 +34,8 @@ class TripDetailsScreen extends Component {
     // alert(JSON.stringify(props));
   }
 
-  async getPastTripsData() {
-    var url = SERVER_URL + "/trips/past";
-    try {
-      const response = await axios.get(url);
-      if (response.data) {
-        this.setState({
-          pastTrips: response.data.trips,
-        });
-      }
-    } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
-    }
-  }
-
   async getUpcomingTripsData() {
-    var url = SERVER_URL + "/trips/upcoming";
+    var url = SERVER_URL + "/trips/trip/details";
     try {
       const response = await axios.get(url);
       if (response.data) {

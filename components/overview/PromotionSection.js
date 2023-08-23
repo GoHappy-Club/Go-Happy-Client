@@ -25,38 +25,41 @@ export default class PromotionSection extends Component {
         id: 1,
         title: "Refer Banner",
         image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner.jpeg",
+          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
         to: "Refer",
       },
       {
         id: 2,
         title: "Contribute Banner",
         image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.jpeg",
+          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
         to: "MembershipScreen",
       },
     ];
     return (
-      <View>
-        <View style={styles.line} />
+      <View style={styles.mainContainer}>
+        <View style={styles.headingContainer}>
+          <View style={styles.line} />
+          <Text style={styles.headingText}>Help Us Grow</Text>
+          <View style={styles.line} />
+        </View>
         <View style={styles.cardsContainer}>
           {data.map((item) => {
             return (
-              <Card style={styles.card} id={item.id}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate(item.to);
-                  }}
-                >
-                  <Card.Cover
-                    borderRadius={8}
-                    resizeMode="stretch"
-                    source={{
-                      uri: item.image,
-                    }}
-                  />
-                </TouchableOpacity>
-              </Card>
+              <TouchableOpacity
+                style={styles.touchable}
+                onPress={() => {
+                  this.props.navigation.navigate(item.to);
+                }}
+              >
+                {/* <View style={styles.card}> */}
+                <Image
+                  source={{ uri: item.image }}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+                {/* </View> */}
+              </TouchableOpacity>
             );
           })}
         </View>
@@ -66,32 +69,49 @@ export default class PromotionSection extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    height: "100%",
+  },
   cardsContainer: {
-    flex: 1,
+    display: "flex",
+    justifyContent: "center",
     flexDirection: "row",
     margin: "2%",
+    padding: 0,
     borderRadius: 8,
+    height: "100%",
   },
-  card: {
-    width: "48%",
-    margin: "1%",
+  touchable: {
+    width: "50%",
+    height: 150,
     borderRadius: 8,
+    justifyContent: "center",
   },
 
   image: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: "100%",
     borderRadius: 8,
+    flex: 1,
+    justifyContent: "center",
+    // borderTopRightRadius: 0,
 
-    borderTopRightRadius: 0,
-
-    borderBottomRightRadius: 0,
+    // borderBottomRightRadius: 0,
+  },
+  headingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // marginVertical: 10,
+    margin: "5%",
+    marginBottom: "2%",
   },
   line: {
     flex: 1,
     height: 1,
     backgroundColor: "grey",
-    margin: 10,
-    color: "grey",
+  },
+  headingText: {
+    marginHorizontal: 10,
+    fontWeight: "bold",
   },
 });

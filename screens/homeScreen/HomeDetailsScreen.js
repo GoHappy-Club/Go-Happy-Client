@@ -161,7 +161,6 @@ export default class HomeDetailsScreen extends Component {
 
   render() {
     if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
           color="white"

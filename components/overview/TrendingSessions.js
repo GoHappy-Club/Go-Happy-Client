@@ -105,8 +105,12 @@ class TrendingSessions extends Component {
           event: item.value,
           phoneNumber: this.props.profile.phoneNumber,
           profile: this.props.profile,
-          onGoBack: () => null,
-          alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(item),
+          onGoBack: () => {
+            this.props.reloadOverview();
+          },
+          alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(
+            item.value
+          ),
         })
       }
     >
@@ -183,14 +187,6 @@ const styles = StyleSheet.create({
     marginTop: "2%",
     // alignItems: "center",
   },
-  headingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    // marginVertical: 10,
-    margin: "5%",
-
-    marginBottom: "2%",
-  },
   headingText: {
     marginHorizontal: 10,
     fontWeight: "bold",
@@ -204,6 +200,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
 
     borderBottomRightRadius: 0,
+  },
+  headingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    // marginVertical: 10,
+    margin: "5%",
+
+    marginBottom: "2%",
   },
   line: {
     flex: 1,

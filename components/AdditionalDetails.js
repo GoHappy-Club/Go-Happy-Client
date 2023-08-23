@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Button } from "react-native-elements";
-
+import analytics from "@react-native-firebase/analytics";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -101,7 +101,7 @@ class AdditionalDetails extends Component {
         // dob: this.state.date,
         age: this.state.age,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
           if (response.data.phoneNumber != null) {
@@ -134,6 +134,12 @@ class AdditionalDetails extends Component {
 
           this.props.route.params.navigation.replace("GoHappy Club");
           this.setState({ loader: false });
+          await analytics().logEvent("signup_click", {
+            phoneNumber: response.data.phoneNumber,
+            email: response.data.email,
+            age: response.data.age,
+            name: response.data.name,
+          });
         } else if (response.data == "ERROR") {
           this.setState({ showAlert: true, loader: false });
         }
