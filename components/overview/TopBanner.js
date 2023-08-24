@@ -8,6 +8,7 @@ import {
   Image,
   Linking,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 
@@ -23,7 +24,7 @@ export default class TopBanner extends Component {
     console.log("imageimage", item);
     return (
       <TouchableOpacity
-        style={styles.container}
+        style={{ flex: 1 }}
         key={index}
         onPress={async () => {
           if (item.isExternal == true) {
@@ -34,13 +35,14 @@ export default class TopBanner extends Component {
           }
         }}
       >
+        {/* <View style={styles.container}> */}
         <Image
           source={{ uri: item.imageUrl }}
           style={styles.image}
+          // style={{ width: "100%", height: "100%" }}
           resizeMode="contain"
         />
-        {/* <Text style={styles.header}>{item.title}</Text>
-        <Text style={styles.body}>{item.body}</Text> */}
+        {/* </View> */}
       </TouchableOpacity>
     );
   };
@@ -50,14 +52,16 @@ export default class TopBanner extends Component {
     data.sort((a, b) => a.order - b.order);
     const activePosters = data.filter((item) => item.isActive);
     return (
-      <View style={styles.outsideContainer}>
+      <SafeAreaView style={styles.outsideContainer}>
         <Carousel
           // layout="tinder"
           // layoutCardOffset={9}
+          // style={{ flex: 1, width: "100%" }}
           autoplay={true}
           data={activePosters}
           renderItem={this.CarouselCardItem}
           sliderWidth={SLIDER_WIDTH}
+          sliderHeight={SLIDER_HEIGHT}
           itemWidth={ITEM_WIDTH}
           inactiveSlideShift={0}
           useScrollView={true}
@@ -65,12 +69,13 @@ export default class TopBanner extends Component {
             this._carousel = c;
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
+const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
 
 const styles = StyleSheet.create({
@@ -79,24 +84,16 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   container: {
-    marginTop: "5%",
-    backgroundColor: "white",
-    borderRadius: 8,
-    width: ITEM_WIDTH,
-    // paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    elevation: 5, // Set the elevation value as desired
+    borderRadius: 8, // Optional: Add border radius for a card-like effect
+    overflow: "hidden", // Clip the shadow to avoid overflow issues
   },
   image: {
-    width: "100%",
-    height: 130,
+    width: ITEM_WIDTH + 10,
+    height: SLIDER_HEIGHT,
     borderRadius: 8,
+    // borderColor: "black",
+    // borderWidth: 0.1,
   },
   header: {
     color: "#222",

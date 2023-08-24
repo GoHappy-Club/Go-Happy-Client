@@ -134,9 +134,9 @@ class UpcomingWorkshops extends Component {
         <Image source={{ uri: item.coverImage }} style={styles.image} />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
-            {this.trimContent(item.eventName, 13)}
+            {this.trimContent(item.eventName, 20)}
           </Text>
-          <Text style={styles.subText}>{this.loadDate(item.eventDate)}</Text>
+          <Text style={styles.subText}>{this.loadDate(item.startTime)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -179,9 +179,6 @@ class UpcomingWorkshops extends Component {
   }
 }
 
-const SLIDER_WIDTH = Dimensions.get("window").width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
-
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 0,
@@ -214,7 +211,7 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderWidth: 0.2,
     margin: 10,
-    width: 100,
+    width: 200,
   },
   subContainer: {
     padding: "2%",
@@ -222,7 +219,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 100,
+    width: "100%",
     height: 100,
     borderRadius: 8,
     borderBottomLeftRadius: 0,
@@ -231,7 +228,7 @@ const styles = StyleSheet.create({
 
   text: {
     marginHorizontal: 10,
-    fontSize: 14,
+    fontSize: 16,
     // fontWeight: "bold",
   },
   subText: {

@@ -216,11 +216,11 @@ const styles = StyleSheet.create({
   },
   text: {
     marginHorizontal: 10,
-    fontSize: 18,
+    fontSize: 16,
   },
   subText: {
     marginHorizontal: 10,
-    fontSize: 14,
+    fontSize: 12,
   },
 });
 
