@@ -11,9 +11,7 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-import { Tab, TabView, Text } from "@rneui/themed";
-import { View } from "react-native";
-import TripsList from "../../components/TripsList.js";
+import Trip from "../../components/Trip.js";
 
 class TripDetailsScreen extends Component {
   constructor(props) {
@@ -51,55 +49,12 @@ class TripDetailsScreen extends Component {
 
   componentWillMount() {
     console.log("is it coming here ?");
-    this.getPastTripsData();
-    this.getUpcomingTripsData();
   }
 
   render() {
+    console.log(this.props.route.params.item);
     if (this.state.error == true) {
-      return (
-        <View style={styles.mainContainer}>
-          {/* <Text>My Trips</Text> */}
-
-          <ImageBackground
-            source={{
-              uri: "https://www.creativefabrica.com/wp-content/uploads/2020/12/11/Time-to-travel-background-Graphics-7122111-1.jpg",
-            }}
-            style={styles.coverImage}
-            resizeMode="cover"
-          >
-            <View style={styles.textContainer}>
-              <Text style={styles.coverTitle}>My trips</Text>
-            </View>
-          </ImageBackground>
-          <Tab
-            value={this.state.index}
-            onChange={(index) => {
-              this.setState({ index: index });
-            }}
-            dense
-          >
-            <Tab.Item>Upcoming</Tab.Item>
-            <Tab.Item>Past</Tab.Item>
-          </Tab>
-          <TabView
-            containerStyle={{ height: "100%" }}
-            value={this.state.index}
-            onChange={(index) => {
-              this.setState({ index: index });
-            }}
-            animationType="spring"
-          >
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.upcomingTrips} />
-            </TabView.Item>
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.pastTrips} />
-            </TabView.Item>
-          </TabView>
-          {/* </ScrollView> */}
-        </View>
-      );
+      return <Trip info={this.props.route.params.item} />;
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (

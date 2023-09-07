@@ -29,12 +29,12 @@ export default class Sections extends Component {
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
     },
-    // {
-    //   title: "Trips",
-    //   imgUrl:
-    //     "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
-    //   link: "Trips",
-    // },
+    {
+      title: "Trips",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      link: "Trips",
+    },
     {
       title: "Contribute",
       imgUrl:
@@ -47,6 +47,8 @@ export default class Sections extends Component {
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_section_pill.jpg",
       link: "Refer",
     },
+  ];
+  data2 = [
     {
       title: "Get Help",
       imgUrl:
@@ -55,7 +57,6 @@ export default class Sections extends Component {
       type: "external",
     },
   ];
-  data2 = [];
   componentDidMount() {
     let helpUrl = this.handleHelp();
   }

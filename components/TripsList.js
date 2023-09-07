@@ -22,7 +22,12 @@ class TripsList extends Component {
   }
 
   renderRow = ({ item, index }) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        console.log(this.props);
+        this.props.navigation.navigate("TripDetailsScreen", { item: item });
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground
           source={{ uri: item.coverImages[0] }}
