@@ -65,7 +65,7 @@ export default function BottomNavigator() {
         // )}
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         options={{
-          tabBarLabel: "Book Now",
+          tabBarLabel: "Sessions",
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon
               icon={faClipboardList}

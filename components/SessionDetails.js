@@ -224,6 +224,95 @@ export default class SessionDetails extends Component {
       .catch((errorMsg) => {});
   };
 
+  tambolaParsing = (item) => {
+    var tic = null;
+    var tic = new Array(10);
+    for (var i = 0; i < tic.length; i++) {
+      tic[i] = new Array(3);
+    }
+    if (
+      item != null &&
+      this.props.event.participantList != null &&
+      this.props.event.participantList.length != 0
+    ) {
+      if (
+        this.props.event.participantList.indexOf(this.props.phoneNumber) != -1
+      ) {
+        var jsonString =
+          this.props.event.tambolaTickets[
+            this.props.event.participantList.indexOf(this.props.phoneNumber)
+          ];
+
+        if (jsonString != null) {
+          var temp = jsonString.match(/\d+/g);
+          for (var i = 0; i < 9; i++) {
+            tic[0][i] = parseInt(temp[i]);
+            if (tic[0][i] == 0) {
+              tic[0][i] = "";
+            }
+          }
+          for (var i = 9; i < 18; i++) {
+            tic[1][i - 9] = parseInt(temp[i]);
+            if (tic[1][i - 9] == 0) {
+              tic[1][i - 9] = "";
+            }
+          }
+          for (var i = 18; i < 27; i++) {
+            tic[2][i - 18] = parseInt(temp[i]);
+            if (tic[2][i - 18] == 0) {
+              tic[2][i - 18] = "";
+            }
+          }
+
+          // jsonString = jsonString.replace('"','');
+          // jsonString = jsonString.substr(1,jsonString.length-1);
+          // tic = JSON.parse(jsonString);
+        }
+      }
+    }
+    console.log("this is tic", tic[0]);
+    var tambolaHtml =
+      " <table align='center' border='1' style=\"border-collapse: collapse; width: 100%; font-size:10px\"><tbody>";
+
+    tambolaHtml = tambolaHtml + "<tr>";
+    tic[0].map((item) => {
+      if (item != "") {
+        tambolaHtml =
+          tambolaHtml +
+          "<td style='background-color: #eda29b'>" +
+          item +
+          "</td>";
+      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
+    });
+    tambolaHtml = tambolaHtml + "</tr>";
+    tambolaHtml = tambolaHtml + "<tr>";
+    tic[1].map((item) => {
+      if (item != "") {
+        tambolaHtml =
+          tambolaHtml +
+          "<td style='background-color: #eda29b'>" +
+          item +
+          "</td>";
+      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
+    });
+    tambolaHtml = tambolaHtml + "</tr>";
+    tambolaHtml = tambolaHtml + "<tr>";
+    tic[2].map((item) => {
+      if (item != "") {
+        tambolaHtml =
+          tambolaHtml +
+          "<td style='background-color: #eda29b'>" +
+          item +
+          "</td>";
+      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
+    });
+    tambolaHtml = tambolaHtml + "</tr>";
+
+    tambolaHtml = tambolaHtml + "</tbody></table>";
+    console.log("tam", tambolaHtml);
+    return tambolaHtml;
+  };
+
   render() {
     if (this.state.loader == true) {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -235,6 +324,7 @@ export default class SessionDetails extends Component {
       );
     }
     const item = this.props.event;
+    const tambolaHtml = this.tambolaParsing(item);
     return (
       <View
         style={{
@@ -343,6 +433,41 @@ export default class SessionDetails extends Component {
                 borderBottomWidth: 1,
               }}
             />
+            {this.props.event.eventName.indexOf("Tambola") >= 0 &&
+              this.props.phoneNumber != null &&
+              this.props.event.participantList != null &&
+              this.props.event.participantList.indexOf(
+                this.props.phoneNumber
+              ) != -1 && (
+                <>
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      color: "grey",
+                      marginTop: "5%",
+                      fontWeight: "bold",
+                      marginBottom: "3%",
+                    }}
+                  >
+                    Tambola Ticket:{" "}
+                    {this.props.event.participantList.indexOf(
+                      this.props.phoneNumber
+                    )}
+                  </Text>
+                  <RenderHtml
+                    // contentWidth={width}
+                    tagsStyles={contentHtmlStyles}
+                    source={{
+                      html: tambolaHtml,
+                      // html: item.description,
+                    }}
+                  />
+                </>
+              )}
+            {/* <TambolaTicket
+              event={this.props.event}
+              phoneNumber={this.props.phoneNumber}
+            /> */}
             <Text
               style={{
                 fontSize: 17,
@@ -353,8 +478,8 @@ export default class SessionDetails extends Component {
             >
               About
             </Text>
-            {item.description && (
-              <Text style={{ fontSize: 17, color: "grey", marginTop: 10 }}>
+            {item.description && item.description.length > 0 && (
+              <Text style={{ fontSize: 17, color: "grey", marginTop: "5%" }}>
                 {item.description}
               </Text>
             )}
@@ -400,10 +525,6 @@ export default class SessionDetails extends Component {
               </View>
             </View>
           </View>
-          <TambolaTicket
-            event={this.props.event}
-            phoneNumber={this.props.phoneNumber}
-          />
         </ScrollView>
 
         <View style={{ margin: 15 }}>
@@ -481,6 +602,24 @@ export default class SessionDetails extends Component {
     );
   }
 }
+
+const contentHtmlStyles = StyleSheet.create({
+  table: {
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 7,
+  },
+  tr: {
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
+  td: {
+    borderRightWidth: 1,
+    borderColor: "#ccc",
+    padding: 5,
+  },
+});
 
 const styles = StyleSheet.create({
   container1: {

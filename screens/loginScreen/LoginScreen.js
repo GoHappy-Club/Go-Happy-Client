@@ -3,10 +3,12 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Linking,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
+  TextInput,
 } from "react-native";
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -67,20 +69,21 @@ class LoginScreen extends Component {
       if (url === null) {
         return;
       }
+      this.setState({ referralCode: url.url.split("=")[1] });
       // alert("test1", url);
-      const urlObj = new URL(url.url);
-      const searchParams = new URLSearchParams(urlObj.search);
+      // const urlObj = new URL(url.url);
+      // const searchParams = new URLSearchParams(urlObj.search);
 
-      const id = searchParams.get("id");
-      const source = searchParams.get("source");
+      // const id = searchParams.get("id");
+      // const source = searchParams.get("source");
 
-      console.log("ID:", id);
-      console.log("Source:", source);
-      if (source == "google_ads") {
-        this.setState({ source: source });
-      } else {
-        this.setState({ referralCode: url.url.split("=")[1] });
-      }
+      // console.log("ID:", id);
+      // console.log("Source:", source);
+      // if (source == "google_ads") {
+      //   this.setState({ source: source });
+      // } else {
+      //   this.setState({ referralCode: url.url.split("=")[1] });
+      // }
     });
     dynamicLinks()
       .getInitialLink()
@@ -88,19 +91,20 @@ class LoginScreen extends Component {
         if (url === null) {
           return;
         }
-        const urlObj = new URL(url.url);
-        const searchParams = new URLSearchParams(urlObj.search);
+        this.setState({ referralCode: url.url.split("=")[1] });
+        // const urlObj = new URL(url.url);
+        // const searchParams = new URLSearchParams(urlObj.search);
 
-        const id = searchParams.get("id");
-        const source = searchParams.get("source");
+        // const id = searchParams.get("id");
+        // const source = searchParams.get("source");
 
-        console.log("ID:", id);
-        console.log("Source:", source);
-        if (source == "google_ads") {
-          this.setState({ source: source });
-        } else {
-          this.setState({ referralCode: url.url.split("=")[1] });
-        }
+        // console.log("ID:", id);
+        // console.log("Source:", source);
+        // if (source == "google_ads") {
+        //   this.setState({ source: source });
+        // } else {
+        //   this.setState({ referralCode: url.url.split("=")[1] });
+        // }
         // alert("test2" + this.state.referralCode);
       });
   }
@@ -246,10 +250,16 @@ class LoginScreen extends Component {
     }
   };
 
+  handleInputChange = (text) => {
+    if (text.length <= 6 && /^[0-9]*$/.test(text)) {
+      this.setState({ verificationCode: text });
+    }
+  };
+
   renderConfirmationCodeView = () => {
     return (
       <View style={styles.verificationView}>
-        <OTPInputView
+        {/* <OTPInputView
           style={{ width: "80%", height: 60, color: "#000" }}
           pinCount={6}
           codeInputFieldStyle={styles.underlineStyleBase}
@@ -257,6 +267,14 @@ class LoginScreen extends Component {
           onCodeChanged={(code) => {
             this.setState({ verificationCode: code });
           }}
+        /> */}
+        <TextInput
+          style={styles.otp_input}
+          onChangeText={this.handleInputChange.bind(this)}
+          value={this.state.verificationCode}
+          keyboardType="numeric"
+          maxLength={6}
+          placeholder="Enter 6-digit OTP"
         />
         <Button
           outline
@@ -486,6 +504,19 @@ class LoginScreen extends Component {
     const title = "Login";
     return (
       <View style={styles.container}>
+        <View style={{ width: "40%", marginLeft: "auto" }}>
+          <Button
+            style={{ marginLeft: "auto" }}
+            type="clear"
+            title="Contact Us"
+            // loading={this.state.loadingResendButton}
+            onPress={() => {
+              Linking.openURL(
+                "https://wa.me/7888384477?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+              );
+            }}
+          />
+        </View>
         <Image
           resizeMode="contain"
           style={styles.logo}
@@ -598,6 +629,9 @@ class LoginScreen extends Component {
               }}
               onPress={this.handleSendCode.bind(this, false)}
             />
+            {/* <View> */}
+            {/* <Text>Facing any difficulty?</Text> */}
+            {/* </View> */}
           </View>
         )}
         {this.state.confirmResult && (
@@ -698,6 +732,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fffaf1",
     justifyContent: "space-around",
   },
+  otp_input: {
+    height: 60,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    fontSize: 18,
+    borderRadius: 8,
+    textAlign: "center",
+  },
   input: {
     width: "90%",
     backgroundColor: "white",
@@ -732,8 +775,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   logo: {
-    width: 250,
-    height: 250,
+    width: 200,
+    height: 200,
     alignSelf: "center",
     // marginTop: -20,
     // marginRight: -20

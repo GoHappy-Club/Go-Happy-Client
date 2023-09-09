@@ -24,7 +24,7 @@ export default class Sections extends Component {
 
   data1 = [
     {
-      title: "Book Now",
+      title: "Free Sessions",
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
