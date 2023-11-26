@@ -186,7 +186,8 @@ class HomeDashboard extends Component {
           color: "#2f2f31",
         }}
       >
-        No Sessions Available 😟
+        {/* No Sessions Available 😟 */}
+        Check tomorrow's sessions 😁
       </Text>
     );
   }

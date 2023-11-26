@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -8,6 +15,7 @@ import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
+import LinearGradient from "react-native-linear-gradient";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +25,7 @@ class AdditionalDetails extends Component {
       state: props.route.params.state,
       city: props.route.params.city,
       phoneNumber: props.route.params.phoneNumber,
+      emergencyContact: props.route.params.emergencyContact,
       loadingButton: false,
       date: new Date(),
       open: false,
@@ -46,7 +55,16 @@ class AdditionalDetails extends Component {
   componentDidMount() {
     // this.getCurrentUserInfo();
   }
-  setProfile(name, age, profileImage, plan, sessionsAttended, selfInviteCode) {
+  setProfile(
+    name,
+    age,
+    profileImage,
+    plan,
+    sessionsAttended,
+    selfInviteCode,
+    city,
+    emergencyContact
+  ) {
     let { profile, actions } = this.props;
 
     profile = {
@@ -61,6 +79,8 @@ class AdditionalDetails extends Component {
       profileImage: profileImage,
       membership: plan,
       sessionsAttended: sessionsAttended,
+      city: city,
+      emergencyContact: emergencyContact,
     };
 
     actions.setProfile(profile);
@@ -98,6 +118,7 @@ class AdditionalDetails extends Component {
         state: this.state.state,
         city: this.state.city,
         phone: this.state.phoneNumber,
+        emergencyContact: this.state.emergencyContact,
         // dob: this.state.date,
         age: this.state.age,
       })
@@ -128,11 +149,13 @@ class AdditionalDetails extends Component {
             response.data.profileImage,
             response.data.membership,
             response.data.sessionsAttended,
-            response.data.selfInviteCode
+            response.data.selfInviteCode,
+            response.data.city,
+            response.data.emergencyContact
           );
           this.setState({ loader: true });
 
-          this.props.route.params.navigation.replace("GoHappy Club");
+          this.props.route.params.navigation.replace("Intro");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
             phoneNumber: response.data.phoneNumber,
@@ -154,8 +177,9 @@ class AdditionalDetails extends Component {
   render() {
     var open = this.state.open;
     return (
-      <View style={styles.container1}>
+      <ScrollView style={styles.container1}>
         <Text style={styles.title}>Add Information</Text>
+
         <View style={styles.inputs}>
           <TextInput
             style={styles.input}
@@ -184,6 +208,24 @@ class AdditionalDetails extends Component {
             autoCapitalize="none"
             value={this.state.email}
             onChangeText={(text) => this.setState({ email: text })}
+          />
+
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="City"
+            placeholderTextColor="#000"
+            value={this.state.city}
+            onChangeText={(text) => this.setState({ city: text })}
+          />
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            placeholder="Emergency Contact Number"
+            placeholderTextColor="#000"
+            value={this.state.emergencyContact}
+            keyboardType="phone-pad"
+            onChangeText={(text) => this.setState({ emergencyContact: text })}
           />
           <Text
             style={{
@@ -229,8 +271,14 @@ class AdditionalDetails extends Component {
           outline
           title="Save"
           loading={this.state.loadingButton}
-          buttonStyle={{ backgroundColor: "white", width: "100%" }}
-          titleStyle={{ color: "black" }}
+          buttonStyle={{ width: "50%", alignSelf: "center", marginTop: "5%" }}
+          ViewComponent={LinearGradient}
+          linearGradientProps={{
+            colors: ["#4c669f", "#3b5998", "#192f6a"],
+            start: { x: 0, y: 0.25 },
+            end: { x: 0.5, y: 1 },
+            locations: [0, 0.5, 0.6],
+          }}
           onPress={this.updateDetails.bind(this)}
         />
         {/* <Button  buttonStyle = {styles.dateInput}
@@ -253,7 +301,7 @@ class AdditionalDetails extends Component {
             this.setState({ showAlert: false });
           }}
         />
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -271,7 +319,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fffaf1",
   },
   input: {
-    fontSize: 20,
+    fontSize: 18,
     color: "black",
     marginTop: "5%",
     alignSelf: "center",
@@ -283,7 +331,7 @@ const styles = StyleSheet.create({
     width: "70%",
   },
   inputs: {
-    marginTop: "15%",
+    marginTop: "1%",
     flex: 1,
     flexDirection: "column",
   },
