@@ -35,6 +35,7 @@ import RenderHtml from "react-native-render-html";
 import crashlytics from "@react-native-firebase/crashlytics";
 import TripsScreen from "./screens/Trips/TripsScreen";
 import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
+import Intro from "./screens/loginScreen/Intro";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -167,6 +168,23 @@ export default function App() {
                 options={{
                   headerLeft: () => <View />,
                   headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Intro"
+                // component={BottomNavigator}
+
+                children={(props) => <Intro {...props} />}
+                options={{
+                  headerLeft: () => <View />,
+                  headerTransparent: true,
+                  title: null,
+                  elevation: 0,
+                  shadowOpacity: 0,
+                  headerShadowVisible: false,
+                  // headerStyle: {
+                  //   backgroundColor: 'white'
+                  // },
                 }}
               />
               <Stack.Screen

@@ -462,6 +462,13 @@ export default class SessionDetails extends Component {
                       // html: item.description,
                     }}
                   />
+                  <View
+                    style={{
+                      marginTop: "5%",
+                      borderBottomColor: "grey",
+                      borderBottomWidth: 1,
+                    }}
+                  />
                 </>
               )}
             {/* <TambolaTicket

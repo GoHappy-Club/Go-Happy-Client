@@ -9,6 +9,7 @@ import {
   View,
   useWindowDimensions,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -54,6 +55,7 @@ class LoginScreen extends Component {
       name: "",
       state: "",
       city: "",
+      emergencyContact: "",
       conditionDialog: false,
       conditionText: "",
       dob: "",
@@ -118,7 +120,9 @@ class LoginScreen extends Component {
     sessionsAttended,
     // dob,
     dateOfJoining,
-    selfInviteCode
+    selfInviteCode,
+    city,
+    emergencyContact
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -132,6 +136,8 @@ class LoginScreen extends Component {
       // dob: dob,
       dateOfJoining: dateOfJoining,
       selfInviteCode: selfInviteCode,
+      city: city,
+      emergencyContact: emergencyContact,
     };
     actions.setProfile(profile);
   }
@@ -184,7 +190,9 @@ class LoginScreen extends Component {
           // else{
           // 	alert(JSON.stringify(error));
           // }
-          alert(error);
+          alert(
+            'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
+          );
           if (resend) {
             this.setState({ loadingResendButton: false });
           } else {
@@ -275,6 +283,7 @@ class LoginScreen extends Component {
           keyboardType="numeric"
           maxLength={6}
           placeholder="Enter 6-digit OTP"
+          autoFocus
         />
         <Button
           outline
@@ -320,6 +329,8 @@ class LoginScreen extends Component {
         // const dob = await AsyncStorage.getItem("dob");
         const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
         const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+        const city = await AsyncStorage.getItem("city");
+        const emergencyContact = await AsyncStorage.getItem("emergencyContact");
         this.setProfile(
           name,
           email,
@@ -330,7 +341,9 @@ class LoginScreen extends Component {
           sessionsAttended,
           // dob,
           dateOfJoining,
-          selfInviteCode
+          selfInviteCode,
+          city,
+          emergencyContact
         );
         // this.props.navigation.replace('GoHappy Club');
 
@@ -342,6 +355,8 @@ class LoginScreen extends Component {
           name: name,
           // dob: dob,
           dateOfJoining: dateOfJoining,
+          city: city,
+          emergencyContact: emergencyContact,
         });
         return;
         // }
@@ -388,6 +403,15 @@ class LoginScreen extends Component {
           if (response.data.email != null) {
             AsyncStorage.setItem("email", response.data.email);
           }
+          if (response.data.emergencyContact != null) {
+            AsyncStorage.setItem(
+              "emergencyContact",
+              response.data.emergencyContact
+            );
+          }
+          if (response.data.city != null) {
+            AsyncStorage.setItem("city", response.data.city);
+          }
           if (response.data.profileImage != null) {
             AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
@@ -410,12 +434,16 @@ class LoginScreen extends Component {
             response.data.sessionsAttended,
             // response.data.dob,
             response.data.dateOfJoining,
-            response.data.selfInviteCode
+            response.data.selfInviteCode,
+            response.data.city,
+            response.data.emergencyContact
           );
           this.setState({
             name: response.data.name,
             email: response.data.email,
             phoneNumber: response.data.phone,
+            city: response.data.city,
+            emergencyContact: response.data.emergencyContact,
             // dob: response.data.dob,
           });
           if (this.pending()) {
@@ -426,6 +454,7 @@ class LoginScreen extends Component {
               name: name,
               state: this.state.state,
               city: this.state.city,
+              emergencyContact: this.state.emergencyContact,
               // dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
@@ -629,6 +658,20 @@ class LoginScreen extends Component {
               }}
               onPress={this.handleSendCode.bind(this, false)}
             />
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(
+                  "https://wa.me/7888384477?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+                );
+              }}
+            >
+              <Text
+                style={{ color: "#4c669f", fontSize: 14 }}
+                // loading={this.state.loadingResendButton}
+              >
+                Trouble logging in? Contact Us
+              </Text>
+            </TouchableOpacity>
             {/* <View> */}
             {/* <Text>Facing any difficulty?</Text> */}
             {/* </View> */}
@@ -637,11 +680,11 @@ class LoginScreen extends Component {
         {this.state.confirmResult && (
           <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
         )}
-        <ImageBackground
+        {/* <ImageBackground
           resizeMode="contain"
           style={styles.cover}
           source={require("../../images/login_bg.png")}
-        />
+        /> */}
         {/* <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
         <AwesomeAlert
           show={this.state.showAlert}
