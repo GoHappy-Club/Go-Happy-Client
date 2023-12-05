@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
-import TripsList from "../../components/TripsList.js";
+import TripsList from "../../components/trips/TripsList.js";
 
 class TripsScreen extends Component {
   constructor(props) {
@@ -105,10 +105,16 @@ class TripsScreen extends Component {
             animationType="spring"
           >
             <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.upcomingTrips} />
+              <TripsList
+                trips={this.state.upcomingTrips}
+                navigation={this.props.navigation}
+              />
             </TabView.Item>
             <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.pastTrips} />
+              <TripsList
+                trips={this.state.pastTrips}
+                navigation={this.props.navigation}
+              />
             </TabView.Item>
           </TabView>
           {/* </ScrollView> */}

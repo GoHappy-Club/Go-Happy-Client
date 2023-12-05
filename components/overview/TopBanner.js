@@ -15,13 +15,10 @@ import Carousel from "react-native-snap-carousel";
 export default class TopBanner extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      imageDimensions: { width: 0, height: 0 },
-    };
+    this.state = {};
   }
 
   CarouselCardItem = ({ item, index }) => {
-    console.log("imageimage", item);
     return (
       <TouchableOpacity
         style={{ flex: 1 }}

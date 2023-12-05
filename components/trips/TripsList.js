@@ -13,7 +13,7 @@ import { Text } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
-import { loadDate, trimContent } from "../commonComponents/helpers";
+import { loadDate, trimContent } from "../../commonComponents/helpers";
 
 class TripsList extends Component {
   constructor(props) {
@@ -21,28 +21,36 @@ class TripsList extends Component {
     this.state = {};
   }
 
-  renderRow = ({ item, index }) => (
-    <TouchableOpacity>
-      <View style={styles.container}>
-        <ImageBackground
-          source={{ uri: item.coverImages[0] }}
-          style={styles.image}
-        >
-          <Text style={styles.text}>{trimContent(item.location, 13)}</Text>
-          <Text style={styles.subText}>{loadDate(item.startTime)}</Text>
-        </ImageBackground>
-      </View>
-    </TouchableOpacity>
-  );
-
   render() {
+    const renderRow = ({ item }) => (
+      <TouchableOpacity
+        onPress={() => {
+          console.log(item.id);
+          this.props.navigation.navigate("TripDetails", {
+            id: item.id,
+          });
+        }}
+      >
+        <View style={styles.container}>
+          <ImageBackground
+            source={{ uri: item.coverImages[0] }}
+            style={styles.image}
+          >
+            <Text style={styles.text}>{trimContent(item.location, 13)}</Text>
+            <Text style={styles.subText}>From: {loadDate(item.startTime)}</Text>
+            <Text style={styles.subText}>Till: {loadDate(item.endTime)}</Text>
+          </ImageBackground>
+        </View>
+      </TouchableOpacity>
+    );
+
     return (
       <View style={styles.scrollContainer}>
         {this.props.trips.length > 0 ? (
           <FlatList
             data={this.props.trips}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={this.renderRow.bind(this)}
+            keyExtractor={(item) => item.id}
+            renderItem={(item) => renderRow(item)}
             nestedScrollEnabled={true}
           />
         ) : (
@@ -83,26 +91,30 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   text: {
-    fontSize: 36,
+    fontSize: 30,
     color: "white",
     marginTop: "auto",
     marginLeft: "8%",
     width: "auto",
     paddingLeft: "3%",
     borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
-    // marginBottom: "4%",
+    marginBottom: "2%",
   },
   subText: {
-    fontSize: 18,
+    fontSize: 12,
     color: "white",
     // marginTop: "auto",
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     paddingBottom: "1%",
     paddingLeft: "3%",
     marginLeft: "8%",
-    marginBottom: "4%",
+
+    //marginTop: "4%",
+    marginBottom: "1%",
     borderBottomLeftRadius: 16,
+    borderTopLeftRadius: 16,
   },
 });
 

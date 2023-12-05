@@ -13,34 +13,31 @@ import {
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
-import TripsList from "../../components/TripsList.js";
+import Trip from "../../components/trips/Trip.js";
 
 class TripDetailsScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      childLoader: false,
-      events: [],
+      details: null,
       error: true,
       index: 0,
-      pastTrips: [],
-      upcomingTrips: [],
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
   }
 
-  async getUpcomingTripsData() {
-    var url = SERVER_URL + "/trips/trip/details";
+  async getTripDetails() {
+    var url =
+      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim();
+    console.log(url);
     try {
       const response = await axios.get(url);
       if (response.data) {
         this.setState({
-          upcomingTrips: response.data.trips,
+          details: response.data.details,
+          error: false,
         });
       }
     } catch (error) {
@@ -49,57 +46,13 @@ class TripDetailsScreen extends Component {
     }
   }
 
-  componentWillMount() {
-    console.log("is it coming here ?");
-    this.getPastTripsData();
-    this.getUpcomingTripsData();
+  componentDidMount() {
+    this.getTripDetails();
   }
 
   render() {
-    if (this.state.error == true) {
-      return (
-        <View style={styles.mainContainer}>
-          {/* <Text>My Trips</Text> */}
-
-          <ImageBackground
-            source={{
-              uri: "https://www.creativefabrica.com/wp-content/uploads/2020/12/11/Time-to-travel-background-Graphics-7122111-1.jpg",
-            }}
-            style={styles.coverImage}
-            resizeMode="cover"
-          >
-            <View style={styles.textContainer}>
-              <Text style={styles.coverTitle}>My trips</Text>
-            </View>
-          </ImageBackground>
-          <Tab
-            value={this.state.index}
-            onChange={(index) => {
-              this.setState({ index: index });
-            }}
-            dense
-          >
-            <Tab.Item>Upcoming</Tab.Item>
-            <Tab.Item>Past</Tab.Item>
-          </Tab>
-          <TabView
-            containerStyle={{ height: "100%" }}
-            value={this.state.index}
-            onChange={(index) => {
-              this.setState({ index: index });
-            }}
-            animationType="spring"
-          >
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.upcomingTrips} />
-            </TabView.Item>
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
-              <TripsList trips={this.state.pastTrips} />
-            </TabView.Item>
-          </TabView>
-          {/* </ScrollView> */}
-        </View>
-      );
+    if (this.state.error == false) {
+      return <Trip details={this.state.details} />;
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (

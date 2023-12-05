@@ -38,15 +38,16 @@ export default function Sections(props) {
       link: props.helpUrl,
       type: "external",
     },
-    // {
-    //   title: "Trips",
-    //   imgUrl:
-    //     "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
-    //   link: "Trips",
-    // },
   ];
 
-  const data2 = [];
+  const data2 = [
+    {
+      title: "Trips",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      link: "Trips",
+    },
+  ];
 
   useEffect(() => {
     async function handleHelp() {

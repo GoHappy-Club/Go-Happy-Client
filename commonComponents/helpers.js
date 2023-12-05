@@ -28,6 +28,31 @@ export const loadDate = (time) => {
 
   return finalTime;
 };
+
+export const loadOnlyDate = (time) => {
+  var dt = new Date(parseInt(time));
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  var month = months[dt.getMonth()];
+  var day = dt.getDate();
+
+  var finalTime = month + " " + day;
+
+  return finalTime;
+};
+
 export const trimContent = (text, cut) => {
   if (text.length < cut) {
     return text;
