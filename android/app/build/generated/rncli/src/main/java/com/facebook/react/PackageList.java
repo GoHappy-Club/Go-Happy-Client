@@ -49,6 +49,8 @@ import com.imagepicker.ImagePickerPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-lottie-splash-screen
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+// react-native-otp-verify
+import com.faizal.OtpVerify.OtpVerifyPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 // react-native-razorpay
@@ -133,6 +135,7 @@ public class PackageList {
       new ImagePickerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
+      new OtpVerifyPackage(),
       new ReactNativePushNotificationPackage(),
       new RazorpayPackage(),
       new SafeAreaContextPackage(),

@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import { Text } from "react-native-elements";
 import { connect } from "react-redux";
@@ -25,10 +26,13 @@ class TripsList extends Component {
     const renderRow = ({ item }) => (
       <TouchableOpacity
         onPress={() => {
-          console.log(item.id);
-          this.props.navigation.navigate("TripDetails", {
-            id: item.id,
-          });
+          if (this.props.type == "past") {
+            Linking.openURL(item.memoryVideoUrl);
+          } else {
+            this.props.navigation.navigate("TripDetails", {
+              id: item.id,
+            });
+          }
         }}
       >
         <View style={styles.container}>

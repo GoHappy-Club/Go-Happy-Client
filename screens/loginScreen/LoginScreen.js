@@ -26,7 +26,6 @@ import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
 import { BottomSheet, ListItem } from "react-native-elements";
-import OTPInputView from "@bherila/react-native-otp-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
@@ -35,7 +34,11 @@ import LinearGradient from "react-native-linear-gradient";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import RenderHtml from "react-native-render-html";
 import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
-
+import {
+  getHash,
+  startOtpListener,
+  useOtpVerify,
+} from "react-native-otp-verify";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -72,20 +75,6 @@ class LoginScreen extends Component {
         return;
       }
       this.setState({ referralCode: url.url.split("=")[1] });
-      // alert("test1", url);
-      // const urlObj = new URL(url.url);
-      // const searchParams = new URLSearchParams(urlObj.search);
-
-      // const id = searchParams.get("id");
-      // const source = searchParams.get("source");
-
-      // console.log("ID:", id);
-      // console.log("Source:", source);
-      // if (source == "google_ads") {
-      //   this.setState({ source: source });
-      // } else {
-      //   this.setState({ referralCode: url.url.split("=")[1] });
-      // }
     });
     dynamicLinks()
       .getInitialLink()
@@ -94,20 +83,6 @@ class LoginScreen extends Component {
           return;
         }
         this.setState({ referralCode: url.url.split("=")[1] });
-        // const urlObj = new URL(url.url);
-        // const searchParams = new URLSearchParams(urlObj.search);
-
-        // const id = searchParams.get("id");
-        // const source = searchParams.get("source");
-
-        // console.log("ID:", id);
-        // console.log("Source:", source);
-        // if (source == "google_ads") {
-        //   this.setState({ source: source });
-        // } else {
-        //   this.setState({ referralCode: url.url.split("=")[1] });
-        // }
-        // alert("test2" + this.state.referralCode);
       });
   }
   setProfile(
@@ -263,19 +238,17 @@ class LoginScreen extends Component {
       this.setState({ verificationCode: text });
     }
   };
-
   renderConfirmationCodeView = () => {
+    startOtpListener((message) => {
+      // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+      console.log("i am in auto message", message);
+      const otp = /(\d{4})/g.exec(message)[1];
+      if (otp && otp.length == 6) {
+        this.setState({ verificationCode: otp });
+      }
+    });
     return (
       <View style={styles.verificationView}>
-        {/* <OTPInputView
-          style={{ width: "80%", height: 60, color: "#000" }}
-          pinCount={6}
-          codeInputFieldStyle={styles.underlineStyleBase}
-          codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeChanged={(code) => {
-            this.setState({ verificationCode: code });
-          }}
-        /> */}
         <TextInput
           style={styles.otp_input}
           onChangeText={this.handleInputChange.bind(this)}

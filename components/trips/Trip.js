@@ -77,31 +77,8 @@ class Trip extends Component {
         {/* <Text>My Trips</Text> */}
 
         <this.CarouselComponent images={this.props.details.coverImages} />
-        <Tab
-          value={this.state.index}
-          onChange={(index) => {
-            this.setState({ index: index });
-          }}
-          dense
-        >
-          <Tab.Item>Details</Tab.Item>
-          <Tab.Item>Memories</Tab.Item>
-        </Tab>
-        <TabView
-          containerStyle={{ height: "100%" }}
-          value={this.state.index}
-          onChange={(index) => {
-            this.setState({ index: index });
-          }}
-          animationType="spring"
-        >
-          <TabView.Item style={{ width: "100%", height: "100%" }}>
-            <Itinerary details={this.props.details} />
-          </TabView.Item>
-          <TabView.Item
-            style={{ width: "100%", height: "100%" }}
-          ></TabView.Item>
-        </TabView>
+
+        <Itinerary details={this.props.details} />
         {/* </ScrollView> */}
       </View>
     );
@@ -112,6 +89,7 @@ const styles = StyleSheet.create({
   outsideContainer: {
     // padding: "3%",
     width: "100%",
+    elevation: 20,
   },
   mainContainer: {
     flex: 1,

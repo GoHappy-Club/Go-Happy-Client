@@ -1,5 +1,5 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
+import { Linking, View } from "react-native";
+import { Button, Text } from "react-native-paper";
 import React, { Component, useEffect, useState } from "react";
 import Accordion from "react-native-collapsible/Accordion";
 import { StyleSheet } from "react-native";
@@ -22,88 +22,106 @@ export const Itinerary = ({ details }) => {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    console.log("item", details);
     setItem(details);
-    const timeDifference = Math.abs(details.endTime - details.startTime);
 
-    // Convert milliseconds to days
-    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-    console.log(daysDifference);
     setSections([
       {
-        title: "Highlights",
-        startTime: details.startTime,
-        endTime: details.endTime,
-        cities: details.cities,
-        cost: details.cost,
-        duration:
-          daysDifference + " Days / " + (daysDifference - 1) + " Nights",
+        id: "aboutTheLocation",
+        title: "About the location",
       },
       {
-        title: "Attractions",
-        attractions: details.attractions,
+        id: "highlights",
+        title: "Highlights",
+      },
+      {
+        id: "itinerary",
+        title: "Itinerary",
+      },
+      {
+        id: "inclusion",
+        title: "Inclusion",
+      },
+      {
+        id: "exclusion",
+        title: "Exclusion",
+      },
+      {
+        id: "paymentPlan",
+        title: "Payment Plan",
+      },
+      {
+        id: "docsRequired",
+        title: "Documents Required",
+      },
+      {
+        id: "cancellationPolicy",
+        title: "Cancellation Policy",
+      },
+      {
+        id: "termsAndConditions",
+        title: "Terms And Conditions",
       },
     ]);
   }, [details]);
 
-  const QuickView = ({ section }) => {
-    return (
-      <View>
-        <Text style={{ fontSize: 18, marginBottom: "3%" }}>
-          <FontAwesomeIcon icon={faCalendarAlt} size={20} color="brown" />
-          {"  "}
-          {loadOnlyDate(section.startTime)} - {loadOnlyDate(section.endTime)}
-        </Text>
-        <Text style={{ fontSize: 18, marginBottom: "3%" }}>
-          <FontAwesomeIcon icon={faCloudSun} size={20} color="blue" />
-          {"  "}
-          {section.duration}
-        </Text>
-        <Text
-          style={{
-            fontSize: 18,
-            marginBottom: "3%",
-          }}
-        >
-          <FontAwesomeIcon icon={faMapMarkerAlt} size={20} color="red" />
-          {"  "}
-          {section.cities.join(" - ")}
-        </Text>
-        <Text style={{ fontSize: 18 }}>
-          <FontAwesomeIcon icon={faMoneyBill} size={20} color="green" />
-          {"  "}₹ {section.cost}/- per person
-        </Text>
-      </View>
-    );
-  };
+  const QuickView = () => {
+    const timeDifference = Math.abs(details.endTime - details.startTime);
 
-  const Attractions = ({ section }) => {
+    // Convert milliseconds to days
+    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    let data = {
+      id: "aboutTheLocation",
+      title: "About the location",
+      startTime: details.startTime,
+      endTime: details.endTime,
+      cities: details.cities,
+      cost: details.cost,
+      duration: daysDifference + " Days / " + (daysDifference - 1) + " Nights",
+    };
     return (
-      <View>
-        {/* <Text style={{ fontSize: 18, marginBottom: "3%" }}>
-          <FontAwesomeIcon icon={faCalendarAlt} size={20} color="brown" />
-          {"  "}
-          {loadOnlyDate(section.startTime)} - {loadOnlyDate(section.endTime)}
-        </Text>
-        <Text style={{ fontSize: 18, marginBottom: "3%" }}>
-          <FontAwesomeIcon icon={faCloudSun} size={20} color="blue" />
-          {"  "}
-          {section.duration}
-        </Text>
+      <View style={{ margin: "7%", marginBottom: 0, marginTop: "5%" }}>
         <Text
           style={{
-            fontSize: 18,
+            fontSize: 24,
+            textAlign: "center",
             marginBottom: "3%",
+            fontWeight: "bold",
           }}
         >
-          <FontAwesomeIcon icon={faMapMarkerAlt} size={20} color="red" />
-          {"  "}
-          {section.cities.join(" - ")}
+          {details.title}
         </Text>
-        <Text style={{ fontSize: 18 }}>
+        <View style={styles.quickViewItem}>
+          <FontAwesomeIcon icon={faCalendarAlt} size={20} color="brown" />
+          <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
+            {"  "}
+            {loadOnlyDate(data.startTime)} - {loadOnlyDate(data.endTime)}
+          </Text>
+        </View>
+        <View style={styles.quickViewItem}>
+          <FontAwesomeIcon icon={faCloudSun} size={20} color="blue" />
+          <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
+            {"  "}
+            {data.duration}
+          </Text>
+        </View>
+        <View style={styles.quickViewItem}>
+          <FontAwesomeIcon icon={faMapMarkerAlt} size={20} color="red" />
+          <Text
+            style={{
+              fontSize: 18,
+              textAlignVertical: "center",
+            }}
+          >
+            {"  "}
+            {data.cities.join(" - ")}
+          </Text>
+        </View>
+        <View style={styles.quickViewItem}>
           <FontAwesomeIcon icon={faMoneyBill} size={20} color="green" />
-          {"  "}₹ {section.cost}/- per person
-        </Text> */}
+          <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
+            {"  "}₹ {data.cost}/- per person
+          </Text>
+        </View>
       </View>
     );
   };
@@ -125,9 +143,13 @@ export const Itinerary = ({ details }) => {
   const _renderContent = (section) => {
     return (
       <View style={styles.content}>
-        {section.title == "Highlights" && <QuickView section={section} />}
-
-        {section.title == "Attractions" && <Attractions section={section} />}
+        <RenderHTML
+          // contentWidth={width}
+          source={{
+            html: item[section.id] + "<hr/>",
+            // html: item.description,
+          }}
+        />
       </View>
     );
   };
@@ -137,37 +159,41 @@ export const Itinerary = ({ details }) => {
   };
 
   return (
-    <ScrollView>
-      {item && (
-        <RenderHTML
-          baseStyle={styles.description}
-          // contentWidth={width}
-          source={{
-            html: item.beautifulDescription,
-            // html: item.description,
-          }}
+    <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        {item && <QuickView />}
+        <Accordion
+          containerStyle={styles.test}
+          sections={sections}
+          activeSections={activeSections}
+          renderHeader={_renderHeader}
+          renderContent={_renderContent}
+          onChange={_updateSections}
         />
+      </ScrollView>
+      {item && (
+        <View style={{ margin: 15 }}>
+          <Button
+            outline
+            style={{ backgroundColor: "#29BFC2" }}
+            onPress={() => {
+              let link = item.inquireNowLink;
+              link = link.replace("${trip}", item.location);
+              console.log(link);
+              return Linking.openURL(link);
+            }}
+          >
+            <Text style={{ color: "white" }}>Inquire Now</Text>
+          </Button>
+        </View>
       )}
-      <Accordion
-        containerStyle={styles.test}
-        sections={sections}
-        activeSections={activeSections}
-        renderHeader={_renderHeader}
-        renderContent={_renderContent}
-        onChange={_updateSections}
-      />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  description: {
-    fontSize: 22,
-    margin: "5%",
-    marginBottom: 0,
-  },
   test: {
-    // backgroundColor: "green",
+    //backgroundColor: "green",
     margin: "5%",
     // marginTop: "5%",
   },
@@ -184,7 +210,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   content: {
-    padding: "5%",
+    marginLeft: "2%",
+    marginBottom: "2%",
     paddingTop: 0,
+    marginTop: 0,
+  },
+  quickViewItem: {
+    marginBottom: "3%",
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
   },
 });

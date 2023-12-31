@@ -112,6 +112,7 @@ class TripsScreen extends Component {
             </TabView.Item>
             <TabView.Item style={{ width: "100%", height: "100%" }}>
               <TripsList
+                type="past"
                 trips={this.state.pastTrips}
                 navigation={this.props.navigation}
               />

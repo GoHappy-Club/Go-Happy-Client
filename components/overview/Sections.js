@@ -26,10 +26,10 @@ export default function Sections(props) {
       link: "MembershipScreen",
     },
     {
-      title: "Refer & Win",
+      title: "Trips",
       imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_section_pill.jpg",
-      link: "Refer",
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      link: "Trips",
     },
     {
       title: "Get Help",
@@ -40,14 +40,7 @@ export default function Sections(props) {
     },
   ];
 
-  const data2 = [
-    {
-      title: "Trips",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
-      link: "Trips",
-    },
-  ];
+  const data2 = [];
 
   useEffect(() => {
     async function handleHelp() {
@@ -57,7 +50,6 @@ export default function Sections(props) {
         if (response.data) {
           const properties = response.data.properties;
           if (properties && properties.length > 0) {
-            start();
             setWhatsappLink(properties[0].whatsappLink);
           }
         }

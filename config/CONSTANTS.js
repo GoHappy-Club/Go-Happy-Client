@@ -200,14 +200,21 @@ export const TermOfUse = {
   service, or any other interferences from an outside force) prevent the<br />
   execution of the transaction.&nbsp;</p>
   
-  <p>Refund &amp; Cancellation Policy of Top/ Subscription Plans/Contribution</p>
+  <p>Refund &amp; Cancellation Policy of Workshops/Offline Meets/Trips</p>
   
   <p><br />
-  A. Contribution</p>
+  A. Workshops</p>
   
-  <p>Contributions &nbsp;once purchased<br />
-  cannot be cancelled.No refund will be provided for payments already made.&nbsp;</p>
+  <p>Workshops, once registered cannot be cancelled.No refund will be provided for payments already made.&nbsp;</p>
+  <p><br />
+  B. Offline Meetups</p>
   
+  <p>Offile meetups, once registered cannot be cancelled.No refund will be provided for payments already made.&nbsp;</p>
+  <p><br />
+  C. Trips</p>
+  
+  <p>Refund for trips is trip specific, which is mentioned with every trip announcement. If not mentioned, the trip payment can be refunded, if asked before 30 days of the first day of the trip.</p>
+  <br />
   <p>7. USER CONTENT&nbsp;</p>
   
   <p>You acknowledge that you are responsible for any content you may<br />

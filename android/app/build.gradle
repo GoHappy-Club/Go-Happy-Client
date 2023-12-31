@@ -146,8 +146,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 88
-        versionName "88"
+        versionCode 91
+        versionName "91"
     }
     splits {
         abi {

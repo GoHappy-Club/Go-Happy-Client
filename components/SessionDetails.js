@@ -225,7 +225,6 @@ export default class SessionDetails extends Component {
   };
 
   tambolaParsing = (item) => {
-    var tic = null;
     var tic = new Array(10);
     for (var i = 0; i < tic.length; i++) {
       tic[i] = new Array(3);
@@ -278,33 +277,39 @@ export default class SessionDetails extends Component {
     tic[0].map((item) => {
       if (item != "") {
         tambolaHtml =
+          tambolaHtml + "<td style='background-color: #fff'>" + item + "</td>";
+      } else
+        tambolaHtml =
           tambolaHtml +
           "<td style='background-color: #eda29b'>" +
           item +
           "</td>";
-      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
     });
     tambolaHtml = tambolaHtml + "</tr>";
     tambolaHtml = tambolaHtml + "<tr>";
     tic[1].map((item) => {
       if (item != "") {
         tambolaHtml =
+          tambolaHtml + "<td style='background-color: #fff'>" + item + "</td>";
+      } else
+        tambolaHtml =
           tambolaHtml +
           "<td style='background-color: #eda29b'>" +
           item +
           "</td>";
-      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
     });
     tambolaHtml = tambolaHtml + "</tr>";
     tambolaHtml = tambolaHtml + "<tr>";
     tic[2].map((item) => {
       if (item != "") {
         tambolaHtml =
+          tambolaHtml + "<td style='background-color: #fff'>" + item + "</td>";
+      } else
+        tambolaHtml =
           tambolaHtml +
           "<td style='background-color: #eda29b'>" +
           item +
           "</td>";
-      } else tambolaHtml = tambolaHtml + "<td>" + item + "</td>";
     });
     tambolaHtml = tambolaHtml + "</tr>";
 
