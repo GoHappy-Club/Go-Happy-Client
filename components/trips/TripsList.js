@@ -22,6 +22,12 @@ class TripsList extends Component {
     this.state = {};
   }
 
+  calculateDaysNights(details) {
+    const timeDifference = Math.abs(details.endTime - details.startTime);
+    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    return daysDifference + " Days / " + (daysDifference - 1) + " Nights";
+  }
+
   render() {
     const renderRow = ({ item }) => (
       <TouchableOpacity
@@ -40,9 +46,24 @@ class TripsList extends Component {
             source={{ uri: item.coverImages[0] }}
             style={styles.image}
           >
-            <Text style={styles.text}>{trimContent(item.location, 13)}</Text>
-            <Text style={styles.subText}>From: {loadDate(item.startTime)}</Text>
-            <Text style={styles.subText}>Till: {loadDate(item.endTime)}</Text>
+            <View
+              style={{
+                alignItems: "center",
+                alignSelf: "flex-start",
+                marginTop: "auto",
+                display: "flex",
+              }}
+            >
+              <Text style={styles.text}>
+                {trimContent(item.location, 13).toUpperCase()}
+              </Text>
+              <Text style={styles.subText}>
+                From: {loadDate(item.startTime).split(",")[0]}
+              </Text>
+              <Text style={styles.subText}>
+                {this.calculateDaysNights(item)}
+              </Text>
+            </View>
           </ImageBackground>
         </View>
       </TouchableOpacity>
@@ -95,30 +116,34 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   text: {
-    fontSize: 30,
+    fontSize: 36,
     color: "white",
-    marginTop: "auto",
-    marginLeft: "8%",
-    width: "auto",
-    paddingLeft: "3%",
-    borderTopLeftRadius: 16,
-    borderBottomLeftRadius: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    // marginTop: "auto",
+    alignSelf: "flex-start",
+    // width: "10%",
+    paddingLeft: "10%",
+    paddingRight: "5%",
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     marginBottom: "2%",
+    fontWeight: "bold",
   },
   subText: {
+    alignSelf: "flex-start",
     fontSize: 12,
     color: "white",
     // marginTop: "auto",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     paddingBottom: "1%",
-    paddingLeft: "3%",
-    marginLeft: "8%",
+    marginRight: "20%",
 
     //marginTop: "4%",
     marginBottom: "1%",
-    borderBottomLeftRadius: 16,
-    borderTopLeftRadius: 16,
+    paddingLeft: "10%",
+    paddingRight: "5%",
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
   },
 });
 

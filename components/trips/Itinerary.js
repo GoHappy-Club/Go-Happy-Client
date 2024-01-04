@@ -80,16 +80,36 @@ export const Itinerary = ({ details }) => {
     };
     return (
       <View style={{ margin: "7%", marginBottom: 0, marginTop: "5%" }}>
-        <Text
-          style={{
-            fontSize: 24,
-            textAlign: "center",
-            marginBottom: "3%",
-            fontWeight: "bold",
-          }}
+        <View
+          style={
+            {
+              // alignItems: "center",
+              // justifyContent: "center",
+            }
+          }
         >
-          {details.title}
-        </Text>
+          <Text
+            style={{
+              backgroundColor: "#29BFC2",
+              padding: 4,
+              paddingLeft: 10,
+              paddingRight: 10,
+              borderRadius: 10,
+              fontSize: 26,
+              color: "white",
+              textAlign: "center",
+              marginBottom: "3%",
+              fontWeight: "bold",
+            }}
+          >
+            {details.title}
+          </Text>
+        </View>
+        <RenderHTML
+          source={{
+            html: "<hr/>",
+          }}
+        />
         <View style={styles.quickViewItem}>
           <FontAwesomeIcon icon={faCalendarAlt} size={20} color="brown" />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
@@ -122,6 +142,11 @@ export const Itinerary = ({ details }) => {
             {"  "}₹ {data.cost}/- per person
           </Text>
         </View>
+        <RenderHTML
+          source={{
+            html: "<hr/>",
+          }}
+        />
       </View>
     );
   };
@@ -144,10 +169,8 @@ export const Itinerary = ({ details }) => {
     return (
       <View style={styles.content}>
         <RenderHTML
-          // contentWidth={width}
           source={{
             html: item[section.id] + "<hr/>",
-            // html: item.description,
           }}
         />
       </View>

@@ -280,7 +280,7 @@ class LoginScreen extends Component {
         />
         <Button
           type="clear"
-          title="Enter a Different Phone Number"
+          title="Re-Enter the Phone Number"
           loading={this.state.loadingButton}
           onPress={this.changePhoneNumber}
         />

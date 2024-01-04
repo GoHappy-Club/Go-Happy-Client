@@ -459,14 +459,17 @@ export default class SessionDetails extends Component {
                       this.props.phoneNumber
                     )}
                   </Text>
-                  <RenderHtml
-                    // contentWidth={width}
-                    tagsStyles={contentHtmlStyles}
-                    source={{
-                      html: tambolaHtml,
-                      // html: item.description,
-                    }}
-                  />
+
+                  {tambolaHtml && (
+                    <RenderHtml
+                      // contentWidth={width}
+                      tagsStyles={contentHtmlStyles}
+                      source={{
+                        html: tambolaHtml,
+                        // html: item.description,
+                      }}
+                    />
+                  )}
                   <View
                     style={{
                       marginTop: "5%",

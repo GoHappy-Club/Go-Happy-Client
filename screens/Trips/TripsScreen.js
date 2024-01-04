@@ -77,13 +77,13 @@ class TripsScreen extends Component {
 
           <ImageBackground
             source={{
-              uri: "https://www.creativefabrica.com/wp-content/uploads/2020/12/11/Time-to-travel-background-Graphics-7122111-1.jpg",
+              uri: "https://storage.googleapis.com/gohappy-main-bucket/Assets/trip_cover.jpeg",
             }}
             style={styles.coverImage}
             resizeMode="cover"
           >
             <View style={styles.textContainer}>
-              <Text style={styles.coverTitle}>Trips</Text>
+              <Text style={styles.coverTitle}>TRIPS</Text>
             </View>
           </ImageBackground>
           <Tab
@@ -158,9 +158,14 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 16,
     marginTop: "auto",
-    width: 200,
+    // width: 200,
+    alignSelf: "flex-start",
   },
   coverTitle: {
+    paddingLeft: "5%",
+    paddingRight: "5%",
+    borderRadius: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     fontSize: 36,
     fontWeight: "bold",
     color: "white",
