@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     paddingLeft: "5%",
     paddingRight: "5%",
     borderRadius: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    // backgroundColor: "rgba(0, 0, 0, 0.6)",
     fontSize: 36,
     fontWeight: "bold",
     color: "white",

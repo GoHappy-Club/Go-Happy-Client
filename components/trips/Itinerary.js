@@ -206,7 +206,9 @@ export const Itinerary = ({ details }) => {
               return Linking.openURL(link);
             }}
           >
-            <Text style={{ color: "white" }}>Inquire Now</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              Inquire Now
+            </Text>
           </Button>
         </View>
       )}
