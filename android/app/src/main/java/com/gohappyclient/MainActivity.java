@@ -15,12 +15,12 @@ import com.facebook.react.ReactActivity;
 
 import android.util.Log;
 import android.widget.Toast;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
-import com.google.android.gms.tasks.OnCompleteListener;
+// import com.google.firebase.messaging.FirebaseMessaging;
+// import com.google.firebase.messaging.RemoteMessage;
+// import com.google.android.gms.tasks.OnCompleteListener;
 
 import androidx.annotation.RequiresApi;
-import com.google.android.gms.tasks.Task;
+// import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.NonNull;
 
@@ -42,20 +42,20 @@ public class MainActivity extends ReactActivity {
             checkAlarmsRemindersPermission();
         }
 
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-                        String msg = token;
-                        Log.d(TAG, msg);
-                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
-                    }
-                });
+        // FirebaseMessaging.getInstance().getToken()
+        //         .addOnCompleteListener(new OnCompleteListener<String>() {
+        //             @Override
+        //             public void onComplete(@NonNull Task<String> task) {
+        //                 if (!task.isSuccessful()) {
+        //                     Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+        //                     return;
+        //                 }
+        //                 String token = task.getResult();
+        //                 String msg = token;
+        //                 Log.d(TAG, msg);
+        //                 //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+        //             }
+        //         });
     }
 
     private boolean checkAlarmsRemindersPermission() {

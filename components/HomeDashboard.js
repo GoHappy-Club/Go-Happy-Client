@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
-import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
+import { phonePe, PaymentConstants, PaymentError } from "./PhonePe/Payments.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -46,41 +46,31 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-  async razorPayWrapper(item) {
-    const prefill = {
-      email: this.props.profile.email
-        ? this.props.profile.email
-        : PaymentConstants.emailId,
-      contact: this.props.profile.phoneNumber,
-      name: this.props.profile.name,
-    };
-    const _callback = (data) => {
+  async phonePeWrapper(item) {
+    var _this = this;
+    const _callback = (id) => {
       this.setState({ success: true });
 
       var _this = this;
-      if (data.razorpay_payment_id === "") {
+      if (id === "") {
         _this.props.navigation.navigate("GoHappy Club");
       } else {
         this.updateEventBook(item);
         this.setState({ showPaymentAlert: true });
       }
     };
-    const _errorHandler = (error) => {
+    const _errorHandler = () => {
       this.setState({
-        paymentAlertMessage: PaymentError.message,
+        paymentAlertMessage: phonepe_payments.PaymentError(),
         paymentAlertTitle: "Oops!",
       });
       this.setState({ showPaymentAlert: true });
     };
-    razorPay(
-      item,
-      item.cost,
-      prefill,
-      "Workshop Payment",
-      _callback,
-      _errorHandler
-    );
+    console.log('propro',this.props.profile)
+    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
+    
   }
+  
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -351,7 +341,7 @@ class HomeDashboard extends Component {
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.razorPayWrapper.bind(this, item)
+                    ? this.phonePeWrapper.bind(this, item)
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}

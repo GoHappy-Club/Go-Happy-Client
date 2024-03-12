@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
+import phonepe_payments from "./PhonePe/Payments.js";
 
 import { Text } from "react-native-elements";
 
@@ -84,27 +84,12 @@ class Membership extends Component {
     };
     this._retrieveData();
   }
-
-  async razorPayWrapper(item) {
-    const prefill = {
-      email: this.props.profile.email
-        ? this.props.profile.email
-        : PaymentConstants.emailId,
-      contact: this.props.profile.phoneNumber,
-      name: this.props.profile.name,
-    };
+  async phonePeWrapper() {
     var _this = this;
-    const _callback = (data) => {
+    const _callback = (id) => {
       _this.setState({ success: true });
-      //console.log("this is data", data);
-
-      // _this.setState({
-      //   showPaymentAlert: true,
-      //   paymentAlertMessage: "Your Payment is Successful!",
-      //   paymentAlertTitle: "Success",
-      // });
-      //console.log("this is data", data);
       _this.props.setPaymentData(
+        id,
         _this.props.profile.phoneNumber,
         _this.state.amount,
         () => {
@@ -112,55 +97,20 @@ class Membership extends Component {
         }
       );
     };
-    const _errorHandler = (error) => {
+    const _errorHandler = () => {
       // console.log("reached in error handler", error);
       this.setState({
-        paymentAlertMessage: PaymentError.message,
+        paymentAlertMessage: phonepe_payments.PaymentError(),
         paymentAlertTitle: "Oops!",
         amount: "",
       });
       this.setState({ showPaymentAlert: true });
     };
-    razorPay(
-      item,
-      this.state.amount,
-      prefill,
-      "Contribution Payment",
-      _callback,
-      _errorHandler
-    );
+    console.log('propro',this.props.profile)
+    phonepe_payments.phonePe(this.props.profile.phoneNumber,this.state.amount,_callback,_errorHandler)
+    
   }
 
-  async razorPayWrapperw() {
-    var options = {
-      description: "GoHappy Contribution",
-      currency: "INR",
-      key: "rzp_live_Gnecc7OCz1jsxK",
-      amount: this.state.amount * 100,
-      name: "Contribution",
-      readonly: { email: true },
-
-      // plan_id:'plan_JA3o75RQvPfKXP',
-      // total_count:6,
-      // notes: {
-      // 	name: "Subscription A"
-      //   },
-
-      order_id: orderId, //Replace this with an order_id created using Orders API.
-      prefill: {
-        email: "contributions@gohappyclub.co.in",
-        contact: this.props.profile.phoneNumber,
-        name: this.props.profile.name,
-      },
-      theme: { color: "#53a20e" },
-    };
-    var _this = this;
-    if (this.state.payType == "m") {
-      Linking.openURL("https://rzp.io/i/qoGMhiRx");
-    } else {
-      Linking.openURL("https://pages.razorpay.com/ContributeUs");
-    }
-  }
   planSelected(plan, index) {
     var allPlans = this.state.plans;
     plan.backgroundColor = "blue";
@@ -271,7 +221,7 @@ class Membership extends Component {
 					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
 						<TouchableOpacity  disabled={this.state.plans.selectedItem===''}
 						 style={this.state.plans.selectedItem==='' && styles.checkoutButtonDisabled || styles.checkoutButtonEnabled}
-						 onPress={this.razorPay.bind(this)}>
+						 onPress={this.phonePe.bind(this)}>
 							<View>
 								<Text style={styles.optionList}>Proceed to Checkout</Text>
 							</View>
@@ -427,7 +377,7 @@ class Membership extends Component {
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={this.razorPayWrapper.bind(this)}
+              onPress={this.phonePeWrapper.bind(this)}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>

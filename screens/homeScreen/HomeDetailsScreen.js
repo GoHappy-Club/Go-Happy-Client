@@ -28,21 +28,6 @@ export default class HomeDetailsScreen extends Component {
     this._retrieveData();
     // alert("ble;" + JSON.stringify(props));
   }
-  getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
-
-    axios
-      .post(url, { amount: amount })
-      .then((response) => {
-        if (response.data) {
-          this.setState({ orderId: response.data });
-          return response.data;
-        }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -144,21 +129,6 @@ export default class HomeDetailsScreen extends Component {
     }
   }
 
-  getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
-    axios
-      .post(url, { amount: amount })
-      .then((response) => {
-        if (response.data) {
-          // this.setState({ orderId: response.data });
-          return response.data;
-        }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
-
   render() {
     if (this.state.loader == true) {
       return (
@@ -181,7 +151,6 @@ export default class HomeDetailsScreen extends Component {
         alreadyBookedSameDayEvent={
           this.props.route.params.alreadyBookedSameDayEvent
         }
-        getOrderId={this.getOrderId.bind(this)}
       />
     );
   }

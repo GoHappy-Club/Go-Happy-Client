@@ -41,19 +41,6 @@ class OverviewScreen extends Component {
     // alert(JSON.stringify(props));
   }
 
-  async getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
-    try {
-      const response = await axios.post(url, { amount: amount });
-      if (response.data) {
-        return response.data;
-      }
-    } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
-    }
-  }
-
   async getOverviewData() {
     var url = SERVER_URL + "/home/overview";
     try {
