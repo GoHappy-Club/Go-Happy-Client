@@ -19,7 +19,9 @@ import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
-import { phonePe, PaymentConstants, PaymentError } from "./PhonePe/Payments.js";
+
+import phonepe_payments from "./PhonePe/Payments.js";
+
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
