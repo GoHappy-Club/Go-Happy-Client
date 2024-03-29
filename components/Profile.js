@@ -155,7 +155,7 @@ class Profile extends Component {
   openWhatsApp = () => {
     // let msg = this.state.message;
     // let mobile = this.state.mobileNo;
-    let url = "https://chat.whatsapp.com/DKjqVwE9c7X4EgEBYE39yu";
+    let url = "https://chat.whatsapp.com/FnEL0tDNlRtEOjYUhehZ1F";
     Linking.openURL(url)
       .then((data) => {})
       .catch(() => {
