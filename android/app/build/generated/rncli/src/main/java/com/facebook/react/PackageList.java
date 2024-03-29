@@ -25,8 +25,6 @@ import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
 import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 // @react-native-firebase/messaging
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
-// @react-native-google-signin/google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // lottie-react-native
 import com.airbnb.android.react.lottie.LottiePackage;
 // react-native-branch
@@ -117,7 +115,6 @@ public class PackageList {
       new ReactNativeFirebaseCrashlyticsPackage(),
       new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseMessagingPackage(),
-      new RNGoogleSigninPackage(),
       new LottiePackage(),
       new RNBranchPackage(),
       new ReactNativeContacts(),
