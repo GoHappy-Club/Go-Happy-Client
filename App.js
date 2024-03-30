@@ -25,7 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as configData from "./config/cloud-dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
-import VersionCheck from "react-native-version-check";
+import DeviceInfo from 'react-native-device-info';
 import firebase from "@react-native-firebase/app";
 import { useSelector } from "react-redux";
 import ErrorScreen from "./components/NoInternet";
@@ -64,9 +64,11 @@ PushNotification.createChannel(
 export default function App() {
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
-  var [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
+  var [productionAppVersion,setProductionAppVersion] = useState("")
+  const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
     WhatsNewMessage().show
   );
+  const [updateRequired,setUpdateRequired] = useState(false)
   const width = Dimensions.get("window").width;
 
   AsyncStorage.getItem("token").then((out) => {
@@ -92,44 +94,52 @@ export default function App() {
       setIsConnected(false);
     }
   };
-  const checkVersion = async () => {
+
+  const checkVersionHelper = async () => {
+    const appVersion = DeviceInfo.getVersion();
+    var url = SERVER_URL + "/properties/list";
     try {
-      // showing updating content if this is newly update but not newly install
-      // it will only show once
-      const asyncJustUpdated = await AsyncStorage.getItem(
-        "@MyApp:isJustUpdated"
-      );
-      let updateNeeded = null;
-      try {
-        updateNeeded = await VersionCheck.needUpdate();
-      } catch {}
-      if (updateNeeded && updateNeeded.isNeeded) {
-        Alert.alert(
-          "Please Update",
-          "You will have to update your app to the latest version to continue using.",
-          [
-            {
-              text: "Update",
-              onPress: () => {
-                BackHandler.exitApp();
-                Linking.openURL(updateNeeded.storeUrl);
-              },
-            },
-          ],
-          { cancelable: false }
-        );
-        // after updating, save status
-        await AsyncStorage.setItem("@MyApp:isJustUpdated", "true");
-      } else {
-        if (asyncJustUpdated == "true") {
-          setJustUpdated(true);
-          // after showing message once, reset status
-          await AsyncStorage.setItem("@MyApp:isJustUpdated", "false");
+      const response = await axios.get(url);
+      if (response.data) {
+        const properties = response.data.properties;
+        if (properties && properties.length > 0 ) {
+          setProductionAppVersion(properties[0].appVersion)
+          console.log('fsd',properties[0].appVersion,'fsdfs',appVersion)
+          if(properties[0].appVersion>appVersion){
+            return true
+          }
+          else{
+            return false
+          }
         }
       }
     } catch (error) {
-      crashlytics().log(JSON.stringify(error));
+      this.error = true;
+      // throw new Error("Error getting order ID");
     }
+  }
+
+
+  const checkVersion = async () => {
+    var needUpdate = await checkVersionHelper()
+    console.log('update',needUpdate)
+    setUpdateRequired(needUpdate)
+    // if (needUpdate) {
+    //   Alert.alert(
+    //     "Please Update",
+    //     "You will have to update your app to the latest version to continue using.",
+    //     [
+    //       {
+    //         text: "Update",
+    //         onPress: () => {
+    //           // BackHandler.exitApp();
+    //           Linking.openURL("https://play.google.com/store/apps/details?id=com.gohappyclient");
+    //         },
+    //       },
+    //     ],
+    //     { cancelable: false }
+    //   );
+    // }
   };
 
   return (
@@ -152,6 +162,28 @@ export default function App() {
           onConfirmPressed={() => {
             setJustUpdated((justUpdated = false));
             setShowWhatsNewMessage((showWhatsNewMessage = false));
+          }}
+        />
+      )}
+
+      {updateRequired && (
+        <AwesomeAlert
+          show={true}
+          showProgress={false}
+          title="Update Required"
+          message={
+            <View style={{ width: width * 0.6 }}>
+              <RenderHtml source={{ html: 'To continue using the app, please install the latest version available. <br/><br/>This update ensures you have access to the newest features and improvements. Thank you for staying up to date!' }} />
+            </View>
+          }
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Update Now"
+          confirmButtonColor="#29BFC2"
+          onConfirmPressed={() => {
+            Linking.openURL("https://play.google.com/store/apps/details?id=com.gohappyclient");
+            // setShowWhatsNewMessage((showWhatsNewMessage = false));
           }}
         />
       )}

@@ -18,21 +18,6 @@ class MembershipScreen extends Component {
     };
     // alert(JSON.stringify(props));
   }
-  getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
-
-    axios
-      .post(url, { amount: amount })
-      .then((response) => {
-        if (response.data) {
-          this.setState({ orderId: response.data });
-          return response.data;
-        }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
   setProfile(amount) {
     let { profile, actions } = this.props;
     profile.amount = amount;
@@ -56,10 +41,10 @@ class MembershipScreen extends Component {
         this.error = true;
       });
   }
-  setPaymentData(phoneNumber, amount, _callback) {
+  setPaymentData(id, phoneNumber, amount, _callback) {
     var url = SERVER_URL + "/user/setPaymentData";
     axios
-      .post(url, { phoneNumber: phoneNumber, amount: amount })
+      .post(url, { id: id, phoneNumber: phoneNumber, amount: amount })
       .then((response) => {
         // if (response.data) {
         AsyncStorage.setItem("amount", amount);
@@ -84,7 +69,6 @@ class MembershipScreen extends Component {
     return (
       <Membership
         navigation={this.props.navigation}
-        getOrderId={this.getOrderId.bind(this)}
         // setMembership={this.setMembership.bind(this)}
         setPaymentData={this.setPaymentData.bind(this)}
       />

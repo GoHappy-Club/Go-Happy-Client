@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.gohappyclient">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.gohappyclient">
 
     <uses-permission
     android:name="android.permission.INTERNET"/>
@@ -8,6 +8,7 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" tools:ignore="ProtectedPermissions" />
     <uses-permission
     android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" /> -->
@@ -47,17 +48,16 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".MyFirebaseMessagingService" android:exported="false" android:directBootAware="true">
+        <!-- <service android:name=".MyFirebaseMessagingService" android:exported="false" android:directBootAware="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service> -->
+
+        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
-        <!-- It is needed to be either  ussage of MyFirebaseMessagingService or com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService as the function cannot be duplicated: <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
-    <!--        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
-        <!--            </intent-filter>-->
-        <!--        </service>-->
     </application>
 </manifest>

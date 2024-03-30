@@ -26,19 +26,6 @@ class HomeScreen extends Component {
     // alert(JSON.stringify(props));
   }
 
-  async getOrderId(amount) {
-    var url = SERVER_URL + "/razorPay/pay";
-    try {
-      const response = await axios.post(url, { amount: amount });
-      if (response.data) {
-        return response.data;
-      }
-    } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
-    }
-  }
-
   async getProperties() {
     var url = SERVER_URL + "/properties/list";
     const redux_profile = this.props.profile;
@@ -68,7 +55,6 @@ class HomeScreen extends Component {
             bookEvent={this.bookEvent.bind(this)}
             loadEvents={this.loadEvents.bind(this)}
             navigation={this.props.navigation}
-            getOrderId={this.getOrderId.bind(this)}
           />
           <WhatsAppFAB
             url={

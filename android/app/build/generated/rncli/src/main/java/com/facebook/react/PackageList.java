@@ -13,14 +13,6 @@ import java.util.ArrayList;
 
 // @react-native-async-storage/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-// @react-native-community/art
-import com.reactnativecommunity.art.ARTPackage;
-// @react-native-community/clipboard
-import com.reactnativecommunity.clipboard.ClipboardPackage;
-// @react-native-community/datetimepicker
-import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
-// @react-native-community/netinfo
-import com.reactnativecommunity.netinfo.NetInfoPackage;
 // @react-native-firebase/analytics
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 // @react-native-firebase/app
@@ -31,8 +23,8 @@ import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
 // @react-native-firebase/dynamic-links
 import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
-// @react-native-google-signin/google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
+// @react-native-firebase/messaging
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 // lottie-react-native
 import com.airbnb.android.react.lottie.LottiePackage;
 // react-native-branch
@@ -41,6 +33,8 @@ import io.branch.rnbranch.RNBranchPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // react-native-date-picker
 import com.henninghall.date_picker.DatePickerPackage;
+// react-native-device-info
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 // react-native-image-picker
@@ -51,10 +45,10 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // react-native-otp-verify
 import com.faizal.OtpVerify.OtpVerifyPackage;
+// react-native-phonepe-pg
+import com.phonepepaymentsdk.PhonePePaymentSDKPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-// react-native-razorpay
-import com.razorpay.rn.RazorpayPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -65,8 +59,6 @@ import cl.json.RNSharePackage;
 import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
-// react-native-version-check
-import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 // react-native-video
 import com.brentvatne.react.ReactVideoPackage;
 // react-native-webview
@@ -117,33 +109,29 @@ public class PackageList {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
-      new ARTPackage(),
-      new ClipboardPackage(),
-      new RNDateTimePickerPackage(),
-      new NetInfoPackage(),
       new ReactNativeFirebaseAnalyticsPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseCrashlyticsPackage(),
       new ReactNativeFirebaseDynamicLinksPackage(),
-      new RNGoogleSigninPackage(),
+      new ReactNativeFirebaseMessagingPackage(),
       new LottiePackage(),
       new RNBranchPackage(),
       new ReactNativeContacts(),
       new DatePickerPackage(),
+      new RNDeviceInfo(),
       new RNGestureHandlerPackage(),
       new ImagePickerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),
       new OtpVerifyPackage(),
+      new PhonePePaymentSDKPackage(),
       new ReactNativePushNotificationPackage(),
-      new RazorpayPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSharePackage(),
       new SvgPackage(),
       new VectorIconsPackage(),
-      new RNVersionCheckPackage(),
       new ReactVideoPackage(),
       new RNCWebViewPackage()
     ));

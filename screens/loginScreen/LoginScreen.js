@@ -18,10 +18,6 @@ import analytics from "@react-native-firebase/analytics";
 
 import Video from "react-native-video";
 
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
@@ -116,10 +112,7 @@ class LoginScreen extends Component {
     };
     actions.setProfile(profile);
   }
-  getCurrentUser = async () => {
-    const currentUser = await GoogleSignin.getCurrentUser();
-    this.setState({ currentUser });
-  };
+
   validatePhoneNumber = () => {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     return regexp.test(this.state.phoneNumber);
@@ -336,11 +329,7 @@ class LoginScreen extends Component {
       }
       this.setState({ loader: false });
     } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        // user has not signed in yet
-      } else {
-        // some other error
-      }
+      
     }
   };
   _backendSignIn(token, name, profileImage, phone) {

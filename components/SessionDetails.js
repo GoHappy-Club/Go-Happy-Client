@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 
+import phonepe_payments from "./PhonePe/Payments.js";
+
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -23,7 +25,6 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
-import { razorPay, PaymentConstants, PaymentError } from "./RazorPay/Payments";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -44,40 +45,34 @@ export default class SessionDetails extends Component {
     };
   }
 
-  async razorPayWrapper(item) {
-    const prefill = {
-      email: this.props.profile.email
-        ? this.props.profile.email
-        : PaymentConstants.emailId,
-      contact: this.props.profile.phoneNumber,
-      name: this.props.profile.name,
-    };
-    const _callback = (data) => {
+
+  async phonePeWrapper(item) {
+    var _this = this;
+    const _callback = (id) => {
       this.setState({ success: true });
-      if (data.razorpay_payment_id === "") {
+
+      var _this = this;
+      if (id === "") {
         this.props.route.params.onGoBack();
-        this.props.navigation.navigate("GoHappy Club");
+        _this.props.navigation.navigate("GoHappy Club");
       } else {
         this.sessionAction();
         this.setState({ showPaymentAlert: true });
       }
     };
-    const _errorHandler = (error) => {
+    const _errorHandler = () => {
       this.setState({
-        paymentAlertMessage: PaymentError.message,
+        paymentAlertMessage: phonepe_payments.PaymentError(),
         paymentAlertTitle: "Oops!",
       });
       this.setState({ showPaymentAlert: true });
     };
-    razorPay(
-      item,
-      item.cost,
-      prefill,
-      "Workshop Payment",
-      _callback,
-      _errorHandler
-    );
+    console.log('propro',this.props.profile)
+    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
+    
   }
+
+  
   componentDidMount() {
     this.createDynamicReferralLink();
   }
@@ -551,7 +546,7 @@ export default class SessionDetails extends Component {
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
-                ? this.razorPayWrapper.bind(this, item)
+                ? this.phonePeWrapper.bind(this, item)
                 : this.sessionAction.bind(this)
             }
           ></Button>

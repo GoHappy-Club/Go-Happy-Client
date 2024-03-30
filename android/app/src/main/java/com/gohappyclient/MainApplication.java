@@ -13,7 +13,6 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
-// import com.razorpay.rn.RazorpayPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // import io.invertase.firebase.RNFirebaseLinksPackage;
@@ -35,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           //packages.add(new ReactNativeFirebaseAppPackage());
-//          packages.add(new RazorpayPackage());
 //          packages.add(new AsyncStoragePackage());
           // packages.add(new ReactNativeContacts());
           // packages.add(new RNFirebaseLinksPackage());
