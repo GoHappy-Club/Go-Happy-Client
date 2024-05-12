@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import {
   Dimensions,
   Image,
-  ImageBackground,
   Linking,
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
   TextInput,
   TouchableOpacity,
 } from "react-native";
@@ -152,12 +150,6 @@ class LoginScreen extends Component {
         })
         .catch((error) => {
           crashlytics().recordError(JSON.stringify(error));
-          // if(JSON.stringify(error).includes('too-many')){
-          // 	alert(error);
-          // }
-          // else{
-          // 	alert(JSON.stringify(error));
-          // }
           alert(
             'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
           );
@@ -190,19 +182,21 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = () => {
+  handleVerifyCode = (code) => {
     const { confirmResult, verificationCode } = this.state;
-
+    if(code==null){
+      code = verificationCode
+    }
     // Request for OTP verification
-    if (verificationCode.length == 6) {
+    if (code.length == 6) {
       this.setState({ loadingVerifyButton: true });
     } else {
       this.setState({ showAlert: true });
     }
 
-    if (verificationCode.length == 6) {
+    if (code.length == 6) {
       confirmResult
-        .confirm(verificationCode)
+        .confirm(code)
         .then((user) => {
           this.setState({ userId: user.user.uid });
           try {
@@ -230,15 +224,19 @@ class LoginScreen extends Component {
     if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
     }
+    if(text.length == 6 && /^[0-9]*$/.test(text)){
+      this.handleVerifyCode(text)
+    }
   };
   renderConfirmationCodeView = () => {
     startOtpListener((message) => {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
       //console.log("i am in auto message", message);
+      if( /(\d{4})/g.exec(message)){
       const otp = /(\d{4})/g.exec(message)[1];
       if (otp && otp.length == 6) {
         this.setState({ verificationCode: otp });
-      }
+      }}
     });
     return (
       <View style={styles.verificationView}>

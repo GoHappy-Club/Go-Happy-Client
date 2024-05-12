@@ -64,7 +64,7 @@
     "react-native-lottie-splash-screen": "0.1.14",
     "react-native-modal-datetime-picker": "13.0.1",
     "react-native-otp-textinput": "0.0.8",
-    "react-native-otp-verify": "^1.1.6",
+    "react-native-otp-verify": "^1.1.8",
     "react-native-paper": "4.12.4",
     "react-native-phone-number-input": "2.1.0",
     "react-native-phonepe-pg": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-mobile-react-native-sdk/releases/v2/react-native-phonepe-pg.tgz",
