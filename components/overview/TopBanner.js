@@ -27,7 +27,7 @@ export default class TopBanner extends Component {
           if (item.isExternal == true) {
             Linking.openURL(item.url);
           } else if (item.isExternal == false && item.url.length > 0) {
-            console.log(this);
+            //console.log(this);
             this.props.navigation.navigate(item.url, JSON.parse(item.params));
           }
         }}

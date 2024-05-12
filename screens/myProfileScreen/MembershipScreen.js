@@ -23,7 +23,7 @@ class MembershipScreen extends Component {
     profile.amount = amount;
     profile.lastPaymentDate = new Date().getTime();
     actions.setProfile(profile);
-    console.log("this is the profile", profile);
+    //console.log("this is the profile", profile);
   }
   setMembership(email, planName, _callback) {
     var url = SERVER_URL + "/user/setMembership";

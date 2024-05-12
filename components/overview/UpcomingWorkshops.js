@@ -121,6 +121,7 @@ class UpcomingWorkshops extends Component {
       onPress={() =>
         this.props.navigation.navigate("Session Details", {
           event: item,
+          deepId: item.id,
           phoneNumber: this.props.profile.phoneNumber,
           profile: this.props.profile,
           onGoBack: () => {

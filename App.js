@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 // import NetInfo from "@react-native-community/network-info";
 import {
   Alert,
@@ -11,11 +11,14 @@ import {
   View,
   // NetInfo,
 } from "react-native";
+import Video from "react-native-video";
+import { setProfile } from "./redux/actions/counts.js";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen/LoginScreen";
 import BottomNavigator from "./components/navigators/BottomNavigator";
 import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
+import HomeScreen from "./screens/homeScreen/HomeScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 // import NoInternet from "./components/NoInternet";
@@ -27,7 +30,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from 'react-native-device-info';
 import firebase from "@react-native-firebase/app";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ErrorScreen from "./components/NoInternet";
 import { WhatsNewMessage } from "./config/CONSTANTS";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -46,7 +49,7 @@ global.Icon = Icon;
 Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
-var token = "";
+
 
 PushNotification.createChannel(
   {
@@ -71,20 +74,104 @@ export default function App() {
   const [updateRequired,setUpdateRequired] = useState(false)
   const width = Dimensions.get("window").width;
 
-  AsyncStorage.getItem("token").then((out) => {
-    token = out;
-  });
+  // AsyncStorage.getItem("token").then((out) => {
+  //   token = out;
+  // });
   const [isConnected, setIsConnected] = useState(true);
+  const [token, setToken] = useState(false)
+  const profile = useSelector(state => state.profile.profile); // Replace 'data' with your actual state slice name
+  const dispatch = useDispatch();
+
+  const setNewProfile = 
+    (name,
+    email,
+    phoneNumber,
+    profileImage,
+    token,
+    plan,
+    sessionsAttended,
+    // dob,
+    dateOfJoining,
+    selfInviteCode,
+    city,
+    emergencyContact) =>
+   {
+    
+    const new_profile = {
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      profileImage: profileImage,
+      token: token,
+      membership: plan,
+      sessionsAttended: sessionsAttended,
+      // dob: dob,
+      dateOfJoining: dateOfJoining,
+      selfInviteCode: selfInviteCode,
+      city: city,
+      emergencyContact: emergencyContact,
+    };
+    dispatch(setProfile(new_profile));
+  }
   useEffect(() => {
     recheck();
     checkVersion();
+    const fetchData = async () => {
+      try {
+        // Retrieve data from AsyncStorage
+        const token_temp = await AsyncStorage.getItem("token");
+        if(token_temp)
+          setToken(true)
+        else
+          setToken(null)
+        if(profile==""){
+          const phoneNumber = await AsyncStorage.getItem("phoneNumber")
+          const name = await AsyncStorage.getItem("name")
+          const email = await AsyncStorage.getItem("email")
+          const emergencyContact = await AsyncStorage.getItem("emergencyContact")
+          const city = await AsyncStorage.getItem("city")
+          const profileImage = await AsyncStorage.getItem("profileImage")
+          const membership = await AsyncStorage.getItem("membership")
+          const sessionsAttended = await AsyncStorage.getItem("sessionsAttended")
+          const dateOfJoining = await AsyncStorage.getItem("dateOfJoining")
+          const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
+          console.log(name,
+            email,
+            phoneNumber,
+            // profileImage,
+            token_temp,
+            membership,
+            sessionsAttended,
+            dateOfJoining,
+            selfInviteCode,
+            city,
+            emergencyContact)
+            setNewProfile(name,
+                      email,
+                      phoneNumber,
+                      profileImage,
+                      token_temp,
+                      membership,
+                      sessionsAttended,
+                      dateOfJoining,
+                      selfInviteCode,
+                      city,
+                      emergencyContact,
+                    )
+        }
+        
+      } catch (error) {
+        console.error('Error retrieving data from AsyncStorage:', error);
+      }
+    };
+    fetchData(); 
   }, []);
-  const profile = useSelector((state) => state.profile);
-
+  
+  
   const recheck = async () => {
     try {
       const response = await fetch("https://go-happy-322816.nw.r.appspot.com");
-      console.log("this is response", JSON.stringify(response));
+      // //console.log("this is response", JSON.stringify(response)); 
       if (response.ok) {
         setIsConnected(true);
       } else {
@@ -104,7 +191,7 @@ export default function App() {
         const properties = response.data.properties;
         if (properties && properties.length > 0 ) {
           setProductionAppVersion(properties[0].appVersion)
-          console.log('fsd',properties[0].appVersion,'fsdfs',appVersion)
+          //console.log('fsd',properties[0].appVersion,'fsdfs',appVersion)
           if(properties[0].appVersion>appVersion){
             return true
           }
@@ -122,25 +209,31 @@ export default function App() {
 
   const checkVersion = async () => {
     var needUpdate = await checkVersionHelper()
-    console.log('update',needUpdate)
+    // //console.log('update12',needUpdate)
     setUpdateRequired(needUpdate)
-    // if (needUpdate) {
-    //   Alert.alert(
-    //     "Please Update",
-    //     "You will have to update your app to the latest version to continue using.",
-    //     [
-    //       {
-    //         text: "Update",
-    //         onPress: () => {
-    //           // BackHandler.exitApp();
-    //           Linking.openURL("https://play.google.com/store/apps/details?id=com.gohappyclient");
-    //         },
-    //       },
-    //     ],
-    //     { cancelable: false }
-    //   );
-    // }
   };
+
+
+  const linking = {
+    prefixes: ['https://www.gohappyclub.in'],
+    config: {
+      screens: {
+        'GoHappy Club': {
+          screens:{
+            'HomeScreen':'free_sessions',
+            'Refer':'refer',
+            'MyProfile':'profile'
+          }
+        },
+        'Session Details': 'session_details/:deepId',
+        'Membership Details': 'contribute',
+        'About GoHappy Club': 'about',
+        'Trips': 'trips',
+        'TripDetails': 'trip_details',
+      },
+    },
+  };
+
 
   return (
     <>
@@ -188,13 +281,12 @@ export default function App() {
         />
       )}
 
-      {isConnected == true ? (
-        <NavigationContainer>
+      {isConnected == true && token!=false ? (
+        <NavigationContainer linking={token==true && linking}>
           <Stack.Navigator>
             <>
               <Stack.Screen
                 name="Login"
-                // component={LoginScreen}
                 children={(props) => (
                   <LoginScreen {...props} propProfile={profile} />
                 )}
@@ -205,7 +297,6 @@ export default function App() {
               />
               <Stack.Screen
                 name="Intro"
-                // component={BottomNavigator}
 
                 children={(props) => <Intro {...props} />}
                 options={{
@@ -222,8 +313,6 @@ export default function App() {
               />
               <Stack.Screen
                 name="GoHappy Club"
-                // component={BottomNavigator}
-
                 children={(props) => (
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
@@ -234,14 +323,10 @@ export default function App() {
                   elevation: 0,
                   shadowOpacity: 0,
                   headerShadowVisible: false,
-                  // headerStyle: {
-                  //   backgroundColor: 'white'
-                  // },
                 }}
               />
               <Stack.Screen
                 name="Session Details"
-                // component={HomeDetailsScreen}
                 children={(props) => (
                   <HomeDetailsScreen {...props} propProfile={profile} />
                 )}
@@ -385,7 +470,28 @@ export default function App() {
             </>
           </Stack.Navigator>
         </NavigationContainer>
-      ) : (
+      ):(
+        <Video
+          source={require("./images/logo_splash.mp4")}
+          style={{
+            position: "absolute",
+            top: 0,
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 1,
+          }}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+        />
+        )
+      }
+      {isConnected==false && (
         <ErrorScreen recheck={recheck} />
       )}
     </>

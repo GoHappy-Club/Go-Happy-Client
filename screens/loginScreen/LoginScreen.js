@@ -22,7 +22,7 @@ import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
 import { BottomSheet, ListItem } from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
@@ -234,7 +234,7 @@ class LoginScreen extends Component {
   renderConfirmationCodeView = () => {
     startOtpListener((message) => {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
-      console.log("i am in auto message", message);
+      //console.log("i am in auto message", message);
       const otp = /(\d{4})/g.exec(message)[1];
       if (otp && otp.length == 6) {
         this.setState({ verificationCode: otp });
@@ -436,7 +436,7 @@ class LoginScreen extends Component {
         }
       })
       .catch((error) => {
-        //console.log(error);
+        ////console.log(error);
       });
   }
   pending() {

@@ -31,33 +31,33 @@ class Payments extends Component {
     return "Your payment could not be processed. Please try again later."
   };
   phonePe(phone,amount,callback,error_handler){
-    console.log('phonepe')
+    //console.log('phonepe')
     PhonePePaymentSDK.init(
       this.state.environmentDropDownValue,
       this.state.merchantId,
       this.state.appId,
       true
     ).then(result => {
-      console.log(this.state)
+      console.log('this is result from phonepe', result)
       this.setState({
         message:"Message: SDK Initialisation ->" + JSON.stringify(result)
       });
-      console.log(result)
+      //console.log(result)
       this.startTransaction(phone,amount,callback,error_handler)
     }).catch(error => {
-      console.log(this.state)
+      console.log('this is error from phonepe', error)
       this.setState({
         message:"error:" + error.message
       });
-      console.log(error)
+      //console.log(error)
       error_handler(error)
     })
     
   };
   async startTransaction(phone,amount,callback,error_handler){
-      console.log('i am here')
+      //console.log('i am here')
       payload = await getPayload(phone,amount*100)
-      console.log(phone,amount,payload)
+      //console.log(phone,amount,payload)
       requestBody = payload.requestBody
       checksum = payload.checksum
     PhonePePaymentSDK.startTransaction(
@@ -72,13 +72,13 @@ class Payments extends Component {
       if(a.status=='FAILURE'){
         throw Error
       }
-      console.log('here',a)
+      //console.log('here',a)
       callback(phone);
     }).catch(error => {
       this.setState({
         message:error.message
       });
-      console.log('in error',JSON.stringify(error))
+      //console.log('in error',JSON.stringify(error))
       error_handler()      
     })
   }

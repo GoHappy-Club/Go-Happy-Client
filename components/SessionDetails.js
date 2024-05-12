@@ -29,8 +29,6 @@ export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      alreadyBookedSameDayEvent: props.alreadyBookedSameDayEvent,
-      event: props.event,
       modalVisible: false,
       showAlert: false,
       showPaymentAlert: false,
@@ -49,7 +47,7 @@ export default class SessionDetails extends Component {
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true });
+      this.setState({ success: true , loadingButton: false});
 
       var _this = this;
       if (id === "") {
@@ -67,19 +65,20 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    console.log('propro',this.props.profile)
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
+    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
     
   }
 
   
   componentDidMount() {
     this.createDynamicReferralLink();
+    this.setState({loadingButton: false})
   }
+
   createDynamicReferralLink = async () => {
-    let selfInviteCode = this.props.profile.selfInviteCode;
+    let selfInviteCode = this.props.selfInviteCode;
     // alert('hi');
-    crashlytics().log(JSON.stringify(this.props.profile));
+    crashlytics().log(JSON.stringify(this.props));
     if (selfInviteCode == null) {
       selfInviteCode = "test";
     }
@@ -101,13 +100,13 @@ export default class SessionDetails extends Component {
     );
 
     this.setState({ referralLink: link1 });
-    // actions.setProfile(profile);
   };
   isDisabled() {
+    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
-      (title == "Cancel Your Booking" && this.state.event.costType == "paid")
+      (title == "Cancel Your Booking" && this.props.event.costType == "paid")
     ) {
       return true;
     } else {
@@ -125,19 +124,19 @@ export default class SessionDetails extends Component {
       return "Join";
     }
     if (
-      this.state.event.participantList != null &&
+      this.props.event.participantList != null &&
       this.props.phoneNumber != null &&
-      this.state.event.participantList.includes(this.props.phoneNumber)
+      this.props.event.participantList.includes(this.props.phoneNumber)
     ) {
-      if (currTime > this.state.event.endTime) {
+      if (currTime > this.props.event.endTime) {
         return "View Recording";
-      } else if (currTime + 600000 < this.state.event.startTime) {
+      } else if (currTime + 600000 < this.props.event.startTime) {
         return "Cancel Your Booking";
       } else {
         return "Join";
       }
     }
-    if (this.state.event.seatsLeft == 0) {
+    if (this.props.event.seatsLeft == 0) {
       return "Seats Full";
     }
     return "Book";
@@ -152,11 +151,11 @@ export default class SessionDetails extends Component {
   sessionAction() {
     crashlytics().log(
       JSON.stringify(this.getTitle()) +
-        JSON.stringify(this.state.alreadyBookedSameDayEvent)
+        JSON.stringify(this.props.alreadyBookedSameDayEvent)
     );
     if (
       this.getTitle() === "Book" &&
-      this.state.alreadyBookedSameDayEvent == true
+      this.props.alreadyBookedSameDayEvent == true
     ) {
       this.setState({ showAlert: true });
       return;
@@ -173,8 +172,6 @@ export default class SessionDetails extends Component {
 
     var output = this.props.sessionAction("book");
     this.setState({ loadingButton: true });
-    if (output == "SUCCESS") {
-    }
   }
   loadDate(item) {
     var dt = new Date(parseInt(item));
@@ -195,7 +192,7 @@ export default class SessionDetails extends Component {
   videoPlayer() {
     this.setState({ videoVisible: true });
   }
-  createShareMessage(item) {
+  async createShareMessage(item, url) {
     let template =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
@@ -203,17 +200,17 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n";
+      ". \n \nClick on the link below: \n"+ url;
     // template = template.replace;
     return template;
   }
-  shareMessage = (item) => {
+  shareMessage = async(item) =>  {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : this.createShareMessage(item);
+        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
     Share.share({
-      message: sessionShareMessage + this.state.referralLink,
+      message: sessionShareMessage,
     })
       .then((result) => {})
       .catch((errorMsg) => {});
@@ -264,7 +261,7 @@ export default class SessionDetails extends Component {
         }
       }
     }
-    console.log("this is tic", tic[0]);
+    //console.log("this is tic", tic[0]);
     var tambolaHtml =
       " <table align='center' border='1' style=\"border-collapse: collapse; width: 100%; font-size:10px\"><tbody>";
 
@@ -309,13 +306,12 @@ export default class SessionDetails extends Component {
     tambolaHtml = tambolaHtml + "</tr>";
 
     tambolaHtml = tambolaHtml + "</tbody></table>";
-    console.log("tam", tambolaHtml);
+    //console.log("tam", tambolaHtml);
     return tambolaHtml;
   };
 
   render() {
     if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
           color="white"

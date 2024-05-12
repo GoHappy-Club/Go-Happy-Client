@@ -68,7 +68,6 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    console.log('propro',this.props.profile)
     phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
     
   }
@@ -134,6 +133,7 @@ class HomeDashboard extends Component {
     return isParticipantInSameEvent;
   }
   updateEventBook(item) {
+    //console.log("item clicked is", item)
     this.setState({ bookingLoader: true });
     if (this.getTitle(item) == "Join") {
       setSessionAttended(this.props.profile.phoneNumber);
@@ -256,9 +256,9 @@ class HomeDashboard extends Component {
           underlayColor={"#29BFC2"}
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
-              event: item,
               phoneNumber: profile.phoneNumber,
               profile: profile,
+              deepId: item.id,
               onGoBack: () => this.loadCaller(),
               alreadyBookedSameDayEvent:
                 this.checkIsParticipantInSameEvent(item),

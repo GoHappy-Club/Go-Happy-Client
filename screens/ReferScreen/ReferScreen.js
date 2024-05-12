@@ -64,18 +64,18 @@ class ReferScreen extends Component {
   }
   requestReferrals(_callback) {
     // fetching refferals
-    //console.log("In requestReferrals api");
+    ////console.log("In requestReferrals api");
     axios
       .post(SERVER_URL + "/user/referralsList", {
         from: this.props.profile.phoneNumber,
       })
       .then((response) => {
-        //console.log("referrals", JSON.stringify(response.data));
+        ////console.log("referrals", JSON.stringify(response.data));
         _callback(response.data);
-        //console.log("api call ends successfully.")
+        ////console.log("api call ends successfully.")
       })
       .catch((error) => {
-        //console.log("referrals failed");
+        ////console.log("referrals failed");
         crashlytics().recordError(JSON.stringify(error));
         this.error = true;
       });

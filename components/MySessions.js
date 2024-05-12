@@ -150,6 +150,7 @@ export default class MySessions extends Component {
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
               event: item,
+              deepId: item.id,
               type: type,
               phoneNumber: this.props.phoneNumber,
               profile: this.props.profile,

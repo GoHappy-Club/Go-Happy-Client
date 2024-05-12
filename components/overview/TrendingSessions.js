@@ -103,6 +103,7 @@ class TrendingSessions extends Component {
       onPress={() =>
         this.props.navigation.navigate("Session Details", {
           event: item.value,
+          deepId: item.value.id,
           phoneNumber: this.props.profile.phoneNumber,
           profile: this.props.profile,
           onGoBack: () => {

@@ -98,7 +98,7 @@ class Membership extends Component {
       );
     };
     const _errorHandler = () => {
-      // console.log("reached in error handler", error);
+      // //console.log("reached in error handler", error);
       this.setState({
         paymentAlertMessage: phonepe_payments.PaymentError(),
         paymentAlertTitle: "Oops!",
@@ -106,7 +106,7 @@ class Membership extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    console.log('propro',this.props.profile)
+    //console.log('propro',this.props.profile)
     phonepe_payments.phonePe(this.props.profile.phoneNumber,this.state.amount,_callback,_errorHandler)
     
   }
@@ -178,7 +178,7 @@ class Membership extends Component {
   }
   handlePress(amount) {
     this.setState({ amount: amount.toString() });
-    console.log(this.props.profile);
+    //console.log(this.props.profile);
     // Do something with the selected amount
   }
   render() {

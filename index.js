@@ -10,7 +10,6 @@ import { Provider } from "react-redux";
 import React from "react";
 
 import store from "./store/store";
-
 // const my_store = store();
 
 const RNRedux = () => {
