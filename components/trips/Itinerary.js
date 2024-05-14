@@ -202,7 +202,7 @@ export const Itinerary = ({ details }) => {
             onPress={() => {
               let link = item.inquireNowLink;
               link = link.replace("${trip}", item.location);
-              console.log(link);
+              //console.log(link);
               return Linking.openURL(link);
             }}
           >

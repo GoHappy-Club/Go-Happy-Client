@@ -6,12 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 const WhatsAppFAB = ({ url }) => {
   const handlePress = async () => {
-    console.log("url is ", url);
+    ////console.log("url is ", url);
     if (url == " " || url == undefined) {
       var url = SERVER_URL + "/properties/list";
       try {
         const response = await axios.get(url);
-        console.log(JSON.stringify(response));
+        ////console.log(JSON.stringify(response));
         if (response.data) {
           const properties = response.data.properties;
           if (properties && properties.length > 0) {

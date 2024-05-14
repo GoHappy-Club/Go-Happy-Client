@@ -20,7 +20,7 @@ import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Clipboard from "@react-native-community/clipboard";
+import Clipboard from '@react-native-clipboard/clipboard';
 import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 // import { refreshProfile } from "../services/profile/ProfileService";
@@ -146,7 +146,7 @@ class Refer extends Component {
   }
 
   requestReferrals() {
-    //console.log("requestReferrals");
+    ////console.log("requestReferrals");
     var output = this.props.requestReferrals((responseData) => {
       // for testing
       // responseData = this.state.responseData;

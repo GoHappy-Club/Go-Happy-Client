@@ -2,53 +2,70 @@ import React, { Component } from "react";
 import PushNotification from "react-native-push-notification";
 
 import {
-  Button,
-  Image,
-  KeyboardAvoidingView,
   Linking,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
 } from "react-native";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
 import SessionDetails from "../../components/SessionDetails";
 import tambola from "tambola";
+import { getEvent } from '../../services/events/EventService'
 
 export default class HomeDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
+      event:null,
+      loader:true
     };
     this._retrieveData();
-    // alert("ble;" + JSON.stringify(props));
+    if(this.props.route.params.deepId) {
+      this.getEventDetails(this.props.route.params.deepId);
+    }
+  }
+  componentDidUpdate(){
+    if(this.props.route.params.deepId!=this.state.event?.id){
+      this.getEventDetails(this.props.route.params.deepId);
+    }
   }
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
-
+      const phoneNumber = await AsyncStorage.getItem("phoneNumber")
+      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
       if (value !== null) {
         // We have data!!
-        this.setState({ email: value });
+        this.setState({ email: value});
+        this.setState({phoneNumber: phoneNumber})
+        this.setState({selfInviteCode: selfInviteCode})
       }
     } catch (error) {
       // Error retrieving data
     }
   };
-  sessionAction(par) {
+
+  getEventDetails(id){
+    // this.setState({event:null})
+    this.state.loader=true
+    getEvent(id).then((response) => {
+      this.setState({event:response.data.event,
+      loader: false})
+    })
+    .catch((error) => {
+      crashlytics().recordError(JSON.stringify(error));
+    })
+
+  }
+
+  sessionAction(par,_callback) {
     var type = this.props.route.params.type;
-    var phoneNumber = this.props.route.params.phoneNumber;
+    var phoneNumber = this.state.phoneNumber;
     if (type == null) {
       type = par;
     }
-
     if (type == "expired") {
-      var meetingLink = this.props.route.params.event.meetingLink;
+      var meetingLink = this.state.event.meetingLink;
       if (meetingLink == null) {
         return;
       }
@@ -73,28 +90,33 @@ export default class HomeDetailsScreen extends Component {
           this.error = true;
         });
     } else if (type == "ongoing") {
-      Linking.openURL(this.props.route.params.event.meetingLink);
+      Linking.openURL(this.state.event.meetingLink);
     } else if (
-      this.props.route.params.event.participantList != null &&
-      this.props.route.params.event.participantList.includes(phoneNumber)
+      this.state.event.participantList != null &&
+      this.state.event.participantList.includes(phoneNumber)
     ) {
       //cancel a notification
       var url = SERVER_URL + "/event/cancelEvent";
       axios
         .post(url, {
-          id: this.props.route.params.event.id,
-          phoneNumber: this.props.route.params.phoneNumber,
+          id: this.state.event.id,
+          phoneNumber: phoneNumber,
         })
         .then((response) => {
           if (response.data) {
-            PushNotification.cancelLocalNotifications({
-              id: String(this.props.route.params.event.id),
+            PushNotification.cancelLocalNotification({
+              id: String(this.state.event.id),
             });
-            //recomended by Viual Studio
-            //PushNotification.cancelLocalNotification({id: String(this.props.route.params.event.id)});
-            this.props.route.params.onGoBack();
-            // this.props.navigation.state.params.onGoBack();
-            this.props.navigation.goBack();
+            if(this.props.route.params.onGoBack){
+              this.props.route.params.onGoBack();
+            }
+            if(this.props.navigation.canGoBack()){
+              this.props.navigation.goBack();
+            }
+            else{
+              this.props.navigation.replace('GoHappy Club')
+            }
+            
           }
         })
         .catch((error) => {
@@ -105,17 +127,25 @@ export default class HomeDetailsScreen extends Component {
       let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 
       var url = SERVER_URL + "/event/bookEvent";
-      var phoneNumber = this.props.route.params.phoneNumber;
-      var id = this.props.route.params.event.id;
+      var id = this.state.event.id;
       axios
         .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
         .then((response) => {
           if (response.data) {
             if (response.data == "SUCCESS") {
-              this.props.route.params.onGoBack();
-              this.props.navigation.goBack();
-              return response.data;
+              if(this.props.route.params.onGoBack){
+                this.props.route.params.onGoBack()
+              }
+              
+              if(this.props.navigation.canGoBack()){
+                this.props.navigation.goBack();
+              }
+              else{
+                this.props.navigation.replace('GoHappy Club')
+              }
               // _callback();
+              return response.data;
+              
               // item.seatsLeft = item.seatsLeft - 1
             }
           }
@@ -139,15 +169,14 @@ export default class HomeDetailsScreen extends Component {
       );
     }
     const navigation = this.props.navigation;
-    const title = "Login";
     return (
-      <SessionDetails
+      this.state.event && <SessionDetails
         navigation={navigation}
         sessionAction={this.sessionAction.bind(this)}
-        event={this.props.route.params.event}
+        event={this.state.event}
         type={this.props.route.params.type}
-        phoneNumber={this.props.route.params.phoneNumber}
-        profile={this.props.route.params.profile}
+        phoneNumber={this.state.phoneNumber}
+        selfInviteCode={this.state.selfInviteCode}
         alreadyBookedSameDayEvent={
           this.props.route.params.alreadyBookedSameDayEvent
         }

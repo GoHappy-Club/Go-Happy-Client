@@ -46,7 +46,7 @@ class OverviewScreen extends Component {
     try {
       const response = await axios.get(url);
       if (response.data) {
-        console.log(response.data.trendingSessions);
+        //console.log(response.data.trendingSessions);
         this.setState({
           trendingSessions: response.data.trendingSessions,
           upcomingWorkshops: response.data.upcomingWorkshops,
@@ -86,33 +86,6 @@ class OverviewScreen extends Component {
       return (
         <>
           <ScrollView>
-            {/* <Banner
-              visible={this.state.bannerVisible}
-              actions={[
-                {
-                  label: "Contribute Now",
-                  onPress: () => this.setState({ bannerVisible: false }),
-                },
-                {
-                  label: "Remind me Later",
-                  onPress: () => this.setState({ bannerVisible: false }),
-                },
-              ]}
-              // icon={({ size }) => (
-              //   <Image
-              //     source={{
-              //       uri: "https://avatars3.githubusercontent.com/u/17571969?s=400&v=4",
-              //     }}
-              //     style={{
-              //       width: size,
-              //       height: size,
-              //     }}
-              //   />
-              // )}
-            >
-              ~ It's been long since you last contributed to us.
-            </Banner> */}
-
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}

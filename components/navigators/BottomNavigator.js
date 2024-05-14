@@ -24,7 +24,7 @@ export default function BottomNavigator() {
   // alert(JSON.stringify(profile));
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="OverviewScreen"
       barStyle={{
         shadowOffset: {
           width: 0,
@@ -62,7 +62,7 @@ export default function BottomNavigator() {
         // component={HomeScreen}
         // children={(props) => (
         //   <MySessionsScreen propProfile={profile} {...props} />
-        // )}
+        //
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         options={{
           tabBarLabel: "Sessions",

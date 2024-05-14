@@ -31,7 +31,7 @@ class TripDetailsScreen extends Component {
   async getTripDetails() {
     var url =
       SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim();
-    console.log(url);
+    //console.log(url);
     try {
       const response = await axios.get(url);
       if (response.data) {

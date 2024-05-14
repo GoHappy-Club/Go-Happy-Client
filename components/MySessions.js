@@ -150,6 +150,7 @@ export default class MySessions extends Component {
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
               event: item,
+              deepId: item.id,
               type: type,
               phoneNumber: this.props.phoneNumber,
               profile: this.props.profile,
@@ -310,7 +311,7 @@ export default class MySessions extends Component {
             keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
-        <Modal
+        {this.state.recordingLink && <Modal
           animationType="slide"
           transparent={false}
           visible={this.state.videoVisible1}
@@ -326,7 +327,7 @@ export default class MySessions extends Component {
               uri: this.state.recordingLink,
             }}
           />
-        </Modal>
+        </Modal>}
       </ScrollView>
     );
   }

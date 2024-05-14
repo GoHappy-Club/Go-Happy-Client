@@ -54,7 +54,7 @@ class Trip extends Component {
   };
 
   CarouselCardItem = ({ item, index }) => {
-    console.log(item);
+    //console.log(item);
     return (
       <TouchableOpacity key={index}>
         {/* <View style={styles.container}> */}

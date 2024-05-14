@@ -12,7 +12,7 @@ import {
 import { FAB, PaperProvider } from "react-native-paper";
 
 import { Text } from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { connect } from "react-redux";
@@ -59,13 +59,13 @@ class Profile extends Component {
         includeBase64: true,
       };
       launchImageLibrary(options, (response) => {
-        //console.log("nlenle", response);
+        ////console.log("nlenle", response);
         if (response.didCancel) {
-          //console.log("User cancelled image picker");
+          ////console.log("User cancelled image picker");
         } else if (response.error) {
-          //console.log("ImagePicker Error: ", response.error);
+          ////console.log("ImagePicker Error: ", response.error);
         } else {
-          //console.log("User cancelled image picker");
+          ////console.log("User cancelled image picker");
           const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
           var url = SERVER_URL + "/user/updateProfileImage";
           axios
@@ -84,7 +84,7 @@ class Profile extends Component {
         }
       });
     } catch (error) {
-      //console.log("here", error);
+      ////console.log("here", error);
     }
   };
   refreshProfile() {
@@ -100,6 +100,8 @@ class Profile extends Component {
             "sessionsAttended",
             response.data.sessionsAttended
           );
+          //console.log('prof',response.data)
+          redux_profile = response.data
           redux_profile.sessionsAttended = response.data.sessionsAttended;
           actions.setProfile(redux_profile);
         }

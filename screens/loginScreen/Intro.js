@@ -33,7 +33,7 @@ export default class Intro extends Component {
         /> */}
         <TouchableOpacity
           onPress={() => {
-            console.log("tdatada");
+            //console.log("tdatada");
             this.props.navigation.replace("GoHappy Club");
           }}
           style={styles.button}
