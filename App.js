@@ -183,21 +183,20 @@ export default function App() {
   };
 
   const checkVersionHelper = async () => {
-    const appVersion = DeviceInfo.getBuildNumber();
+    var buildNumber = DeviceInfo.getBuildNumber();
     var url = SERVER_URL + "/properties/list";
     try {
       const response = await axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0 ) {
-          setProductionAppVersion(properties[0].appVersion)
-          //console.log('fsd',properties[0].appVersion,'fsdfs',appVersion)
-          if(properties[0].appVersion>appVersion){
-            return true
-          }
-          else{
-            return false
-          }
+          setProductionAppVersion(properties[0].buildNumber)
+            if(properties[0].buildNumber>buildNumber){
+              return true
+            }
+            else{
+              return false
+            }
         }
       }
     } catch (error) {
