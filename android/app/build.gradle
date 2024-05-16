@@ -80,8 +80,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 99
-        versionName "2.1.0"
+        versionCode 100
+        versionName "100"
     }
     signingConfigs {
         debug {
