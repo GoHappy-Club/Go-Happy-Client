@@ -183,7 +183,7 @@ export default function App() {
   };
 
   const checkVersionHelper = async () => {
-    const appVersion = DeviceInfo.getVersion();
+    const appVersion = DeviceInfo.getBuildNumber();
     var url = SERVER_URL + "/properties/list";
     try {
       const response = await axios.get(url);
