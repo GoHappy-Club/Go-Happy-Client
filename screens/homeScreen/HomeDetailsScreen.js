@@ -33,7 +33,7 @@ export default class HomeDetailsScreen extends Component {
       const value = await AsyncStorage.getItem("email");
       const phoneNumber = await AsyncStorage.getItem("phoneNumber")
       const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
-      if (value !== null) {
+      if (phoneNumber !== null) {
         // We have data!!
         this.setState({ email: value});
         this.setState({phoneNumber: phoneNumber})
