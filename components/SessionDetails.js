@@ -16,7 +16,6 @@ import phonepe_payments from "./PhonePe/Payments.js";
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
-import TambolaTicket from "./TambolaTicket.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
