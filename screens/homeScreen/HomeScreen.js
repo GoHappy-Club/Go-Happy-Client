@@ -32,7 +32,7 @@ class HomeScreen extends Component {
       const value = await AsyncStorage.getItem("email");
       const phoneNumber = await AsyncStorage.getItem("phoneNumber")
       const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
-      if (phoneNumber !== null) {
+      if (value !== null) {
         // We have data!!
         this.setState({ email: value});
         this.setState({phoneNumber: phoneNumber})
