@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import PushNotification from "react-native-push-notification";
-
+import Video from "react-native-video";
 import {
   Linking,
   StyleSheet,
 } from "react-native";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
-import { MaterialIndicator } from "react-native-indicators";
 import SessionDetails from "../../components/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from '../../services/events/EventService'
@@ -34,7 +33,7 @@ export default class HomeDetailsScreen extends Component {
       const value = await AsyncStorage.getItem("email");
       const phoneNumber = await AsyncStorage.getItem("phoneNumber")
       const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
-      if (value !== null) {
+      if (phoneNumber !== null) {
         // We have data!!
         this.setState({ email: value});
         this.setState({phoneNumber: phoneNumber})
@@ -162,9 +161,23 @@ export default class HomeDetailsScreen extends Component {
   render() {
     if (this.state.loader == true) {
       return (
-        <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+        <Video
+          source={require("../../images/logo_splash.mp4")}
+          style={{
+            position: "absolute",
+            top: 0,
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 1,
+          }}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
         />
       );
     }
