@@ -23,9 +23,8 @@ import { faComment } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
-
 import { launchImageLibrary } from "react-native-image-picker";
-
+import AwesomeAlert from "react-native-awesome-alerts";
 
 class Profile extends Component {
   constructor(props) {
@@ -42,6 +41,7 @@ class Profile extends Component {
       city: "",
       state: "",
       image: null,
+      logoutPopup: false,
     };
     this._retrieveData();
   }
@@ -101,7 +101,7 @@ class Profile extends Component {
             response.data.sessionsAttended
           );
           //console.log('prof',response.data)
-          redux_profile = response.data
+          redux_profile = response.data;
           redux_profile.sessionsAttended = response.data.sessionsAttended;
           actions.setProfile(redux_profile);
         }
@@ -423,12 +423,40 @@ class Profile extends Component {
                 borderColor: "#E0E0E0",
                 borderBottomWidth: 1,
               }}
-              onPress={this._signout.bind(this)}
+              onPress={() => this.setState({ logoutPopup: true })}
             >
               <View>
                 <Text style={styles.optionList}>Logout</Text>
               </View>
             </TouchableOpacity>
+            {this.state.logoutPopup && (
+              <AwesomeAlert
+                show={this.state.logoutPopup}
+                showProgress={false}
+                title="Confirm Logout"
+                message={"Are you sure you want to logout?"}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                customView={
+                  <View style={styles.container}>
+                    <TouchableOpacity
+                      style={[styles.button, styles.logoutButton]}
+                      onPress={() => this._signout()}
+                    >
+                      <Text style={styles.buttonText}>LogOut</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, styles.cancelButton]}
+                      onPress={() => {
+                        this.setState({ logoutPopup: false });
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+              />
+            )}
           </View>
           {/* <View >
 							<View>
@@ -478,6 +506,30 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    marginTop: 18,
+    gap: 20,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  cancelButton: {
+    backgroundColor: "deepskyblue",
+  },
+  logoutButton: {
+    backgroundColor: "#CECECE",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
