@@ -443,7 +443,7 @@ class Profile extends Component {
                       style={[styles.button, styles.logoutButton]}
                       onPress={() => this._signout()}
                     >
-                      <Text style={styles.buttonText}>LogOut</Text>
+                      <Text style={styles.buttonText}>Logout</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.button, styles.cancelButton]}
