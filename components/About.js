@@ -1,3 +1,5 @@
+//about page in profile tab
+
 import React, { Component } from 'react';
 
 import { View } from 'react-native';

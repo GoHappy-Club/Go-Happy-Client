@@ -69,7 +69,6 @@ class AdditionalDetails extends Component {
 
     profile = {
       selfInviteCode: selfInviteCode,
-      // dob: profile.dob,
       dateOfJoining: profile.dateOfJoining,
       age: age,
       name: name,
