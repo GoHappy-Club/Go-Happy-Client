@@ -40,6 +40,7 @@ class LoginScreen extends Component {
     super(props);
     this.state = {
       phoneNumber: "",
+      phoneNumberError: "",
       password: "",
       showAlert: false,
       loader: true,
@@ -114,8 +115,21 @@ class LoginScreen extends Component {
   }
 
   validatePhoneNumber = () => {
-    var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
-    return regexp.test(this.state.phoneNumber);
+    const regex = /^\+91\d{10}$/;
+    const unformattedNumber = this.state.phoneNumber.slice(3);
+    if (unformattedNumber.length < 10) {
+      alert("Number has less than 10 digits");
+      return false;
+    }
+    if (unformattedNumber.length > 10) {
+      alert("Number has more than 10 digits");
+      return false;
+    }
+    if (!regex.test(this.state.phoneNumber)) {
+      alert("Please enter a valid 10 digit number");
+      return false;
+    }
+    return true;
   };
   handlePhoneNumberInput = (text) => {
     this.setState({ phoneNumber: text }, () => {
@@ -171,7 +185,7 @@ class LoginScreen extends Component {
           }
         });
     } else {
-      alert("Invalid Phone Number");
+      // alert(this.state.phoneNumberError);
       if (resend) {
         this.setState({ loadingResendButton: false });
       } else {
@@ -232,7 +246,6 @@ class LoginScreen extends Component {
   };
 
   handleInputChange = (text) => {
-
     if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
     }
@@ -240,17 +253,17 @@ class LoginScreen extends Component {
       this.handleVerifyCode(text);
     }
   };
-  
-  
+
   renderConfirmationCodeView = () => {
     startOtpListener((message) => {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
       //console.log("i am in auto message", message);
-      if( /(\d{4})/g.exec(message)){
-      const otp = /(\d{4})/g.exec(message)[1];
-      if (otp && otp.length == 6) {
-        this.setState({ verificationCode: otp });
-      }}
+      if (/(\d{4})/g.exec(message)) {
+        const otp = /(\d{4})/g.exec(message)[1];
+        if (otp && otp.length == 6) {
+          this.setState({ verificationCode: otp });
+        }
+      }
     });
     return (
       <KeyboardAvoidingView style={styles.verificationView}>
@@ -548,6 +561,7 @@ class LoginScreen extends Component {
               layout="first"
               onChangeFormattedText={this.handlePhoneNumberInput}
               withDarkTheme
+              maxLength={10}
               withShadow
               autoFocus
             />
@@ -754,6 +768,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 8,
     textAlign: "center",
+    color: "black",
   },
   input: {
     width: "90%",
