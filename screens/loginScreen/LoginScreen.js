@@ -8,8 +8,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Keyboard,
 } from "react-native";
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -30,11 +28,14 @@ import LinearGradient from "react-native-linear-gradient";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import RenderHtml from "react-native-render-html";
 import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
-import RNOtpVerify from "react-native-otp-verify";
+import {
+  getHash,
+  startOtpListener,
+  useOtpVerify,
+} from "react-native-otp-verify";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    // console.log(props);
     this.state = {
       phoneNumber: "",
       password: "",
@@ -77,15 +78,7 @@ class LoginScreen extends Component {
         }
         this.setState({ referralCode: url.url.split("=")[1] });
       });
-      // this.getHash();
-      // this.startListeningForOtp();
   }
-
-
-  // componentWillUnmount() {
-  //   RNOtpVerify.removeListener();
-  // }
-
   setProfile(
     name,
     email,
@@ -122,15 +115,6 @@ class LoginScreen extends Component {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     return regexp.test(this.state.phoneNumber);
   };
-  handlePhoneNumberInput = (text) => {
-    this.setState({ phoneNumber: text }, () => {
-      console.log("phone number inside state", this.state.phoneNumber);
-      const { phoneNumber } = this.state;
-      if (phoneNumber.length === 13 && phoneNumber.startsWith("+")) {
-        this.handleSendCode(false);
-      }
-    });
-  };
   handleSendCode = (resend) => {
     // Request to send OTP
     if (resend) {
@@ -140,12 +124,10 @@ class LoginScreen extends Component {
     }
     crashlytics().log(JSON.stringify(this.state));
     if (this.validatePhoneNumber()) {
-      console.log("inside validated request", this.state.phoneNumber);
       firebase
         .auth()
         .signInWithPhoneNumber(this.state.phoneNumber)
         .then((confirmResult) => {
-          console.log("Phone number in handlecode", this.state.phoneNumber);
           this.setState({ confirmResult });
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -168,7 +150,6 @@ class LoginScreen extends Component {
         })
         .catch((error) => {
           crashlytics().recordError(JSON.stringify(error));
-          console.log(error);
           alert(
             'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
           );
@@ -187,14 +168,6 @@ class LoginScreen extends Component {
       }
     }
   };
-  // handleSendCode = (resend) => {
-  //   if (resend) {
-  //     this.setState({ loadingResendButton: true });
-  //   } else {
-  //     this.setState({loadingButton:true})
-  //   }
-  //   this.setState({confirmResult:true})
-  // };
   changePhoneNumber = () => {
     // this.loadingButton=true;
     this.setState({
@@ -209,12 +182,10 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-
   handleVerifyCode = (code) => {
-    console.log(code);
     const { confirmResult, verificationCode } = this.state;
-    if (code == null) {
-      code = verificationCode;
+    if(code==null){
+      code = verificationCode
     }
     // Request for OTP verification
     if (code.length == 6) {
@@ -250,43 +221,25 @@ class LoginScreen extends Component {
   };
 
   handleInputChange = (text) => {
-
     if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
     }
-    if (text.length == 6 && /^[0-9]*$/.test(text)) {
-      this.handleVerifyCode(text);
+    if(text.length == 6 && /^[0-9]*$/.test(text)){
+      this.handleVerifyCode(text)
     }
   };
-  // getHash = () =>
-  //   RNOtpVerify.getHash()
-  //     .then((o) => {
-  //       console.log(o);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-
-  // startListeningForOtp = () => {
-  //   RNOtpVerify.getOtp()
-  //     .then((p) => RNOtpVerify.addListener(this.otpHandler))
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // };
-
-  // otpHandler = (message) => {
-  //   console.log("message",message);
-  //   const otp = /(\d{6})/g.exec(message)[1];
-  //   console.log("otp",otp);
-  //   this.setState({ verificationCode: otp });
-  //   RNOtpVerify.removeListener();
-  //   Keyboard.dismiss();
-  // };
-  
   renderConfirmationCodeView = () => {
+    startOtpListener((message) => {
+      // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+      //console.log("i am in auto message", message);
+      if( /(\d{4})/g.exec(message)){
+      const otp = /(\d{4})/g.exec(message)[1];
+      if (otp && otp.length == 6) {
+        this.setState({ verificationCode: otp });
+      }}
+    });
     return (
-      <KeyboardAvoidingView style={styles.verificationView}>
+      <View style={styles.verificationView}>
         <TextInput
           style={styles.otp_input}
           onChangeText={this.handleInputChange.bind(this)}
@@ -322,7 +275,7 @@ class LoginScreen extends Component {
           loading={this.state.loadingButton}
           onPress={this.changePhoneNumber}
         />
-      </KeyboardAvoidingView>
+      </View>
     );
   };
   getCurrentUserInfo = async () => {
@@ -373,7 +326,9 @@ class LoginScreen extends Component {
         // }
       }
       this.setState({ loader: false });
-    } catch (error) {}
+    } catch (error) {
+      
+    }
   };
   _backendSignIn(token, name, profileImage, phone) {
     if (this.state.reachedBackendSignIn == false) {
@@ -506,7 +461,6 @@ class LoginScreen extends Component {
     var flag = !this.state.conditionDialog;
     this.setState({ conditionDialog: flag });
   }
-
   render() {
     if (this.state.loader == true) {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -569,21 +523,19 @@ class LoginScreen extends Component {
           LOGIN or SIGN UP
         </Text>
         {!this.state.confirmResult && (
-          <KeyboardAvoidingView
-            style={styles.page}
-            behavior="height"
-            keyboardVerticalOffset={100}
-          >
+          <View style={styles.page}>
             <PhoneInput
               style={styles.textInput}
               ref={this.state.phoneNumber}
               keyboardType="phone-pad"
               defaultCode="IN"
               layout="first"
-              // onChangeText={(text) => {
-              //   this.setState({ phoneNumber: text });
-              // }}
-              onChangeFormattedText={this.handlePhoneNumberInput}
+              onChangeText={(text) => {
+                this.setState({ phoneNumber: text });
+              }}
+              onChangeFormattedText={(text) => {
+                this.setState({ phoneNumber: text });
+              }}
               withDarkTheme
               withShadow
               autoFocus
@@ -683,7 +635,7 @@ class LoginScreen extends Component {
             {/* <View> */}
             {/* <Text>Facing any difficulty?</Text> */}
             {/* </View> */}
-          </KeyboardAvoidingView>
+          </View>
         )}
         {this.state.confirmResult && (
           <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
@@ -692,8 +644,8 @@ class LoginScreen extends Component {
           resizeMode="contain"
           style={styles.cover}
           source={require("../../images/login_bg.png")}
-        />
-        <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
+        /> */}
+        {/* <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
         <AwesomeAlert
           show={this.state.showAlert}
           showProgress={false}
@@ -867,7 +819,6 @@ const styles = StyleSheet.create({
     marginTop: "10%",
     alignItems: "center",
     justifyContent: "center",
-    // flex:1
     // marginBottom: 200
   },
   textInput: {

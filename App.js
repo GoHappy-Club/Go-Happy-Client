@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+// import NetInfo from "@react-native-community/network-info";
 import {
   Alert,
   BackHandler,
@@ -8,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  // NetInfo,
 } from "react-native";
 import Video from "react-native-video";
 import { setProfile } from "./redux/actions/counts.js";
@@ -16,15 +18,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen/LoginScreen";
 import BottomNavigator from "./components/navigators/BottomNavigator";
 import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
+import HomeScreen from "./screens/homeScreen/HomeScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
+// import NoInternet from "./components/NoInternet";
 import About from "./components/About";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as configData from "./config/cloud-dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
-import DeviceInfo from "react-native-device-info";
+import DeviceInfo from 'react-native-device-info';
+import firebase from "@react-native-firebase/app";
 import { useSelector, useDispatch } from "react-redux";
 import ErrorScreen from "./components/NoInternet";
 import { WhatsNewMessage } from "./config/CONSTANTS";
@@ -45,6 +50,7 @@ Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
 
+
 PushNotification.createChannel(
   {
     channelId: "events", // (required)
@@ -61,23 +67,23 @@ PushNotification.createChannel(
 export default function App() {
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
-  var [productionAppVersion, setProductionAppVersion] = useState("");
+  var [productionAppVersion,setProductionAppVersion] = useState("")
   const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
     WhatsNewMessage().show
   );
-  const [updateRequired, setUpdateRequired] = useState(false);
+  const [updateRequired,setUpdateRequired] = useState(false)
   const width = Dimensions.get("window").width;
 
   // AsyncStorage.getItem("token").then((out) => {
   //   token = out;
   // });
   const [isConnected, setIsConnected] = useState(true);
-  const [token, setToken] = useState(false);
-  const profile = useSelector((state) => state.profile.profile); // Replace 'data' with your actual state slice name
+  const [token, setToken] = useState(false)
+  const profile = useSelector(state => state.profile.profile); // Replace 'data' with your actual state slice name
   const dispatch = useDispatch();
 
-  const setNewProfile = (
-    name,
+  const setNewProfile = 
+    (name,
     email,
     phoneNumber,
     profileImage,
@@ -88,8 +94,9 @@ export default function App() {
     dateOfJoining,
     selfInviteCode,
     city,
-    emergencyContact
-  ) => {
+    emergencyContact) =>
+   {
+    
     const new_profile = {
       name: name,
       email: email,
@@ -105,7 +112,7 @@ export default function App() {
       emergencyContact: emergencyContact,
     };
     dispatch(setProfile(new_profile));
-  };
+  }
   useEffect(() => {
     recheck();
     checkVersion();
@@ -113,60 +120,58 @@ export default function App() {
       try {
         // Retrieve data from AsyncStorage
         const token_temp = await AsyncStorage.getItem("token");
-        if (token_temp) setToken(true);
-        else setToken(null);
-        if (profile == "") {
-          const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-          const name = await AsyncStorage.getItem("name");
-          const email = await AsyncStorage.getItem("email");
-          const emergencyContact = await AsyncStorage.getItem(
-            "emergencyContact"
-          );
-          const city = await AsyncStorage.getItem("city");
-          const profileImage = await AsyncStorage.getItem("profileImage");
-          const membership = await AsyncStorage.getItem("membership");
-          const sessionsAttended = await AsyncStorage.getItem(
-            "sessionsAttended"
-          );
-          const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
-          const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
-          // console.log(
-          //   name,
-          //   email,
-          //   phoneNumber,
-          //   // profileImage,
-          //   token_temp,
-          //   membership,
-          //   sessionsAttended,
-          //   dateOfJoining,
-          //   selfInviteCode,
-          //   city,
-          //   emergencyContact
-          // );
-          setNewProfile(
-            name,
+        if(token_temp)
+          setToken(true)
+        else
+          setToken(null)
+        if(profile==""){
+          const phoneNumber = await AsyncStorage.getItem("phoneNumber")
+          const name = await AsyncStorage.getItem("name")
+          const email = await AsyncStorage.getItem("email")
+          const emergencyContact = await AsyncStorage.getItem("emergencyContact")
+          const city = await AsyncStorage.getItem("city")
+          const profileImage = await AsyncStorage.getItem("profileImage")
+          const membership = await AsyncStorage.getItem("membership")
+          const sessionsAttended = await AsyncStorage.getItem("sessionsAttended")
+          const dateOfJoining = await AsyncStorage.getItem("dateOfJoining")
+          const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
+          console.log(name,
             email,
             phoneNumber,
-            profileImage,
+            // profileImage,
             token_temp,
             membership,
             sessionsAttended,
             dateOfJoining,
             selfInviteCode,
             city,
-            emergencyContact
-          );
+            emergencyContact)
+            setNewProfile(name,
+                      email,
+                      phoneNumber,
+                      profileImage,
+                      token_temp,
+                      membership,
+                      sessionsAttended,
+                      dateOfJoining,
+                      selfInviteCode,
+                      city,
+                      emergencyContact,
+                    )
         }
+        
       } catch (error) {
-        console.error("Error retrieving data from AsyncStorage:", error);
+        console.error('Error retrieving data from AsyncStorage:', error);
       }
     };
-    fetchData();
+    fetchData(); 
   }, []);
-
+  
+  
   const recheck = async () => {
     try {
       const response = await fetch("https://go-happy-322816.nw.r.appspot.com");
+      // //console.log("this is response", JSON.stringify(response)); 
       if (response.ok) {
         setIsConnected(true);
       } else {
@@ -179,51 +184,55 @@ export default function App() {
 
   const checkVersionHelper = async () => {
     var buildNumber = DeviceInfo.getBuildNumber();
-    // console.log(buildNumber);
     var url = SERVER_URL + "/properties/list";
     try {
       const response = await axios.get(url);
-      // console.log(response);
       if (response.data) {
         const properties = response.data.properties;
-        if (properties && properties.length > 0) {
-          setProductionAppVersion(properties[0].buildNumber);
-          if (properties[0].buildNumber > buildNumber) {
-            return true;
-          } else {
-            return false;
-          }
+        if (properties && properties.length > 0 ) {
+          setProductionAppVersion(properties[0].buildNumber)
+            if(properties[0].buildNumber>buildNumber){
+              return true
+            }
+            else{
+              return false
+            }
         }
       }
     } catch (error) {
       this.error = true;
+      // throw new Error("Error getting order ID");
     }
-  };
+  }
+
 
   const checkVersion = async () => {
-    var needUpdate = await checkVersionHelper();
-    setUpdateRequired(needUpdate);
+    var needUpdate = await checkVersionHelper()
+    // //console.log('update12',needUpdate)
+    setUpdateRequired(needUpdate)
   };
 
+
   const linking = {
-    prefixes: ["https://www.gohappyclub.in"],
+    prefixes: ['https://www.gohappyclub.in'],
     config: {
       screens: {
-        "GoHappy Club": {
-          screens: {
-            HomeScreen: "free_sessions",
-            Refer: "refer",
-            MyProfile: "profile",
-          },
+        'GoHappy Club': {
+          screens:{
+            'HomeScreen':'free_sessions',
+            'Refer':'refer',
+            'MyProfile':'profile'
+          }
         },
-        "Session Details": "session_details/:deepId",
-        "Membership Details": "contribute",
-        "About GoHappy Club": "about",
-        Trips: "trips",
-        TripDetails: "trip_details",
+        'Session Details': 'session_details/:deepId',
+        'Membership Details': 'contribute',
+        'About GoHappy Club': 'about',
+        'Trips': 'trips',
+        'TripDetails': 'trip_details',
       },
     },
   };
+
 
   return (
     <>
@@ -256,11 +265,7 @@ export default function App() {
           title="Update Required"
           message={
             <View style={{ width: width * 0.6 }}>
-              <RenderHtml
-                source={{
-                  html: "To continue using the app, please install the latest version available. <br/><br/>This update ensures you have access to the newest features and improvements. Thank you for staying up to date!",
-                }}
-              />
+              <RenderHtml source={{ html: 'To continue using the app, please install the latest version available. <br/><br/>This update ensures you have access to the newest features and improvements. Thank you for staying up to date!' }} />
             </View>
           }
           closeOnTouchOutside={false}
@@ -269,16 +274,14 @@ export default function App() {
           confirmText="Update Now"
           confirmButtonColor="#29BFC2"
           onConfirmPressed={() => {
-            Linking.openURL(
-              "https://play.google.com/store/apps/details?id=com.gohappyclient"
-            );
+            Linking.openURL("https://play.google.com/store/apps/details?id=com.gohappyclient");
             // setShowWhatsNewMessage((showWhatsNewMessage = false));
           }}
         />
       )}
 
-      {isConnected == true && token != false ? (
-        <NavigationContainer linking={token == true && linking}>
+      {isConnected == true && token!=false ? (
+        <NavigationContainer linking={token==true && linking}>
           <Stack.Navigator>
             <>
               <Stack.Screen
@@ -293,6 +296,7 @@ export default function App() {
               />
               <Stack.Screen
                 name="Intro"
+
                 children={(props) => <Intro {...props} />}
                 options={{
                   headerLeft: () => <View />,
@@ -332,10 +336,8 @@ export default function App() {
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      /**
-                       * Handles the press event to navigate to the "GoHappy Club" screen.
-                       */
                       onPress={() => navigation.navigate("GoHappy Club")}
+                      underlayColor="#fff"
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -467,7 +469,7 @@ export default function App() {
             </>
           </Stack.Navigator>
         </NavigationContainer>
-      ) : (
+      ):(
         <Video
           source={require("./images/logo_splash.mp4")}
           style={{
@@ -486,8 +488,11 @@ export default function App() {
           repeat={true}
           resizeMode="cover"
         />
+        )
+      }
+      {isConnected==false && (
+        <ErrorScreen recheck={recheck} />
       )}
-      {isConnected == false && <ErrorScreen recheck={recheck} />}
     </>
   );
 }
