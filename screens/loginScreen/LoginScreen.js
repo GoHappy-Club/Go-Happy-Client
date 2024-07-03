@@ -8,6 +8,8 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -115,6 +117,15 @@ class LoginScreen extends Component {
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     return regexp.test(this.state.phoneNumber);
   };
+  handlePhoneNumberInput = (text) => {
+    this.setState({ phoneNumber: text }, () => {
+      const { phoneNumber } = this.state;
+      if (phoneNumber.length === 13 && phoneNumber.startsWith("+")) {
+        Keyboard.dismiss();
+        this.handleSendCode(false);
+      }
+    });
+  };
   handleSendCode = (resend) => {
     // Request to send OTP
     if (resend) {
@@ -184,8 +195,8 @@ class LoginScreen extends Component {
   };
   handleVerifyCode = (code) => {
     const { confirmResult, verificationCode } = this.state;
-    if(code==null){
-      code = verificationCode
+    if (code == null) {
+      code = verificationCode;
     }
     // Request for OTP verification
     if (code.length == 6) {
@@ -221,13 +232,16 @@ class LoginScreen extends Component {
   };
 
   handleInputChange = (text) => {
+
     if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
     }
-    if(text.length == 6 && /^[0-9]*$/.test(text)){
-      this.handleVerifyCode(text)
+    if (text.length == 6 && /^[0-9]*$/.test(text)) {
+      this.handleVerifyCode(text);
     }
   };
+  
+  
   renderConfirmationCodeView = () => {
     startOtpListener((message) => {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
@@ -239,7 +253,7 @@ class LoginScreen extends Component {
       }}
     });
     return (
-      <View style={styles.verificationView}>
+      <KeyboardAvoidingView style={styles.verificationView}>
         <TextInput
           style={styles.otp_input}
           onChangeText={this.handleInputChange.bind(this)}
@@ -275,7 +289,7 @@ class LoginScreen extends Component {
           loading={this.state.loadingButton}
           onPress={this.changePhoneNumber}
         />
-      </View>
+      </KeyboardAvoidingView>
     );
   };
   getCurrentUserInfo = async () => {
@@ -326,9 +340,7 @@ class LoginScreen extends Component {
         // }
       }
       this.setState({ loader: false });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
   _backendSignIn(token, name, profileImage, phone) {
     if (this.state.reachedBackendSignIn == false) {
@@ -523,19 +535,18 @@ class LoginScreen extends Component {
           LOGIN or SIGN UP
         </Text>
         {!this.state.confirmResult && (
-          <View style={styles.page}>
+          <KeyboardAvoidingView
+            style={styles.page}
+            behavior="height"
+            keyboardVerticalOffset={100}
+          >
             <PhoneInput
               style={styles.textInput}
               ref={this.state.phoneNumber}
               keyboardType="phone-pad"
               defaultCode="IN"
               layout="first"
-              onChangeText={(text) => {
-                this.setState({ phoneNumber: text });
-              }}
-              onChangeFormattedText={(text) => {
-                this.setState({ phoneNumber: text });
-              }}
+              onChangeFormattedText={this.handlePhoneNumberInput}
               withDarkTheme
               withShadow
               autoFocus
@@ -635,7 +646,7 @@ class LoginScreen extends Component {
             {/* <View> */}
             {/* <Text>Facing any difficulty?</Text> */}
             {/* </View> */}
-          </View>
+          </KeyboardAvoidingView>
         )}
         {this.state.confirmResult && (
           <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
@@ -644,8 +655,8 @@ class LoginScreen extends Component {
           resizeMode="contain"
           style={styles.cover}
           source={require("../../images/login_bg.png")}
-        /> */}
-        {/* <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
+        />
+        <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
         <AwesomeAlert
           show={this.state.showAlert}
           showProgress={false}
