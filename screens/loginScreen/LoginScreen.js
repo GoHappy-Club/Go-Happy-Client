@@ -119,7 +119,6 @@ class LoginScreen extends Component {
   };
   handlePhoneNumberInput = (text) => {
     this.setState({ phoneNumber: text }, () => {
-      console.log("phone number inside state", this.state.phoneNumber);
       const { phoneNumber } = this.state;
       if (phoneNumber.length === 13 && phoneNumber.startsWith("+")) {
         Keyboard.dismiss();
