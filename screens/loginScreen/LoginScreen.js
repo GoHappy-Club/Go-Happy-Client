@@ -40,7 +40,6 @@ class LoginScreen extends Component {
     super(props);
     this.state = {
       phoneNumber: "",
-      phoneNumberError: "",
       password: "",
       showAlert: false,
       loader: true,
@@ -185,7 +184,6 @@ class LoginScreen extends Component {
           }
         });
     } else {
-      // alert(this.state.phoneNumberError);
       if (resend) {
         this.setState({ loadingResendButton: false });
       } else {
