@@ -37,7 +37,7 @@ class LoginScreen extends Component {
     this.state = {
       phoneNumber: "",
       phoneNumberError: "",
-      showPhoneNumberError: "",
+      showPhoneNumberError: false,
       password: "",
       showAlert: false,
       loader: true,
@@ -293,6 +293,8 @@ class LoginScreen extends Component {
           maxLength={6}
           placeholder="Enter 6-digit OTP"
           autoFocus
+          returnKeyType="done"
+          textContentType="oneTimeCode"
         />
         <Button
           outline
@@ -579,9 +581,7 @@ class LoginScreen extends Component {
               layout="first"
               onChangeFormattedText={this.handlePhoneNumberInput}
               withDarkTheme
-              maxLength={10}
               withShadow
-              autoFocus
             />
             <Text style={{ width: "80%" }}>
               <Text
