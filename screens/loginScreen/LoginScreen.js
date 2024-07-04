@@ -40,6 +40,8 @@ class LoginScreen extends Component {
     super(props);
     this.state = {
       phoneNumber: "",
+      phoneNumberError: "",
+      showPhoneNumberError: "",
       password: "",
       showAlert: false,
       loader: true,
@@ -117,15 +119,30 @@ class LoginScreen extends Component {
     const regex = /^\+91\d{10}$/;
     const unformattedNumber = this.state.phoneNumber.slice(3);
     if (unformattedNumber.length < 10) {
-      alert("Number has less than 10 digits");
+      this.setState(
+        { phoneNumberError: "Number has less than 10 digits" },
+        () => {
+          this.setState({ showPhoneNumberError: true });
+        }
+      );
       return false;
     }
     if (unformattedNumber.length > 10) {
-      alert("Number has more than 10 digits");
+      this.setState(
+        { phoneNumberError: "Number has more than 10 digits" },
+        () => {
+          this.setState({ showPhoneNumberError: true });
+        }
+      );
       return false;
     }
     if (!regex.test(this.state.phoneNumber)) {
-      alert("Please enter a valid 10 digit number");
+      this.setState(
+      { phoneNumberError: "Please Enter a valid 10 digit Number." },
+      () => {
+        this.setState({ showPhoneNumberError: true });
+      }
+    );
       return false;
     }
     return true;
@@ -658,6 +675,20 @@ class LoginScreen extends Component {
             {/* <View> */}
             {/* <Text>Facing any difficulty?</Text> */}
             {/* </View> */}
+            <AwesomeAlert
+              show={this.state.showPhoneNumberError}
+              showProgress={false}
+              title="Phone Number Error"
+              message={this.state.phoneNumberError}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              confirmButtonColor="gray"
+              confirmText="Ok"
+              onConfirmPressed={()=>{
+                this.setState({showPhoneNumberError:false})
+              }}
+            />
           </KeyboardAvoidingView>
         )}
         {this.state.confirmResult && (
