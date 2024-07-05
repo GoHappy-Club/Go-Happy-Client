@@ -99,22 +99,6 @@ class UpcomingWorkshops extends Component {
     return text.substring(0, cut) + "...";
   }
 
-  checkIsParticipantInSameEvent(item) {
-    let isParticipantInSameEvent = false;
-    if (item.sameDayEventId === null) {
-      return false;
-    }
-    this.props.trendingSessions.map((trend) => {
-      var session = trend.value;
-      if (!isParticipantInSameEvent) {
-        isParticipantInSameEvent =
-          session.sameDayEventId == item.sameDayEventId &&
-          session.participantList.includes(this.props.profile.phoneNumber);
-      }
-    });
-    return isParticipantInSameEvent;
-  }
-
   // Render each row of items
   renderRow = ({ item, index }) => (
     <TouchableOpacity
@@ -127,7 +111,7 @@ class UpcomingWorkshops extends Component {
           onGoBack: () => {
             this.props.reloadOverview();
           },
-          alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(item),
+          alreadyBookedSameDayEvent: false,
         })
       }
     >

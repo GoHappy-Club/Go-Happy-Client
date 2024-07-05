@@ -1,41 +1,20 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardAction,
-  CardButton,
-  CardContent,
-  CardImage,
-  CardTitle,
-} from "react-native-cards";
+
 import {
   FlatList,
-  Image,
-  KeyboardAvoidingView,
   Linking,
   Modal,
   RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Button, Text } from "react-native-elements";
 import { WebView } from "react-native-webview";
 
-import {
-  Avatar,
-  Caption,
-  Card as Cd,
-  Drawer,
-  Paragraph,
-  Switch,
-  Title,
-  TouchableRipple,
-} from "react-native-paper";
+import { Avatar, Card as Cd, Title } from "react-native-paper";
 
 export default class MySessions extends Component {
   constructor(props) {
@@ -104,7 +83,6 @@ export default class MySessions extends Component {
     }
     var finalTime = hours + ":" + minutes + " " + AmOrPm;
     return finalTime;
-    // return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
   }
 
   sorry() {
@@ -311,23 +289,25 @@ export default class MySessions extends Component {
             keyExtractor={(item) => item.id}
           />
         </SafeAreaView>
-        {this.state.recordingLink && <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.videoVisible1}
-          onRequestClose={() => {
-            this.setState({ videoVisible1: false });
-          }}
-        >
-          <WebView
-            allowsFullscreenVideo
-            javaScriptEnabled={true}
-            style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
-            source={{
-              uri: this.state.recordingLink,
+        {this.state.recordingLink && (
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.videoVisible1}
+            onRequestClose={() => {
+              this.setState({ videoVisible1: false });
             }}
-          />
-        </Modal>}
+          >
+            <WebView
+              allowsFullscreenVideo
+              javaScriptEnabled={true}
+              style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
+              source={{
+                uri: this.state.recordingLink,
+              }}
+            />
+          </Modal>
+        )}
       </ScrollView>
     );
   }

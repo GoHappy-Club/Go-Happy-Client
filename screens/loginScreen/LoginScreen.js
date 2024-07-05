@@ -60,6 +60,7 @@ class LoginScreen extends Component {
       referralCode: "",
       source: "",
       copiedText: "",
+      fcmToken: "",
     };
     this.getCurrentUserInfo();
   }
@@ -111,7 +112,8 @@ class LoginScreen extends Component {
     dateOfJoining,
     selfInviteCode,
     city,
-    emergencyContact
+    emergencyContact,
+    fcmToken
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -127,6 +129,7 @@ class LoginScreen extends Component {
       selfInviteCode: selfInviteCode,
       city: city,
       emergencyContact: emergencyContact,
+      fcmToken: fcmToken,
     };
     actions.setProfile(profile);
   }
@@ -233,8 +236,6 @@ class LoginScreen extends Component {
     });
   };
   resendOtp = () => {
-    // this.loadingButton=true;
-    //this.setState({ confirmResult: null, verificationCode: ''})
     const resend = true;
     this.handleSendCode(resend);
   };
@@ -329,7 +330,8 @@ class LoginScreen extends Component {
   getCurrentUserInfo = async () => {
     try {
       const token1 = await AsyncStorage.getItem("token");
-
+      const fcmToken = await AsyncStorage.getItem("fcmToken");
+      this.setState({ fcmToken: fcmToken });
       if (token1 != null) {
         const name = await AsyncStorage.getItem("name");
         const email = await AsyncStorage.getItem("email");
@@ -355,8 +357,18 @@ class LoginScreen extends Component {
           dateOfJoining,
           selfInviteCode,
           city,
-          emergencyContact
+          emergencyContact,
+          fcmToken
         );
+        axios
+          .post(SERVER_URL + "/user/update", {
+            fcmToken: fcmToken,
+            phone: phoneNumber,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.log(error);
+          });
         // this.props.navigation.replace('GoHappy Club');
 
         // this.setState({loader:false});
@@ -394,6 +406,7 @@ class LoginScreen extends Component {
         phone: phone.substr(1),
         referralId: this.state.referralCode,
         source: this.state.source,
+        fcmToken: this.state.fcmToken,
       })
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
@@ -442,7 +455,8 @@ class LoginScreen extends Component {
             response.data.dateOfJoining,
             response.data.selfInviteCode,
             response.data.city,
-            response.data.emergencyContact
+            response.data.emergencyContact,
+            this.state.fcmToken
           );
           this.setState({
             name: response.data.name,
@@ -509,10 +523,7 @@ class LoginScreen extends Component {
   }
   render() {
     if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-      // return (<MaterialIndicator color='white' style={{backgroundColor:"#0A1045"}}/>)
       return (
-        // <View style={{ backgroundColor: "white" }}>
         <Video
           source={require("../../images/logo_splash.mp4")}
           style={{
@@ -532,11 +543,8 @@ class LoginScreen extends Component {
           repeat={true}
           resizeMode="cover"
         />
-        // </View>
       );
     }
-    const navigation = this.props.navigation;
-    const title = "Login";
     return (
       <View style={styles.container}>
         <View style={{ width: "40%", marginLeft: "auto" }}>
