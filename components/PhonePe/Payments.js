@@ -1,146 +1,155 @@
 import { getPayload } from "../../services/PhonePe/PaymentServices";
-import React, { Component} from "react";
+import React, { Component } from "react";
 
-import PhonePePaymentSDK from 'react-native-phonepe-pg' 
-
+import PhonePePaymentSDK from "react-native-phonepe-pg";
 
 class Payments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      apiEndPoint:'/pg/v1/pay',
-      merchantId: 'GOHAPPYCLUBONLINE',
-      appId: '',
-      checksum: 'b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1',
+      apiEndPoint: "/pg/v1/pay",
+      merchantId: "GOHAPPYCLUBONLINE",
+      appId: "",
+      checksum:
+        "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
       openEnvironment: false,
-      environmentDropDownValue: 'PRODUCTION',
+      environmentDropDownValue: "PRODUCTION",
       environments: [
-        { label: 'SANDBOX', value: 'SANDBOX' },
-        { label: 'PRODUCTION', value: 'PRODUCTION' }
+        { label: "SANDBOX", value: "SANDBOX" },
+        { label: "PRODUCTION", value: "PRODUCTION" },
       ],
-      packageName: '',
-      callbackURL: 'reactDemoAppScheme',
+      packageName: "",
+      callbackURL: "reactDemoAppScheme",
       phonePeAppInstalled: false,
       gPayAppInstalled: false,
       paytmAppInstalled: false,
-      message: 'Message: ',
+      message: "Message: ",
     };
     // this.phonePe();
   }
-  PaymentError(){
-    return "Your payment could not be processed. Please try again later."
-  };
-  phonePe(phone,amount,callback,error_handler){
+  PaymentError() {
+    return "Your payment could not be processed. Please try again later.";
+  }
+  phonePe(phone, amount, callback, error_handler) {
     //console.log('phonepe')
     PhonePePaymentSDK.init(
       this.state.environmentDropDownValue,
       this.state.merchantId,
       this.state.appId,
       true
-    ).then(result => {
-      console.log('this is result from phonepe', result)
-      this.setState({
-        message:"Message: SDK Initialisation ->" + JSON.stringify(result)
-      });
-      //console.log(result)
-      this.startTransaction(phone,amount,callback,error_handler)
-    }).catch(error => {
-      console.log('this is error from phonepe', error)
-      this.setState({
-        message:"error:" + error.message
+    )
+      .then((result) => {
+        this.setState({
+          message: "Message: SDK Initialisation ->" + JSON.stringify(result),
+        });
+        //console.log(result)
+        this.startTransaction(phone, amount, callback, error_handler);
+      })
+      .catch((error) => {
+        this.setState({
+          message: "error:" + error.message,
+        });
+        error_handler(error);
       });
       //console.log(error)
-      error_handler(error)
-    })
-    
-  };
-  async startTransaction(phone,amount,callback,error_handler){
-      //console.log('i am here')
-      payload = await getPayload(phone,amount*100)
-      //console.log(phone,amount,payload)
-      requestBody = payload.requestBody
-      checksum = payload.checksum
+  }
+  async startTransaction(phone, amount, callback, error_handler) {
+    payload = await getPayload(phone, amount * 100);
+    console.log(payload);
+    requestBody = payload.requestBody;
+    checksum = payload.checksum;
     PhonePePaymentSDK.startTransaction(
       requestBody,
       checksum,
       this.state.packageName,
       this.state.callbackURL
-    ).then(a => {
-      this.setState({
-        message:JSON.stringify(a)
+    )
+      .then((a) => {
+        console.log(a);
+        this.setState({
+          message: JSON.stringify(a),
+        });
+        if (a.status == "SUCCESS") {
+          callback(phone);
+        } else {
+          throw Error;
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          message: error.message,
+        });
+        error_handler();
       });
-      if(a.status=='FAILURE'){
-        throw Error
-      }
-      //console.log('here',a)
-      callback(phone);
-    }).catch(error => {
-      this.setState({
-        message:error.message
-      });
-      //console.log('in error',JSON.stringify(error))
-      error_handler()      
-    })
   }
-  handleIsPhonePeAppInstalled(){
-    PhonePePaymentSDK.isPhonePeInstalled().then(a => {
-      setPhonePeAppInstalled(a);
-      if (a) {
-        setMessage("Message: PhonePe App Installed")
-      } else {
-        setMessage("Message: PhonePe App Unavailable")
-      }
-    }).catch(error => {
-      setMessage("error:" + error.message);
-    })
-  };
-  handleIsGPayAppInstalled(){
-    PhonePePaymentSDK.isGPayAppInstalled().then(a => {
-      setGPayAppInstalled(a);
-      if (a) {
-        setMessage("Message: Gpay App Installed")
-      } else {
-        setMessage("Message: Gpay App Unavailable")
-      }
-    }).catch(error => {
-      setMessage("error:" + error.message);
-    })
-  };
-
-  handleIsPaytmInstalled(){
-    PhonePePaymentSDK.isPaytmAppInstalled().then(a => {
-      setPaytmAppInstalled(a);
-      if (a) {
-        setMessage("Message: Paytm App Installed")
-      } else {
-        setMessage("Message: Paytm App Unavailable")
-      }
-    }).catch(error => {
-      setMessage("error:" + error.message);
-    })
-  };
-
-  getPackageSignatureForAndroid(){
-    if (Platform.OS === 'android') {
-      PhonePePaymentSDK.getPackageSignatureForAndroid().then(packageSignture => {
-        setMessage(JSON.stringify(packageSignture));
-      }).catch(error => {
-        setMessage("error:" + error.message);
+  handleIsPhonePeAppInstalled() {
+    PhonePePaymentSDK.isPhonePeInstalled()
+      .then((a) => {
+        setPhonePeAppInstalled(a);
+        if (a) {
+          setMessage("Message: PhonePe App Installed");
+        } else {
+          setMessage("Message: PhonePe App Unavailable");
+        }
       })
-    }
-  };
-
-  getUpiAppsForAndroid(){
-    if (Platform.OS === 'android') {
-      PhonePePaymentSDK.getUpiAppsForAndroid().then(upiApps => {
-        if (upiApps != null)
-          setMessage(JSON.stringify(JSON.parse(upiApps)));
-      }).catch(error => {
+      .catch((error) => {
         setMessage("error:" + error.message);
+      });
+  }
+  handleIsGPayAppInstalled() {
+    PhonePePaymentSDK.isGPayAppInstalled()
+      .then((a) => {
+        setGPayAppInstalled(a);
+        if (a) {
+          setMessage("Message: Gpay App Installed");
+        } else {
+          setMessage("Message: Gpay App Unavailable");
+        }
       })
+      .catch((error) => {
+        setMessage("error:" + error.message);
+      });
+  }
+
+  handleIsPaytmInstalled() {
+    PhonePePaymentSDK.isPaytmAppInstalled()
+      .then((a) => {
+        setPaytmAppInstalled(a);
+        if (a) {
+          setMessage("Message: Paytm App Installed");
+        } else {
+          setMessage("Message: Paytm App Unavailable");
+        }
+      })
+      .catch((error) => {
+        setMessage("error:" + error.message);
+      });
+  }
+
+  getPackageSignatureForAndroid() {
+    if (Platform.OS === "android") {
+      PhonePePaymentSDK.getPackageSignatureForAndroid()
+        .then((packageSignture) => {
+          setMessage(JSON.stringify(packageSignture));
+        })
+        .catch((error) => {
+          setMessage("error:" + error.message);
+        });
     }
-  };
+  }
+
+  getUpiAppsForAndroid() {
+    if (Platform.OS === "android") {
+      PhonePePaymentSDK.getUpiAppsForAndroid()
+        .then((upiApps) => {
+          if (upiApps != null) setMessage(JSON.stringify(JSON.parse(upiApps)));
+        })
+        .catch((error) => {
+          setMessage("error:" + error.message);
+        });
+    }
+  }
 }
 
-const phonepe_payments = new Payments()
+const phonepe_payments = new Payments();
 export default phonepe_payments;

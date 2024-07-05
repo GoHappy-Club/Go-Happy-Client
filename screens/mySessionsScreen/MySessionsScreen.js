@@ -1,17 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Image,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
+import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
 
@@ -39,6 +27,12 @@ export default class MySessionsScreen extends Component {
       // Error retrieving data
     }
   };
+  /**
+   * Loads the user's sessions from the server.
+   *
+   * @param {string} phoneNumber - The phone number of the user.
+   * @param {function} _callback - A callback function to be executed after the data is loaded.
+   */
   loadMySessions(phoneNumber, _callback) {
     phoneNumber = this.state.phoneNumber;
     var url = SERVER_URL + "/event/mySessions";
