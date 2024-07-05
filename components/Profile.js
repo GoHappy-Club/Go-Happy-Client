@@ -438,22 +438,19 @@ class Profile extends Component {
                 message={"Are you sure you want to logout?"}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={true}
-                customView={
-                  <View style={styles.container}>
-                  <TouchableOpacity
-                    style={[styles.button, styles.logoutButton]}
-                    onPress={()=>this._signout()}
-                  >
-                    <Text style={styles.buttonText}>LogOut</Text>
-                  </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, styles.cancelButton]}
-                      onPress={()=>{this.setState({logoutPopup:false})}}
-                    >
-                      <Text style={styles.buttonText}>Cancel</Text>
-                    </TouchableOpacity>
-                  </View>
-                }
+                showCancelButton={true}
+                showConfirmButton={true}
+                confirmText="Cancel" //confirm action is for cancelling to swap positions of the two
+                confirmButtonColor="gray"
+                cancelButtonColor="deepskyblue"
+                cancelText="Logout"
+                onConfirmPressed={() => { 
+                  this.setState({ logoutPopup: false });
+                }}
+                onCancelPressed={() => {
+                  this.setState({ logoutPopup: false });
+                  this._signout();
+                }}
               />
             )}
           </View>
