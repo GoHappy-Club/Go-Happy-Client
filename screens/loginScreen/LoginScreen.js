@@ -30,18 +30,14 @@ import LinearGradient from "react-native-linear-gradient";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import RenderHtml from "react-native-render-html";
 import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
-import {
-  getHash,
-  startOtpListener,
-  useOtpVerify,
-} from "react-native-otp-verify";
+import RNOtpVerify from "react-native-otp-verify";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       phoneNumber: "",
       phoneNumberError: "",
-      showPhoneNumberError: "",
+      showPhoneNumberError: false,
       password: "",
       showAlert: false,
       loader: true,
@@ -82,7 +78,27 @@ class LoginScreen extends Component {
         }
         this.setState({ referralCode: url.url.split("=")[1] });
       });
+
+    RNOtpVerify.getOtp()
+      .then((p) => {
+        RNOtpVerify.addListener(this.otpHandler);
+      })
+      .catch((p) => {});
   }
+
+  componentWillUnmount() {
+    RNOtpVerify.removeListener();
+  }
+
+  otpHandler = (message) => {
+    const otpList = message.match(/\b\d{6}\b/);
+    if (otpList && otpList.length > 0) {
+      const verificationCode = otpList[0];
+      this.setState({ verificationCode });
+      this.handleVerifyCode();
+    }
+  };
+
   setProfile(
     name,
     email,
@@ -138,11 +154,11 @@ class LoginScreen extends Component {
     }
     if (!regex.test(this.state.phoneNumber)) {
       this.setState(
-      { phoneNumberError: "Please Enter a valid 10 digit Number." },
-      () => {
-        this.setState({ showPhoneNumberError: true });
-      }
-    );
+        { phoneNumberError: "Please Enter a valid 10 digit Number." },
+        () => {
+          this.setState({ showPhoneNumberError: true });
+        }
+      );
       return false;
     }
     return true;
@@ -270,16 +286,6 @@ class LoginScreen extends Component {
   };
 
   renderConfirmationCodeView = () => {
-    startOtpListener((message) => {
-      // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
-      //console.log("i am in auto message", message);
-      if (/(\d{4})/g.exec(message)) {
-        const otp = /(\d{4})/g.exec(message)[1];
-        if (otp && otp.length == 6) {
-          this.setState({ verificationCode: otp });
-        }
-      }
-    });
     return (
       <KeyboardAvoidingView style={styles.verificationView}>
         <TextInput
@@ -685,8 +691,8 @@ class LoginScreen extends Component {
               showConfirmButton={true}
               confirmButtonColor="gray"
               confirmText="Ok"
-              onConfirmPressed={()=>{
-                this.setState({showPhoneNumberError:false})
+              onConfirmPressed={() => {
+                this.setState({ showPhoneNumberError: false });
               }}
             />
           </KeyboardAvoidingView>
