@@ -434,7 +434,7 @@ class Profile extends Component {
               <AwesomeAlert
                 show={this.state.logoutPopup}
                 showProgress={false}
-                title="Confirm Logout"
+                title="Confirm"
                 message={"Are you sure you want to logout?"}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={true}
@@ -442,9 +442,9 @@ class Profile extends Component {
                 showConfirmButton={true}
                 confirmText="Cancel" //confirm action is for cancelling to swap positions of the two
                 confirmButtonColor="gray"
-                cancelButtonColor="deepskyblue"
+                cancelButtonColor="#29BFC2"
                 cancelText="Logout"
-                onConfirmPressed={() => { 
+                onConfirmPressed={() => {
                   this.setState({ logoutPopup: false });
                 }}
                 onCancelPressed={() => {
@@ -504,28 +504,28 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     margin: 10,
-    marginTop:18,
-    gap:12
+    marginTop: 18,
+    gap: 12,
   },
   button: {
     paddingVertical: 10,
     paddingHorizontal: 18,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: 'deepskyblue',
+    backgroundColor: "deepskyblue",
   },
   logoutButton: {
-    backgroundColor: 'gray', 
+    backgroundColor: "gray",
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 });
 

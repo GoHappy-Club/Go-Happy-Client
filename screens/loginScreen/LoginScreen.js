@@ -139,7 +139,10 @@ class LoginScreen extends Component {
     const unformattedNumber = this.state.phoneNumber.slice(3);
     if (unformattedNumber.length < 10) {
       this.setState(
-        { phoneNumberError: "Number has less than 10 digits" },
+        {
+          phoneNumberError:
+            "It looks like your phone number might be missing a few digits. Please enter a valid 10-digit phone number to continue.",
+        },
         () => {
           this.setState({ showPhoneNumberError: true });
         }
@@ -148,7 +151,10 @@ class LoginScreen extends Component {
     }
     if (unformattedNumber.length > 10) {
       this.setState(
-        { phoneNumberError: "Number has more than 10 digits" },
+        {
+          phoneNumberError:
+            "Your phone number seems to have more than 10 digits. Please double-check and enter a valid 10-digit number.",
+        },
         () => {
           this.setState({ showPhoneNumberError: true });
         }
@@ -157,7 +163,10 @@ class LoginScreen extends Component {
     }
     if (!regex.test(this.state.phoneNumber)) {
       this.setState(
-        { phoneNumberError: "Please Enter a valid 10 digit Number." },
+        {
+          phoneNumberError:
+            "Please enter a valid 10-digit phone number to continue.",
+        },
         () => {
           this.setState({ showPhoneNumberError: true });
         }
@@ -692,13 +701,13 @@ class LoginScreen extends Component {
             <AwesomeAlert
               show={this.state.showPhoneNumberError}
               showProgress={false}
-              title="Phone Number Error"
+              title="Error"
               message={this.state.phoneNumberError}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={true}
               showConfirmButton={true}
-              confirmButtonColor="gray"
-              confirmText="Ok"
+              confirmButtonColor="#29BFC2"
+              confirmText="Try Again"
               onConfirmPressed={() => {
                 this.setState({ showPhoneNumberError: false });
               }}
