@@ -470,7 +470,6 @@ ${link}`;
                   confirmButtonColor="deepskyblue"
                   cancelButtonColor="green"
                   onConfirmPressed={() => {
-                    console.log("item in alert==>", this.state.itemToBuy);
                     this.phonePeWrapper("self", this.state.itemToBuy);
                     this.setState({
                       clickPopup: false,
@@ -479,7 +478,7 @@ ${link}`;
                   cancelText="Share"
                   showCancelButton={true}
                   onCancelPressed={() => {
-                    this.phonePeWrapper("share", item);
+                    this.phonePeWrapper("share", this.state.itemToBuy);
                   }}
                 />
               )}
