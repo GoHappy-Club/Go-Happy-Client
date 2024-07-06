@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  Share,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -21,7 +22,7 @@ import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import phonepe_payments from "./PhonePe/Payments.js";
-
+import toUnicodeVariant from "./toUnicodeVariant.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -39,6 +40,8 @@ class HomeDashboard extends Component {
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
       showPaymentAlert: false,
+      shareLink: "",
+      clickPopup: false,
       alreadyBookedSameDayEvent: false,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
@@ -48,7 +51,7 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-  async phonePeWrapper(item) {
+  async phonePeWrapper(type,item) {
     var _this = this;
     const _callback = (id) => {
       this.setState({ success: true });
@@ -68,10 +71,40 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    if (type == "share") {
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          item.cost,
+          _callback,
+          _errorHandler
+        )
+        .then((link) => {
+          console.log(link);
+          //prettier-ignore
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")}.
+Please pay on the below link:
+${link}`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              // console.log(result);
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.profile.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler
+      );
+    }
   }
-  
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -343,7 +376,7 @@ class HomeDashboard extends Component {
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.phonePeWrapper.bind(this, item)
+                    ? this.setState({clickPopup:true})
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
@@ -351,6 +384,31 @@ class HomeDashboard extends Component {
                 buttonStyle={{ backgroundColor: "white" }}
                 titleStyle={{ color: "#2f2f31" }}
               />
+              {this.state.clickPopup && (
+              <AwesomeAlert
+                show={this.state.clickPopup}
+                showProgress={false}
+                title="Payment Confirmation"
+                message="Do you want to pay this yourself or share it to your family member"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                confirmText="Pay Now"
+                confirmButtonColor="deepskyblue"
+                cancelButtonColor="green"
+                onConfirmPressed={() => {
+                  this.phonePeWrapper("self",item);
+                  this.setState({
+                    clickPopup: false,
+                  });
+                }}
+                cancelText="Share"
+                showCancelButton={true}
+                onCancelPressed={() => {
+                  this.phonePeWrapper("share",item);
+                }}
+              />
+            )}
             </View>
           </Cd.Content>
         </TouchableOpacity>

@@ -3,6 +3,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  Share,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -19,6 +20,7 @@ import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import toUnicodeVariant from "./toUnicodeVariant.js";
 
 class Membership extends Component {
   constructor(props) {
@@ -44,6 +46,8 @@ class Membership extends Component {
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
+      shareLink: "",
+      clickPopup: false,
       plans: {
         selectedItem: "",
         planDetails: [
@@ -84,7 +88,7 @@ class Membership extends Component {
     };
     this._retrieveData();
   }
-  async phonePeWrapper() {
+  async phonePeWrapper(type) {
     var _this = this;
     const _callback = (id) => {
       _this.setState({ success: true });
@@ -107,8 +111,38 @@ class Membership extends Component {
       this.setState({ showPaymentAlert: true });
     };
     //console.log('propro',this.props.profile)
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,this.state.amount,_callback,_errorHandler)
-    
+    if (type == "share") {
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          this.state.amount,
+          _callback,
+          _errorHandler
+        )
+        .then((link) => {
+          console.log(link);
+          //prettier-ignore
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")}.
+Please pay on the below link:
+${link}`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              // console.log(result);
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.profile.phoneNumber,
+        this.state.amount,
+        _callback,
+        _errorHandler
+      );
+    }
   }
 
   planSelected(plan, index) {
@@ -377,12 +411,37 @@ class Membership extends Component {
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={this.phonePeWrapper.bind(this)}
+              onPress={() => this.setState({ clickPopup: true })}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>
               </View>
             </TouchableOpacity>
+            {this.state.clickPopup && (
+              <AwesomeAlert
+                show={this.state.clickPopup}
+                showProgress={false}
+                title="Payment Confirmation"
+                message="Do you want to pay this yourself or share it to your family member"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                confirmText="Pay Now"
+                confirmButtonColor="deepskyblue"
+                cancelButtonColor="green"
+                onConfirmPressed={() => {
+                  this.phonePeWrapper("self");
+                  this.setState({
+                    clickPopup: false,
+                  });
+                }}
+                cancelText="Share"
+                showCancelButton={true}
+                onCancelPressed={() => {
+                  this.phonePeWrapper("share");
+                }}
+              />
+            )}
           </View>
 
           {this.state.success && (

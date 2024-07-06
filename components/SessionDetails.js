@@ -43,7 +43,7 @@ export default class SessionDetails extends Component {
   }
 
 
-  async phonePeWrapper(item) {
+  async phonePeWrapper(type,item) {
     var _this = this;
     const _callback = (id) => {
       this.setState({ success: true , loadingButton: false});
@@ -64,7 +64,38 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
+    if (type == "share") {
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          item.cost,
+          _callback,
+          _errorHandler
+        )
+        .then((link) => {
+          console.log(link);
+          //prettier-ignore
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")}.
+Please pay on the below link:
+${link}`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              // console.log(result);
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler
+      );
+    }
     
   }
 
@@ -197,9 +228,14 @@ export default class SessionDetails extends Component {
       toUnicodeVariant(item.eventName, "bold italic") +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
       toUnicodeVariant("GoHappy Club", "bold") +
-      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
-      toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye," +
+      `${
+        item.costType !== "paid"
+          ? `Vo bhi bilkul ${toUnicodeVariant("FREE", "bold")}`
+          : `vo bhi sirf {\u20B9} ${item.cost} main`
+      }` +
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
@@ -541,11 +577,36 @@ export default class SessionDetails extends Component {
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
+                ? this.setState({clickPopup:true})
                 : this.sessionAction.bind(this)
             }
           ></Button>
         </View>
+        {this.state.clickPopup && (
+              <AwesomeAlert
+                show={this.state.clickPopup}
+                showProgress={false}
+                title="Payment Confirmation"
+                message="Do you want to pay this yourself or share it to your family member"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                confirmText="Pay Now"
+                confirmButtonColor="deepskyblue"
+                cancelButtonColor="green"
+                onConfirmPressed={() => {
+                  this.phonePeWrapper("self",item);
+                  this.setState({
+                    clickPopup: false,
+                  });
+                }}
+                cancelText="Share"
+                showCancelButton={true}
+                onCancelPressed={() => {
+                  this.phonePeWrapper("share",item);
+                }}
+              />
+            )}
 
         {item.recordingLink != null && (
           <Modal
