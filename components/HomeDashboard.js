@@ -81,9 +81,8 @@ class HomeDashboard extends Component {
           "workshop"
         )
         .then((link) => {
-          console.log(link);
           //prettier-ignore
-          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")}.
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
 Please pay on the below link:
 ${link}`;
           Share.share({
@@ -378,7 +377,7 @@ ${link}`;
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.setState({clickPopup:true})
+                    ? ()=>this.setState({clickPopup:true})
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}

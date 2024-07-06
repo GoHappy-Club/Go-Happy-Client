@@ -42,11 +42,10 @@ export default class SessionDetails extends Component {
     };
   }
 
-
-  async phonePeWrapper(type,item) {
+  async phonePeWrapper(type, item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -74,7 +73,6 @@ export default class SessionDetails extends Component {
           "workshop"
         )
         .then((link) => {
-          console.log(link);
           //prettier-ignore
           const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")}.
 Please pay on the below link:
@@ -98,13 +96,11 @@ ${link}`;
         "workshop"
       );
     }
-    
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -134,7 +130,6 @@ ${link}`;
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -225,27 +220,36 @@ ${link}`;
     this.setState({ videoVisible: true });
   }
   async createShareMessage(item, url) {
-    let template =
+    const sessionsTemplate =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
       toUnicodeVariant("GoHappy Club", "bold") +
-      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye," +
-      `${
-        item.costType !== "paid"
-          ? `Vo bhi bilkul ${toUnicodeVariant("FREE", "bold")}`
-          : `vo bhi sirf {\u20B9} ${item.cost} main`
-      }` +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
+      toUnicodeVariant("FREE", "bold") +
       ". \n \nClick on the link below: \n" +
       url;
-    // template = template.replace;
-    return template;
+
+    const workshopTemplate =
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" workshop. Aap bhi join kr skte ho mere sath, super entertaining and informative workshop of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, " +
+      `vo bhi sirf ${toUnicodeVariant(`\u20B9${item.cost}`, "bold")} mein` +
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -579,36 +583,36 @@ ${link}`;
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
-                ? this.setState({clickPopup:true})
+                ? () => this.setState({ clickPopup: true })
                 : this.sessionAction.bind(this)
             }
           ></Button>
         </View>
         {this.state.clickPopup && (
-              <AwesomeAlert
-                show={this.state.clickPopup}
-                showProgress={false}
-                title="Payment Confirmation"
-                message="Do you want to pay this yourself or share it to your family member"
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={true}
-                showConfirmButton={true}
-                confirmText="Pay Now"
-                confirmButtonColor="deepskyblue"
-                cancelButtonColor="green"
-                onConfirmPressed={() => {
-                  this.phonePeWrapper("self",item);
-                  this.setState({
-                    clickPopup: false,
-                  });
-                }}
-                cancelText="Share"
-                showCancelButton={true}
-                onCancelPressed={() => {
-                  this.phonePeWrapper("share",item);
-                }}
-              />
-            )}
+          <AwesomeAlert
+            show={this.state.clickPopup}
+            showProgress={false}
+            title="Payment Confirmation"
+            message="Do you want to pay this yourself or share it to your family member"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            confirmText="Pay Now"
+            confirmButtonColor="deepskyblue"
+            cancelButtonColor="green"
+            onConfirmPressed={() => {
+              this.phonePeWrapper("self", item);
+              this.setState({
+                clickPopup: false,
+              });
+            }}
+            cancelText="Share"
+            showCancelButton={true}
+            onCancelPressed={() => {
+              this.phonePeWrapper("share", item);
+            }}
+          />
+        )}
 
         {item.recordingLink != null && (
           <Modal

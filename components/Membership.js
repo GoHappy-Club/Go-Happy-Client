@@ -121,7 +121,6 @@ class Membership extends Component {
           "contribution"
         )
         .then((link) => {
-          console.log("link in membership component ==>",link);
           //prettier-ignore
           const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")}.
 Please pay on the below link:
@@ -413,7 +412,7 @@ ${link}`;
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={() => this.setState({ clickPopup: true })}
+              onPress={() => {this.setState({ clickPopup: true })}}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>
@@ -424,22 +423,22 @@ ${link}`;
                 show={this.state.clickPopup}
                 showProgress={false}
                 title="Payment Confirmation"
-                message="Do you want to pay this yourself or share it to your family member"
+                message="Do you want to pay this yourself or share it with your family member"
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={true}
                 showConfirmButton={true}
-                confirmText="Pay Now"
-                confirmButtonColor="deepskyblue"
-                cancelButtonColor="green"
-                onConfirmPressed={() => {
+                cancelText="Pay Now"
+                confirmButtonColor="gray"
+                cancelButtonColor="#29BFC2"
+                onCancelPressed={() => {
                   this.phonePeWrapper("self");
                   this.setState({
                     clickPopup: false,
                   });
                 }}
-                cancelText="Share"
+                confirmText="Share"
                 showCancelButton={true}
-                onCancelPressed={() => {
+                onConfirmPressed={() => {
                   this.phonePeWrapper("share");
                 }}
               />

@@ -41,17 +41,22 @@ class Payments extends Component {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
-        "X-Verify": checksum,
+        "X-VERIFY": checksum,
       },
       data: {
         request: requestBody,
       },
     };
-    const response = await axios.request(options);
+    console.log("here");
+    try {
+      const response = await axios.request(options);
     const shareableLink =
       response.data.data.instrumentResponse.redirectInfo.url;
-    console.log("Shareable link in paymentjs ==>", shareableLink);
     return shareableLink
+    } catch (error) {
+      console.log("Error in paymentjs==>", error)
+    }
+    
   }
   phonePe(phone, amount, callback, error_handler, paymentType) {
     //console.log('phonepe')
