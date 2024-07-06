@@ -95,9 +95,8 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState({ verificationCode }, () => {
-        this.handleVerifyCode();
-      });
+      this.setState({ verificationCode });
+      this.handleVerifyCode();
     }
   };
 
