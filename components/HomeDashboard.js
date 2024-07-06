@@ -466,18 +466,18 @@ ${link}`;
                   closeOnTouchOutside={true}
                   closeOnHardwareBackPress={true}
                   showConfirmButton={true}
-                  confirmText="Pay Now"
-                  confirmButtonColor="deepskyblue"
-                  cancelButtonColor="green"
-                  onConfirmPressed={() => {
+                  cancelText="Pay Now"
+                  confirmButtonColor="gray"
+                  cancelButtonColor="#29BFC2"
+                  onCancelPressed={() => {
                     this.phonePeWrapper("self", this.state.itemToBuy);
                     this.setState({
                       clickPopup: false,
                     });
                   }}
-                  cancelText="Share"
+                  confirmText="Share"
                   showCancelButton={true}
-                  onCancelPressed={() => {
+                  onConfirmPressed={() => {
                     this.phonePeWrapper("share", this.state.itemToBuy);
                   }}
                 />
