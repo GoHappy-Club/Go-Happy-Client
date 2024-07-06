@@ -74,7 +74,7 @@ export default class SessionDetails extends Component {
         )
         .then((link) => {
           //prettier-ignore
-          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")}.
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
 Please pay on the below link:
 ${link}`;
           Share.share({
