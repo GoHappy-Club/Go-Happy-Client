@@ -43,7 +43,7 @@ export default class SessionDetails extends Component {
     };
   }
 
-  async phonePeWrapper(item) {
+  async phonePeWrapper(type, item) {
     var _this = this;
     const _callback = (id) => {
       this.setState({ success: true, loadingButton: false });
@@ -64,12 +64,44 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(
-      this.props.phoneNumber,
-      item.cost,
-      _callback,
-      _errorHandler
-    );
+    if (type == "share") {
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          item.cost,
+          _callback,
+          _errorHandler,
+          "workshop"
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+Please make your payment using the link below:
+${link}
+${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.
+`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              this.setState({
+                clickPopup: false,
+              });
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler,
+        "workshop"
+      );
+    }
   }
 
   componentDidMount() {
@@ -183,7 +215,7 @@ export default class SessionDetails extends Component {
     this.setState({ videoVisible: true });
   }
   async createShareMessage(item, url) {
-    let template =
+    const sessionsTemplate =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
@@ -192,8 +224,18 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("FREE", "bold") +
       ". \n \nClick on the link below: \n" +
       url;
-    // template = template.replace;
-    return template;
+
+    const workshopTemplate =
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" workshop. Aap bhi join kr skte ho mere sath, super entertaining and informative workshop of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, " +
+      `vo bhi sirf ${toUnicodeVariant(`\u20B9${item.cost}`, "bold")} mein` +
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
   }
   shareMessage = async (item) => {
     const sessionShareMessage =
@@ -536,11 +578,36 @@ export default class SessionDetails extends Component {
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
+                ? () => this.setState({ clickPopup: true })
                 : this.sessionAction.bind(this)
             }
           ></Button>
         </View>
+        {this.state.clickPopup && (
+          <AwesomeAlert
+            show={this.state.clickPopup}
+            showProgress={false}
+            title="Payment Confirmation"
+            message="Would you like to pay this yourself or share the payment link with a family member?"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            cancelText="Pay Now"
+            confirmButtonColor="gray"
+            cancelButtonColor="#29BFC2"
+            onCancelPressed={() => {
+              this.phonePeWrapper("self", item);
+              this.setState({
+                clickPopup: false,
+              });
+            }}
+            confirmText="Share"
+            showCancelButton={true}
+            onConfirmPressed={() => {
+              this.phonePeWrapper("share", item);
+            }}
+          />
+        )}
 
         {item.recordingLink != null && (
           <Modal

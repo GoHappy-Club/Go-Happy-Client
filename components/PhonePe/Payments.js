@@ -24,13 +24,40 @@ class Payments extends Component {
       gPayAppInstalled: false,
       paytmAppInstalled: false,
       message: "Message: ",
+      // shareableLink: "",
     };
     // this.phonePe();
   }
   PaymentError() {
     return "Your payment could not be processed. Please try again later.";
   }
-  phonePe(phone, amount, callback, error_handler) {
+  async phonePeShare(phone, amount, callback, error_handler, paymentType) {
+    payload = await getPayload(phone, amount * 100, paymentType);
+    requestBody = payload.requestBody;
+    checksum = payload.checksum;
+    const options = {
+      method: "post",
+      url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-VERIFY": checksum,
+      },
+      data: {
+        request: requestBody,
+      },
+    };
+    try {
+      const response = await axios.request(options);
+    const shareableLink =
+      response.data.data.instrumentResponse.redirectInfo.url;
+    return shareableLink
+    } catch (error) {
+      console.log("Error in paymentjs==>", error)
+    }
+    
+  }
+  phonePe(phone, amount, callback, error_handler, paymentType) {
     //console.log('phonepe')
     PhonePePaymentSDK.init(
       this.state.environmentDropDownValue,
@@ -43,7 +70,13 @@ class Payments extends Component {
           message: "Message: SDK Initialisation ->" + JSON.stringify(result),
         });
         //console.log(result)
-        this.startTransaction(phone, amount, callback, error_handler);
+        this.startTransaction(
+          phone,
+          amount,
+          callback,
+          error_handler,
+          paymentType
+        );
       })
       .catch((error) => {
         this.setState({
@@ -51,10 +84,10 @@ class Payments extends Component {
         });
         error_handler(error);
       });
-      //console.log(error)
+    //console.log(error)
   }
-  async startTransaction(phone, amount, callback, error_handler) {
-    payload = await getPayload(phone, amount * 100);
+  async startTransaction(phone, amount, callback, error_handler, paymentType) {
+    payload = await getPayload(phone, amount * 100, paymentType);
     console.log(payload);
     requestBody = payload.requestBody;
     checksum = payload.checksum;

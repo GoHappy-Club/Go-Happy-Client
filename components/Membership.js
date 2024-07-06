@@ -3,6 +3,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  Share,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -19,6 +20,7 @@ import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import toUnicodeVariant from "./toUnicodeVariant.js";
 
 class Membership extends Component {
   constructor(props) {
@@ -44,6 +46,8 @@ class Membership extends Component {
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
+      shareLink: "",
+      clickPopup: false,
       plans: {
         selectedItem: "",
         planDetails: [
@@ -84,18 +88,11 @@ class Membership extends Component {
     };
     this._retrieveData();
   }
-  async phonePeWrapper() {
+  async phonePeWrapper(type) {
     var _this = this;
     const _callback = (id) => {
       _this.setState({ success: true });
-      _this.props.setPaymentData(
-        id,
-        _this.props.profile.phoneNumber,
-        _this.state.amount,
-        () => {
-          _this.props.navigation.navigate("GoHappy Club");
-        }
-      );
+      _this.props.navigation.navigate("GoHappy Club")
     };
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
@@ -107,8 +104,44 @@ class Membership extends Component {
       this.setState({ showPaymentAlert: true });
     };
     //console.log('propro',this.props.profile)
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,this.state.amount,_callback,_errorHandler)
-    
+    if (type == "share") {
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          this.state.amount,
+          _callback,
+          _errorHandler,
+          "contribution"
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+Please make your payment using the link below:
+${link}
+${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
+`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              this.setState({
+                clickPopup: false,
+              });
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.profile.phoneNumber,
+        this.state.amount,
+        _callback,
+        _errorHandler,
+        "contribution"
+      );
+    }
   }
 
   planSelected(plan, index) {
@@ -377,12 +410,37 @@ class Membership extends Component {
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={this.phonePeWrapper.bind(this)}
+              onPress={() => {this.setState({ clickPopup: true })}}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>
               </View>
             </TouchableOpacity>
+            {this.state.clickPopup && (
+              <AwesomeAlert
+                show={this.state.clickPopup}
+                showProgress={false}
+                title="Payment Confirmation"
+                message="Would you like to pay this yourself or share the payment link with a family member?"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                cancelText="Pay Now"
+                confirmButtonColor="gray"
+                cancelButtonColor="#29BFC2"
+                onCancelPressed={() => {
+                  this.phonePeWrapper("self");
+                  this.setState({
+                    clickPopup: false,
+                  });
+                }}
+                confirmText="Share"
+                showCancelButton={true}
+                onConfirmPressed={() => {
+                  this.phonePeWrapper("share");
+                }}
+              />
+            )}
           </View>
 
           {this.state.success && (
@@ -494,6 +552,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // width: "auto",
     // flex: 1,
+    color:"black",
     fontSize: 36,
     fontWeight: "700",
   },
