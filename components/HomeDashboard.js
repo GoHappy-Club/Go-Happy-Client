@@ -43,6 +43,7 @@ class HomeDashboard extends Component {
       shareLink: "",
       clickPopup: false,
       alreadyBookedSameDayEvent: false,
+      itemToBuy: null,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
     };
@@ -51,7 +52,8 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-  async phonePeWrapper(type,item) {
+  async phonePeWrapper(type, item) {
+    console.log("item ==>", item);
     var _this = this;
     const _callback = (id) => {
       this.setState({ success: true });
@@ -104,6 +106,14 @@ ${link}`;
         "workshop"
       );
     }
+  }
+
+  handleClickBook( item ) {
+    console.log("item in handleClickBook ==>", item);
+
+    this.setState({ itemToBuy: item }, () => {
+      this.setState({ clickPopup: true });
+    });
   }
 
   _retrieveData = async () => {
@@ -377,7 +387,7 @@ ${link}`;
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? ()=>this.setState({clickPopup:true})
+                    ? this.handleClickBook.bind(this, item)
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
@@ -385,31 +395,6 @@ ${link}`;
                 buttonStyle={{ backgroundColor: "white" }}
                 titleStyle={{ color: "#2f2f31" }}
               />
-              {this.state.clickPopup && (
-              <AwesomeAlert
-                show={this.state.clickPopup}
-                showProgress={false}
-                title="Payment Confirmation"
-                message="Do you want to pay this yourself or share it to your family member"
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={true}
-                showConfirmButton={true}
-                confirmText="Pay Now"
-                confirmButtonColor="deepskyblue"
-                cancelButtonColor="green"
-                onConfirmPressed={() => {
-                  this.phonePeWrapper("self",item);
-                  this.setState({
-                    clickPopup: false,
-                  });
-                }}
-                cancelText="Share"
-                showCancelButton={true}
-                onCancelPressed={() => {
-                  this.phonePeWrapper("share",item);
-                }}
-              />
-            )}
             </View>
           </Cd.Content>
         </TouchableOpacity>
@@ -472,6 +457,32 @@ ${link}`;
             }}
           />
         )}
+        {this.state.clickPopup && (
+                <AwesomeAlert
+                  show={this.state.clickPopup}
+                  showProgress={false}
+                  title="Payment Confirmation"
+                  message="Do you want to pay this yourself or share it to your family member"
+                  closeOnTouchOutside={true}
+                  closeOnHardwareBackPress={true}
+                  showConfirmButton={true}
+                  confirmText="Pay Now"
+                  confirmButtonColor="deepskyblue"
+                  cancelButtonColor="green"
+                  onConfirmPressed={() => {
+                    console.log("item in alert==>", this.state.itemToBuy);
+                    this.phonePeWrapper("self", this.state.itemToBuy);
+                    this.setState({
+                      clickPopup: false,
+                    });
+                  }}
+                  cancelText="Share"
+                  showCancelButton={true}
+                  onCancelPressed={() => {
+                    this.phonePeWrapper("share", item);
+                  }}
+                />
+              )}
         {this.state.showPaymentAlert && (
           <AwesomeAlert
             show={this.state.showPaymentAlert}
