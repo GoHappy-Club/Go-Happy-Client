@@ -70,7 +70,8 @@ export default class SessionDetails extends Component {
           this.props.profile.phoneNumber,
           item.cost,
           _callback,
-          _errorHandler
+          _errorHandler,
+          "workshop"
         )
         .then((link) => {
           console.log(link);
@@ -93,7 +94,8 @@ ${link}`;
         this.props.phoneNumber,
         item.cost,
         _callback,
-        _errorHandler
+        _errorHandler,
+        "workshop"
       );
     }
     

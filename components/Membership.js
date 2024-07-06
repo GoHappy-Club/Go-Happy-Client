@@ -117,10 +117,11 @@ class Membership extends Component {
           this.props.profile.phoneNumber,
           this.state.amount,
           _callback,
-          _errorHandler
+          _errorHandler,
+          "contribution"
         )
         .then((link) => {
-          console.log(link);
+          console.log("link in membership component ==>",link);
           //prettier-ignore
           const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")}.
 Please pay on the below link:
@@ -140,7 +141,8 @@ ${link}`;
         this.props.profile.phoneNumber,
         this.state.amount,
         _callback,
-        _errorHandler
+        _errorHandler,
+        "contribution"
       );
     }
   }
