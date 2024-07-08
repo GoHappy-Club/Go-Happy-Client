@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
 import LinearGradient from "react-native-linear-gradient";
+import { Colors } from "../constants/Colors.js";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -178,7 +179,7 @@ class AdditionalDetails extends Component {
             style={styles.input}
             underlineColorAndroid="transparent"
             placeholder="Name *"
-            placeholderTextColor="#000"
+            placeholderTextColor={Colors.black}
             autoCapitalize="none"
             value={this.state.name}
             onChangeText={(text) => this.setState({ name: text })}
@@ -188,7 +189,7 @@ class AdditionalDetails extends Component {
             underlineColorAndroid="transparent"
             keyboardType="numeric"
             placeholder="Age *"
-            placeholderTextColor="#000"
+            placeholderTextColor={Colors.black}
             autoCapitalize="none"
             value={this.state.age}
             onChangeText={(text) => this.setState({ age: text })}
@@ -197,7 +198,7 @@ class AdditionalDetails extends Component {
             style={styles.input}
             underlineColorAndroid="transparent"
             placeholder="Email"
-            placeholderTextColor="#000"
+            placeholderTextColor={Colors.black}
             autoCapitalize="none"
             value={this.state.email}
             onChangeText={(text) => this.setState({ email: text })}
@@ -207,7 +208,7 @@ class AdditionalDetails extends Component {
             style={styles.input}
             underlineColorAndroid="transparent"
             placeholder="City"
-            placeholderTextColor="#000"
+            placeholderTextColor={Colors.black}
             value={this.state.city}
             onChangeText={(text) => this.setState({ city: text })}
           />
@@ -215,7 +216,7 @@ class AdditionalDetails extends Component {
             style={styles.input}
             underlineColorAndroid="transparent"
             placeholder="Emergency Contact Number"
-            placeholderTextColor="#000"
+            placeholderTextColor={Colors.black}
             value={this.state.emergencyContact}
             keyboardType="phone-pad"
             onChangeText={(text) => this.setState({ emergencyContact: text })}
@@ -223,7 +224,7 @@ class AdditionalDetails extends Component {
           <Text
             style={{
               fontSize: 14,
-              color: "black",
+              color: Colors.black,
               marginTop: "5%",
               alignSelf: "center",
               alignContent: "center",
@@ -267,7 +268,7 @@ class AdditionalDetails extends Component {
           buttonStyle={{ width: "50%", alignSelf: "center", marginTop: "5%" }}
           ViewComponent={LinearGradient}
           linearGradientProps={{
-            colors: ["#4c669f", "#3b5998", "#192f6a"],
+            colors: Colors.linearGradient,
             start: { x: 0, y: 0.25 },
             end: { x: 0.5, y: 1 },
             locations: [0, 0.5, 0.6],
@@ -289,7 +290,7 @@ class AdditionalDetails extends Component {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Try Again"
-          confirmButtonColor="#DD6B55"
+          confirmButtonColor={Colors.errorButton}
           onConfirmPressed={() => {
             this.setState({ showAlert: false });
           }}
@@ -303,22 +304,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.black,
     marginTop: "15%",
     alignSelf: "center",
   },
   container1: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    backgroundColor: Colors.grey.f,
   },
   input: {
     fontSize: 18,
-    color: "black",
+    color: Colors.black,
     marginTop: "5%",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     paddingLeft: 15,
-    borderColor: "black",
+    borderColor: Colors.black,
     borderWidth: 1,
     borderRadius: 5,
     width: "70%",
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: "5%",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     width: "40%",
   },
   btnContainer: {
@@ -347,20 +348,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 250,
@@ -376,7 +377,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#aaa",
   },
   title2: {
-    color: "black",
+    color: Colors.black,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: "#fff",
+    color: Colors.white,
     fontSize: 16,
   },
   themeButton: {
@@ -417,7 +418,7 @@ const styles = StyleSheet.create({
   themeButtonTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: Colors.white,
   },
   verificationView: {
     width: "100%",

@@ -61,8 +61,8 @@ class MembershipScreen extends Component {
     if (this.state.loader == true) {
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.MaterialIndicatorColor }}
         />
       );
     }
