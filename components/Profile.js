@@ -441,8 +441,8 @@ class Profile extends Component {
                 showCancelButton={true}
                 showConfirmButton={true}
                 confirmText="Cancel" //confirm action is for cancelling to swap positions of the two
-                confirmButtonColor="gray"
-                cancelButtonColor="#29BFC2"
+                confirmButtonColor="#29BFC2"
+                cancelButtonColor="gray"
                 cancelText="Logout"
                 onConfirmPressed={() => {
                   this.setState({ logoutPopup: false });
