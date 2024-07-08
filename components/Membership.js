@@ -19,6 +19,7 @@ import { setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { Colors } from "../constants/Colors.js";
 
 class Membership extends Component {
   constructor(props) {
@@ -36,8 +37,8 @@ class Membership extends Component {
       membership: "",
       city: "Pune",
       state: "Maharashtra",
-      backgroundColor: "white",
-      textColor: "black",
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
       amount: "",
       success: false,
       payType: "o",
@@ -50,32 +51,32 @@ class Membership extends Component {
           {
             amount: 99,
             duration: "1 month",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Basic",
           },
           {
             amount: 249,
             duration: "3 months",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Silver",
           },
           {
             amount: 549,
             duration: "6 months",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Gold",
           },
           {
             amount: 1099,
             duration: "1 year",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Premium",
           },
@@ -107,22 +108,26 @@ class Membership extends Component {
       this.setState({ showPaymentAlert: true });
     };
     //console.log('propro',this.props.profile)
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,this.state.amount,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.profile.phoneNumber,
+      this.state.amount,
+      _callback,
+      _errorHandler
+    );
   }
 
   planSelected(plan, index) {
     var allPlans = this.state.plans;
     plan.backgroundColor = "blue";
-    plan.textColor = "white";
+    plan.textColor = Colors.white;
     allPlans.planDetails[index] = plan;
     allPlans.selectedItem = index;
     for (var i = 0; i < allPlans.planDetails.length; i++) {
       if (i == index) {
         continue;
       }
-      allPlans.planDetails[i].backgroundColor = "white";
-      allPlans.planDetails[i].textColor = "black";
+      allPlans.planDetails[i].backgroundColor = Colors.white;
+      allPlans.planDetails[i].textColor = Colors.black;
     }
     this.setState({ plans: allPlans });
   }
@@ -147,7 +152,7 @@ class Membership extends Component {
         <TouchableOpacity
           style={{
             backgroundColor: plan.backgroundColor,
-            shadowColor: "black",
+            shadowColor: Colors.black,
             elevation: 10,
             shadowOffset: { height: 2 },
             shadowOpacity: 0.3,
@@ -183,11 +188,11 @@ class Membership extends Component {
   }
   render() {
     if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+      // return (<ActivityIndicator size='large' color={Colors.MaterialIndicatorColor} style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.MaterialIndicatorColor }}
         />
       );
     }
@@ -196,14 +201,14 @@ class Membership extends Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
         {/*--------------------------------------OLD UI------------------------------------------------ */}
 
         {/* <ScrollView style = {{
-					backgroundColor: 'white',height:'100%'
+					backgroundColor: Colors.white,height:'100%'
 				}}
 				contentContainerStyle={{justifyContent: 'center',
 				alignItems: 'center'}}
@@ -235,7 +240,7 @@ class Membership extends Component {
         {/* ------------------------------------------------------------------------------------ */}
         <ScrollView
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
             height: "100%",
           }}
           contentContainerStyle={{
@@ -319,7 +324,7 @@ class Membership extends Component {
             </View>
             <Text
               style={{
-                color: "black",
+                color: Colors.black,
                 fontWeight: "bold",
                 textAlign: "center",
                 fontSize: 18,
@@ -335,7 +340,7 @@ class Membership extends Component {
                 borderColor: "rgba(0,0,0,0.2)",
                 borderRadius: 10,
                 marginTop: "5%",
-                color: "black",
+                color: Colors.black,
                 width: Dimensions.get("window").width * 0.9,
                 textAlign: "justify",
                 lineHeight: 22,
@@ -417,7 +422,7 @@ class Membership extends Component {
               closeOnHardwareBackPress={false}
               showConfirmButton={true}
               confirmText="OK"
-              confirmButtonColor="#DD6B55"
+              confirmButtonColor={Colors.errorButton}
               onConfirmPressed={() => {
                 this.setState({
                   showPaymentAlert: false,
@@ -436,7 +441,7 @@ class Membership extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.MaterialIndicatorColor,
   },
   cover: {
     flex: 1,
@@ -449,17 +454,17 @@ const styles = StyleSheet.create({
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: "white",
+    color: Colors.white,
   },
   checkoutButtonDisabled: {
     opacity: 0.5,
     alignItems: "center",
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     padding: 10,
   },
   checkoutButtonEnabled: {
     alignItems: "center",
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     padding: 10,
   },
   input: {
@@ -481,7 +486,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: "#d6d7da",
+    borderColor: Colors.grey.d,
     padding: 5,
     margin: "5%",
   },
@@ -504,7 +509,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 1,
-    borderColor: "#d6d7da",
+    borderColor: Colors.grey.d,
     borderRadius: 20,
     paddingHorizontal: 8,
     paddingVertical: 4,

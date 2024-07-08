@@ -20,12 +20,13 @@ import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Clipboard from '@react-native-clipboard/clipboard';
+import Clipboard from "@react-native-clipboard/clipboard";
 import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 // import { refreshProfile } from "../services/profile/ProfileService";
 import ReferralsList from "./ReferralsList";
 import { FlatList } from "react-native-gesture-handler";
+import { Colors } from "../constants/Colors.js";
 const screenWidth = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
@@ -194,7 +195,7 @@ class Refer extends Component {
   render() {
     const { referralLink } = this.state;
     return (
-      <View style={{ backgroundColor: "white" }}>
+      <View style={{ backgroundColor: Colors.white }}>
         <ScrollView>
           <Text style={styles.title}>Refer & Win</Text>
           <Text style={styles.subtitle}>
@@ -229,14 +230,14 @@ class Refer extends Component {
             <TouchableOpacity
               style={{
                 ...styles.copyButton,
-                backgroundColor: "#2bbdc3",
+                backgroundColor: Colors.referPrimary,
               }}
-              underlayColor={"#2bbdc3"}
+              underlayColor={Colors.referPrimary}
               onPress={this.copyToClipboard.bind(this)}
             >
               <Text
                 style={{
-                  color: "white",
+                  color: Colors.white,
                   fontWeight: "bold",
                 }}
               >
@@ -308,7 +309,7 @@ class Refer extends Component {
                 ? styles.referButtonDisabled
                 : styles.referButton
             }
-            underlayColor={"#2bbdc3"}
+            underlayColor={Colors.referPrimary}
             onPress={this.shareMessage.bind(this)}
             disabled={referralLink.length == 0 ? true : false}
           >
@@ -319,13 +320,17 @@ class Refer extends Component {
                 alignItems: "center",
               }}
             >
-              <FontAwesomeIcon icon={faShareAlt} size={20} color="white" />
+              <FontAwesomeIcon
+                icon={faShareAlt}
+                size={20}
+                color={Colors.white}
+              />
               <Text style={styles.referButtonText}>REFER NOW</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.rulesButton}
-            underlayColor={"#2bbdc3"}
+            underlayColor={Colors.referPrimary}
             onPress={this.showConditions.bind(this)}
           >
             <View
@@ -340,7 +345,7 @@ class Refer extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.rulesButton}
-            underlayColor={"#2bbdc3"}
+            underlayColor={Colors.referPrimary}
             onPress={this.onPressReferralsButton.bind(this)}
           >
             <View
@@ -388,11 +393,11 @@ class Refer extends Component {
               </ListItem>
               <ListItem
                 key="2"
-                containerStyle={{ backgroundColor: "#29BFC2" }}
+                containerStyle={{ backgroundColor: Colors.primary }}
                 onPress={this.showConditions.bind(this)}
               >
                 <ListItem.Content>
-                  <ListItem.Title style={{ color: "white" }}>
+                  <ListItem.Title style={{ color: Colors.white }}>
                     Close
                   </ListItem.Title>
                 </ListItem.Content>
@@ -412,14 +417,14 @@ class Refer extends Component {
             >
               {/* <ListItem
                 key="2"
-                // containerStyle={{ backgroundColor: "white", margin: 0 }}
+                // containerStyle={{ backgroundColor: Colors.white, margin: 0 }}
                 // onPress={this.closeShowReferralsStatus.bind(this)}
               >
                 <ListItem.Content>
                   <TouchableOpacity
                     style={styles.backButton}
                     onPress={this.closeShowReferralsStatus.bind(this)}
-                    underlayColor="#fff"
+                    underlayColor={Colors.white}
                   >
                     <Text style={styles.backText}>back</Text>
                   </TouchableOpacity>
@@ -428,7 +433,7 @@ class Refer extends Component {
               <TouchableOpacity
                 style={styles.backButton}
                 onPress={this.closeShowReferralsStatus.bind(this)}
-                underlayColor="#fff"
+                underlayColor={Colors.white}
               >
                 <Text style={styles.backText}>Click to Exit</Text>
               </TouchableOpacity>
@@ -462,17 +467,17 @@ const styles = StyleSheet.create({
   backButton: {
     width: "auto",
     padding: 4,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#fff",
-    shadowColor: "black",
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
     elevation: 10,
     shadowOffset: { height: 2 },
     shadowOpacity: 0.3,
   },
   backText: {
-    color: "#000",
+    color: Colors.black,
     textAlign: "center",
     fontSize: 18,
   },
@@ -491,13 +496,13 @@ const styles = StyleSheet.create({
   },
   cicle: {
     borderRadius: 80,
-    backgroundColor: "#ffc8c8",
+    backgroundColor: Colors.referCircle,
     width: 50,
     height: 50,
   },
   referButton: {
     marginTop: "3%",
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
@@ -506,7 +511,7 @@ const styles = StyleSheet.create({
   },
   referButtonDisabled: {
     marginTop: "3%",
-    backgroundColor: "#b1f2f4",
+    backgroundColor: Colors.referLinkBackground,
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
@@ -520,28 +525,28 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   BSContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   rulesButtonText: {
     fontWeight: "bold",
-    color: "#29BFC2",
+    color: Colors.primary,
     justifyContent: "center",
     alignSelf: "center",
   },
   referButtonText: {
     fontWeight: "bold",
-    color: "white",
+    color: Colors.white,
     justifyContent: "center",
     alignSelf: "center",
     marginLeft: "10%",
   },
   messageBox: {
     width: "90%",
-    backgroundColor: "#fef9f3",
+    backgroundColor: Colors.referPrimary,
     alignSelf: "center",
     alignItems: "center",
     marginTop: "5%",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
@@ -550,20 +555,20 @@ const styles = StyleSheet.create({
   messageText: {
     marginTop: "3%",
     width: "80%",
-    backgroundColor: "#fef9f3",
+    backgroundColor: Colors.referPrimary,
     textAlign: "center",
     alignSelf: "center",
     fontWeight: "bold",
   },
   title: {
-    color: "black",
+    color: Colors.black,
     marginTop: "7%",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 32,
   },
   subtitle: {
-    color: "black",
+    color: Colors.black,
     marginTop: 6,
     textAlign: "center",
     fontSize: 14,
@@ -575,7 +580,7 @@ const styles = StyleSheet.create({
     color: "#ffb5b5",
   },
   link: {
-    backgroundColor: "#b1f2f4",
+    backgroundColor: Colors.referLinkBackground,
     padding: 5,
     marginTop: 40,
     fontWeight: "700",
@@ -588,7 +593,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "90%",
     alignSelf: "center",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,

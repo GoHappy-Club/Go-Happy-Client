@@ -26,6 +26,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { launchImageLibrary } from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Platform } from "react-native";
+import { Colors } from "../constants/Colors.js";
 
 class Profile extends Component {
   constructor(props) {
@@ -167,11 +168,11 @@ class Profile extends Component {
   };
   render() {
     if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+      // return (<ActivityIndicator size='large' color={Colors.MaterialIndicatorColor} style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.MaterialIndicatorColor }}
         />
       );
     }
@@ -198,13 +199,13 @@ class Profile extends Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
         <ScrollView
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
             height: "100%",
           }}
           contentContainerStyle={{
@@ -214,8 +215,8 @@ class Profile extends Component {
         >
           <View
             style={{
-              backgroundColor: "white",
-              shadowColor: "black",
+              backgroundColor: Colors.white,
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               width: "100%",
@@ -253,7 +254,7 @@ class Profile extends Component {
                   overflow: "hidden",
                   backgroundColor: "rgba(41,191,194,0.9)",
                   padding: 4,
-                  color: "white",
+                  color: Colors.white,
                   borderRadius: 10,
                 }}
               >
@@ -264,8 +265,8 @@ class Profile extends Component {
 
           <View
             style={{
-              backgroundColor: "#29BFC2",
-              shadowColor: "black",
+              backgroundColor: Colors.primary,
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               borderRadius: 10,
@@ -286,7 +287,7 @@ class Profile extends Component {
                 style={{
                   width: "33%",
                   height: "100%",
-                  borderColor: "#E0E0E0",
+                  borderColor: Colors.grey.e,
                   borderRightWidth: 1,
                   justifyContent: "center",
                   alignContent: "center",
@@ -302,7 +303,7 @@ class Profile extends Component {
                   width: "33%",
                   height: "100%",
                   justifyContent: "center",
-                  borderColor: "#E0E0E0",
+                  borderColor: Colors.grey.e,
                   borderRightWidth: 1,
                   alignContent: "center",
                 }}
@@ -340,7 +341,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
               }}
               onPress={() => {
                 this.props.navigation.navigate("Membership Details");
@@ -361,7 +362,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
               }}
               onPress={this._handleSelectImage.bind(this)}
             >
@@ -375,7 +376,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
               }}
               onPress={() => this.props.navigation.navigate("PastSessions")}
             >
@@ -389,7 +390,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
               }}
               onPress={() => {
                 this.props.navigation.navigate("About GoHappy Club");
@@ -405,7 +406,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
               }}
               onPress={this.openWhatsApp}
             >
@@ -421,7 +422,7 @@ class Profile extends Component {
               style={{
                 width: "100%",
                 borderTopWidth: 1,
-                borderColor: "#E0E0E0",
+                borderColor: Colors.grey.e,
                 borderBottomWidth: 1,
               }}
               onPress={() => this.setState({ logoutPopup: true })}
@@ -442,7 +443,7 @@ class Profile extends Component {
                 showConfirmButton={true}
                 confirmText="Cancel" //confirm action is for cancelling to swap positions of the two
                 confirmButtonColor="gray"
-                cancelButtonColor="#29BFC2"
+                cancelButtonColor={Colors.primary}
                 cancelText="Logout"
                 onConfirmPressed={() => {
                   this.setState({ logoutPopup: false });
@@ -465,7 +466,7 @@ class Profile extends Component {
         <FAB
           style={styles.fab}
           icon={({ size, color }) => (
-            <FontAwesomeIcon icon={faComment} color={"white"} size={25} />
+            <FontAwesomeIcon icon={faComment} color={Colors.white} size={25} />
           )}
           onPress={this.openWhatsApp}
         />
@@ -477,7 +478,7 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.MaterialIndicatorColor,
   },
   coverContainer: {
     overflow: "hidden",
@@ -489,15 +490,15 @@ const styles = StyleSheet.create({
   cardText: {
     textAlign: "center",
     marginTop: 10,
-    color: "white",
+    color: Colors.white,
   },
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: "#424242",
+    color: Colors.grey.optionList,
   },
   fab: {
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     position: "absolute",
     margin: 16,
     right: 0,
@@ -524,7 +525,7 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
   },
   buttonText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
   },
 });

@@ -24,6 +24,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { Colors } from "../constants/Colors.js";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -42,11 +43,10 @@ export default class SessionDetails extends Component {
     };
   }
 
-
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +64,17 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +104,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -199,15 +201,19 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -313,8 +319,8 @@ export default class SessionDetails extends Component {
     if (this.state.loader == true) {
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.MaterialIndicatorColor }}
         />
       );
     }
@@ -323,21 +329,21 @@ export default class SessionDetails extends Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
           }}
         >
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: Colors.white,
               borderRadius: 50,
-              shadowColor: "black",
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               width: "100%",
@@ -366,9 +372,9 @@ export default class SessionDetails extends Component {
               <Text
                 style={{
                   overflow: "hidden",
-                  backgroundColor: "white",
+                  backgroundColor: Colors.white,
                   padding: 4,
-                  color: "black",
+                  color: Colors.black,
                   borderRadius: 4,
                 }}
               >
@@ -391,7 +397,7 @@ export default class SessionDetails extends Component {
                 <TouchableOpacity onPress={this.shareMessage.bind(this, item)}>
                   <FontAwesomeIcon
                     icon={faShareAlt}
-                    color={"black"}
+                    color={Colors.black}
                     size={25}
                   />
                 </TouchableOpacity>
@@ -523,7 +529,7 @@ export default class SessionDetails extends Component {
                   size={30}
                 />
                 <Title
-                  style={{ color: "#404040", fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: Colors.grey['4'], fontSize: 13, paddingLeft: 10 }}
                 >
                   {item.expertName}
                 </Title>
@@ -536,7 +542,7 @@ export default class SessionDetails extends Component {
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: Colors.primary }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={
@@ -577,7 +583,7 @@ export default class SessionDetails extends Component {
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Try Again"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
@@ -593,7 +599,7 @@ export default class SessionDetails extends Component {
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="OK"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({
                 showPaymentAlert: false,
@@ -612,16 +618,16 @@ const contentHtmlStyles = StyleSheet.create({
   table: {
     borderTopWidth: 1,
     borderLeftWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
     marginBottom: 7,
   },
   tr: {
     borderBottomWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
   },
   td: {
     borderRightWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
     padding: 5,
   },
 });
@@ -629,11 +635,11 @@ const contentHtmlStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.MaterialIndicatorColor,
   },
   input: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 15,
     marginBottom: 10,
   },
@@ -657,20 +663,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 150,
@@ -683,7 +689,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {},
   title: {
-    color: "white",
+    color: Colors.white,
     marginTop: 10,
     width: 160,
     opacity: 0.9,
@@ -693,14 +699,14 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,

@@ -21,6 +21,7 @@ import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import phonepe_payments from "./PhonePe/Payments.js";
+import { Colors } from "../constants/Colors.js";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -68,10 +69,14 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.profile.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
-  
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -175,7 +180,7 @@ class HomeDashboard extends Component {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          color: "#2f2f31",
+          color: Colors.greyishText,
         }}
       >
         {/* No Sessions Available 😟 */}
@@ -248,12 +253,16 @@ class HomeDashboard extends Component {
           marginLeft: 30,
           marginRight: 30,
           marginBottom: 15,
-          backgroundColor: "#29BFC2",
+          backgroundColor: Colors.primary,
         }}
       >
         <TouchableOpacity
-          style={{ ...styles.card, marginTop: 10, backgroundColor: "#29BFC2" }}
-          underlayColor={"#29BFC2"}
+          style={{
+            ...styles.card,
+            marginTop: 10,
+            backgroundColor: Colors.primary,
+          }}
+          underlayColor={Colors.primary}
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
               phoneNumber: profile.phoneNumber,
@@ -278,18 +287,22 @@ class HomeDashboard extends Component {
                 <Badge
                   value={item.costType == "paid" ? "Workshop" : item.category}
                   badgeStyle={styles.badge}
-                  textStyle={{ color: "#2f2f31" }}
+                  textStyle={{ color: Colors.greyishText }}
                 />
-                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
+                <Text
+                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
+                >
                   {this.loadDate(item)} |
                 </Text>
-                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
+                <Text
+                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
+                >
                   {item.seatsLeft} seats left
                 </Text>
                 {item.costType == "paid" && (
                   <Text
                     style={{
-                      color: "white",
+                      color: Colors.white,
                       fontSize: 14,
                       paddingLeft: 4,
                       position: "absolute",
@@ -303,7 +316,7 @@ class HomeDashboard extends Component {
               </View>
               {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
-            <Title style={{ color: "white", fontSize: 20, padding: 4 }}>
+            <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
               {this.trimContent(item.eventName, 30)}
             </Title>
 
@@ -327,7 +340,7 @@ class HomeDashboard extends Component {
                   size={30}
                 />
                 <Title
-                  style={{ color: "white", fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}
                 >
                   {this.trimContent(item.expertName, 17)}
                 </Title>
@@ -347,9 +360,9 @@ class HomeDashboard extends Component {
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
-                loadingProps={{ size: "small", color: "black" }}
-                buttonStyle={{ backgroundColor: "white" }}
-                titleStyle={{ color: "#2f2f31" }}
+                loadingProps={{ size: "small", color: Colors.black }}
+                buttonStyle={{ backgroundColor: Colors.white }}
+                titleStyle={{ color: Colors.greyishText }}
               />
             </View>
           </Cd.Content>
@@ -357,7 +370,7 @@ class HomeDashboard extends Component {
       </Cd>
     );
     return (
-      <View style={{ flex: 1, backgroundColor: "#f0f0f0" }}>
+      <View style={{ flex: 1, backgroundColor: Colors.grey.d }}>
         <CalendarDays
           numberOfDays={15}
           daysInView={3}
@@ -370,13 +383,13 @@ class HomeDashboard extends Component {
             marginLeft: 30,
             marginTop: 20,
             marginBottom: 15,
-            color: "#2f2f31",
+            color: Colors.greyishText,
           }}
         >
           {this.state.selectedDate}
         </Text>
         {this.props.childLoader == true && (
-          <MaterialIndicator color="#29BFC2" />
+          <MaterialIndicator color={Colors.primary} />
         )}
         {this.props.childLoader == false &&
           this.props.events.filter((item) => item.endTime > Date.now()).length >
@@ -407,7 +420,7 @@ class HomeDashboard extends Component {
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Try Again"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
@@ -423,7 +436,7 @@ class HomeDashboard extends Component {
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="OK"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({
                 showPaymentAlert: false,
@@ -446,7 +459,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 8,
   },
   image: {
@@ -456,7 +469,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "lightgrey",
+    backgroundColor: Colors.grey.lightgrey,
     paddingBottom: 50,
     margin: 40,
   },
@@ -464,23 +477,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#29BFC2",
+    borderColor: Colors.primary,
   },
   badge: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     alignSelf: "flex-start",
-    color: "#29BFC2",
+    color: Colors.primary,
     // padding:4
   },
   fav: {
     alignSelf: "flex-start",
   },
   bookButton: {
-    backgroundColor: "green",
+    backgroundColor: Colors.green,
   },
 });
 
