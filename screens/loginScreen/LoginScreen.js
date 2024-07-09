@@ -95,7 +95,7 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState({ verificationCode }, () => {
+      this.setState({ verificationCode:verificationCode }, () => {
         this.handleVerifyCode();
       });
     }
@@ -177,13 +177,7 @@ class LoginScreen extends Component {
     return true;
   };
   handlePhoneNumberInput = (text) => {
-    this.setState({ phoneNumber: text }, () => {
-      const { phoneNumber } = this.state;
-      if (phoneNumber.length === 13 && phoneNumber.startsWith("+")) {
-        Keyboard.dismiss();
-        this.handleSendCode(false);
-      }
-    });
+    this.setState({ phoneNumber: text });
   };
   handleSendCode = (resend) => {
     // Request to send OTP
@@ -249,11 +243,12 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = (code) => {
+  handleVerifyCode = () => {
     const { confirmResult, verificationCode } = this.state;
-    if (code == null) {
-      code = verificationCode;
-    }
+    // if (code == null) {
+    //   code = verificationCode;
+    // }
+    const code = verificationCode;
     // Request for OTP verification
     if (code.length == 6) {
       this.setState({ loadingVerifyButton: true });
@@ -261,7 +256,7 @@ class LoginScreen extends Component {
       this.setState({ showAlert: true });
     }
 
-    if (code.length == 6) {
+    // if (code.length == 6) {
       confirmResult
         .confirm(code)
         .then((user) => {
@@ -282,23 +277,23 @@ class LoginScreen extends Component {
 
           this.setState({ loadingVerifyButton: false, showAlert: true });
         });
-    } else {
+    // } else {
       //   alert('Please enter a 6 digit OTP code.')
-    }
+    // }
   };
 
   handleInputChange = (text) => {
-    if (text.length <= 6 && /^[0-9]*$/.test(text)) {
+    // if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
-    }
-    if (text.length == 6 && /^[0-9]*$/.test(text)) {
-      this.handleVerifyCode(text);
-    }
+    // }
+    // if (text.length == 6 && /^[0-9]*$/.test(text)) {
+    //   this.handleVerifyCode(text);
+    // }
   };
 
   renderConfirmationCodeView = () => {
     return (
-      <KeyboardAvoidingView style={styles.verificationView}>
+      <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.verificationView}>
         <TextInput
           style={styles.otp_input}
           onChangeText={this.handleInputChange.bind(this)}
