@@ -245,9 +245,6 @@ class LoginScreen extends Component {
   };
   handleVerifyCode = () => {
     const { confirmResult, verificationCode } = this.state;
-    // if (code == null) {
-    //   code = verificationCode;
-    // }
     const code = verificationCode;
     // Request for OTP verification
     if (code.length == 6) {
@@ -256,7 +253,6 @@ class LoginScreen extends Component {
       this.setState({ showAlert: true });
     }
 
-    // if (code.length == 6) {
       confirmResult
         .confirm(code)
         .then((user) => {
@@ -277,18 +273,10 @@ class LoginScreen extends Component {
 
           this.setState({ loadingVerifyButton: false, showAlert: true });
         });
-    // } else {
-      //   alert('Please enter a 6 digit OTP code.')
-    // }
   };
 
   handleInputChange = (text) => {
-    // if (text.length <= 6 && /^[0-9]*$/.test(text)) {
       this.setState({ verificationCode: text });
-    // }
-    // if (text.length == 6 && /^[0-9]*$/.test(text)) {
-    //   this.handleVerifyCode(text);
-    // }
   };
 
   renderConfirmationCodeView = () => {
