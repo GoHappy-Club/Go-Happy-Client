@@ -323,7 +323,8 @@ class LoginScreen extends Component {
   getCurrentUserInfo = async () => {
     try {
       const token1 = await AsyncStorage.getItem("token");
-      const fcmToken = await AsyncStorage.getItem("fcmToken");
+      const fcmToken = await firebase.messaging().getToken();
+      AsyncStorage.setItem("fcmToken", fcmToken);
       this.setState({ fcmToken: fcmToken });
       if (token1 != null) {
         const name = await AsyncStorage.getItem("name");

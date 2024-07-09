@@ -206,11 +206,6 @@ export default function App() {
       }
     };
 
-    const fetchFcmToken = async () => {
-      const fcmToken = await messaging().getToken();
-      AsyncStorage.setItem("fcmToken", fcmToken);
-    };
-
     firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
       console.log("onNotificationOpened ", remoteMessage);
       if (remoteMessage == null) {
@@ -274,7 +269,6 @@ export default function App() {
 
     setToken(true);
     fetchData();
-    fetchFcmToken();
     return unsubscribe;
   }, []);
 
