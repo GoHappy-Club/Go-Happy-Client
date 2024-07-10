@@ -83,7 +83,9 @@ The Link will Expire in 20 Minutes.
             message: message,
           })
             .then((result) => {
-              // console.log(result);
+              this.setState({
+                clickPopup: false,
+              });
             })
             .catch((errorMsg) => {
               console.log("error in sharing", errorMsg);
