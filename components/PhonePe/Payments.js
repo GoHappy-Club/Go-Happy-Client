@@ -104,7 +104,7 @@ class Payments extends Component {
           message: JSON.stringify(a),
         });
         if (a.status == "SUCCESS") {
-          callback(phone);
+          // callback(phone);
         } else {
           throw Error;
         }

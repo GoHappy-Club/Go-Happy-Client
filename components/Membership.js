@@ -124,7 +124,8 @@ class Membership extends Component {
           //prettier-ignore
           const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
 Please pay on the below link:
-${link}`;
+${link}
+The Link will Expire in 20 Minutes.`;
           Share.share({
             message: message,
           })
@@ -554,6 +555,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // width: "auto",
     // flex: 1,
+    color:"black",
     fontSize: 36,
     fontWeight: "700",
   },

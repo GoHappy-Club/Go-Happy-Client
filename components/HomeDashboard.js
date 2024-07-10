@@ -86,7 +86,9 @@ class HomeDashboard extends Component {
           //prettier-ignore
           const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
 Please pay on the below link:
-${link}`;
+${link}
+The Link will Expire in 20 Minutes.
+`;
           Share.share({
             message: message,
           })
