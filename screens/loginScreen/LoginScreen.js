@@ -95,8 +95,8 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState({ verificationCode:verificationCode }, () => {
-        this.handleVerifyCode();
+      this.setState({ verificationCode: verificationCode }, () => {
+        this.handleVerifyCode(verificationCode);
       });
     }
   };
@@ -243,9 +243,11 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = () => {
+  handleVerifyCode = (code) => {
     const { confirmResult, verificationCode } = this.state;
-    const code = verificationCode;
+    if (code == null) {
+      code = verificationCode;
+    }
     // Request for OTP verification
     if (code.length == 6) {
       this.setState({ loadingVerifyButton: true });
@@ -253,35 +255,39 @@ class LoginScreen extends Component {
       this.setState({ showAlert: true });
     }
 
-      confirmResult
-        .confirm(code)
-        .then((user) => {
-          this.setState({ userId: user.user.uid });
-          try {
-            this._backendSignIn(
-              user.user.uid,
-              user.user.displayName,
-              "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-              user.user.phoneNumber
-            );
-          } catch (error) {}
-          //   this.setState({ loadingButton:false });
-        })
-        .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
-          //   alert(error.message)
+    confirmResult
+      .confirm(code)
+      .then((user) => {
+        this.setState({ userId: user.user.uid });
+        try {
+          this._backendSignIn(
+            user.user.uid,
+            user.user.displayName,
+            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
+            user.user.phoneNumber
+          );
+        } catch (error) {}
+        //   this.setState({ loadingButton:false });
+      })
+      .catch((error) => {
+        crashlytics().recordError(JSON.stringify(error));
+        //   alert(error.message)
 
-          this.setState({ loadingVerifyButton: false, showAlert: true });
-        });
+        this.setState({ loadingVerifyButton: false, showAlert: true });
+      });
   };
 
   handleInputChange = (text) => {
-      this.setState({ verificationCode: text });
+    this.setState({ verificationCode: text });
   };
 
   renderConfirmationCodeView = () => {
     return (
-      <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.verificationView}>
+      <KeyboardAvoidingView
+        behavior="height"
+        keyboardVerticalOffset={100}
+        style={styles.verificationView}
+      >
         <TextInput
           style={styles.otp_input}
           onChangeText={this.handleInputChange.bind(this)}
