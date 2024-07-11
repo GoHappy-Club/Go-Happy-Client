@@ -1,109 +1,85 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
-  Button,
-  Image,
-  KeyboardAvoidingView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
+  ScrollView,
 } from "react-native";
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
 import Refer from "../../components/Refer";
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
 import { bindActionCreators } from "redux";
-class ReferScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      loader: false,
-      ongoingEvents: [],
-      expiredEvents: [],
-      upcomingEvents: [],
-      email: "",
-    };
-    this._retrieveData();
-  }
-  _retrieveData = async () => {
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const ReferScreen = (props) => {
+  const [loader, setLoader] = useState(false);
+  const [ongoingEvents, setOngoingEvents] = useState([]);
+  const [expiredEvents, setExpiredEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [email, setEmail] = useState("");
+
+  const _retrieveData = async () => {
     try {
       const email = await AsyncStorage.getItem("email");
-      this.setState({ email: email });
-      this.loadMySessions(this.state.email);
+      if (email !== null) {
+        setEmail(email);
+        loadMySessions(email);
+      }
     } catch (error) {
       // Error retrieving data
+      console.log("error retreiving data",error);
     }
   };
-  loadMySessions(email, _callback) {
-    email = this.state.email;
-    var url = SERVER_URL + "/event/mySessions";
-    axios
-      .post(url, { email: email })
-      .then((response) => {
-        if (response.data) {
-          //
-          this.setState({ expiredEvents: response.data.expiredEvents });
-          this.setState({ upcomingEvents: response.data.upcomingEvents });
-          this.setState({ ongoingEvents: response.data.ongoingEvents });
-          this.setState({ error: false });
-          this.setState({ childLoader: false });
 
-          _callback();
-        }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
-  requestReferrals(_callback) {
-    // fetching refferals
-    ////console.log("In requestReferrals api");
-    axios
-      .post(SERVER_URL + "/user/referralsList", {
-        from: this.props.profile.phoneNumber,
-      })
-      .then((response) => {
-        ////console.log("referrals", JSON.stringify(response.data));
-        _callback(response.data);
-        ////console.log("api call ends successfully.")
-      })
-      .catch((error) => {
-        ////console.log("referrals failed");
-        crashlytics().recordError(JSON.stringify(error));
-        this.error = true;
-      });
-  }
-  render() {
-    if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-      return (
-        <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
-        />
-      );
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+
+  const loadMySessions = async (email,_callback) => {
+    email = email || email;
+    var url = SERVER_URL + "/event/mySessions";
+    try {
+      const response = await axios.post(url, { email: email });
+      if (response.data) {
+        setExpiredEvents(response.data.expiredEvents);
+        setUpcomingEvents(response.data.upcomingEvents);
+        setOngoingEvents(response.data.ongoingEvents);
+
+        _callback();
+      }
+    } catch (error) {
+      console.log("error in event/mySsesisonf",error);
     }
-    const navigation = this.props.navigation;
-    const title = "Login";
+  };
+
+  const requestReferrals = async (_callback) => {
+    try {
+      const response = await axios.post(SERVER_URL + "/user/referralsList", {
+        from: props.profile.phoneNumber,
+      });
+      _callback(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (loader) {
     return (
-      <Refer
-        loadMySessions={this.loadMySessions.bind(this)}
-        navigation={this.props.navigation}
-        ongoingEvents={this.state.ongoingEvents}
-        upcomingEvents={this.state.upcomingEvents}
-        expiredEvents={this.state.expiredEvents}
-        requestReferrals={this.requestReferrals.bind(this)}
-      />
+      <MaterialIndicator color="white" style={{ backgroundColor: "#0A1045" }} />
     );
   }
-}
+
+  return (
+    <Refer
+      loadMySessions={loadMySessions}
+      navigation={props.navigation}
+      ongoingEvents={ongoingEvents}
+      upcomingEvents={upcomingEvents}
+      expiredEvents={expiredEvents}
+      requestReferrals={requestReferrals}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   container1: {

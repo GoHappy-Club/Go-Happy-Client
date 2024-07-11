@@ -1,57 +1,61 @@
-import React, { Component } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
   Linking,
-  PermissionsAndroid,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { FAB, PaperProvider } from "react-native-paper";
+import { FAB } from "react-native-paper";
 
 import { Text } from "react-native-elements";
 
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
-import { connect } from "react-redux";
-import { changeCount, setProfile } from "../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
+import { changeCount, setProfile } from "../redux/actions/counts.js";;
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { launchImageLibrary } from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { Platform } from "react-native";
+import { useDispatch } from "react-redux";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
-class Profile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      loader: false,
-      profileImage: "",
-      name: "",
-      email: "",
-      membership: "",
-      city: "",
-      state: "",
-      image: null,
-      logoutPopup: false,
-    };
-    this._retrieveData();
-  }
-  componentDidUpdate() {
-    this.refreshProfile();
-  }
-  _handleSelectImage = async () => {
+const Profile=(props)=>  {
+
+  console.log("profile props====>",props);
+
+  useEffect(() => {
+    _retrieveData();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      _retrieveData();
+    }, [])
+  );
+  const [phoneNumber,setPhoneNumber]= useState("");
+  const [password,setPassword]= useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [membership, setMembership] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [image, setImage] = useState(null);
+  const [logoutPopup, setLogoutPopup] = useState(false);
+
+  const dispatch = useDispatch();
+
+
+ const  _handleSelectImage = async () => {
     try {
-      const redux_profile = this.props.profile;
+      const redux_profile = props.profile;
       var options = {
         mediaType: "photo",
         maxHeight: 1024,
@@ -60,13 +64,9 @@ class Profile extends Component {
         includeBase64: true,
       };
       launchImageLibrary(options, (response) => {
-        ////console.log("nlenle", response);
         if (response.didCancel) {
-          ////console.log("User cancelled image picker");
         } else if (response.error) {
-          ////console.log("ImagePicker Error: ", response.error);
         } else {
-          ////console.log("User cancelled image picker");
           const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
           var url = SERVER_URL + "/user/updateProfileImage";
           axios
@@ -76,21 +76,19 @@ class Profile extends Component {
             })
             .then((response1) => {})
             .catch((error) => {
-              // alert(error);
             });
           redux_profile.profileImage = base64Image;
-          this.setState({ image: base64Image });
-          // setImage(base64Image);
+          // this.setState({ image: base64Image });
+          setImage(base64Image)
           AsyncStorage.setItem("profileImage", base64Image);
         }
       });
     } catch (error) {
-      ////console.log("here", error);
     }
   };
-  refreshProfile() {
+  const refreshProfile=()=> {
     var url = SERVER_URL + "/auth/login";
-    const redux_profile = this.props.profile;
+    const redux_profile = props.profile;
     axios
       .post(url, {
         phone: redux_profile.phoneNumber,
@@ -101,10 +99,10 @@ class Profile extends Component {
             "sessionsAttended",
             response.data.sessionsAttended
           );
-          //console.log('prof',response.data)
           redux_profile = response.data;
           redux_profile.sessionsAttended = response.data.sessionsAttended;
-          actions.setProfile(redux_profile);
+          // actions.setProfile(redux_profile);
+          dispatch(setProfile(redux_profile));
         }
       })
       .catch((error) => {
@@ -112,23 +110,26 @@ class Profile extends Component {
       });
   }
 
-  decrementCount() {
-    let { count, actions } = this.props;
+ const decrementCount=()=> {
+    let { count } = props;
     count--;
-    actions.changeCount(count);
+    // actions.changeCount(count);
+    dispatch(changeCount(count));
+
   }
-  incrementCount() {
-    let { count, actions } = this.props;
+  const incrementCount=()=> {
+    let { count } = props;
 
     count++;
     actions.changeCount(count);
+    dispatch(changeCount(count));
   }
 
-  _signout = async () => {
+  const _signout = async () => {
     try {
       firebase.auth().signOut();
       AsyncStorage.clear();
-      this.props.navigation.reset({
+      navigation.reset({
         index: 0,
         routes: [{ name: "Login" }],
       });
@@ -136,28 +137,21 @@ class Profile extends Component {
       console.error(error);
     }
   };
-  _retrieveData = async () => {
+ const  _retrieveData = async () => {
     try {
       const name = await AsyncStorage.getItem("name");
       const email = await AsyncStorage.getItem("email");
       const profileImage = await AsyncStorage.getItem("profileImage");
       const membership = await AsyncStorage.getItem("membership");
-      this.setState({ name: name });
-      this.setState({ email: email });
-      this.setState({ profileImage: profileImage });
-      this.setState({ membership: membership });
+      setName(name);
+      setEmail(email);
+      setProfileImage(profileImage);
+      setMembership(membership);
     } catch (error) {
       // Error retrieving data
     }
   };
-  componentDidMount = () => {
-    this.focusListener = this.props.navigation.addListener("focus", () => {
-      this._retrieveData();
-    });
-  };
-  openWhatsApp = () => {
-    // let msg = this.state.message;
-    // let mobile = this.state.mobileNo;
+  const openWhatsApp = () => {
     let url = "https://chat.whatsapp.com/FnEL0tDNlRtEOjYUhehZ1F";
     Linking.openURL(url)
       .then((data) => {})
@@ -165,21 +159,11 @@ class Profile extends Component {
         alert("Make sure WhatsApp installed on your device");
       });
   };
-  render() {
-    if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-      return (
-        <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
-        />
-      );
-    }
-    const navigation = this.props.navigation;
+    
+    const navigation = useNavigation();
     const title = "Login";
-    const { count } = this.props;
-    const { profile } = this.props;
-    // alert(JSON.stringify(profile));
+    const { count } = props;
+    const { profile } = props;
     const now = new Date();
     var days = Math.ceil(
       (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
@@ -193,6 +177,15 @@ class Profile extends Component {
       dayString = "day";
     } else {
       dayString = "days";
+    }
+
+    if (loader == true) {
+      return (
+        <MaterialIndicator
+          color="white"
+          style={{ backgroundColor: "#0A1045" }}
+        />
+      );
     }
 
     return (
@@ -229,11 +222,9 @@ class Profile extends Component {
                 resizeMode="cover"
                 source={{
                   uri:
-                    this.state.image && this.state.image.length > 0
-                      ? this.state.image
+                    image && image.length > 0
+                      ? image
                       : profile.profileImage,
-                  // uri: "https://images.rawpixel.com/image_1300/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjkzNy1hZXctMTExXzMuanBn.jpg?s=MyfPR1OOzWQDXe_rg0F-Td-wIlh0wX79G02NeNTXvdE",
-                  // require('../images/profile_image.jpeg')
                 }}
               />
             </View>
@@ -308,7 +299,6 @@ class Profile extends Component {
                 }}
               >
                 <Text style={{ ...styles.cardText }}>Membership</Text>
-                {/* <Text style={{...styles.cardText,fontWeight: "bold"}}>{profile.membership}</Text> */}
                 <Text style={{ ...styles.cardText, fontWeight: "bold" }}>
                   Free
                 </Text>
@@ -322,35 +312,12 @@ class Profile extends Component {
                 }}
               >
                 <Text style={{ ...styles.cardText }}>Member Since</Text>
-                {/* <Text style={{...styles.cardText,fontWeight: "bold"}}>{count}</Text> */}
                 <Text style={{ ...styles.cardText, fontWeight: "bold" }}>
                   {days} {dayString}
                 </Text>
               </View>
             </View>
           </View>
-          {/* onPress={this._handleSelectImage.bind(this)} */}
-          {/* <View
-            style={{
-              marginTop: 20,
-              width: Dimensions.get("window").width * 0.9,
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                borderTopWidth: 1,
-                borderColor: "#E0E0E0",
-              }}
-              onPress={() => {
-                this.props.navigation.navigate("Membership Details");
-              }}
-            >
-              <View>
-                <Text style={styles.optionList}>Contribute and Support Us</Text>
-              </View>
-            </TouchableOpacity>
-          </View> */}
           <View
             style={{
               width: Dimensions.get("window").width * 0.9,
@@ -363,7 +330,7 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={this._handleSelectImage.bind(this)}
+              onPress={_handleSelectImage}
             >
               <View>
                 <Text style={styles.optionList}>Update Profile Picture</Text>
@@ -377,7 +344,7 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={() => this.props.navigation.navigate("PastSessions")}
+              onPress={() => navigation.navigate("PastSessions")}
             >
               <View>
                 <Text style={styles.optionList}>Check Past Sessions</Text>
@@ -392,7 +359,7 @@ class Profile extends Component {
                 borderColor: "#E0E0E0",
               }}
               onPress={() => {
-                this.props.navigation.navigate("About GoHappy Club");
+                navigation.navigate("About GoHappy Club");
               }}
             >
               <View>
@@ -407,7 +374,7 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={this.openWhatsApp}
+              onPress={openWhatsApp}
             >
               <View>
                 <Text style={styles.optionList}>
@@ -424,15 +391,15 @@ class Profile extends Component {
                 borderColor: "#E0E0E0",
                 borderBottomWidth: 1,
               }}
-              onPress={() => this.setState({ logoutPopup: true })}
+              onPress={() => setLogoutPopup(true)}
             >
               <View>
                 <Text style={styles.optionList}>Logout</Text>
               </View>
             </TouchableOpacity>
-            {this.state.logoutPopup && (
+            {logoutPopup && (
               <AwesomeAlert
-                show={this.state.logoutPopup}
+                show={logoutPopup}
                 showProgress={false}
                 title="Confirm"
                 message={"Are you sure you want to logout?"}
@@ -445,21 +412,15 @@ class Profile extends Component {
                 cancelButtonColor="gray"
                 cancelText="Logout"
                 onConfirmPressed={() => {
-                  this.setState({ logoutPopup: false });
+                  setLogoutPopup(false)
                 }}
                 onCancelPressed={() => {
-                  this.setState({ logoutPopup: false });
-                  this._signout();
+                  setLogoutPopup(false)
+                  _signout();
                 }}
               />
             )}
           </View>
-          {/* <View >
-							<View>
-								<Text >GoHappy Club from GoIndependent.in</Text>
-								<Text >All rights reserved</Text>
-							</View>
-					</View> */}
         </ScrollView>
 
         <FAB
@@ -467,12 +428,11 @@ class Profile extends Component {
           icon={({ size, color }) => (
             <FontAwesomeIcon icon={faComment} color={"white"} size={25} />
           )}
-          onPress={this.openWhatsApp}
+          onPress={openWhatsApp}
         />
       </View>
     );
   }
-}
 
 const styles = StyleSheet.create({
   container1: {
@@ -529,14 +489,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  count: state.count.count,
-  profile: state.profile.profile,
-});
-
-const ActionCreators = Object.assign({}, { changeCount }, { setProfile });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default Profile;

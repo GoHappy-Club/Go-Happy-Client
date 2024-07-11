@@ -1,37 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faWifi } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-native-elements';
 
-class ErrorScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <FontAwesomeIcon icon={faWifi} size={100} style={styles.icon} />
-        <Text style={styles.errorText}>No Internet Connection</Text>
-        <Text style={styles.subtext}>
-          Please check your network settings and try again.
-        </Text>
-        {/* <Button
-          title="Try Again"
-          onPress={this.props.recheck}
-          style={styles.button}
-        /> */}
-        <Button
-          buttonStyle={styles.button}
-          title="Try Again"
-          onPress={this.props.recheck}
-        />
-      </View>
-    );
-  }
-}
+const ErrorScreen = ({ recheck }) => {
+  return (
+    <View style={styles.container}>
+      <FontAwesomeIcon icon={faWifi} size={100} style={styles.icon} />
+      <Text style={styles.errorText}>No Internet Connection</Text>
+      <Text style={styles.subtext}>
+        Please check your network settings and try again.
+      </Text>
+      <Button
+        buttonStyle={styles.button}
+        title="Try Again"
+        onPress={recheck}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

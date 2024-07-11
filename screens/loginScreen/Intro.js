@@ -1,49 +1,39 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Image } from "react-native-elements";
+import { Image } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
-export default class Intro extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const Intro = () => {
+  const navigation = useNavigation();
 
-  render() {
-    return (
-      <View style={styles.container1}>
-        <View style={styles.container2}>
-          <Image
-            source={{
-              uri: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
-            }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-
-          {/* <Text style={styles.text}>Free Sessions</Text> */}
-        </View>
-
-        <Text style={styles.text}>
-          Join free sessions by clicking the "Free Sessions" icon on the next
-          Screen.
-        </Text>
-        {/* <Image
-          style={styles.image}
-          source={require("../../images/intro_image1.png")}
-        /> */}
-        <TouchableOpacity
-          onPress={() => {
-            //console.log("tdatada");
-            this.props.navigation.replace("GoHappy Club");
+  return (
+    <View style={styles.container1}>
+      <View style={styles.container2}>
+        <Image
+          source={{
+            uri: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
           }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Let's get started</Text>
-        </TouchableOpacity>
+          style={styles.image}
+          resizeMode="cover"
+        />
       </View>
-    );
-  }
-}
+
+      <Text style={styles.text}>
+        Join free sessions by clicking the "Free Sessions" icon on the next
+        Screen.
+      </Text>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.replace("GoHappy Club");
+        }}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Let's get started</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container1: {
@@ -63,7 +53,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    // marginTop:,
     borderRadius: 80,
     alignSelf: "center",
     width: 100,
@@ -80,3 +69,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+export default Intro;

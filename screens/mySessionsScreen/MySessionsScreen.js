@@ -1,87 +1,72 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-export default class MySessionsScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      loader: false,
-      ongoingEvents: [],
-      expiredEvents: [],
-      upcomingEvents: [],
-      email: "",
-    };
-    this._retrieveData();
-  }
-  _retrieveData = async () => {
+const MySessionsScreen = ({ navigation, propProfile }) => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [ongoingEvents, setOngoingEvents] = useState([]);
+  const [expiredEvents, setExpiredEvents] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  const retrieveData = async () => {
     try {
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-      this.setState({ phoneNumber: phoneNumber });
-      this.loadMySessions(this.state.phoneNumber);
+      const storedPhoneNumber = await AsyncStorage.getItem("phoneNumber");
+      setPhoneNumber(storedPhoneNumber);
+      loadMySessions(storedPhoneNumber);
     } catch (error) {
       // Error retrieving data
     }
   };
-  /**
-   * Loads the user's sessions from the server.
-   *
-   * @param {string} phoneNumber - The phone number of the user.
-   * @param {function} _callback - A callback function to be executed after the data is loaded.
-   */
-  loadMySessions(phoneNumber, _callback) {
-    phoneNumber = this.state.phoneNumber;
-    var url = SERVER_URL + "/event/mySessions";
+
+  const loadMySessions = (phoneNumber, _callback = () => {}) => {
+    const url = SERVER_URL + "/event/mySessions";
     axios
       .post(url, { phoneNumber: phoneNumber })
       .then((response) => {
         if (response.data) {
-          //
-          this.setState({ expiredEvents: response.data.expiredEvents });
-          this.setState({ upcomingEvents: response.data.upcomingEvents });
-          this.setState({ ongoingEvents: response.data.ongoingEvents });
-          this.setState({ error: false });
-          this.setState({ childLoader: false });
-
+          setExpiredEvents(response.data.expiredEvents);
+          setUpcomingEvents(response.data.upcomingEvents);
+          setOngoingEvents(response.data.ongoingEvents);
+          setError(false);
+          setLoader(false);
           _callback();
         }
       })
       .catch((error) => {
-        this.error = true;
+        setError(true);
       });
-  }
-  render() {
-    if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
-      return (
-        <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
-        />
-      );
-    }
-    const navigation = this.props.navigation;
-    const title = "Login";
+  };
+
+  if (loader) {
     return (
-      <MySessions
-        loadMySessions={this.loadMySessions.bind(this)}
-        navigation={this.props.navigation}
-        ongoingEvents={[]}
-        upcomingEvents={[]}
-        expiredEvents={this.state.expiredEvents}
-        phoneNumber={this.state.phoneNumber}
-        profile={this.props.propProfile.profile}
+      <MaterialIndicator
+        color="white"
+        style={{ backgroundColor: "#0A1045" }}
       />
     );
   }
-  componentDidMount() {
-    // this.loadMySessions(this.state.email);
-  }
-}
+
+  return (
+    <MySessions
+      loadMySessions={loadMySessions}
+      navigation={navigation}
+      ongoingEvents={[]}
+      upcomingEvents={[]}
+      expiredEvents={expiredEvents}
+      phoneNumber={phoneNumber}
+      profile={propProfile.profile}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   container1: {
@@ -157,3 +142,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+
+export default MySessionsScreen;

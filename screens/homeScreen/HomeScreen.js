@@ -1,119 +1,68 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import HomeDashboard from "../../components/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
 import tambola from "tambola";
 import Video from "react-native-video";
 import { EventReminderNotification } from "../../services/LocalPushController";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-class HomeScreen extends Component {
-  constructor(props) {
-    super(props);
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
-    this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      childLoader: false,
-      events: [],
-      error: true,
-      whatsappLink: "",
-    };
-    crashlytics().log(JSON.stringify(props.propProfile));
-    this._retrieveData()
-    // alert(JSON.stringify(props));
-  }
+const HomeScreen = ({ navigation, route }) => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [childLoader, setChildLoader] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [error, setError] = useState(true);
+  const [whatsappLink, setWhatsappLink] = useState("");
 
-  _retrieveData = async () => {
+  const profile = useSelector((state) => state.profile.profile);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    crashlytics().log(JSON.stringify(profile));
+    _retrieveData();
+    loadEvents(new Date().setHours(0, 0, 0, 0));
+  }, []);
+
+  const _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber")
-      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
+      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
       if (value !== null) {
-        // We have data!!
-        this.setState({ email: value});
-        this.setState({phoneNumber: phoneNumber})
-        this.setState({selfInviteCode: selfInviteCode})
+        setPhoneNumber(phoneNumber);
+        // Add other setState calls as needed
       }
     } catch (error) {
       // Error retrieving data
     }
   };
 
-
-  async getProperties() {
-    var url = SERVER_URL + "/properties/list";
-    const redux_profile = this.props.profile;
+  const getProperties = async () => {
+    const url = SERVER_URL + "/properties/list";
     try {
       const response = await axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
-        if (properties && properties.length > 0 && redux_profile) {
-          redux_profile.properties = properties[0];
-          actions.setProfile(redux_profile);
-          this.setState({ whatsappLink: properties[0].whatsappLink });
+        if (properties && properties.length > 0 && profile) {
+          profile.properties = properties[0];
+          dispatch(setProfile(profile));
+          setWhatsappLink(properties[0].whatsappLink);
         }
       }
     } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
+      setError(true);
     }
-  }
+  };
 
-  render() {
-    if (this.state.error == false) {
-      return (
-        <>
-          <HomeDashboard
-            events={this.state.events}
-            childLoader={this.state.childLoader}
-            bookEvent={this.bookEvent.bind(this)}
-            loadEvents={this.loadEvents.bind(this)}
-            navigation={this.props.navigation}
-            deepId={this.props.route.params?.deepId}
-          />
-          <WhatsAppFAB
-            url={
-              this.props.profile.properties
-                ? this.props.profile.properties.whatsappLink
-                : this.state.whatsappLink
-            }
-          />
-        </>
-      );
-    } else {
-      // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
-      return (
-        // <ScrollView style={{ backgroundColor: "white" }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
-        // </ScrollView>
-      );
-    }
-  }
-  loadEvents(selectedDate) {
-    this.setState({ childLoader: true });
-    this.setState({ events: [] });
-    var url = SERVER_URL + "/event/getEventsByDate";
+  const loadEvents = (selectedDate) => {
+    setChildLoader(true);
+    setEvents([]);
+    const url = SERVER_URL + "/event/getEventsByDate";
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
@@ -122,85 +71,94 @@ class HomeScreen extends Component {
       .post(url, { date: selectedDate })
       .then((response) => {
         if (response.data) {
-          for (var i = 0; i < response.data.events.length; i++) {
-            response.data.events[i].loadingButton = false;
-          }
-          this.setState({ events: response.data.events });
-          this.setState({ error: false });
-          this.setState({ childLoader: false });
+          response.data.events.forEach((event) => (event.loadingButton = false));
+          setEvents(response.data.events);
+          setError(false);
+          setChildLoader(false);
         }
-        this.getProperties();
+        getProperties();
       })
       .catch((error) => {
-        // alert("blablabla" + url + error);
-        this.error = true;
-        this.getProperties();
+        setError(true);
+        getProperties();
       });
-  }
+  };
 
-  bookEvent(item, phoneNumber, selectedDate) {
-    let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
-    if(phoneNumber=="" || phoneNumber==undefined){
-      phoneNumber = this.state.phoneNumber
+  const bookEvent = (item, phoneNumber, selectedDate) => {
+    let ticket = tambola.generateTicket();
+    if (phoneNumber == "" || phoneNumber == undefined) {
+      phoneNumber = phoneNumber;
     }
-    //console.log('phone is', phoneNumber)
-    var id = item.id;
-    var url = SERVER_URL + "/event/bookEvent";
+    const id = item.id;
+    const url = SERVER_URL + "/event/bookEvent";
 
     axios
-      .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
+      .post(url, { id, phoneNumber, tambolaTicket: ticket })
       .then((response) => {
-        if (response.data) {
-          if (response.data == "SUCCESS") {
-            //EventNotification({channelId: 'events',event:item});
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
-              bigText: "Your session starts in a few minutes.",
-            });
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime)),
-              bigText: "Your session has been started. Join Now!",
-            });
-            var tempEvents = this.state.events;
-            for (var i = 0; i < tempEvents.length; i++) {
-              if (tempEvents[i].id == item.id) {
-                tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
-                tempEvents[i].loadingButton = false;
-                tempEvents[i].status = "Booked";
-                this.setState({ events: tempEvents });
-                break;
-              }
+        if (response.data === "SUCCESS") {
+          EventReminderNotification({
+            channelId: "events",
+            event: item,
+            fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
+            bigText: "Your session starts in a few minutes.",
+          });
+          EventReminderNotification({
+            channelId: "events",
+            event: item,
+            fireTime: new Date(parseInt(item.startTime)),
+            bigText: "Your session has started. Join Now!",
+          });
+          const tempEvents = events.map((event) => {
+            if (event.id === item.id) {
+              event.seatsLeft -= 1;
+              event.loadingButton = false;
+              event.status = "Booked";
             }
-            this.loadEvents(selectedDate);
-            // _callback();
-            // item.seatsLeft = item.seatsLeft - 1;
-
-            return item;
-          }
+            return event;
+          });
+          setEvents(tempEvents);
+          loadEvents(selectedDate);
         }
       })
       .catch((error) => {
-        this.error = true;
-        //console.log('error is ',error, id, phoneNumber )
-        return false;
+        setError(true);
       });
-  }
-  componentDidMount() {
-    this.loadEvents(new Date().setHours(0, 0, 0, 0));
-  }
-}
+  };
 
-const mapStateToProps = (state) => ({
-  count: state.count.count,
-  profile: state.profile.profile,
-});
-const ActionCreators = Object.assign({}, { setProfile });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
+  return error ? (
+    <Video
+      source={require("../../images/logo_splash.mp4")}
+      style={{
+        position: "absolute",
+        top: 0,
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: 1,
+      }}
+      muted={true}
+      repeat={true}
+      resizeMode="cover"
+    />
+  ) : (
+    <>
+      <HomeDashboard
+        events={events}
+        childLoader={childLoader}
+        bookEvent={bookEvent}
+        loadEvents={loadEvents}
+        navigation={navigation}
+        deepId={route.params?.deepId}
+      />
+      <WhatsAppFAB
+        url={profile.properties ? profile.properties.whatsappLink : whatsappLink}
+      />
+    </>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default HomeScreen;

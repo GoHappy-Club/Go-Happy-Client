@@ -1,160 +1,120 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import HomeDashboard from "../../components/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
-import tambola from "tambola";
 import Video from "react-native-video";
-import { EventReminderNotification } from "../../services/LocalPushController.js";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { Banner, Divider } from "react-native-paper";
-import { Image, View } from "react-native";
+import { Image, View, ScrollView, Text } from "react-native";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
 import PromotionSection from "../../components/overview/PromotionSection.js";
-import { ScrollView } from "react-native-gesture-handler";
 import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
-import LottieView from "lottie-react-native";
 import Sections from "../../components/overview/Sections.js";
-import { Text } from "react-native";
+import crashlytics from '@react-native-firebase/crashlytics';
+import { useNavigation } from "@react-navigation/native";
 
-class OverviewScreen extends Component {
-  constructor(props) {
-    super(props);
+const OverviewScreen = () => {
+  const [error, setError] = useState(true);
+  const [whatsappLink, setWhatsappLink] = useState("");
+  const [trendingSessions, setTrendingSessions] = useState(null);
+  const [upcomingWorkshops, setUpcomingWorkshops] = useState(null);
+  const [posters, setPosters] = useState([]);
 
-    this.state = {
-      phoneNumber: "",
-      password: "",
-      showAlert: false,
-      childLoader: false,
-      events: [],
-      error: true,
-      whatsappLink: "",
-      bannerVisible: true,
-      trendingSessions: null,
-      upcomingWorkshops: null,
-      posters: [],
-    };
-    crashlytics().log(JSON.stringify(props.propProfile));
-    // alert(JSON.stringify(props));
-  }
+  const profile = useSelector((state) => state.profile.profile);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  async getOverviewData() {
-    var url = SERVER_URL + "/home/overview";
+  useEffect(() => {
+    crashlytics().log(JSON.stringify(profile));
+    getOverviewData();
+  }, []);
+
+  const getOverviewData = async () => {
+    const url = SERVER_URL + "/home/overview";
     try {
       const response = await axios.get(url);
       if (response.data) {
-        //console.log(response.data.trendingSessions);
-        this.setState({
-          trendingSessions: response.data.trendingSessions,
-          upcomingWorkshops: response.data.upcomingWorkshops,
-          posters: response.data.posters,
-        });
+        setTrendingSessions(response.data.trendingSessions);
+        setUpcomingWorkshops(response.data.upcomingWorkshops);
+        setPosters(response.data.posters);
       }
     } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
+      setError(true);
     }
-  }
+  };
 
-  async getProperties() {
-    var url = SERVER_URL + "/properties/list";
-    const redux_profile = this.props.profile;
+  const getProperties = async () => {
+    const url = SERVER_URL + "/properties/list";
     try {
       const response = await axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
-        if (properties && properties.length > 0 && redux_profile) {
-          redux_profile.properties = properties[0];
-          actions.setProfile(redux_profile);
-          this.setState({ whatsappLink: properties[0].whatsappLink });
+        if (properties && properties.length > 0 && profile) {
+          profile.properties = properties[0];
+          dispatch(setProfile(profile));
+          setWhatsappLink(properties[0].whatsappLink);
         }
       }
     } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
+      setError(true);
     }
-  }
+  };
 
-  componentWillMount() {
-    this.getOverviewData();
-  }
-  render() {
-    if (this.state.error == true) {
-      return (
-        <>
-          <ScrollView>
-            <TopBanner
-              navigation={this.props.navigation}
-              posters={this.state.posters}
-            />
-
-            <Sections
-              navigation={this.props.navigation}
-              helpUrl={
-                this.props.profile.properties
-                  ? this.props.profile.properties.whatsappLink
-                  : this.state.whatsappLink
-              }
-            />
-            <UpcomingWorkshops
-              navigation={this.props.navigation}
-              upcomingWorkshops={this.state.upcomingWorkshops}
-              reloadOverview={this.getOverviewData.bind(this)}
-            />
-            <TrendingSessions
-              navigation={this.props.navigation}
-              trendingSessions={this.state.trendingSessions}
-              reloadOverview={this.getOverviewData.bind(this)}
-            />
-            <PromotionSection navigation={this.props.navigation} />
-          </ScrollView>
-          <WhatsAppFAB
-            url={
-              this.props.profile.properties
-                ? this.props.profile.properties.whatsappLink
-                : this.state.whatsappLink
-            }
-          />
-        </>
-      );
-    } else {
-      // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
-      return (
-        // <ScrollView style={{ backgroundColor: "white" }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
+  return !error ? (
+    <Video
+      source={require("../../images/logo_splash.mp4")}
+      style={{
+        position: "absolute",
+        top: 0,
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: 1,
+      }}
+      muted={true}
+      repeat={true}
+      resizeMode="cover"
+    />
+  ) : (
+    <>
+      <ScrollView>
+        <TopBanner
+          navigation={navigation}
+          posters={posters}
         />
-        // </ScrollView>
-      );
-    }
-  }
-}
+        <Sections
+          navigation={navigation}
+          helpUrl={
+            profile.properties
+              ? profile.properties.whatsappLink
+              : whatsappLink
+          }
+        />
+        <UpcomingWorkshops
+          navigation={navigation}
+          upcomingWorkshops={upcomingWorkshops}
+          reloadOverview={getOverviewData}
+        />
+        <TrendingSessions
+          navigation={navigation}
+          trendingSessions={trendingSessions}
+          reloadOverview={getOverviewData}
+        />
+        <PromotionSection navigation={navigation} />
+      </ScrollView>
+      <WhatsAppFAB
+        url={
+          profile.properties
+            ? profile.properties.whatsappLink
+            : whatsappLink
+        }
+      />
+    </>
+  );
+};
 
-const mapStateToProps = (state) => ({
-  count: state.count.count,
-  profile: state.profile.profile,
-});
-const ActionCreators = Object.assign({}, { setProfile });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(OverviewScreen);
+export default OverviewScreen;

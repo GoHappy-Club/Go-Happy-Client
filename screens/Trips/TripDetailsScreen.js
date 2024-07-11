@@ -1,87 +1,63 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Video from "react-native-video";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { ScrollView } from "react-native-gesture-handler";
-import {
-  StyleSheet,
-  ActivityIndicator,
-  Image,
-  ImageBackground,
-} from "react-native";
-import { Tab, TabView, Text } from "@rneui/themed";
-import { View } from "react-native";
+import { useSelector } from "react-redux";
+import { StyleSheet } from "react-native";
 import Trip from "../../components/trips/Trip.js";
 
-class TripDetailsScreen extends Component {
-  constructor(props) {
-    super(props);
+const TripDetailsScreen = (props) => {
+  const [details, setDetails] = useState(null);
+  const [error, setError] = useState(true);
+  
+  const profile = useSelector(state => state.profile.profile);
 
-    this.state = {
-      details: null,
-      error: true,
-      index: 0,
-    };
-    crashlytics().log(JSON.stringify(props.propProfile));
-    // alert(JSON.stringify(props));
-  }
+  useEffect(() => {
+    crashlytics().log(JSON.stringify(profile));
+    getTripDetails();
+  }, []);
 
-  async getTripDetails() {
-    var url =
-      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim();
-    //console.log(url);
+  const getTripDetails = async () => {
+    const url = SERVER_URL + "/trips/getDetails/" + props.route.params.id.trim();
     try {
       const response = await axios.get(url);
       if (response.data) {
-        this.setState({
-          details: response.data.details,
-          error: false,
-        });
+        setDetails(response.data.details);
+        setError(false);
       }
     } catch (error) {
-      this.error = true;
-      // throw new Error("Error getting order ID");
+      setError(true);
+      // Handle error
     }
-  }
+  };
 
-  componentDidMount() {
-    this.getTripDetails();
+  if (!error) {
+    return <Trip details={details} />;
+  } else {
+    return (
+      <Video
+        source={require("../../images/logo_splash.mp4")}
+        style={styles.video}
+        muted={true}
+        repeat={true}
+        resizeMode="cover"
+      />
+    );
   }
-
-  render() {
-    if (this.state.error == false) {
-      return <Trip details={this.state.details} />;
-    } else {
-      // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
-      return (
-        // <ScrollView style={{ backgroundColor: "white" }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
-        // </ScrollView>
-      );
-    }
-  }
-}
+};
 
 const styles = StyleSheet.create({
+  video: {
+    position: "absolute",
+    top: 0,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 1,
+  },
   mainContainer: {
     flex: 1,
     flexDirection: "column",
@@ -108,13 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  count: state.count.count,
-  profile: state.profile.profile,
-});
-const ActionCreators = Object.assign({}, { setProfile });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TripDetailsScreen);
+export default TripDetailsScreen;
