@@ -61,6 +61,7 @@ class LoginScreen extends Component {
       source: "",
       copiedText: "",
       fcmToken: "",
+      unformattedNumber: null,
     };
     this.getCurrentUserInfo();
   }
@@ -95,9 +96,7 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState({ verificationCode: verificationCode }, () => {
-        this.handleVerifyCode(verificationCode);
-      });
+      this.setState({ verificationCode: verificationCode });
     }
   };
 
@@ -136,8 +135,8 @@ class LoginScreen extends Component {
   }
 
   validatePhoneNumber = () => {
-    const regex = /^\+91\d{10}$/;
-    const unformattedNumber = this.state.phoneNumber.slice(3);
+    const regex = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
+    const unformattedNumber = this.state.unformattedNumber;
     if (unformattedNumber.length < 10) {
       this.setState(
         {
@@ -243,8 +242,9 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = (code) => {
+  handleVerifyCode = (vcode) => {
     const { confirmResult, verificationCode } = this.state;
+    let code = vcode;
     if (code == null) {
       code = verificationCode;
     }
@@ -253,6 +253,7 @@ class LoginScreen extends Component {
       this.setState({ loadingVerifyButton: true });
     } else {
       this.setState({ showAlert: true });
+      return;
     }
 
     confirmResult
@@ -271,8 +272,6 @@ class LoginScreen extends Component {
       })
       .catch((error) => {
         crashlytics().recordError(JSON.stringify(error));
-        //   alert(error.message)
-
         this.setState({ loadingVerifyButton: false, showAlert: true });
       });
   };
@@ -283,9 +282,9 @@ class LoginScreen extends Component {
 
   renderConfirmationCodeView = () => {
     return (
-      <KeyboardAvoidingView
-        behavior="height"
-        keyboardVerticalOffset={100}
+      <View
+        // behavior="height"
+        // keyboardVerticalOffset={height / 10}
         style={styles.verificationView}
       >
         <TextInput
@@ -302,7 +301,7 @@ class LoginScreen extends Component {
           style={[styles.themeButton, { paddingTop: 20 }]}
           title="Verify Code"
           loading={this.state.loadingVerifyButton}
-          onPress={this.handleVerifyCode}
+          onPress={this.handleVerifyCode.bind(this, null)}
           ViewComponent={LinearGradient}
           linearGradientProps={{
             colors: ["#4c669f", "#3b5998", "#192f6a"],
@@ -323,7 +322,7 @@ class LoginScreen extends Component {
           loading={this.state.loadingButton}
           onPress={this.changePhoneNumber}
         />
-      </KeyboardAvoidingView>
+      </View>
     );
   };
   getCurrentUserInfo = async () => {
@@ -370,7 +369,6 @@ class LoginScreen extends Component {
             console.log(error);
           });
         // this.props.navigation.replace('GoHappy Club');
-
         // this.setState({loader:false});
         this.props.navigation.replace("Additional Details", {
           navigation: this.props.navigation,
@@ -466,15 +464,15 @@ class LoginScreen extends Component {
             emergencyContact: response.data.emergencyContact,
             // dob: response.data.dob,
           });
-          if (this.pending()) {
+          if (this.pending(response.data.name, response.data.phone)) {
             this.props.navigation.replace("Additional Details", {
               navigation: this.props.navigation,
               email: response.data.email,
               phoneNumber: response.data.phone,
-              name: name,
+              name: response.data.name,
               state: this.state.state,
-              city: this.state.city,
-              emergencyContact: this.state.emergencyContact,
+              city: response.data.city,
+              emergencyContact: response.data.emergencyContact,
               // dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
@@ -497,12 +495,12 @@ class LoginScreen extends Component {
         ////console.log(error);
       });
   }
-  pending() {
+  pending(name, phone) {
     if (
-      this.state.phoneNumber == null ||
-      this.state.phoneNumber.length == 0 ||
-      this.state.name == null ||
-      this.state.name.length == 0
+      phone == null ||
+      phone.length == 0 ||
+      name == null ||
+      name.length == 0
       //  ||
       // this.state.dob == null ||
       // this.state.dob.length == 0
@@ -560,154 +558,160 @@ class LoginScreen extends Component {
             }}
           />
         </View>
-        <Image
-          resizeMode="contain"
-          style={styles.logo}
-          source={require("../../images/logo.png")}
-        />
-
-        <Text
-          style={{
-            fontWeight: "normal",
-            fontSize: 30,
-            color: "black",
-            alignSelf: "center",
-          }}
+        <KeyboardAvoidingView
+          behavior="position"
+          keyboardVerticalOffset={height / 10}
         >
-          LOGIN or SIGN UP
-        </Text>
-        {!this.state.confirmResult && (
-          <KeyboardAvoidingView
-            style={styles.page}
-            behavior="height"
-            keyboardVerticalOffset={100}
-          >
-            <PhoneInput
-              style={styles.textInput}
-              ref={this.state.phoneNumber}
-              keyboardType="phone-pad"
-              defaultCode="IN"
-              layout="first"
-              onChangeFormattedText={this.handlePhoneNumberInput}
-              withDarkTheme
-              maxLength={10}
-              withShadow
-              autoFocus
-            />
-            <Text style={{ width: "80%" }}>
-              <Text
-                style={{
-                  paddingTop: 10,
-                  width: "80%",
-                  color: "grey",
-                  fontSize: 12,
-                }}
-              >
-                By signing up, I agree to the{" "}
-              </Text>
-              <Text
-                style={{ color: "blue", width: "80%", fontSize: 12 }}
-                onPress={this.showConditions.bind(this, 0)}
-              >
-                Terms of Use
-              </Text>
-              <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
-                {" "}
-                and{" "}
-              </Text>
-              <Text
-                style={{ color: "blue", width: "80%", fontSize: 12 }}
-                onPress={this.showConditions.bind(this, 1)}
-              >
-                Privacy Policy
-              </Text>
-              <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
-                , including usage of cookies.
-              </Text>
-            </Text>
+          <Image
+            resizeMode="contain"
+            style={styles.logo}
+            source={require("../../images/logo.png")}
+          />
 
-            <>
-              <BottomSheet
-                modalProps={{}}
-                isVisible={this.state.conditionDialog}
-              >
-                <Text style={styles.title}>Please Read Below</Text>
-                <ListItem key="1">
-                  <ListItem.Content>
-                    <ListItem.Title>
-                      <View style={{ width: width * 0.9 }}>
-                        <RenderHtml
-                          // contentWidth={width}
-                          source={this.state.conditionText}
-                        />
-                      </View>
-                    </ListItem.Title>
-                  </ListItem.Content>
-                </ListItem>
-                <ListItem
-                  key="2"
-                  containerStyle={{ backgroundColor: "blue" }}
+          <Text
+            style={{
+              fontWeight: "normal",
+              fontSize: 30,
+              color: "black",
+              alignSelf: "center",
+            }}
+          >
+            LOGIN or SIGN UP
+          </Text>
+          {!this.state.confirmResult && (
+            <View style={styles.page}>
+              <PhoneInput
+                style={styles.textInput}
+                ref={this.state.phoneNumber}
+                keyboardType="phone-pad"
+                defaultCode="IN"
+                layout="first"
+                onChangeFormattedText={this.handlePhoneNumberInput}
+                onChangeText={(phone) => {
+                  this.setState({ unformattedNumber: phone });
+                }}
+                withDarkTheme
+                maxLength={10}
+                withShadow
+                autoFocus
+              />
+              <Text style={{ width: "80%" }}>
+                <Text
+                  style={{
+                    paddingTop: 10,
+                    width: "80%",
+                    color: "grey",
+                    fontSize: 12,
+                  }}
+                >
+                  By signing up, I agree to the{" "}
+                </Text>
+                <Text
+                  style={{ color: "blue", width: "80%", fontSize: 12 }}
+                  onPress={this.showConditions.bind(this, 0)}
+                >
+                  Terms of Use
+                </Text>
+                <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
+                  {" "}
+                  and{" "}
+                </Text>
+                <Text
+                  style={{ color: "blue", width: "80%", fontSize: 12 }}
                   onPress={this.showConditions.bind(this, 1)}
                 >
-                  <ListItem.Content>
-                    <ListItem.Title style={styles.buttonBottomSheet}>
-                      Accept
-                    </ListItem.Title>
-                  </ListItem.Content>
-                </ListItem>
-              </BottomSheet>
-            </>
-
-            <Button
-              outline
-              style={[styles.themeButton, { paddingTop: 20 }]}
-              title={"Login"}
-              loading={this.state.loadingButton}
-              ViewComponent={LinearGradient}
-              linearGradientProps={{
-                colors: ["#4c669f", "#3b5998", "#192f6a"],
-                start: { x: 0, y: 0.25 },
-                end: { x: 0.5, y: 1 },
-                locations: [0, 0.5, 0.6],
-              }}
-              onPress={this.handleSendCode.bind(this, false)}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL(
-                  "https://wa.me/7888384477?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
-                );
-              }}
-            >
-              <Text
-                style={{ color: "#4c669f", fontSize: 14 }}
-                // loading={this.state.loadingResendButton}
-              >
-                Trouble logging in? Contact Us
+                  Privacy Policy
+                </Text>
+                <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
+                  , including usage of cookies.
+                </Text>
               </Text>
-            </TouchableOpacity>
-            {/* <View> */}
-            {/* <Text>Facing any difficulty?</Text> */}
-            {/* </View> */}
-            <AwesomeAlert
-              show={this.state.showPhoneNumberError}
-              showProgress={false}
-              title="Error"
-              message={this.state.phoneNumberError}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={true}
-              showConfirmButton={true}
-              confirmButtonColor="#29BFC2"
-              confirmText="Try Again"
-              onConfirmPressed={() => {
-                this.setState({ showPhoneNumberError: false });
-              }}
-            />
-          </KeyboardAvoidingView>
-        )}
-        {this.state.confirmResult && (
-          <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
-        )}
+
+              <>
+                <BottomSheet
+                  modalProps={{}}
+                  isVisible={this.state.conditionDialog}
+                >
+                  <Text style={styles.title}>Please Read Below</Text>
+                  <ListItem key="1">
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        <View style={{ width: width * 0.9 }}>
+                          <RenderHtml
+                            // contentWidth={width}
+                            source={this.state.conditionText}
+                          />
+                        </View>
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                  <ListItem
+                    key="2"
+                    containerStyle={{ backgroundColor: "blue" }}
+                    onPress={this.showConditions.bind(this, 1)}
+                  >
+                    <ListItem.Content>
+                      <ListItem.Title style={styles.buttonBottomSheet}>
+                        Accept
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                </BottomSheet>
+              </>
+
+              <Button
+                outline
+                style={[styles.themeButton, { paddingTop: 20 }]}
+                title={"Login"}
+                loading={this.state.loadingButton}
+                ViewComponent={LinearGradient}
+                linearGradientProps={{
+                  colors: ["#4c669f", "#3b5998", "#192f6a"],
+                  start: { x: 0, y: 0.25 },
+                  end: { x: 0.5, y: 1 },
+                  locations: [0, 0.5, 0.6],
+                }}
+                onPress={this.handleSendCode.bind(this, false)}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(
+                    "https://wa.me/7888384477?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+                  );
+                }}
+              >
+                <Text
+                  style={{ color: "#4c669f", fontSize: 14 }}
+                  // loading={this.state.loadingResendButton}
+                >
+                  Trouble logging in? Contact Us
+                </Text>
+              </TouchableOpacity>
+              {/* <View> */}
+              {/* <Text>Facing any difficulty?</Text> */}
+              {/* </View> */}
+              <AwesomeAlert
+                show={this.state.showPhoneNumberError}
+                showProgress={false}
+                title="Error"
+                message={this.state.phoneNumberError}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                confirmButtonColor="#29BFC2"
+                confirmText="Try Again"
+                onConfirmPressed={() => {
+                  this.setState({ showPhoneNumberError: false });
+                }}
+              />
+            </View>
+          )}
+
+          {this.state.confirmResult && (
+            <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
+          )}
+        </KeyboardAvoidingView>
+
         {/* <ImageBackground
           resizeMode="contain"
           style={styles.cover}
@@ -897,7 +901,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: "#fff",
+    color: "#000",
     fontSize: 16,
   },
   themeButton: {
