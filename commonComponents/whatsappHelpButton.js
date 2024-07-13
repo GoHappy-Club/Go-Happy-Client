@@ -6,25 +6,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 const WhatsAppFAB = ({ url }) => {
   const handlePress = async () => {
-    ////console.log("url is ", url);
-    if (url == " " || url == undefined) {
-      var url = SERVER_URL + "/properties/list";
-      try {
-        const response = await axios.get(url);
-        ////console.log(JSON.stringify(response));
-        if (response.data) {
-          const properties = response.data.properties;
-          if (properties && properties.length > 0) {
-            Linking.openURL(properties[0].whatsappLink);
-          }
-        }
-      } catch (error) {
-        this.error = true;
-        // throw new Error("Error getting order ID");
-      }
-    } else {
-      Linking.openURL(url);
-    }
+    // if (url == " " || url == undefined) {
+    //   var url = SERVER_URL + "/properties/list";
+    //   try {
+    //     const response = await axios.get(url);
+    //     if (response.data) {
+    //       const properties = response.data.properties;
+    //       if (properties && properties.length > 0) {
+    //         Linking.openURL(properties[0].whatsappLink);
+    //       }
+    //     }
+    //   } catch (error) {
+    //     this.error = true;
+    //   }
+    // } else {
+    //   Linking.openURL(url);
+    // }
+    const url = "https://wa.me/6280114385?text= Hi%20GoHappy%20Club%20Team%0A%0ACan%20you%20please%20help%20me%20%3F"
+    Linking.openURL(url);
   };
 
   return (
