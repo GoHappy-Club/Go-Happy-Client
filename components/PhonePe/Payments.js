@@ -47,7 +47,6 @@ class Payments extends Component {
         request: requestBody,
       },
     };
-    console.log("here");
     try {
       const response = await axios.request(options);
     const shareableLink =
@@ -104,7 +103,7 @@ class Payments extends Component {
           message: JSON.stringify(a),
         });
         if (a.status == "SUCCESS") {
-          // callback(phone);
+          callback(phone);
         } else {
           throw Error;
         }

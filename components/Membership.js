@@ -92,14 +92,7 @@ class Membership extends Component {
     var _this = this;
     const _callback = (id) => {
       _this.setState({ success: true });
-      _this.props.setPaymentData(
-        id,
-        _this.props.profile.phoneNumber,
-        _this.state.amount,
-        () => {
-          _this.props.navigation.navigate("GoHappy Club");
-        }
-      );
+      _this.props.navigation.navigate("GoHappy Club")
     };
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
