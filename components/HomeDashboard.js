@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { parseISO, format, getTime } from 'date-fns';
+import { parseISO, format, getTime, fromUnixTime } from "date-fns";
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
@@ -68,10 +68,14 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.profile.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
-  
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -94,7 +98,7 @@ class HomeDashboard extends Component {
 
   changeSelectedDate = (date) => {
     const parsedSelect = parseISO(date);
-    const select = format(parsedSelect, 'EEE MMM dd yyyy')
+    const select = format(parsedSelect, "EEE MMM dd yyyy");
     const tempDate = getTime(date);
 
     this.setState({
@@ -186,18 +190,8 @@ class HomeDashboard extends Component {
     );
   }
   loadDate(item) {
-    var dt = new Date(parseInt(item.startTime));
-    var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12 || 12;
-    var minutes = dt.getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
+    const dt = fromUnixTime(item.startTime / 1000);
+    const finalTime = format(dt, "MMM d, h:mm aa");
     return finalTime;
   }
   getTitle(item) {
