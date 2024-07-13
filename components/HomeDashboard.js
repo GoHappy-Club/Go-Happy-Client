@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import { parseISO, format, getTime } from 'date-fns';
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
@@ -93,15 +93,17 @@ class HomeDashboard extends Component {
   };
 
   changeSelectedDate = (date) => {
-    var select = new Date(Date.parse(date)).toDateString();
-    var tempDate = new Date(Date.parse(date)).setHours(0, 0, 0, 0);
+    const parsedSelect = parseISO(date);
+    const select = format(parsedSelect, 'EEE MMM dd yyyy')
+    const tempDate = getTime(date);
+
     this.setState({
       selectedDate: select,
     });
     this.setState({ selectedDateRaw: tempDate });
     this.setState({ events: [] });
 
-    this.props.loadEvents(new Date(Date.parse(date)).setHours(0, 0, 0, 0));
+    this.props.loadEvents(tempDate);
   };
   trimContent(text, cut) {
     if (text.length < cut) {
