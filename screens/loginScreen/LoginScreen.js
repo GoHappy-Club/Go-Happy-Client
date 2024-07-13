@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import axios from "axios";
+//import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
 import PhoneInput from "react-native-phone-number-input";
 import analytics from "@react-native-firebase/analytics";
@@ -267,7 +267,9 @@ class LoginScreen extends Component {
             "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
             user.user.phoneNumber
           );
-        } catch (error) {}
+        } catch (error) {
+          console.log("Error in handleVerify==>",error);
+        }
         //   this.setState({ loadingButton:false });
       })
       .catch((error) => {
@@ -492,7 +494,7 @@ class LoginScreen extends Component {
         }
       })
       .catch((error) => {
-        ////console.log(error);
+        console.log("Error in backendSignin",error);
       });
   }
   pending(name, phone) {

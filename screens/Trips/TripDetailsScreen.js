@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+//import axios from "axios";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";

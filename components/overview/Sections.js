@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Linking } from "react-native";
-import axios from "axios";
+//import axios from "axios";
 
 export default function Sections(props) {
   const [whatsappLink, setWhatsappLink] = useState("");

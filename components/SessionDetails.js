@@ -24,6 +24,9 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { format, fromUnixTime } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import tambola from "tambola";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -35,18 +38,19 @@ export default class SessionDetails extends Component {
       paymentAlertTitle: "Success",
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+      name: "",
       loadingButton: false,
       videoVisible: false,
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
     };
+    this.retrieveData();
   }
 
-
-  async phonePeWrapper(item) {
+  async phonePeWrapper(type, item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +68,55 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    if (type == "share") {
+      const tambolaTicket = tambola.generateTicket();
+      phonepe_payments
+        .phonePeShare(
+          this.props.phoneNumber,
+          item.cost,
+          _errorHandler,
+          "workshop",
+          item.id,
+          tambolaTicket
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(this.state.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(item.cost),"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+Please make your payment using the link below:
+${link}
+${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              this.setState({
+                clickPopup: false,
+              });
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler,
+        "workshop"
+      );
+    }
   }
 
-  
+  retrieveData = async () => {
+    const name = await AsyncStorage.getItem("name");
+    this.setState({ name: name });
+  };
+
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +146,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -173,41 +217,44 @@ export default class SessionDetails extends Component {
     this.setState({ loadingButton: true });
   }
   loadDate(item) {
-    var dt = new Date(parseInt(item));
-    var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12 || 12;
-    var minutes = dt.getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
+    const dt = fromUnixTime(item / 1000);
+    const finalTime = format(dt, "hh:mm a");
     return finalTime;
-    // return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
   }
   videoPlayer() {
     this.setState({ videoVisible: true });
   }
   async createShareMessage(item, url) {
-    let template =
+    const sessionsTemplate =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
       ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
-    // template = template.replace;
-    return template;
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    const workshopTemplate =
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" workshop. Aap bhi join kr skte ho mere sath, super entertaining and informative workshop of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, " +
+      `vo bhi sirf ${toUnicodeVariant(`\u20B9${item.cost}`, "bold")} mein` +
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -541,11 +588,36 @@ export default class SessionDetails extends Component {
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
+                ? () => this.setState({ clickPopup: true })
                 : this.sessionAction.bind(this)
             }
           ></Button>
         </View>
+        {this.state.clickPopup && (
+          <AwesomeAlert
+            show={this.state.clickPopup}
+            showProgress={false}
+            title="Payment Confirmation"
+            message="Would you like to pay this yourself or share the payment link with a family member?"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            cancelText="Pay Now"
+            confirmButtonColor="gray"
+            cancelButtonColor="#29BFC2"
+            onCancelPressed={() => {
+              this.phonePeWrapper("self", item);
+              this.setState({
+                clickPopup: false,
+              });
+            }}
+            confirmText="Share"
+            showCancelButton={true}
+            onConfirmPressed={() => {
+              this.phonePeWrapper("share", item);
+            }}
+          />
+        )}
 
         {item.recordingLink != null && (
           <Modal

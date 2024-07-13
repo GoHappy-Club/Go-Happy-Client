@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  Share,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { parseISO, format, getTime } from 'date-fns';
+import { parseISO, format, getTime, fromUnixTime } from "date-fns";
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
@@ -21,7 +22,8 @@ import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import phonepe_payments from "./PhonePe/Payments.js";
-
+import toUnicodeVariant from "./toUnicodeVariant.js";
+import tambola from "tambola";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -39,7 +41,10 @@ class HomeDashboard extends Component {
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
       showPaymentAlert: false,
+      shareLink: "",
+      clickPopup: false,
       alreadyBookedSameDayEvent: false,
+      itemToBuy: null,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
     };
@@ -48,7 +53,7 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-  async phonePeWrapper(item) {
+  async phonePeWrapper(type, item) {
     var _this = this;
     const _callback = (id) => {
       this.setState({ success: true });
@@ -68,10 +73,54 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    if (type == "share") {
+      const tambolaTicket=tambola.generateTicket();
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          item.cost,
+          _errorHandler,
+          "workshop",
+          item.id,
+          tambolaTicket
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(item.cost),"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+Please make your payment using the link below:
+${link}
+${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
+`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              this.setState({
+                clickPopup: false,
+              });
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      phonepe_payments.phonePe(
+        this.props.profile.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler,
+        "workshop"
+      );
+    }
   }
-  
+
+  handleClickBook(item) {
+    this.setState({ itemToBuy: item }, () => {
+      this.setState({ clickPopup: true });
+    });
+  }
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
@@ -94,7 +143,7 @@ class HomeDashboard extends Component {
 
   changeSelectedDate = (date) => {
     const parsedSelect = parseISO(date);
-    const select = format(parsedSelect, 'EEE MMM dd yyyy')
+    const select = format(parsedSelect, "EEE MMM dd yyyy");
     const tempDate = getTime(date);
 
     this.setState({
@@ -186,18 +235,8 @@ class HomeDashboard extends Component {
     );
   }
   loadDate(item) {
-    var dt = new Date(parseInt(item.startTime));
-    var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12 || 12;
-    var minutes = dt.getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
+    const dt = fromUnixTime(item.startTime / 1000);
+    const finalTime = format(dt, "MMM d, h:mm aa");
     return finalTime;
   }
   getTitle(item) {
@@ -345,7 +384,7 @@ class HomeDashboard extends Component {
                 title={this.getTitle(item)}
                 onPress={
                   item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.phonePeWrapper.bind(this, item)
+                    ? this.handleClickBook.bind(this, item)
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
@@ -412,6 +451,31 @@ class HomeDashboard extends Component {
             confirmButtonColor="#DD6B55"
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
+            }}
+          />
+        )}
+        {this.state.clickPopup && (
+          <AwesomeAlert
+            show={this.state.clickPopup}
+            showProgress={false}
+            title="Payment Confirmation"
+            message="Would you like to pay this yourself or share the payment link with a family member?"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            cancelText="Pay Now"
+            confirmButtonColor="gray"
+            cancelButtonColor="#29BFC2"
+            onCancelPressed={() => {
+              this.phonePeWrapper("self", this.state.itemToBuy);
+              this.setState({
+                clickPopup: false,
+              });
+            }}
+            confirmText="Share"
+            showCancelButton={true}
+            onConfirmPressed={() => {
+              this.phonePeWrapper("share", this.state.itemToBuy);
             }}
           />
         )}
