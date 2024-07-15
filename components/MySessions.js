@@ -15,6 +15,7 @@ import { Button, Text } from "react-native-elements";
 import { WebView } from "react-native-webview";
 
 import { Avatar, Card as Cd, Title } from "react-native-paper";
+import { format, fromUnixTime } from "date-fns";
 
 export default class MySessions extends Component {
   constructor(props) {
@@ -70,19 +71,9 @@ export default class MySessions extends Component {
   }
 
   loadDate(item) {
-    var dt = new Date(parseInt(item));
-    var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12 || 12;
-    var minutes = dt.getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
-    return finalTime;
+    const dt = fromUnixTime(item / 1000);
+  const finalTime = format(dt, 'hh:mm a');
+  return finalTime;
   }
 
   sorry() {

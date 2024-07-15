@@ -24,6 +24,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { format, fromUnixTime } from "date-fns";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -42,11 +43,10 @@ export default class SessionDetails extends Component {
     };
   }
 
-
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +64,17 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +104,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -173,20 +175,9 @@ export default class SessionDetails extends Component {
     this.setState({ loadingButton: true });
   }
   loadDate(item) {
-    var dt = new Date(parseInt(item));
-    var hours = dt.getHours(); // gives the value in 24 hours format
-    var AmOrPm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12 || 12;
-    var minutes = dt.getMinutes();
-    if (hours < 10) {
-      hours = "0" + hours;
-    }
-    if (minutes < 10) {
-      minutes = "0" + minutes;
-    }
-    var finalTime = hours + ":" + minutes + " " + AmOrPm;
+    const dt = fromUnixTime(item / 1000);
+    const finalTime = format(dt, "hh:mm a");
     return finalTime;
-    // return (new Date(parseInt(item.startTime))).toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3")
   }
   videoPlayer() {
     this.setState({ videoVisible: true });
@@ -199,15 +190,19 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })

@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
+import { format, fromUnixTime } from "date-fns";
 
 const data = [
   {
@@ -45,34 +46,9 @@ class TrendingSessions extends Component {
   }
 
   loadDate(time) {
-    var dt = new Date(parseInt(time));
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var month = months[dt.getMonth()];
-    var day = dt.getDate();
-    var hours = dt.getHours();
-    var minutes = dt.getMinutes();
-    var AmOrPm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12 || 12;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-
-    var finalTime =
-      month + " " + day + ", " + hours + ":" + minutes + " " + AmOrPm;
-
-    return finalTime;
+    const dt = fromUnixTime(time / 1000);
+  const finalTime = format(dt, 'MMM d, h:mm aa');
+  return finalTime;
   }
   trimContent(text, cut) {
     if (text.length < cut) {
