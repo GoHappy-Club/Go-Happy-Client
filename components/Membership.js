@@ -115,12 +115,10 @@ class Membership extends Component {
         )
         .then((link) => {
           //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
-Please make your payment using the link below:
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
+Please pay on the below link:
 ${link}
-${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
-`;
+The Link will Expire in 20 Minutes.`;
           Share.share({
             message: message,
           })
