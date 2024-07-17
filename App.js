@@ -205,7 +205,8 @@ export default function App() {
         console.error("Error retrieving data from AsyncStorage:", error);
       }
     };
-
+    setToken(true);
+    fetchData();
     firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
       console.log("onNotificationOpened ", remoteMessage);
       if (remoteMessage == null) {
@@ -247,28 +248,28 @@ export default function App() {
           console.log(e);
         }
       });
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      const incomingDeepLink = remoteMessage.data.deepLink;
-      const priority = remoteMessage.data.priority;
-      console.log("bla", remoteMessage);
-      if (priority && priority == "HIGH") {
-        setNotify(remoteMessage);
-      } else {
-        Toast.show({
-          config: { toastConfig },
-          text1: remoteMessage.notification.title,
-          text2: remoteMessage.notification.body,
-          autoHide: true,
-          visibilityTime: 10000,
-          onPress: () => {
-            Linking.openURL(incomingDeepLink);
-          },
-        });
-      }
-    });
+    const unsubscribe = firebase
+      .messaging()
+      .onMessage(async (remoteMessage) => {
+        const incomingDeepLink = remoteMessage.data.deepLink;
+        const priority = remoteMessage.data.priority;
+        console.log("bla", remoteMessage);
+        if (priority && priority == "HIGH") {
+          setNotify(remoteMessage);
+        } else {
+          Toast.show({
+            config: { toastConfig },
+            text1: remoteMessage.notification.title,
+            text2: remoteMessage.notification.body,
+            autoHide: true,
+            visibilityTime: 10000,
+            onPress: () => {
+              Linking.openURL(incomingDeepLink);
+            },
+          });
+        }
+      });
 
-    setToken(true);
-    fetchData();
     return unsubscribe;
   }, []);
 
