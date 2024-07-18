@@ -25,6 +25,7 @@ import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -36,11 +37,13 @@ export default class SessionDetails extends Component {
       paymentAlertTitle: "Success",
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+      name:"",
       loadingButton: false,
       videoVisible: false,
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
     };
+    this.retrieveData();
   }
 
   async phonePeWrapper(type, item) {
@@ -67,7 +70,7 @@ export default class SessionDetails extends Component {
     if (type == "share") {
       phonepe_payments
         .phonePeShare(
-          this.props.profile.phoneNumber,
+          this.props.phoneNumber,
           item.cost,
           _callback,
           _errorHandler,
@@ -76,11 +79,10 @@ export default class SessionDetails extends Component {
         .then((link) => {
           //prettier-ignore
           const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(item.cost,"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+${toUnicodeVariant(this.state.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(item.cost),"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
 Please make your payment using the link below:
 ${link}
-${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.
-`;
+${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.`;
           Share.share({
             message: message,
           })
@@ -102,6 +104,11 @@ ${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.
         "workshop"
       );
     }
+  }
+
+  retrieveData=async()=>{
+    const name = await AsyncStorage.getItem("name");
+    this.setState({name:name});
   }
 
   componentDidMount() {
