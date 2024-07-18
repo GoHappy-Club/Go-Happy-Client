@@ -83,3 +83,4 @@ buck-out/
 .idea/*
 android/.gradle/*
 *.bin
+.env
