@@ -22,9 +22,9 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 // import NoInternet from "./components/NoInternet";
 import About from "./components/About";
-import axios from "axios";
+// import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud-dev/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -41,6 +41,8 @@ import TripDetailsScreen from "./screens/Trips/TripDetailsScreen";
 import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
 import Intro from "./screens/loginScreen/Intro";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
+import axios from "./config/CustomAxios.js";
+import {JWT_TOKEN} from "@env";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -274,9 +276,8 @@ export default function App() {
 
   const recheck = async () => {
     try {
-      const response = await fetch("https://go-happy-322816.nw.r.appspot.com");
-      // //console.log("this is response", JSON.stringify(response));
-      if (response.ok) {
+      const response = await axios.get(SERVER_URL);
+      if (response.status==200) {
         setIsConnected(true);
       } else {
         setIsConnected(false);
