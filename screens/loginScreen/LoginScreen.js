@@ -261,13 +261,16 @@ class LoginScreen extends Component {
       .then((user) => {
         this.setState({ userId: user.user.uid });
         try {
+          console.log("here");
           this._backendSignIn(
             user.user.uid,
             user.user.displayName,
             "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
             user.user.phoneNumber
           );
-        } catch (error) {}
+        } catch (error) {
+          console.log("Error in handleVerify==>",error);
+        }
         //   this.setState({ loadingButton:false });
       })
       .catch((error) => {
@@ -492,7 +495,7 @@ class LoginScreen extends Component {
         }
       })
       .catch((error) => {
-        ////console.log(error);
+        console.log("Error in backendSignin",error);
       });
   }
   pending(name, phone) {
