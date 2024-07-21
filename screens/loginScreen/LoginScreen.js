@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import axios from "axios";
+//import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
 import PhoneInput from "react-native-phone-number-input";
 import analytics from "@react-native-firebase/analytics";
@@ -261,7 +261,6 @@ class LoginScreen extends Component {
       .then((user) => {
         this.setState({ userId: user.user.uid });
         try {
-          console.log("here");
           this._backendSignIn(
             user.user.uid,
             user.user.displayName,
