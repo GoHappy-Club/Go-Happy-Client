@@ -20,7 +20,7 @@ import { changeCount, setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+//import axios from "axios";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { launchImageLibrary } from "react-native-image-picker";
