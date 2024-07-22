@@ -31,8 +31,8 @@ class Payments extends Component {
   PaymentError() {
     return "Your payment could not be processed. Please try again later.";
   }
-  async phonePeShare(phone, amount, callback, error_handler, paymentType) {
-    payload = await getPayload(phone, amount * 100, paymentType);
+  async phonePeShare(phone, amount, error_handler, paymentType,orderId,tambolaTicket) {
+    payload = await getPayload(phone, amount * 100, paymentType,orderId,tambolaTicket);
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     const options = {
@@ -53,6 +53,7 @@ class Payments extends Component {
       response.data.data.instrumentResponse.redirectInfo.url;
     return shareableLink
     } catch (error) {
+      error_handler();
       console.log("Error in paymentjs==>", error)
     }
     

@@ -21,6 +21,7 @@ import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import toUnicodeVariant from "./toUnicodeVariant.js";
+import tambola from "tambola";
 
 class Membership extends Component {
   constructor(props) {
@@ -105,11 +106,12 @@ class Membership extends Component {
     };
     //console.log('propro',this.props.profile)
     if (type == "share") {
+      
+      const tambolaTicket=tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
           this.props.profile.phoneNumber,
           this.state.amount,
-          _callback,
           _errorHandler,
           "contribution"
         )

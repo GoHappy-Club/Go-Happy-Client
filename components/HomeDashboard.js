@@ -23,6 +23,7 @@ import { setSessionAttended } from "../services/events/EventService";
 
 import phonepe_payments from "./PhonePe/Payments.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
+import tambola from "tambola";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -73,13 +74,15 @@ class HomeDashboard extends Component {
       this.setState({ showPaymentAlert: true });
     };
     if (type == "share") {
+      const tambolaTicket=tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
           this.props.profile.phoneNumber,
           item.cost,
-          _callback,
           _errorHandler,
-          "workshop"
+          "workshop",
+          item.id,
+          tambolaTicket
         )
         .then((link) => {
           //prettier-ignore
