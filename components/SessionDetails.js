@@ -26,6 +26,7 @@ import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import tambola from "tambola";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +38,7 @@ export default class SessionDetails extends Component {
       paymentAlertTitle: "Success",
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
-      name:"",
+      name: "",
       loadingButton: false,
       videoVisible: false,
       defaultCoverImage:
@@ -68,13 +69,15 @@ export default class SessionDetails extends Component {
       this.setState({ showPaymentAlert: true });
     };
     if (type == "share") {
+      const tambolaTicket = tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
           this.props.phoneNumber,
           item.cost,
-          _callback,
           _errorHandler,
-          "workshop"
+          "workshop",
+          item.id,
+          tambolaTicket
         )
         .then((link) => {
           //prettier-ignore
@@ -106,10 +109,10 @@ ${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.`;
     }
   }
 
-  retrieveData=async()=>{
+  retrieveData = async () => {
     const name = await AsyncStorage.getItem("name");
-    this.setState({name:name});
-  }
+    this.setState({ name: name });
+  };
 
   componentDidMount() {
     this.createDynamicReferralLink();
