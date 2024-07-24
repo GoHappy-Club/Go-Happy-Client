@@ -10,9 +10,8 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import CountDown from "react-native-countdown-component";
 import phonepe_payments from "./PhonePe/Payments.js";
-
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -30,6 +29,7 @@ export default class SessionDetails extends Component {
     this.state = {
       modalVisible: false,
       showAlert: false,
+      showBookAlert: false,
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
@@ -42,11 +42,10 @@ export default class SessionDetails extends Component {
     };
   }
 
-
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +63,17 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +103,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -199,15 +200,19 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -307,6 +312,11 @@ export default class SessionDetails extends Component {
     tambolaHtml = tambolaHtml + "</tbody></table>";
     //console.log("tam", tambolaHtml);
     return tambolaHtml;
+  };
+
+  handleBook = () => {
+    this.setState({ showBookAlert: false });
+    this.sessionAction();
   };
 
   render() {
@@ -532,19 +542,40 @@ export default class SessionDetails extends Component {
           </View>
         </ScrollView>
 
-        <View style={{ margin: 15 }}>
+        <View
+          style={{
+            margin: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: "#29BFC2", width: "85%" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={
               item.costType == "paid" && this.getTitle() == "Book"
                 ? this.phonePeWrapper.bind(this, item)
-                : this.sessionAction.bind(this)
+                : this.handleBook
             }
           ></Button>
+          <CountDown
+            size={20}
+            until={(item.startTime - Date.now()) / 1000}
+            digitStyle={{
+              backgroundColor: "#FFF",
+              borderWidth: 2,
+              borderColor: "#29BFC2",
+            }}
+            digitTxtStyle={{ color: "#29BFC2" }}
+            separatorStyle={{ color: "#29BFC2" }}
+            timeToShow={["H", "M", "S"]}
+            timeLabels={{ h: null, m: null, s: null }}
+            showSeparator
+          />
         </View>
 
         {item.recordingLink != null && (
@@ -601,6 +632,20 @@ export default class SessionDetails extends Component {
                 paymentAlertTitle: "Success",
               });
             }}
+          />
+        )}
+        {this.state.showBookAlert && (
+          <AwesomeAlert
+            show={this.state.showBookAlert}
+            showProgress={false}
+            title={"Confirm"}
+            message={"Are you sure you want to cancel your booking?"}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="red"
+            onConfirmPressed={() => {}}
           />
         )}
       </View>
