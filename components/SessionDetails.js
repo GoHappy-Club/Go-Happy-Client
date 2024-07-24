@@ -10,9 +10,8 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import CountDown from "react-native-countdown-component";
 import phonepe_payments from "./PhonePe/Payments.js";
-
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -33,6 +32,7 @@ export default class SessionDetails extends Component {
     this.state = {
       modalVisible: false,
       showAlert: false,
+      showBookAlert: false,
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
@@ -362,6 +362,11 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     return tambolaHtml;
   };
 
+  handleBook = () => {
+    this.setState({ showBookAlert: false });
+    this.sessionAction();
+  };
+
   render() {
     if (this.state.loader == true) {
       return (
@@ -585,11 +590,18 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           </View>
         </ScrollView>
 
-        <View style={{ margin: 15 }}>
+        <View
+          style={{
+            margin: 10,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: "#29BFC2", width: "85%" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={
@@ -598,6 +610,20 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 : this.sessionAction.bind(this)
             }
           ></Button>
+          <CountDown
+            size={20}
+            until={(item.startTime - Date.now()) / 1000}
+            digitStyle={{
+              backgroundColor: "#FFF",
+              borderWidth: 2,
+              borderColor: "#29BFC2",
+            }}
+            digitTxtStyle={{ color: "#29BFC2" }}
+            separatorStyle={{ color: "#29BFC2" }}
+            timeToShow={["H", "M", "S"]}
+            timeLabels={{ h: null, m: null, s: null }}
+            showSeparator
+          />
         </View>
         {this.state.clickPopup && (
           <AwesomeAlert
@@ -679,6 +705,20 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 paymentAlertTitle: "Success",
               });
             }}
+          />
+        )}
+        {this.state.showBookAlert && (
+          <AwesomeAlert
+            show={this.state.showBookAlert}
+            showProgress={false}
+            title={"Confirm"}
+            message={"Are you sure you want to cancel your booking?"}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor="red"
+            onConfirmPressed={() => {}}
           />
         )}
       </View>
