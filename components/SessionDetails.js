@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import CountDown from "react-native-countdown-component";
 import phonepe_payments from "./PhonePe/Payments.js";
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
@@ -23,6 +22,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import CountdownTimer from "../commonComponents/countdown.js";
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -39,6 +39,8 @@ export default class SessionDetails extends Component {
       videoVisible: false,
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
+      showCountdown: false,
+      title:""
     };
   }
 
@@ -74,6 +76,8 @@ export default class SessionDetails extends Component {
   componentDidMount() {
     this.createDynamicReferralLink();
     this.setState({ loadingButton: false });
+    const title = this.getTitle();
+    this.setState({ title: title });
   }
 
   createDynamicReferralLink = async () => {
@@ -314,11 +318,6 @@ export default class SessionDetails extends Component {
     return tambolaHtml;
   };
 
-  handleBook = () => {
-    this.setState({ showBookAlert: false });
-    this.sessionAction();
-  };
-
   render() {
     if (this.state.loader == true) {
       return (
@@ -544,38 +543,41 @@ export default class SessionDetails extends Component {
 
         <View
           style={{
-            margin: 10,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            margin: 15,
+            flexDirection: this.state.title=="Cancel Your Booking"?"row":"column",
+            justifyContent: this.state.title=="Cancel Your Booking"?"space-between":"center",
+            alignItems: this.state.title=="Cancel Your Booking"?"center":"",
           }}
         >
+          {this.state.title == "Cancel Your Booking" && (
+            <CountdownTimer
+              targetTime={item.startTime}
+              height={35}
+              width={35}
+              textSize={15}
+              separatorSize={20}
+            />
+          )}
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2", width: "85%" }}
+            buttonStyle={{ backgroundColor: "#29BFC2" }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={
-              item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
-                : this.handleBook
-            }
-          ></Button>
-          <CountDown
-            size={20}
-            until={(item.startTime - Date.now()) / 1000}
-            digitStyle={{
-              backgroundColor: "#FFF",
-              borderWidth: 2,
-              borderColor: "#29BFC2",
+            onPress={() => {
+              const title = this.getTitle();
+              this.setState({title:title})
+              if (this.getTitle() === "Cancel Your Booking") {
+                this.setState({ showBookAlert: true });
+              } else if (item.costType == "paid" && this.getTitle() == "Book") {
+                this.phonePeWrapper();
+                return;
+              } else {
+                this.sessionAction();
+                return;
+              }
             }}
-            digitTxtStyle={{ color: "#29BFC2" }}
-            separatorStyle={{ color: "#29BFC2" }}
-            timeToShow={["H", "M", "S"]}
-            timeLabels={{ h: null, m: null, s: null }}
-            showSeparator
-          />
+          ></Button>
         </View>
 
         {item.recordingLink != null && (
@@ -638,14 +640,51 @@ export default class SessionDetails extends Component {
           <AwesomeAlert
             show={this.state.showBookAlert}
             showProgress={false}
-            title={"Confirm"}
-            message={"Are you sure you want to cancel your booking?"}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="OK"
-            confirmButtonColor="red"
-            onConfirmPressed={() => {}}
+            customView={
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 300,
+                }}
+              >
+                <Text style={{
+                    fontSize: 20,
+                }}>Your Session is starting in :</Text>
+                <CountdownTimer targetTime={item.startTime} />
+                <Text style={{
+                    fontSize: 16,
+                    textAlign:"center",
+                    marginVertical:10
+                }}>Are you sure you want to cancel your booking?</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: 190,
+                  }}
+                >
+                  <Button
+                    title="Yes"
+                    buttonStyle={{ backgroundColor: "#DD6B55",width:80 }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                      this.sessionAction();
+                    }}
+                  />
+
+                  <Button
+                    title="No"
+                    buttonStyle={{ backgroundColor: "lightgrey",width:80 }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                    }}
+                  />
+                </View>
+              </View>
+            }
           />
         )}
       </View>
