@@ -41,6 +41,7 @@ import TripDetailsScreen from "./screens/Trips/TripDetailsScreen";
 import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
 import Intro from "./screens/loginScreen/Intro";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
+import { useCopilot } from "react-native-copilot";
 import axios from "./config/CustomAxios.js";
 import { JWT_TOKEN } from "@env";
 
@@ -134,6 +135,8 @@ export default function App() {
   const [token, setToken] = useState(false);
   const profile = useSelector((state) => state.profile.profile); // Replace 'data' with your actual state slice name
   const dispatch = useDispatch();
+
+  const { copilotEvents } = useCopilot();
 
   const setNewProfile = (
     name,
@@ -458,7 +461,11 @@ export default function App() {
               <Stack.Screen
                 name="Session Details"
                 children={(props) => (
-                  <HomeDetailsScreen {...props} propProfile={profile} />
+                  <HomeDetailsScreen
+                    {...props}
+                    propProfile={profile}
+                    copilotEvents={copilotEvents}
+                  />
                 )}
                 options={({ navigation }) => ({
                   headerTransparent: true,

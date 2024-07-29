@@ -44,30 +44,16 @@ export default function Sections(props) {
     },
   ];
 
-  const handleFinish = () => {
-    props.navigation.navigate("HomeScreen");
-  };
+  // useEffect(() => {
+  //   if (!walktroughStarted.current) {
+  //     const timer = setTimeout(() => {
+  //       start();
+  //       walktroughStarted.current = true;
+  //     }, 3000);
 
-  useEffect(() => {
-    if (!walktroughStarted.current) {
-      const timer = setTimeout(() => {
-        start();
-        walktroughStarted.current = true;
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [start]);
-
-  useEffect(() => {
-    copilotEvents.on("stop", () => {
-      // props.navigation.navigate("HomeScreen");
-    });
-    copilotEvents.on("finish", handleFinish);
-    return () => {
-      copilotEvents.off("stop");
-    };
-  }, [copilotEvents]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [start]);
 
   useEffect(() => {
     async function handleHelp() {

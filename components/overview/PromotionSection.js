@@ -9,6 +9,9 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { walkthroughable, CopilotStep } from "react-native-copilot";
+
+const Walkthroughable = walkthroughable(TouchableOpacity);
 
 export default class PromotionSection extends Component {
   constructor(props) {
@@ -44,22 +47,29 @@ export default class PromotionSection extends Component {
           <View style={styles.line} />
         </View>
         <View style={styles.cardsContainer}>
-          {data.map((item) => {
+          {data.map((item, index) => {
             return (
-              <TouchableOpacity
-                style={styles.touchable}
-                onPress={() => {
-                  this.props.navigation.navigate(item.to);
-                }}
+              <CopilotStep
+                name={item.title}
+                order={index + 5}
+                text={`This is the ${item.title} Section`}
+                key={index}
               >
-                {/* <View style={styles.card}> */}
-                <Image
-                  source={{ uri: item.image }}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                {/* </View> */}
-              </TouchableOpacity>
+                <Walkthroughable
+                  style={styles.touchable}
+                  onPress={() => {
+                    this.props.navigation.navigate(item.to);
+                  }}
+                >
+                  {/* <View style={styles.card}> */}
+                  <Image
+                    source={{ uri: item.image }}
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                  {/* </View> */}
+                </Walkthroughable>
+              </CopilotStep>
             );
           })}
         </View>

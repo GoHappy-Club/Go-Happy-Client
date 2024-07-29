@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -18,11 +18,11 @@ const CustomTooltip = () => {
     goToPrev,
     stop,
     copilotEvents,
+    totalStepsNumber,
+    unregisterStep,
+    registerStep,
   } = useCopilot();
-  const handleFinish = () => {
-    copilotEvents.emit("finish");
-    stop();
-  };
+
   return (
     <View style={[styles.container, { width: 280 }]}>
       <Text style={styles.tooltipText}>{currentStep.text}</Text>
@@ -43,7 +43,7 @@ const CustomTooltip = () => {
           </>
         )}
         {isLastStep && (
-          <TouchableOpacity onPress={handleFinish} style={styles.button}>
+          <TouchableOpacity onPress={stop} style={styles.button}>
             <Text style={styles.buttonText}>Finish</Text>
           </TouchableOpacity>
         )}

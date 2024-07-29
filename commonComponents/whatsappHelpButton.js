@@ -6,6 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+
+const Walkthroughable = walkthroughable(View);
+
 const WhatsAppFAB = ({ url }) => {
   const profile = useSelector((state) => state.profile.profile);
 
@@ -33,21 +37,27 @@ const WhatsAppFAB = ({ url }) => {
   };
 
   return (
-    <>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handlePress}>
-          <FAB
-            style={styles.fab}
-            icon={() => (
-              <Image
-                source={require("../images/whatsapp.png")}
-                style={styles.logo}
-              />
-            )}
-          />
-        </TouchableOpacity>
-      </View>
-    </>
+    <View style={styles.container}>
+      <CopilotStep
+        name="whatsapp"
+        order={7}
+        text="Click here to contact us on WhatsApp"
+      >
+        <Walkthroughable>
+          <TouchableOpacity onPress={handlePress}>
+            <FAB
+              style={styles.fab}
+              icon={() => (
+                <Image
+                  source={require("../images/whatsapp.png")}
+                  style={styles.logo}
+                />
+              )}
+            />
+          </TouchableOpacity>
+        </Walkthroughable>
+      </CopilotStep>
+    </View>
   );
 };
 
