@@ -3,10 +3,10 @@ import { View, Text, StyleSheet } from "react-native";
 
 const CountdownTimer = ({
   targetTime,
-  width=40,
-  height=40,
-  separatorSize=30,
-  textSize=26,
+  width = 40,
+  height = 40,
+  separatorSize = 30,
+  textSize = 20,
 }) => {
   const calculateTimeLeft = () => {
     const difference = targetTime - Date.now();
@@ -14,9 +14,15 @@ const CountdownTimer = ({
 
     if (difference > 0) {
       timeLeft = {
-        hours: Math.floor(difference / (1000 * 60 * 60)).toString().padStart(2,"0"),
-        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2,"0"),
-        seconds: Math.floor((difference % (1000 * 60)) / 1000).toString().padStart(2,"0"),
+        hours: Math.floor(difference / (1000 * 60 * 60))
+          .toString()
+          .padStart(2, "0"),
+        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+          .toString()
+          .padStart(2, "0"),
+        seconds: Math.floor((difference % (1000 * 60)) / 1000)
+          .toString()
+          .padStart(2, "0"),
       };
     }
 
@@ -36,15 +42,21 @@ const CountdownTimer = ({
   return (
     <View style={styles.container}>
       <View style={[styles.timeBox, { width: width, height: height }]}>
-        <Text style={[styles.timeText,{fontSize:textSize}]}>{timeLeft.hours || 0}</Text>
+        <Text style={[styles.timeText, { fontSize: textSize }]}>
+          {timeLeft.hours || 0}
+        </Text>
       </View>
-      <Text style={[styles.colon,{fontSize: separatorSize}]}>:</Text>
+      <Text style={[styles.colon, { fontSize: separatorSize }]}>:</Text>
       <View style={[styles.timeBox, { width: width, height: height }]}>
-        <Text style={[styles.timeText,{fontSize:textSize}]}>{timeLeft.minutes || 0}</Text>
+        <Text style={[styles.timeText, { fontSize: textSize }]}>
+          {timeLeft.minutes || 0}
+        </Text>
       </View>
-      <Text style={[styles.colon,{fontSize: separatorSize}]}>:</Text>
+      <Text style={[styles.colon, { fontSize: separatorSize }]}>:</Text>
       <View style={[styles.timeBox, { width: width, height: height }]}>
-        <Text style={[styles.timeText,{fontSize:textSize}]}>{timeLeft.seconds || 0}</Text>
+        <Text style={[styles.timeText, { fontSize: textSize }]}>
+          {timeLeft.seconds || 0}
+        </Text>
       </View>
     </View>
   );
@@ -55,15 +67,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 5,
   },
   timeBox: {
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
     backgroundColor: "#29BFC2",
-    margin: 5,
-    textAlign:"center"
+    marginHorizontal: 1,
+    textAlign: "center",
   },
   timeText: {
     fontWeight: "bold",
@@ -73,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "bold",
     color: "#29BFC2",
-    marginHorizontal: 5,
+    marginHorizontal: 2,
   },
 });
 
