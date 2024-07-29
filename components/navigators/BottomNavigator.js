@@ -16,11 +16,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import MembershipScreen from "../../screens/myProfileScreen/MembershipScreen";
 import { useSelector } from "react-redux";
 import OverviewScreen from "../../screens/overview/OverviewScreen";
+import { useCopilot } from "react-native-copilot";
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
+  const {start,copilotEvents} = useCopilot();
   // alert(JSON.stringify(profile));
   return (
     <Tab.Navigator
