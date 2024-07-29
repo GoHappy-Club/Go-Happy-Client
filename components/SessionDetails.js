@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Dimensions,
   Image,
   Linking,
   Modal,
@@ -23,6 +24,8 @@ import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import CountdownTimer from "../commonComponents/countdown.js";
+
+const WIDTH = Dimensions.get("window").width;
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +43,7 @@ export default class SessionDetails extends Component {
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
       showCountdown: false,
-      title:""
+      title: "",
     };
   }
 
@@ -543,10 +546,16 @@ export default class SessionDetails extends Component {
 
         <View
           style={{
-            margin: 15,
-            flexDirection: this.state.title=="Cancel Your Booking"?"row":"column",
-            justifyContent: this.state.title=="Cancel Your Booking"?"space-between":"center",
-            alignItems: this.state.title=="Cancel Your Booking"?"center":"",
+            margin:this.state.title=="Cancel Your Booking"?15:0,
+            flexDirection:
+              this.state.title == "Cancel Your Booking" ? "row" : "column",
+            justifyContent:
+              this.state.title == "Cancel Your Booking"
+                ? "space-evenly"
+                : "center",
+            alignItems:
+              this.state.title == "Cancel Your Booking" ? "center" : "",
+            gap: 15,
           }}
         >
           {this.state.title == "Cancel Your Booking" && (
@@ -561,12 +570,12 @@ export default class SessionDetails extends Component {
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: "#29BFC2",minWidth:180 }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={() => {
               const title = this.getTitle();
-              this.setState({title:title})
+              this.setState({ title: title });
               if (this.getTitle() === "Cancel Your Booking") {
                 this.setState({ showBookAlert: true });
               } else if (item.costType == "paid" && this.getTitle() == "Book") {
@@ -647,18 +656,27 @@ export default class SessionDetails extends Component {
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
-                  width: 300,
                 }}
               >
-                <Text style={{
+                <Text
+                  style={{
                     fontSize: 20,
-                }}>Your Session is starting in :</Text>
+                    marginVertical:10,
+                    fontWeight:"bold"
+                  }}
+                >
+                  Your Session is starting in :
+                </Text>
                 <CountdownTimer targetTime={item.startTime} />
-                <Text style={{
+                <Text
+                  style={{
                     fontSize: 16,
-                    textAlign:"center",
-                    marginVertical:10
-                }}>Are you sure you want to cancel your booking?</Text>
+                    textAlign: "center",
+                    marginVertical: 15,
+                  }}
+                >
+                  Are you sure you want to cancel your booking?
+                </Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -668,7 +686,7 @@ export default class SessionDetails extends Component {
                 >
                   <Button
                     title="Yes"
-                    buttonStyle={{ backgroundColor: "#DD6B55",width:80 }}
+                    buttonStyle={{ backgroundColor: "#DD6B55", width: 80 }}
                     onPress={() => {
                       this.setState({ showBookAlert: false });
                       this.sessionAction();
@@ -677,7 +695,7 @@ export default class SessionDetails extends Component {
 
                   <Button
                     title="No"
-                    buttonStyle={{ backgroundColor: "lightgrey",width:80 }}
+                    buttonStyle={{ backgroundColor: "lightgrey", width: 80 }}
                     onPress={() => {
                       this.setState({ showBookAlert: false });
                     }}
