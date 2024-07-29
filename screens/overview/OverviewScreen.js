@@ -19,6 +19,9 @@ import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
 import LottieView from "lottie-react-native";
 import Sections from "../../components/overview/Sections.js";
 import { Text } from "react-native";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+
+const Walkthroughable = walkthroughable(View);
 
 class OverviewScreen extends Component {
   constructor(props) {
@@ -38,7 +41,21 @@ class OverviewScreen extends Component {
       posters: [],
     };
     crashlytics().log(JSON.stringify(props.propProfile));
+    this.walkthroughStarted = React.createRef();
     // alert(JSON.stringify(props));
+  }
+
+  componentDidMount() {
+    if (!this.walkthroughStarted.current) {
+      const timer=setTimeout(() => {
+        this.props.start(false, this.scrollView);
+        this.walkthroughStarted.current = true;
+      }, 3000);
+    }
+  }
+
+  componentWillUnmount(){
+    clearTimeout(timer);
   }
 
   async getOverviewData() {
@@ -85,7 +102,7 @@ class OverviewScreen extends Component {
     if (this.state.error == true) {
       return (
         <>
-          <ScrollView>
+          <ScrollView ref={(ref) => (this.scrollView = ref)}>
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}

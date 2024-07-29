@@ -4,6 +4,10 @@ import { FAB } from "react-native-paper";
 import { Linking } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+
+const Walkthroughable = walkthroughable(View);
+
 const WhatsAppFAB = ({ url }) => {
   const handlePress = async () => {
     ////console.log("url is ", url);
@@ -29,17 +33,25 @@ const WhatsAppFAB = ({ url }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress}>
-        <FAB
-          style={styles.fab}
-          icon={() => (
-            <Image
-              source={require("../images/whatsapp.png")}
-              style={styles.logo}
+      <CopilotStep
+        name="whatsapp"
+        order={7}
+        text="Click here to contact us on WhatsApp"
+      >
+        <Walkthroughable>
+          <TouchableOpacity onPress={handlePress}>
+            <FAB
+              style={styles.fab}
+              icon={() => (
+                <Image
+                  source={require("../images/whatsapp.png")}
+                  style={styles.logo}
+                />
+              )}
             />
-          )}
-        />
-      </TouchableOpacity>
+          </TouchableOpacity>
+        </Walkthroughable>
+      </CopilotStep>
     </View>
   );
 };

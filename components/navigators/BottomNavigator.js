@@ -3,7 +3,7 @@ import HomeScreen from "../../screens/homeScreen/HomeScreen";
 import MySessionsScreen from "../../screens/mySessionsScreen/MySessionsScreen";
 import MyProfileScreen from "../../screens/myProfileScreen/MyProfileScreen";
 import ReferScreen from "../../screens/ReferScreen/ReferScreen";
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import {
   faChild,
   faClipboardList,
@@ -17,13 +17,38 @@ import MembershipScreen from "../../screens/myProfileScreen/MembershipScreen";
 import { useSelector } from "react-redux";
 import OverviewScreen from "../../screens/overview/OverviewScreen";
 import { useCopilot } from "react-native-copilot";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createMaterialBottomTabNavigator();
 
+const steps = [
+  {
+    name: "step_1",
+    text: "This is the Free Sessions section",
+    order: 1,
+  },
+  {
+    name: "step_2",
+    text: "This is the Contribute section",
+    order: 2,
+  },
+  {
+    name: "step_3",
+    text: "This is the Trips section",
+    order: 3,
+  },
+  {
+    name: "step_4",
+    text: "This is the Get Help section",
+    order: 4,
+  },
+];
+
 export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
-  const {start,copilotEvents} = useCopilot();
-  // alert(JSON.stringify(profile));
+  const navigation = useNavigation();
+  const { start, registerStep, unregisterStep, copilotEvents } = useCopilot();
+
   return (
     <Tab.Navigator
       initialRouteName="OverviewScreen"
@@ -46,7 +71,7 @@ export default function BottomNavigator() {
       <Tab.Screen
         name="OverviewScreen"
         children={(props) => (
-          <OverviewScreen propProfile={profile} {...props} />
+          <OverviewScreen propProfile={profile} {...props} start={start} />
         )}
         options={{
           tabBarLabel: "Home",
