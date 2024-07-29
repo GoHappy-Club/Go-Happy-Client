@@ -9,9 +9,13 @@ import {
 } from "react-native";
 import { Linking } from "react-native";
 //import axios from "axios";
+import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
+const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const [whatsappLink, setWhatsappLink] = useState("");
+  const { start, copilotEvents } = useCopilot();
+  const walktroughStarted = useRef(false);
   const data1 = [
     {
       title: "Free Sessions",
@@ -40,7 +44,30 @@ export default function Sections(props) {
     },
   ];
 
-  const data2 = [];
+  const handleFinish = () => {
+    props.navigation.navigate("HomeScreen");
+  };
+
+  useEffect(() => {
+    if (!walktroughStarted.current) {
+      const timer = setTimeout(() => {
+        start();
+        walktroughStarted.current = true;
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [start]);
+
+  useEffect(() => {
+    copilotEvents.on("stop", () => {
+      // props.navigation.navigate("HomeScreen");
+    });
+    copilotEvents.on("finish", handleFinish);
+    return () => {
+      copilotEvents.off("stop");
+    };
+  }, [copilotEvents]);
 
   useEffect(() => {
     async function handleHelp() {
@@ -70,36 +97,14 @@ export default function Sections(props) {
       </View>
 
       <View style={styles.sectionsContainer}>
-        {data1.map((item) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                if (item.type && item.type === "external") {
-                  Linking.openURL(whatsappLink);
-                } else {
-                  props.navigation.navigate(item.link);
-                }
-              }}
-              key={item.title}
-            >
-              <View style={styles.container}>
-                <Image
-                  source={{ uri: item.imgUrl }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-
-                <Text style={styles.text}>{item.title}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-
-      {data2.length > 0 && (
-        <View style={{ ...styles.sectionsContainer, marginTop: "3%" }}>
-          {data2.map((item) => {
-            return (
+        {data1.map((item, index) => (
+          <CopilotStep
+            key={index}
+            text={`This is the ${item.title} section`}
+            order={index + 1}
+            name={`step_${index + 1}`}
+          >
+            <Walkthroughable>
               <TouchableOpacity
                 onPress={() => {
                   if (item.type && item.type === "external") {
@@ -108,17 +113,20 @@ export default function Sections(props) {
                     props.navigation.navigate(item.link);
                   }
                 }}
-                key={item.title}
               >
                 <View style={styles.container}>
-                  <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                  <Image
+                    source={{ uri: item.imgUrl }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
                   <Text style={styles.text}>{item.title}</Text>
                 </View>
               </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
+            </Walkthroughable>
+          </CopilotStep>
+        ))}
+      </View>
     </View>
   );
 }
@@ -170,5 +178,18 @@ const styles = StyleSheet.create({
   subText: {
     marginHorizontal: 10,
     fontSize: 12,
+  },
+  startButton: {
+    color: "#29BFC2",
+    textAlign: "center",
+    margin: 10,
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
+  walkthroughableView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
