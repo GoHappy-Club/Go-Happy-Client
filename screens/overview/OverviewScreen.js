@@ -42,12 +42,13 @@ class OverviewScreen extends Component {
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     this.walkthroughStarted = React.createRef();
+    this.timer = null;
     // alert(JSON.stringify(props));
   }
 
   componentDidMount() {
     if (!this.walkthroughStarted.current) {
-      const timer=setTimeout(() => {
+      this.timer=setTimeout(() => {
         this.props.start(false, this.scrollView);
         this.walkthroughStarted.current = true;
       }, 3000);
@@ -55,7 +56,7 @@ class OverviewScreen extends Component {
   }
 
   componentWillUnmount(){
-    clearTimeout(timer);
+    clearTimeout(this.timer);
   }
 
   async getOverviewData() {
