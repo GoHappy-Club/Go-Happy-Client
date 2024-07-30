@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import MembershipScreen from "../../screens/myProfileScreen/MembershipScreen";
 import { useSelector } from "react-redux";
 import OverviewScreen from "../../screens/overview/OverviewScreen";
+import { Colors } from "../../constants/Colors";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -35,7 +36,7 @@ export default function BottomNavigator() {
         elevation: 64,
         borderTopLeftRadius: 21,
         borderTopRightRadius: 21,
-        backgroundColor: "#fff",
+        backgroundColor: Colors.white,
         padding: 10,
         zIndex: 10000,
       }}
@@ -51,7 +52,11 @@ export default function BottomNavigator() {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHome} color={"#2f2f31"} size={25} />
+            <FontAwesomeIcon
+              icon={faHome}
+              color={Colors.greyishText}
+              size={25}
+            />
           ),
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
@@ -69,7 +74,7 @@ export default function BottomNavigator() {
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon
               icon={faClipboardList}
-              color={"#2f2f31"}
+              color={Colors.greyishText}
               size={25}
             />
           ),
@@ -85,7 +90,7 @@ export default function BottomNavigator() {
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon
               icon={faClipboardList}
-              color={"#2f2f31"}
+              color={Colors.greyishText}
               size={25}
             />
           ),
@@ -108,7 +113,11 @@ export default function BottomNavigator() {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHandshake} color={"#2f2f31"} size={25} />
+            <FontAwesomeIcon
+              icon={faHandshake}
+              color={Colors.greyishText}
+              size={25}
+            />
           ),
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: "gray",
@@ -122,7 +131,11 @@ export default function BottomNavigator() {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faTrophy} color={"#2f2f31"} size={25} />
+            <FontAwesomeIcon
+              icon={faTrophy}
+              color={Colors.greyishText}
+              size={25}
+            />
           ),
         }}
       />
@@ -136,7 +149,11 @@ export default function BottomNavigator() {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faChild} color={"#2f2f31"} size={25} />
+            <FontAwesomeIcon
+              icon={faChild}
+              color={Colors.greyishText}
+              size={25}
+            />
           ),
         }}
       />

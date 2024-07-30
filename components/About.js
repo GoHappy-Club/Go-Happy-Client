@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 
 import { Text } from 'react-native-elements';
+import { Colors } from '../constants/Colors';
 
 export default class About extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export default class About extends Component {
     return (
       <View
         style={{
-          backgroundColor: 'white',
+          backgroundColor: Colors.white,
           flex: 1,
           alignItems: 'center',
         }}

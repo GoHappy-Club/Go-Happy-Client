@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
 import { loadDate, trimContent } from "../../commonComponents/helpers";
+import { Colors } from "../../constants/Colors";
 
 class TripsList extends Component {
   constructor(props) {
@@ -88,7 +89,7 @@ class TripsList extends Component {
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              color: "#2f2f31",
+              color: Colors.greyishText,
             }}
           >
             No Upcoming Trips 😟
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 36,
-    color: "white",
+    color: Colors.white,
     // marginTop: "auto",
     alignSelf: "flex-start",
     // width: "10%",
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
   subText: {
     alignSelf: "flex-start",
     fontSize: 12,
-    color: "white",
+    color: Colors.white,
     // marginTop: "auto",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     paddingBottom: "1%",

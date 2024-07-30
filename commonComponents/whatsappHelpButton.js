@@ -4,6 +4,7 @@ import { FAB } from "react-native-paper";
 import { Linking } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { Colors } from "../constants/Colors";
 const WhatsAppFAB = ({ url }) => {
   const handlePress = async () => {
     ////console.log("url is ", url);
@@ -51,13 +52,13 @@ const styles = StyleSheet.create({
     right: 16,
   },
   fab: {
-    backgroundColor: "#25D366",
+    backgroundColor: Colors.whatsappButton,
   },
   logo: {
     width: 24,
     height: 24,
     alignSelf: "center",
-    backgroundColor: "white", // set background color for image
+    backgroundColor: Colors.white, // set background color for image
     borderRadius: 20, // make the image round
     padding: 4, // add some padding to the image
   },

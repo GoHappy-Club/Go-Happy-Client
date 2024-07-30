@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faWifi } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-native-elements';
+import { Colors } from '../constants/Colors';
 
 class ErrorScreen extends Component {
   constructor(props) {
@@ -38,10 +39,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
   },
   icon: {
-    color: '#000',
+    color: Colors.black,
     marginBottom: 20,
   },
   errorText: {
@@ -49,13 +50,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    color: '#000',
+    color: Colors.black,
   },
   subtext: {
     fontSize: 14,
     marginBottom: 20,
     textAlign: 'center',
-    color: '#000',
+    color: Colors.black,
   },
   button: {
     backgroundColor: '#38434D',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   Card,
   CardAction,
@@ -6,7 +6,7 @@ import {
   CardContent,
   CardImage,
   CardTitle,
-} from 'react-native-cards';
+} from "react-native-cards";
 import {
   Dimensions,
   Image,
@@ -20,9 +20,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
+} from "react-native";
 
-import { Button, Text } from 'react-native-elements';
+import { Button, Text } from "react-native-elements";
 import {
   Cell,
   Col,
@@ -31,7 +31,8 @@ import {
   Rows,
   Table,
   TableWrapper,
-} from 'react-native-table-component';
+} from "react-native-table-component";
+import { Colors } from "../constants/Colors";
 
 export default class TambolaTicket extends Component {
   constructor(props) {
@@ -39,12 +40,12 @@ export default class TambolaTicket extends Component {
     this.state = {
       modalVisible: false,
       tambolaTicket1: [
-        [0, 0, 0, 0, '-', 0, 0, 0, 0],
+        [0, 0, 0, 0, "-", 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
       ],
       tambolaTicket: [
-        [0, 0, 0, 0, '-', 0, 0, 0, 0],
+        [0, 0, 0, 0, "-", 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
       ],
@@ -92,19 +93,19 @@ export default class TambolaTicket extends Component {
           for (var i = 0; i < 9; i++) {
             tic[0][i] = parseInt(temp[i]);
             if (tic[0][i] == 0) {
-              tic[0][i] = '';
+              tic[0][i] = "";
             }
           }
           for (var i = 9; i < 18; i++) {
             tic[1][i - 9] = parseInt(temp[i]);
             if (tic[1][i - 9] == 0) {
-              tic[1][i - 9] = '';
+              tic[1][i - 9] = "";
             }
           }
           for (var i = 18; i < 27; i++) {
             tic[2][i - 18] = parseInt(temp[i]);
             if (tic[2][i - 18] == 0) {
-              tic[2][i - 18] = '';
+              tic[2][i - 18] = "";
             }
           }
 
@@ -121,7 +122,7 @@ export default class TambolaTicket extends Component {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            Alert.alert("Modal has been closed.");
             this.props.setModalVisible(!this.state.modalVisible);
           }}
         >
@@ -132,7 +133,7 @@ export default class TambolaTicket extends Component {
                 <Table
                   borderStyle={{
                     borderWidth: 1,
-                    borderColor: '#ffa1d2',
+                    borderColor: Colors.pink.tambola,
                   }}
                 >
                   <Rows
@@ -142,7 +143,7 @@ export default class TambolaTicket extends Component {
                   />
                 </Table>
               )}
-              <Text style={{ textAlign: 'left', marginTop: '5%' }}>
+              <Text style={{ textAlign: "left", marginTop: "5%" }}>
                 Ticket Number: {this.state.ticketNumber}
               </Text>
               <Pressable
@@ -155,7 +156,7 @@ export default class TambolaTicket extends Component {
           </View>
         </Modal>
         {this.props != null &&
-          this.props.event.eventName.indexOf('Tambola') >= 0 &&
+          this.props.event.eventName.indexOf("Tambola") >= 0 &&
           this.props.phoneNumber != null &&
           this.props.event.participantList != null &&
           this.props.event.participantList.indexOf(this.props.phoneNumber) !=
@@ -174,18 +175,18 @@ export default class TambolaTicket extends Component {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
     // marginBottom:100
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: Colors.white,
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -201,28 +202,28 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.blue.tambola,
     // marginBottom: 0,
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: Colors.white,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
   HeadStyle: {
     height: 50,
-    alignContent: 'center',
-    backgroundColor: '#ffe0f0',
+    alignContent: "center",
+    backgroundColor: "#ffe0f0",
   },
   TableText: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 12,
   },
 });

@@ -14,6 +14,7 @@ import {
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
 import Trip from "../../components/trips/Trip.js";
+import { Colors } from "../../constants/Colors.js";
 
 class TripDetailsScreen extends Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class TripDetailsScreen extends Component {
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
-        // <ScrollView style={{ backgroundColor: "white" }}>
+        // <ScrollView style={{ backgroundColor: Colors.white }}>
         <Video
           source={require("../../images/logo_splash.mp4")}
           style={{
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
   textContainer: {
     padding: 16,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   coverTitle: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "white",
+    color: Colors.white,
     marginBottom: 0,
   },
   scrollContainer: {
