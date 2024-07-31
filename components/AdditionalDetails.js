@@ -9,6 +9,7 @@ import { bindActionCreators } from "redux";
 import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
 import LinearGradient from "react-native-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -148,7 +149,8 @@ class AdditionalDetails extends Component {
           );
           this.setState({ loader: true });
 
-          this.props.route.params.navigation.replace("Intro");
+          // this.props.route.params.navigation.replace("Intro");
+          AsyncStorage.setItem("showTour","true");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
             phoneNumber: response.data.phoneNumber,
