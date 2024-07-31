@@ -261,7 +261,6 @@ class LoginScreen extends Component {
       .then((user) => {
         this.setState({ userId: user.user.uid });
         try {
-          console.log("here");
           this._backendSignIn(
             user.user.uid,
             user.user.displayName,
