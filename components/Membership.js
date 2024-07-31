@@ -93,7 +93,7 @@ class Membership extends Component {
     var _this = this;
     const _callback = (id) => {
       _this.setState({ success: true });
-      _this.props.navigation.navigate("GoHappy Club")
+      _this.props.navigation.navigate("GoHappy Club");
     };
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
@@ -106,8 +106,7 @@ class Membership extends Component {
     };
     //console.log('propro',this.props.profile)
     if (type == "share") {
-      
-      const tambolaTicket=tambola.generateTicket();
+      const tambolaTicket = tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
           this.props.profile.phoneNumber,
@@ -116,22 +115,26 @@ class Membership extends Component {
           "contribution"
         )
         .then((link) => {
-          //prettier-ignore
-          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
-Please pay on the below link:
-${link}
-The Link will Expire in 20 Minutes.`;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              this.setState({
-                clickPopup: false,
-              });
+          if (link && link !== undefined) {
+            //prettier-ignore
+            const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
+          Please pay on the below link:
+          ${link}
+          The Link will Expire in 20 Minutes.`;
+            Share.share({
+              message: message,
             })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-            });
+              .then((result) => {
+                this.setState({
+                  clickPopup: false,
+                });
+              })
+              .catch((errorMsg) => {
+                console.log("error in sharing", errorMsg);
+              });
+          }else{
+            this.setState({clickPopup:false})
+          }
         });
     } else {
       phonepe_payments.phonePe(
@@ -410,7 +413,9 @@ The Link will Expire in 20 Minutes.`;
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={() => {this.setState({ clickPopup: true })}}
+              onPress={() => {
+                this.setState({ clickPopup: true });
+              }}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>
@@ -552,7 +557,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // width: "auto",
     // flex: 1,
-    color:"black",
+    color: "black",
     fontSize: 36,
     fontWeight: "700",
   },
