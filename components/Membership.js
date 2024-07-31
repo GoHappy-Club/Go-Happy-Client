@@ -115,22 +115,26 @@ class Membership extends Component {
           "contribution"
         )
         .then((link) => {
-          //prettier-ignore
-          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for contribution to GoHappy Club Family.
-Please pay on the below link:
-${link}
-The Link will Expire in 20 Minutes.`;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              this.setState({
-                clickPopup: false,
-              });
+          if (link && link !== undefined) {
+            //prettier-ignore
+            const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
+          Please pay on the below link:
+          ${link}
+          The Link will Expire in 20 Minutes.`;
+            Share.share({
+              message: message,
             })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-            });
+              .then((result) => {
+                this.setState({
+                  clickPopup: false,
+                });
+              })
+              .catch((errorMsg) => {
+                console.log("error in sharing", errorMsg);
+              });
+          } else {
+            this.setState({ clickPopup: false });
+          }
         });
     } else {
       phonepe_payments.phonePe(
