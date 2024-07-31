@@ -20,6 +20,7 @@ import LottieView from "lottie-react-native";
 import Sections from "../../components/overview/Sections.js";
 import { Text } from "react-native";
 import { CopilotStep, walkthroughable } from "react-native-copilot";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Walkthroughable = walkthroughable(View);
 
@@ -46,16 +47,18 @@ class OverviewScreen extends Component {
     // alert(JSON.stringify(props));
   }
 
-  componentDidMount() {
-    if (!this.walkthroughStarted.current) {
-      this.timer=setTimeout(() => {
+  async componentDidMount() {
+    const showTour = await AsyncStorage.getItem("showTour");
+    console.log("showTour===>", showTour);
+    if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
+      this.timer = setTimeout(() => {
         this.props.start(false, this.scrollView);
         this.walkthroughStarted.current = true;
       }, 3000);
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     clearTimeout(this.timer);
   }
 
