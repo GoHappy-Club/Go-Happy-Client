@@ -2,7 +2,6 @@ import { getPayload } from "../../services/PhonePe/PaymentServices";
 import React, { Component } from "react";
 import axios from "axios";
 import PhonePePaymentSDK from "react-native-phonepe-pg";
-import { generateShareLink } from "../../services/PhonePe/GenerateSharePage";
 
 class Payments extends Component {
   constructor(props) {
