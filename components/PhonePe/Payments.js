@@ -1,5 +1,6 @@
 import { getPayload } from "../../services/PhonePe/PaymentServices";
 import React, { Component } from "react";
+import axiosWithoutAuth from "axios";
 
 import PhonePePaymentSDK from "react-native-phonepe-pg";
 
@@ -35,6 +36,7 @@ class Payments extends Component {
     payload = await getPayload(phone, amount * 100, paymentType,orderId,tambolaTicket);
     requestBody = payload.requestBody;
     checksum = payload.checksum;
+
     const options = {
       method: "post",
       url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
@@ -48,7 +50,7 @@ class Payments extends Component {
       },
     };
     try {
-      const response = await axios.request(options);
+      const response = await axiosWithoutAuth.request(options);
     const shareableLink =
       response.data.data.instrumentResponse.redirectInfo.url;
     return shareableLink
@@ -89,7 +91,6 @@ class Payments extends Component {
   }
   async startTransaction(phone, amount, callback, error_handler, paymentType) {
     payload = await getPayload(phone, amount * 100, paymentType);
-    console.log(payload);
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     PhonePePaymentSDK.startTransaction(
