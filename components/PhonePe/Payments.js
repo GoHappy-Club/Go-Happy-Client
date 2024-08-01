@@ -1,8 +1,8 @@
 import { getPayload } from "../../services/PhonePe/PaymentServices";
 import React, { Component } from "react";
+import axiosWithoutAuth from "axios";
 
 import PhonePePaymentSDK from "react-native-phonepe-pg";
-import { generateShareLink } from "../../services/PhonePe/GenerateSharePage";
 
 class Payments extends Component {
   constructor(props) {
@@ -37,12 +37,28 @@ class Payments extends Component {
     requestBody = payload.requestBody;
     checksum = payload.checksum;
 
-    const shareableLink = await generateShareLink(checksum,requestBody)
-    if(shareableLink){
-      return shareableLink
-    }else{
-      error_handler()
+    const options = {
+      method: "post",
+      url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-VERIFY": checksum,
+      },
+      data: {
+        request: requestBody,
+      },
+    };
+    try {
+      const response = await axiosWithoutAuth.request(options);
+    const shareableLink =
+      response.data.data.instrumentResponse.redirectInfo.url;
+    return shareableLink
+    } catch (error) {
+      error_handler();
+      console.log("Error in paymentjs==>", error)
     }
+    
   }
   phonePe(phone, amount, callback, error_handler, paymentType) {
     //console.log('phonepe')
