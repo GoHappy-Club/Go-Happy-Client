@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 export const setSessionAttended = (phone) => {
   var url = SERVER_URL + '/user/sessionAttended';

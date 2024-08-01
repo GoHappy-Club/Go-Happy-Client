@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { setProfile } from '../../redux/actions/counts.js';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
