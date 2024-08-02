@@ -9,38 +9,51 @@ import {
 } from "react-native";
 import { Linking } from "react-native";
 import axios from "axios";
+import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
+const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const [whatsappLink, setWhatsappLink] = useState("");
+  const { start, copilotEvents } = useCopilot();
+  const walktroughStarted = useRef(false);
   const data1 = [
     {
       title: "Free Sessions",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
+      text: "Click here to explore and book free sessions tailored just for you!"
     },
     {
       title: "Contribute",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
       link: "MembershipScreen",
+      text: "Help us make a difference! Click here to learn how you can contribute."
     },
     {
       title: "Trips",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
       link: "Trips",
+      text: "Discover exciting trips and adventures! Click here to see our upcoming trips."
     },
     {
       title: "Get Help",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
-      link: props.helpUrl,
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
+      link: "props.helpUrl",
       type: "external",
-    },
-  ];
+      text: "Need assistance? Click here to get help and find the support you need."
+    }
+  ];  
 
-  const data2 = [];
+  // useEffect(() => {
+  //   if (!walktroughStarted.current) {
+  //     const timer = setTimeout(() => {
+  //       start();
+  //       walktroughStarted.current = true;
+  //     }, 3000);
+
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [start]);
 
   useEffect(() => {
     async function handleHelp() {
@@ -70,36 +83,14 @@ export default function Sections(props) {
       </View>
 
       <View style={styles.sectionsContainer}>
-        {data1.map((item) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                if (item.type && item.type === "external") {
-                  Linking.openURL(whatsappLink);
-                } else {
-                  props.navigation.navigate(item.link);
-                }
-              }}
-              key={item.title}
-            >
-              <View style={styles.container}>
-                <Image
-                  source={{ uri: item.imgUrl }}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-
-                <Text style={styles.text}>{item.title}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-
-      {data2.length > 0 && (
-        <View style={{ ...styles.sectionsContainer, marginTop: "3%" }}>
-          {data2.map((item) => {
-            return (
+        {data1.map((item, index) => (
+          <CopilotStep
+            key={index}
+            text={item.text}
+            order={index + 1}
+            name={`step_${index + 1}`}
+          >
+            <Walkthroughable>
               <TouchableOpacity
                 onPress={() => {
                   if (item.type && item.type === "external") {
@@ -108,17 +99,20 @@ export default function Sections(props) {
                     props.navigation.navigate(item.link);
                   }
                 }}
-                key={item.title}
               >
                 <View style={styles.container}>
-                  <Image source={{ uri: item.imgUrl }} style={styles.image} />
+                  <Image
+                    source={{ uri: item.imgUrl }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
                   <Text style={styles.text}>{item.title}</Text>
                 </View>
               </TouchableOpacity>
-            );
-          })}
-        </View>
-      )}
+            </Walkthroughable>
+          </CopilotStep>
+        ))}
+      </View>
     </View>
   );
 }
@@ -170,5 +164,18 @@ const styles = StyleSheet.create({
   subText: {
     marginHorizontal: 10,
     fontSize: 12,
+  },
+  startButton: {
+    color: "#29BFC2",
+    textAlign: "center",
+    margin: 10,
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
+  walkthroughableView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

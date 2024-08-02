@@ -23,26 +23,25 @@ class HomeScreen extends Component {
       whatsappLink: "",
     };
     crashlytics().log(JSON.stringify(props.propProfile));
-    this._retrieveData()
+    this._retrieveData();
     // alert(JSON.stringify(props));
   }
 
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber")
-      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode")
+      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
       if (value !== null) {
         // We have data!!
-        this.setState({ email: value});
-        this.setState({phoneNumber: phoneNumber})
-        this.setState({selfInviteCode: selfInviteCode})
+        this.setState({ email: value });
+        this.setState({ phoneNumber: phoneNumber });
+        this.setState({ selfInviteCode: selfInviteCode });
       }
     } catch (error) {
       // Error retrieving data
     }
   };
-
 
   async getProperties() {
     var url = SERVER_URL + "/properties/list";
@@ -74,6 +73,9 @@ class HomeScreen extends Component {
             loadEvents={this.loadEvents.bind(this)}
             navigation={this.props.navigation}
             deepId={this.props.route.params?.deepId}
+            start={this.props.start}
+            registerStep={this.props.registerStep}
+            copilotEvents={this.props.copilotEvents}
           />
           <WhatsAppFAB
             url={
@@ -140,8 +142,8 @@ class HomeScreen extends Component {
 
   bookEvent(item, phoneNumber, selectedDate) {
     let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
-    if(phoneNumber=="" || phoneNumber==undefined){
-      phoneNumber = this.state.phoneNumber
+    if (phoneNumber == "" || phoneNumber == undefined) {
+      phoneNumber = this.state.phoneNumber;
     }
     //console.log('phone is', phoneNumber)
     var id = item.id;

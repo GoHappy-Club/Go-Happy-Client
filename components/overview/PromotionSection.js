@@ -9,6 +9,9 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { walkthroughable, CopilotStep } from "react-native-copilot";
+
+const Walkthroughable = walkthroughable(TouchableOpacity);
 
 export default class PromotionSection extends Component {
   constructor(props) {
@@ -24,18 +27,19 @@ export default class PromotionSection extends Component {
       {
         id: 1,
         title: "Refer Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
+        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
         to: "Refer",
+        text: "Invite friends to join and benefit! Click here to refer and earn rewards."
       },
       {
         id: 2,
         title: "Contribute Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
+        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
         to: "MembershipScreen",
-      },
+        text: "Support our mission! Click here to learn how you can contribute and make an impact."
+      }
     ];
+    
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headingContainer}>
@@ -44,22 +48,29 @@ export default class PromotionSection extends Component {
           <View style={styles.line} />
         </View>
         <View style={styles.cardsContainer}>
-          {data.map((item) => {
+          {data.map((item, index) => {
             return (
-              <TouchableOpacity
-                style={styles.touchable}
-                onPress={() => {
-                  this.props.navigation.navigate(item.to);
-                }}
+              <CopilotStep
+                name={item.title}
+                order={index + 5}
+                text={item.text}
+                key={index}
               >
-                {/* <View style={styles.card}> */}
-                <Image
-                  source={{ uri: item.image }}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                {/* </View> */}
-              </TouchableOpacity>
+                <Walkthroughable
+                  style={styles.touchable}
+                  onPress={() => {
+                    this.props.navigation.navigate(item.to);
+                  }}
+                >
+                  {/* <View style={styles.card}> */}
+                  <Image
+                    source={{ uri: item.image }}
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                  {/* </View> */}
+                </Walkthroughable>
+              </CopilotStep>
             );
           })}
         </View>

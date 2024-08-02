@@ -68,10 +68,14 @@ class HomeDashboard extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.profile.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.profile.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
-  
+
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");

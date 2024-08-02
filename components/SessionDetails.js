@@ -24,6 +24,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -42,11 +43,10 @@ export default class SessionDetails extends Component {
     };
   }
 
-
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +64,17 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +104,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -199,15 +201,19 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -532,20 +538,18 @@ export default class SessionDetails extends Component {
           </View>
         </ScrollView>
 
-        <View style={{ margin: 15 }}>
-          <Button
-            disabled={this.isDisabled()}
-            outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
-            title={this.getTitle()}
-            loading={this.state.loadingButton}
-            onPress={
-              item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
-                : this.sessionAction.bind(this)
-            }
-          ></Button>
-        </View>
+        <Button
+          disabled={this.isDisabled()}
+          outline
+          buttonStyle={{ backgroundColor: "#29BFC2" }}
+          title={this.getTitle()}
+          loading={this.state.loadingButton}
+          onPress={
+            item.costType == "paid" && this.getTitle() == "Book"
+              ? this.phonePeWrapper.bind(this, item)
+              : this.sessionAction.bind(this)
+          }
+        ></Button>
 
         {item.recordingLink != null && (
           <Modal
