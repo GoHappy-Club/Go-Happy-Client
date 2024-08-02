@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Dimensions,
   Image,
   Linking,
   Modal,
@@ -10,9 +11,7 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-
 import phonepe_payments from "./PhonePe/Payments.js";
-
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -24,12 +23,16 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import CountdownTimer from "../commonComponents/countdown.js";
+
+const WIDTH = Dimensions.get("window").width;
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       showAlert: false,
+      showBookAlert: false,
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
@@ -39,14 +42,15 @@ export default class SessionDetails extends Component {
       videoVisible: false,
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
+      showCountdown: false,
+      title: "",
     };
   }
-
 
   async phonePeWrapper(item) {
     var _this = this;
     const _callback = (id) => {
-      this.setState({ success: true , loadingButton: false});
+      this.setState({ success: true, loadingButton: false });
 
       var _this = this;
       if (id === "") {
@@ -64,14 +68,19 @@ export default class SessionDetails extends Component {
       });
       this.setState({ showPaymentAlert: true });
     };
-    phonepe_payments.phonePe(this.props.phoneNumber,item.cost,_callback,_errorHandler)
-    
+    phonepe_payments.phonePe(
+      this.props.phoneNumber,
+      item.cost,
+      _callback,
+      _errorHandler
+    );
   }
 
-  
   componentDidMount() {
     this.createDynamicReferralLink();
-    this.setState({loadingButton: false})
+    this.setState({ loadingButton: false });
+    const title = this.getTitle();
+    this.setState({ title: title });
   }
 
   createDynamicReferralLink = async () => {
@@ -101,7 +110,6 @@ export default class SessionDetails extends Component {
     this.setState({ referralLink: link1 });
   };
   isDisabled() {
-    
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
@@ -199,15 +207,19 @@ export default class SessionDetails extends Component {
       toUnicodeVariant("GoHappy Club", "bold") +
       ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
       toUnicodeVariant("FREE", "bold") +
-      ". \n \nClick on the link below: \n"+ url;
+      ". \n \nClick on the link below: \n" +
+      url;
     // template = template.replace;
     return template;
   }
-  shareMessage = async(item) =>  {
+  shareMessage = async (item) => {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(item, "https://www.gohappyclub.in/session_details/" + item.id)
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
     Share.share({
       message: sessionShareMessage,
     })
@@ -532,18 +544,48 @@ export default class SessionDetails extends Component {
           </View>
         </ScrollView>
 
-        <View style={{ margin: 15 }}>
+        <View
+          style={{
+            margin:this.state.title=="Cancel Your Booking"?15:0,
+            flexDirection:
+              this.state.title == "Cancel Your Booking" ? "row" : "column",
+            justifyContent:
+              this.state.title == "Cancel Your Booking"
+                ? "space-evenly"
+                : "center",
+            alignItems:
+              this.state.title == "Cancel Your Booking" ? "center" : "",
+            gap: 15,
+          }}
+        >
+          {this.state.title == "Cancel Your Booking" && (
+            <CountdownTimer
+              targetTime={item.startTime}
+              height={35}
+              width={35}
+              textSize={15}
+              separatorSize={20}
+            />
+          )}
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: "#29BFC2",minWidth:180 }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={
-              item.costType == "paid" && this.getTitle() == "Book"
-                ? this.phonePeWrapper.bind(this, item)
-                : this.sessionAction.bind(this)
-            }
+            onPress={() => {
+              const title = this.getTitle();
+              this.setState({ title: title });
+              if (this.getTitle() === "Cancel Your Booking") {
+                this.setState({ showBookAlert: true });
+              } else if (item.costType == "paid" && this.getTitle() == "Book") {
+                this.phonePeWrapper();
+                return;
+              } else {
+                this.sessionAction();
+                return;
+              }
+            }}
           ></Button>
         </View>
 
@@ -601,6 +643,66 @@ export default class SessionDetails extends Component {
                 paymentAlertTitle: "Success",
               });
             }}
+          />
+        )}
+        {this.state.showBookAlert && (
+          <AwesomeAlert
+            show={this.state.showBookAlert}
+            showProgress={false}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            customView={
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    marginVertical:10,
+                    fontWeight:"bold"
+                  }}
+                >
+                  Your Session is starting in :
+                </Text>
+                <CountdownTimer targetTime={item.startTime} />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    textAlign: "center",
+                    marginVertical: 15,
+                  }}
+                >
+                  Are you sure you want to cancel your booking?
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: 190,
+                  }}
+                >
+                  <Button
+                    title="Yes"
+                    buttonStyle={{ backgroundColor: "#DD6B55", width: 80 }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                      this.sessionAction();
+                    }}
+                  />
+
+                  <Button
+                    title="No"
+                    buttonStyle={{ backgroundColor: "lightgrey", width: 80 }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                    }}
+                  />
+                </View>
+              </View>
+            }
           />
         )}
       </View>
