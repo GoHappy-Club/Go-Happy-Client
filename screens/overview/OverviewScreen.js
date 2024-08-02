@@ -49,7 +49,6 @@ class OverviewScreen extends Component {
 
   async componentDidMount() {
     const showTour = await AsyncStorage.getItem("showTour");
-    console.log("showTour===>", showTour);
     if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
       this.timer = setTimeout(() => {
         this.props.start(false, this.scrollView);

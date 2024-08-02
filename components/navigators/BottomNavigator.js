@@ -21,33 +21,11 @@ import { useNavigation } from "@react-navigation/native";
 
 const Tab = createMaterialBottomTabNavigator();
 
-const steps = [
-  {
-    name: "step_1",
-    text: "This is the Free Sessions section",
-    order: 1,
-  },
-  {
-    name: "step_2",
-    text: "This is the Contribute section",
-    order: 2,
-  },
-  {
-    name: "step_3",
-    text: "This is the Trips section",
-    order: 3,
-  },
-  {
-    name: "step_4",
-    text: "This is the Get Help section",
-    order: 4,
-  },
-];
 
 export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
   const navigation = useNavigation();
-  const { start, registerStep, unregisterStep, copilotEvents } = useCopilot();
+  const { start } = useCopilot();
 
   return (
     <Tab.Navigator

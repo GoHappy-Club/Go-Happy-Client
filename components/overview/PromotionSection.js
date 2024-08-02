@@ -27,18 +27,19 @@ export default class PromotionSection extends Component {
       {
         id: 1,
         title: "Refer Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
+        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
         to: "Refer",
+        text: "Invite friends to join and benefit! Click here to refer and earn rewards."
       },
       {
         id: 2,
         title: "Contribute Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
+        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
         to: "MembershipScreen",
-      },
+        text: "Support our mission! Click here to learn how you can contribute and make an impact."
+      }
     ];
+    
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headingContainer}>
@@ -52,7 +53,7 @@ export default class PromotionSection extends Component {
               <CopilotStep
                 name={item.title}
                 order={index + 5}
-                text={`This is the ${item.title} Section`}
+                text={item.text}
                 key={index}
               >
                 <Walkthroughable
