@@ -19,30 +19,30 @@ export default function Sections(props) {
   const data1 = [
     {
       title: "Free Sessions",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
+      text: "Click here to explore and book free sessions tailored just for you!"
     },
     {
       title: "Contribute",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
       link: "MembershipScreen",
+      text: "Help us make a difference! Click here to learn how you can contribute."
     },
     {
       title: "Trips",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
       link: "Trips",
+      text: "Discover exciting trips and adventures! Click here to see our upcoming trips."
     },
     {
       title: "Get Help",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
-      link: props.helpUrl,
+      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
+      link: "props.helpUrl",
       type: "external",
-    },
-  ];
+      text: "Need assistance? Click here to get help and find the support you need."
+    }
+  ];  
 
   // useEffect(() => {
   //   if (!walktroughStarted.current) {
@@ -86,7 +86,7 @@ export default function Sections(props) {
         {data1.map((item, index) => (
           <CopilotStep
             key={index}
-            text={`This is the ${item.title} section`}
+            text={item.text}
             order={index + 1}
             name={`step_${index + 1}`}
           >
