@@ -1,6 +1,6 @@
 import { getPayload } from "../../services/PhonePe/PaymentServices";
 import React, { Component } from "react";
-
+import axios from "axios";
 import PhonePePaymentSDK from "react-native-phonepe-pg";
 
 class Payments extends Component {
@@ -31,8 +31,21 @@ class Payments extends Component {
   PaymentError() {
     return "Your payment could not be processed. Please try again later.";
   }
-  async phonePeShare(phone, amount, error_handler, paymentType,orderId,tambolaTicket) {
-    payload = await getPayload(phone, amount * 100, paymentType,orderId,tambolaTicket);
+  async phonePeShare(
+    phone,
+    amount,
+    error_handler,
+    paymentType,
+    orderId,
+    tambolaTicket
+  ) {
+    payload = await getPayload(
+      phone,
+      amount * 100,
+      paymentType,
+      orderId,
+      tambolaTicket
+    );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     const options = {
@@ -49,14 +62,13 @@ class Payments extends Component {
     };
     try {
       const response = await axios.request(options);
-    const shareableLink =
-      response.data.data.instrumentResponse.redirectInfo.url;
-    return shareableLink
+      console.log(response);
+      const shareableLink =
+        response.data.data.instrumentResponse.redirectInfo.url;
+      return shareableLink;
     } catch (error) {
       error_handler();
-      console.log("Error in paymentjs==>", error)
     }
-    
   }
   phonePe(phone, amount, callback, error_handler, paymentType) {
     //console.log('phonepe')

@@ -1,4 +1,10 @@
-export async function getPayload(phone, amount, paymentType,orderId,tambolaTicket) {
+export async function getPayload(
+  phone,
+  amount,
+  paymentType,
+  orderId,
+  tambolaTicket
+) {
   var url = SERVER_URL + "/phonePe/generatePayload";
   try {
     const response = await axios.post(url, {
@@ -6,7 +12,7 @@ export async function getPayload(phone, amount, paymentType,orderId,tambolaTicke
       amount: amount,
       paymentType: paymentType,
       orderId: orderId,
-      tambolaTicket:tambolaTicket
+      tambolaTicket: tambolaTicket,
     });
     if (response.data) {
       return response.data;

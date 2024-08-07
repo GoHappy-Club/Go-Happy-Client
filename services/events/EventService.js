@@ -1,7 +1,5 @@
-import axios from 'axios';
-
 export const setSessionAttended = (phone) => {
-  var url = SERVER_URL + '/user/sessionAttended';
+  var url = SERVER_URL + "/user/sessionAttended";
   axios
     .post(url, { phone: phone })
     .then((response) => {})
@@ -11,37 +9,35 @@ export const setSessionAttended = (phone) => {
 };
 
 export const getEvent = (id) => {
-  var url = SERVER_URL + '/event/getEvent';
+  var url = SERVER_URL + "/event/getEvent";
   ////console.log(id)
   return axios.post(url, { id: id });
 };
 
-export const getTitle = (item,phoneNumber) => {
-  var isOngoing = false
+export const getTitle = (item, phoneNumber) => {
+  var isOngoing = false;
   if (item.startTime - 600000 <= new Date().getTime()) {
-    isOngoing = true
+    isOngoing = true;
   }
-    if (item.participantList == null) {
-      return "Book";
-    }
-    const isParticipant = item.participantList.includes(
-      phoneNumber
-    );
+  if (item.participantList == null) {
+    return "Book";
+  }
+  const isParticipant = item.participantList.includes(phoneNumber);
 
-    if (isOngoing && isParticipant) {
-      return "Join";
-    } else if (isParticipant) {
-      return "Booked";
-    } else if (item.seatsLeft == 0) {
-      return "Seats Full";
-    } else {
-      return "Book";
-    }
-}
+  if (isOngoing && isParticipant) {
+    return "Join";
+  } else if (isParticipant) {
+    return "Booked";
+  } else if (item.seatsLeft == 0) {
+    return "Seats Full";
+  } else {
+    return "Book";
+  }
+};
 
-export const getTitle_for_details = (item,phoneNumber,type) => {
+export const getTitle_for_details = (item, phoneNumber, type) => {
   var currTime = Date.now();
-  // var title = 
+  // var title =
   if (type == "expired") {
     return "View Recording";
   }
@@ -65,4 +61,4 @@ export const getTitle_for_details = (item,phoneNumber,type) => {
     return "Seats Full";
   }
   return "Book";
-}
+};

@@ -82,10 +82,16 @@ export default class SessionDetails extends Component {
         .then((link) => {
           //prettier-ignore
           const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(this.state.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(item.cost),"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
+${toUnicodeVariant(
+  this.state.name,
+  "italic"
+)} is requesting a payment of ₹${toUnicodeVariant(
+            String(item.cost),
+            "bold"
+          )} for ${toUnicodeVariant(item.eventName, "bold")}.
 Please make your payment using the link below:
 ${link}
-${toUnicodeVariant("Note","bold")}: The link will expire in 20 minutes.`;
+${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           Share.share({
             message: message,
           })
