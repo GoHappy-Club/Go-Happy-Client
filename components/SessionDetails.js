@@ -89,7 +89,7 @@ ${toUnicodeVariant(
             String(item.cost),
             "bold"
           )} for ${toUnicodeVariant(item.eventName, "bold")}.
-Please make your payment using the link below:
+Please make the payment using the link below:
 ${link}
 ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           Share.share({

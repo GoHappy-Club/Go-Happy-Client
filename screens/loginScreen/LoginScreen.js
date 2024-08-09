@@ -268,7 +268,7 @@ class LoginScreen extends Component {
             user.user.phoneNumber
           );
         } catch (error) {
-          console.log("Error in handleVerify==>",error);
+          console.log("Error in handleVerify==>", error);
         }
         //   this.setState({ loadingButton:false });
       })
@@ -494,7 +494,7 @@ class LoginScreen extends Component {
         }
       })
       .catch((error) => {
-        console.log("Error in backendSignin",error);
+        console.log("Error in backendSignin", error);
       });
   }
   pending(name, phone) {
@@ -678,7 +678,7 @@ class LoginScreen extends Component {
               <TouchableOpacity
                 onPress={() => {
                   Linking.openURL(
-                    "https://wa.me/7888384477?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+                    "https://wa.me/6280114385?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
                   );
                 }}
               >

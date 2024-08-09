@@ -93,7 +93,7 @@ class Membership extends Component {
     var _this = this;
     const _callback = (id) => {
       _this.setState({ success: true });
-      _this.props.navigation.navigate("GoHappy Club")
+      _this.props.navigation.navigate("GoHappy Club");
     };
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
@@ -106,8 +106,7 @@ class Membership extends Component {
     };
     //console.log('propro',this.props.profile)
     if (type == "share") {
-      
-      const tambolaTicket=tambola.generateTicket();
+      const tambolaTicket = tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
           this.props.profile.phoneNumber,
@@ -117,7 +116,7 @@ class Membership extends Component {
         )
         .then((link) => {
           //prettier-ignore
-          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
+          const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for contribution to GoHappy Club Family.
 Please pay on the below link:
 ${link}
 The Link will Expire in 20 Minutes.`;
@@ -410,7 +409,9 @@ The Link will Expire in 20 Minutes.`;
                 (this.state.amount < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
-              onPress={() => {this.setState({ clickPopup: true })}}
+              onPress={() => {
+                this.setState({ clickPopup: true });
+              }}
             >
               <View>
                 <Text style={styles.optionList}>Click To Pay</Text>
@@ -552,7 +553,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // width: "auto",
     // flex: 1,
-    color:"black",
+    color: "black",
     fontSize: 36,
     fontWeight: "700",
   },
