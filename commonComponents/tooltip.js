@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import {
   View,
@@ -23,6 +24,16 @@ const CustomTooltip = () => {
     registerStep,
   } = useCopilot();
 
+
+  const handleSkip = () => {
+    AsyncStorage.setItem("showTour","false")
+    stop();
+  };
+  const handleFinish = () => {
+    AsyncStorage.setItem("showTour","false")
+    stop();
+  };
+
   return (
     <View style={[styles.container, { width: 280 }]}>
       <Text style={styles.tooltipText}>{currentStep.text}</Text>
@@ -34,7 +45,7 @@ const CustomTooltip = () => {
         )}
         {!isLastStep && (
           <>
-            <TouchableOpacity onPress={stop} style={styles.button}>
+            <TouchableOpacity onPress={handleSkip} style={styles.button}>
               <Text style={styles.buttonText}>Skip</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToNext} style={styles.button}>
@@ -43,7 +54,7 @@ const CustomTooltip = () => {
           </>
         )}
         {isLastStep && (
-          <TouchableOpacity onPress={stop} style={styles.button}>
+          <TouchableOpacity onPress={handleFinish} style={styles.button}>
             <Text style={styles.buttonText}>Finish</Text>
           </TouchableOpacity>
         )}
