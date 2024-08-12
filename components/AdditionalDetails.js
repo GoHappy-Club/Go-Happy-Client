@@ -135,7 +135,9 @@ class AdditionalDetails extends Component {
           if (response.data.age != null) {
             AsyncStorage.setItem("age", response.data.age);
           }
-          AsyncStorage.setItem("token", response.data.token);
+          if(response.data.token != null){
+            AsyncStorage.setItem("token", response.data.token);
+          }
           // this.state.navigation.navigate('DrawerNavigator');
           this.setProfile(
             response.data.name,
@@ -151,6 +153,7 @@ class AdditionalDetails extends Component {
 
           // this.props.route.params.navigation.replace("Intro");
           AsyncStorage.setItem("showTour","true");
+          this.props.navigation.navigate("GoHappy Club");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
             phoneNumber: response.data.phoneNumber,
