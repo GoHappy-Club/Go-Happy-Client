@@ -63,8 +63,22 @@ class Payments extends Component {
     try {
       const response = await axios.request(options);
       console.log(response);
-      const shareableLink =
+      let shareableLink =
         response.data.data.instrumentResponse.redirectInfo.url;
+      const shortenLinkApi =
+        "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
+      const shortenLinkApiCall = await axios
+        .request({
+          method: "get",
+          url: shortenLinkApi,
+        })
+        .then((re) => {
+          console.log(re.data);
+          shareableLink = re.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       return shareableLink;
     } catch (error) {
       error_handler();
