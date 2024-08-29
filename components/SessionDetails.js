@@ -613,6 +613,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               width={35}
               textSize={15}
               separatorSize={20}
+              showText={true}
             />
           )}
           <Button
@@ -635,20 +636,6 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               }
             }}
           ></Button>
-          <CountDown
-            size={20}
-            until={(item.startTime - Date.now()) / 1000}
-            digitStyle={{
-              backgroundColor: "#FFF",
-              borderWidth: 2,
-              borderColor: "#29BFC2",
-            }}
-            digitTxtStyle={{ color: "#29BFC2" }}
-            separatorStyle={{ color: "#29BFC2" }}
-            timeToShow={["H", "M", "S"]}
-            timeLabels={{ h: null, m: null, s: null }}
-            showSeparator
-          />
         </View>
         {this.state.clickPopup && (
           <AwesomeAlert
@@ -749,7 +736,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   style={{
                     fontSize: 20,
                     marginVertical:10,
-                    fontWeight:"bold"
+                    fontWeight:"bold",
+                    textAlign:"center"
                   }}
                 >
                   Your Session is starting in :
@@ -782,7 +770,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
 
                   <Button
                     title="No"
-                    buttonStyle={{ backgroundColor: "lightgrey", width: 80 }}
+                    buttonStyle={{ backgroundColor: "#34983CAF", width: 80 }}
                     onPress={() => {
                       this.setState({ showBookAlert: false });
                     }}
