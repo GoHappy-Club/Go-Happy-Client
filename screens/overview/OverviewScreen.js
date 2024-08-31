@@ -31,7 +31,7 @@ class OverviewScreen extends Component {
       childLoader: false,
       events: [],
       error: true,
-      whatsappLink: "",
+      whatsappLink: "https://chat.whatsapp.com/GXcaodDZLKLGrCMdK8FpUi",
       bannerVisible: true,
       trendingSessions: null,
       upcomingWorkshops: null,
@@ -111,13 +111,7 @@ class OverviewScreen extends Component {
             />
             <PromotionSection navigation={this.props.navigation} />
           </ScrollView>
-          <WhatsAppFAB
-            url={
-              this.props.profile.properties
-                ? this.props.profile.properties.whatsappLink
-                : this.state.whatsappLink
-            }
-          />
+          <WhatsAppFAB url={this.state.whatsappLink} />
         </>
       );
     } else {

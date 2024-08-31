@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { FAB } from "react-native-paper";
 import { Linking } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
+import AwesomeAlert from "react-native-awesome-alerts";
 const WhatsAppFAB = ({ url }) => {
+  const [showAlert, setShowAlert] = useState(false);
   const handlePress = async () => {
     if (url == " " || url == undefined) {
       var url = SERVER_URL + "/properties/list";
@@ -25,19 +27,41 @@ const WhatsAppFAB = ({ url }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress}>
-        <FAB
-          style={styles.fab}
-          icon={() => (
-            <Image
-              source={require("../images/whatsapp.png")}
-              style={styles.logo}
-            />
-          )}
-        />
-      </TouchableOpacity>
-    </View>
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => setShowAlert(true)}>
+          <FAB
+            style={styles.fab}
+            icon={() => (
+              <Image
+                source={require("../images/whatsapp.png")}
+                style={styles.logo}
+              />
+            )}
+          />
+        </TouchableOpacity>
+      </View>
+      {showAlert && <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Join WhatsApp Group"
+                message={"Only for new Members"}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                confirmText="Join"
+                confirmButtonColor="#29BFC2"
+                cancelButtonColor="gray"
+                cancelText="Cancel"
+                onConfirmPressed={() => {
+                  Linking.openURL(url);
+                }}
+                onCancelPressed={() => {
+                  setShowAlert(false);
+                }}
+              />}
+    </>
   );
 };
 

@@ -43,6 +43,7 @@ class Profile extends Component {
       state: "",
       image: null,
       logoutPopup: false,
+      whatsAppAlert: false,
     };
     this._retrieveData();
   }
@@ -158,7 +159,8 @@ class Profile extends Component {
   openWhatsApp = () => {
     // let msg = this.state.message;
     // let mobile = this.state.mobileNo;
-    let url = "https://chat.whatsapp.com/FnEL0tDNlRtEOjYUhehZ1F";
+    // let url = "https://chat.whatsapp.com/FnEL0tDNlRtEOjYUhehZ1F";
+    let url = "https://chat.whatsapp.com/GXcaodDZLKLGrCMdK8FpUi";
     Linking.openURL(url)
       .then((data) => {})
       .catch(() => {
@@ -407,7 +409,7 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={this.openWhatsApp}
+              onPress={() => this.setState({ whatsAppAlert: true })}
             >
               <View>
                 <Text style={styles.optionList}>
@@ -450,6 +452,29 @@ class Profile extends Component {
                 onCancelPressed={() => {
                   this.setState({ logoutPopup: false });
                   this._signout();
+                }}
+              />
+            )}
+            {this.state.whatsAppAlert && (
+              <AwesomeAlert
+                show={this.state.whatsAppAlert}
+                showProgress={false}
+                title="Join WhatsApp Group"
+                message={"This group is only for new members"}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showCancelButton={true}
+                showConfirmButton={true}
+                confirmText="Join"
+                confirmButtonColor="#29BFC2"
+                cancelButtonColor="gray"
+                cancelText="Cancel"
+                onConfirmPressed={() => {
+                  this.setState({ whatsAppAlert: false });
+                  this.openWhatsApp();
+                }}
+                onCancelPressed={() => {
+                  this.setState({ whatsAppAlert: false });
                 }}
               />
             )}
