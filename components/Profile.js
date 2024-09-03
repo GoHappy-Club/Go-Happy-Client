@@ -413,7 +413,7 @@ class Profile extends Component {
             >
               <View>
                 <Text style={styles.optionList}>
-                  Join Whatsapp Support Group
+                  Join Whatsapp Official Group
                 </Text>
               </View>
             </TouchableOpacity>
