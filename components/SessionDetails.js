@@ -30,7 +30,8 @@ import CountdownTimer from "../commonComponents/countdown.js";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-export default class SessionDetails extends Component {
+import { connect } from "react-redux";
+class SessionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -171,6 +172,9 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
   }
   getTitle() {
+    if (this.props.profile.age < 50) {
+      return "Share";
+    }
     var currTime = Date.now();
     if (this.props.type == null) {
     }
@@ -198,7 +202,18 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
     return "Book";
   }
-
+  handleBelowAge() {
+    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient&hl=en_CA&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+    const shareMessage = "Hi ! I found this fantastic app designed specifically for seniors to stay connected and enjoy various features tailored for them. I think you’ll love it! Here’s the link to download:"+link+". Give it a try and let me know what you think! 😊";
+    Share.share({
+      message: shareMessage,
+    })
+      .then((result) => {
+      })
+      .catch((errorMsg) => {
+        console.log("error in sharing", errorMsg);
+      });
+  }
   checkTambola() {
     if (this.props.event.eventName.contains("Tambola")) {
       return true;
@@ -210,6 +225,10 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
       JSON.stringify(this.getTitle()) +
         JSON.stringify(this.props.alreadyBookedSameDayEvent)
     );
+    if (this.getTitle() === "Share") {
+      this.handleBelowAge();
+      return;
+    }
     if (
       this.getTitle() === "Book" &&
       this.props.alreadyBookedSameDayEvent == true
@@ -512,14 +531,19 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   </Text>
 
                   {tambolaHtml && (
-                    <RenderHtml
-                      // contentWidth={width}
-                      tagsStyles={contentHtmlStyles}
-                      source={{
-                        html: tambolaHtml,
-                        // html: item.description,
-                      }}
-                    />
+                    <>
+                      <RenderHtml
+                        // contentWidth={width}
+                        tagsStyles={contentHtmlStyles}
+                        source={{
+                          html: tambolaHtml,
+                          // html: item.description,
+                        }}
+                      />
+                      <View>
+                        <Text>Note : Please draw the ticket on a Paper.</Text>
+                      </View>
+                    </>
                   )}
                   <View
                     style={{
@@ -899,3 +923,9 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
+
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+});
+
+export default connect(mapStateToProps)(SessionDetails);

@@ -95,11 +95,11 @@ class AdditionalDetails extends Component {
 
       return;
     }
-    if (this.state.age < 50) {
+    if (this.state.age < 15) {
       this.setState({
         showAlert: true,
         alertMessage:
-          "GoHappy Club is an initiative exclusively for aged 50 years and above.",
+          "Sorry, you must be atleast 15 years old to log in.",
       });
       return;
     }
@@ -147,7 +147,8 @@ class AdditionalDetails extends Component {
             response.data.sessionsAttended,
             response.data.selfInviteCode,
             response.data.city,
-            response.data.emergencyContact
+            response.data.emergencyContact,
+            response.data.age
           );
           this.setState({ loader: true });
 
@@ -193,6 +194,7 @@ class AdditionalDetails extends Component {
             underlineColorAndroid="transparent"
             keyboardType="numeric"
             placeholder="Age *"
+            maxLength={2}
             placeholderTextColor="#000"
             autoCapitalize="none"
             value={this.state.age}
