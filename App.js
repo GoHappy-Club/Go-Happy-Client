@@ -24,7 +24,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -150,7 +150,8 @@ export default function App() {
     dateOfJoining,
     selfInviteCode,
     city,
-    emergencyContact
+    emergencyContact,
+    age
   ) => {
     const new_profile = {
       name: name,
@@ -165,6 +166,7 @@ export default function App() {
       selfInviteCode: selfInviteCode,
       city: city,
       emergencyContact: emergencyContact,
+      age: age,
     };
     dispatch(setProfile(new_profile));
   };
@@ -192,6 +194,8 @@ export default function App() {
           );
           const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
           const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+          const age = await AsyncStorage.getItem("age");
+
           setNewProfile(
             name,
             email,
@@ -203,7 +207,8 @@ export default function App() {
             dateOfJoining,
             selfInviteCode,
             city,
-            emergencyContact
+            emergencyContact,
+            age
           );
         }
       } catch (error) {

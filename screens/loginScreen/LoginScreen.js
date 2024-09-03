@@ -31,6 +31,7 @@ import dynamicLinks from "@react-native-firebase/dynamic-links";
 import RenderHtml from "react-native-render-html";
 import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 import RNOtpVerify from "react-native-otp-verify";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -113,7 +114,8 @@ class LoginScreen extends Component {
     selfInviteCode,
     city,
     emergencyContact,
-    fcmToken
+    fcmToken,
+    age
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -130,6 +132,7 @@ class LoginScreen extends Component {
       city: city,
       emergencyContact: emergencyContact,
       fcmToken: fcmToken,
+      age:age
     };
     actions.setProfile(profile);
   }
@@ -137,6 +140,18 @@ class LoginScreen extends Component {
   validatePhoneNumber = () => {
     const regex = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     const unformattedNumber = this.state.unformattedNumber;
+    if(unformattedNumber ==null){
+      this.setState(
+        {
+          phoneNumberError:
+            "Please Enter a phone number first.",
+        },
+        () => {
+          this.setState({ showPhoneNumberError: true });
+        }
+      );
+      return false;
+    }
     if (unformattedNumber.length < 10) {
       this.setState(
         {
@@ -346,6 +361,8 @@ class LoginScreen extends Component {
         const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
         const city = await AsyncStorage.getItem("city");
         const emergencyContact = await AsyncStorage.getItem("emergencyContact");
+        const age = await AsyncStorage.getItem("age")        
+        
         this.setProfile(
           name,
           email,
@@ -359,7 +376,8 @@ class LoginScreen extends Component {
           selfInviteCode,
           city,
           emergencyContact,
-          fcmToken
+          fcmToken,
+          age
         );
         axios
           .post(SERVER_URL + "/user/update", {
@@ -443,6 +461,7 @@ class LoginScreen extends Component {
           // AsyncStorage.setItem("dob", response.data.dob);
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
           AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
+          AsyncStorage.setItem("age", response.data.age);
           this.setProfile(
             response.data.name,
             response.data.email,
@@ -456,7 +475,8 @@ class LoginScreen extends Component {
             response.data.selfInviteCode,
             response.data.city,
             response.data.emergencyContact,
-            this.state.fcmToken
+            this.state.fcmToken,
+            response.data.age
           );
           this.setState({
             name: response.data.name,

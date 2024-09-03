@@ -183,9 +183,26 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     });
     return isParticipantInSameEvent;
   }
+  handleBelowAge() {
+    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient&hl=en_CA&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+    const shareMessage = "Hi ! I found this fantastic app designed specifically for seniors to stay connected and enjoy various features tailored for them. I think you’ll love it! Here’s the link to download:"+link+". Give it a try and let me know what you think! 😊";
+    Share.share({
+      message: shareMessage,
+    })
+      .then((result) => {
+      })
+      .catch((errorMsg) => {
+        console.log("error in sharing", errorMsg);
+      });
+  }
+
   updateEventBook(item) {
     //console.log("item clicked is", item)
     this.setState({ bookingLoader: true });
+    if(this.getTitle(item)=="Share"){
+      this.handleBelowAge();
+      return;
+    }
     if (this.getTitle(item) == "Join") {
       setSessionAttended(this.props.profile.phoneNumber);
       Linking.openURL(item.meetingLink);
@@ -240,6 +257,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return finalTime;
   }
   getTitle(item) {
+    if (this.props.profile.age < 50) {
+      return "Share";
+    }
     const isOngoing = this.isOngoingEvent(item);
     if (item.participantList == null) {
       return "Book";
