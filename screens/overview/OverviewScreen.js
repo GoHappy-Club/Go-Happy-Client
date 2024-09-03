@@ -44,6 +44,8 @@ class OverviewScreen extends Component {
     crashlytics().log(JSON.stringify(props.propProfile));
     this.walkthroughStarted = React.createRef();
     this.timer = null;
+    console.log("Prfile in overview==>", props);
+
     // alert(JSON.stringify(props));
   }
 
@@ -131,7 +133,15 @@ class OverviewScreen extends Component {
             />
             <PromotionSection navigation={this.props.navigation} />
           </ScrollView>
-          <WhatsAppFAB url={this.state.whatsappLink} />
+          {this.props.profile.age > 50 && (
+            <WhatsAppFAB
+              url={
+                this.props.profile.properties
+                  ? this.props.profile.properties.whatsappLink
+                  : this.state.whatsappLink
+              }
+            />
+          )}
         </>
       );
     } else {
