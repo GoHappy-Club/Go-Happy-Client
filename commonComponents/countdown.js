@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+
+const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
 
 const CountdownTimer = ({
   targetTime,
-  width = 40,
-  height = 40,
+  width=40,
+  height=40,
   separatorSize = 30,
   textSize = 20,
   showText,
@@ -47,7 +50,12 @@ const CountdownTimer = ({
       <View
         style={[
           styles.container,
-          { backgroundColor: "#8a8888", padding: 8, borderRadius: 5 },
+          {
+            backgroundColor: "#8a8888",
+            padding: 8,
+            borderRadius: 5,
+            height: showText && "100%",
+          },
         ]}
       >
         <Text style={[styles.dayText, { fontSize: textSize + 2 }]}>

@@ -29,6 +29,7 @@ import tambola from "tambola";
 import CountdownTimer from "../commonComponents/countdown.js";
 
 const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -594,7 +595,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
 
         <View
           style={{
-            margin:this.state.title=="Cancel Your Booking"?15:0,
+            margin: WIDTH * 0.02,
             flexDirection:
               this.state.title == "Cancel Your Booking" ? "row" : "column",
             justifyContent:
@@ -603,23 +604,23 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 : "center",
             alignItems:
               this.state.title == "Cancel Your Booking" ? "center" : "",
-            gap: 15,
+            gap: WIDTH*0.02,
           }}
         >
           {this.state.title == "Cancel Your Booking" && (
             <CountdownTimer
               targetTime={item.startTime}
-              height={35}
-              width={35}
-              textSize={15}
-              separatorSize={20}
+              width={WIDTH * 0.1}
+              height={HEIGHT * 0.05}
+              textSize={HEIGHT * 0.02}
+              separatorSize={WIDTH * 0.07}
               showText={true}
             />
           )}
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2",minWidth:180 }}
+            buttonStyle={{ backgroundColor: "#29BFC2", minWidth: WIDTH*0.55 }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={() => {
@@ -628,7 +629,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               if (this.getTitle() === "Cancel Your Booking") {
                 this.setState({ showBookAlert: true });
               } else if (item.costType == "paid" && this.getTitle() == "Book") {
-                this.setState({ clickPopup: true })
+                this.setState({ clickPopup: true });
                 return;
               } else {
                 this.sessionAction();
@@ -734,20 +735,20 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               >
                 <Text
                   style={{
-                    fontSize: 20,
-                    marginVertical:10,
-                    fontWeight:"bold",
-                    textAlign:"center"
+                    fontSize: WIDTH * 0.058,
+                    marginVertical: HEIGHT * 0.015,
+                    fontWeight: "bold",
+                    textAlign: "center",
                   }}
                 >
-                  Your Session is starting in :
+                  Your session is starting in :
                 </Text>
                 <CountdownTimer targetTime={item.startTime} />
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: WIDTH * 0.04,
                     textAlign: "center",
-                    marginVertical: 15,
+                    marginVertical: HEIGHT * 0.015,
                   }}
                 >
                   Are you sure you want to cancel your booking?
@@ -756,12 +757,15 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    width: 190,
+                    width: WIDTH * 0.5,
                   }}
                 >
                   <Button
                     title="Yes"
-                    buttonStyle={{ backgroundColor: "#DD6B55", width: 80 }}
+                    buttonStyle={{
+                      backgroundColor: "#DD6B55",
+                      width: WIDTH * 0.2,
+                    }}
                     onPress={() => {
                       this.setState({ showBookAlert: false });
                       this.sessionAction();
@@ -770,7 +774,10 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
 
                   <Button
                     title="No"
-                    buttonStyle={{ backgroundColor: "#34983CAF", width: 80 }}
+                    buttonStyle={{
+                      backgroundColor: "#34983CAF",
+                      width: WIDTH * 0.2,
+                    }}
                     onPress={() => {
                       this.setState({ showBookAlert: false });
                     }}
