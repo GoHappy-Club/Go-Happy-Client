@@ -43,6 +43,7 @@ import Intro from "./screens/loginScreen/Intro";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import axios from "./config/CustomAxios.js";
 import { JWT_TOKEN } from "@env";
+import "./i18n.js"
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;

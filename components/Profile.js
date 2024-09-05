@@ -26,6 +26,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { launchImageLibrary } from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Platform } from "react-native";
+import i18n from "../i18n.js";
 
 class Profile extends Component {
   constructor(props) {
@@ -165,6 +166,9 @@ class Profile extends Component {
         alert("Make sure WhatsApp installed on your device");
       });
   };
+  changeLanguage(lng){
+    i18n.changeLanguage(lng);
+  }
   render() {
     if (this.state.loader == true) {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
@@ -412,6 +416,38 @@ class Profile extends Component {
               <View>
                 <Text style={styles.optionList}>
                   Join Whatsapp Support Group
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderColor: "#E0E0E0",
+              }}
+              onPress={()=>this.changeLanguage('hi')}
+            >
+              <View>
+                <Text style={styles.optionList}>
+                  Change Language to hindi
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                borderTopWidth: 1,
+                borderColor: "#E0E0E0",
+              }}
+              onPress={()=>this.changeLanguage('en')}
+            >
+              <View>
+                <Text style={styles.optionList}>
+                  Change Language to english
                 </Text>
               </View>
             </TouchableOpacity>

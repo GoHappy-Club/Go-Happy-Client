@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   View,
   Text,
@@ -12,27 +13,29 @@ import { Linking } from "react-native";
 
 export default function Sections(props) {
   const [whatsappLink, setWhatsappLink] = useState("");
+  const {t} = useTranslation();
+
   const data1 = [
     {
-      title: "Free Sessions",
+      title: t('free_sessions'),
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
     },
     {
-      title: "Contribute",
+      title: t("contribute"),
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
       link: "MembershipScreen",
     },
     {
-      title: "Trips",
+      title: t("trips"),
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
       link: "Trips",
     },
     {
-      title: "Get Help",
+      title: t("get_help"),
       imgUrl:
         "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
       link: props.helpUrl,
@@ -65,7 +68,7 @@ export default function Sections(props) {
       {/* <Button title="Start tutorial" onPress={() => start()} /> */}
       <View style={styles.headingContainer}>
         <View style={styles.line} />
-        <Text style={styles.headingText}>Explore</Text>
+        <Text style={styles.headingText}>{t('explore')}</Text>
         <View style={styles.line} />
       </View>
 
@@ -165,7 +168,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 14,
+    fontWeight:"bold"
   },
   subText: {
     marginHorizontal: 10,
