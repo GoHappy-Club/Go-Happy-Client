@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Dimensions,
   Image,
   Linking,
   Modal,
@@ -10,9 +11,7 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-
 import phonepe_payments from "./PhonePe/Payments.js";
-
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -27,12 +26,17 @@ import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import tambola from "tambola";
+import CountdownTimer from "../commonComponents/countdown.js";
+
+const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
 export default class SessionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       showAlert: false,
+      showBookAlert: false,
       showPaymentAlert: false,
       paymentAlertMessage: "Your Payment is Successful!",
       paymentAlertTitle: "Success",
@@ -43,6 +47,8 @@ export default class SessionDetails extends Component {
       videoVisible: false,
       defaultCoverImage:
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
+      showCountdown: false,
+      title: "",
     };
     this.retrieveData();
   }
@@ -123,6 +129,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
   componentDidMount() {
     this.createDynamicReferralLink();
     this.setState({ loadingButton: false });
+    const title = this.getTitle();
+    this.setState({ title: title });
   }
 
   createDynamicReferralLink = async () => {
@@ -585,18 +593,49 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           </View>
         </ScrollView>
 
-        <View style={{ margin: 15 }}>
+        <View
+          style={{
+            margin: WIDTH * 0.02,
+            flexDirection:
+              this.state.title == "Cancel Your Booking" ? "row" : "column",
+            justifyContent:
+              this.state.title == "Cancel Your Booking"
+                ? "space-evenly"
+                : "center",
+            alignItems:
+              this.state.title == "Cancel Your Booking" ? "center" : "",
+            gap: WIDTH*0.02,
+          }}
+        >
+          {this.state.title == "Cancel Your Booking" && (
+            <CountdownTimer
+              targetTime={item.startTime}
+              width={WIDTH * 0.1}
+              height={HEIGHT * 0.05}
+              textSize={HEIGHT * 0.02}
+              separatorSize={WIDTH * 0.07}
+              showText={true}
+            />
+          )}
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2" }}
+            buttonStyle={{ backgroundColor: "#29BFC2", minWidth: WIDTH*0.55 }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
-            onPress={
-              item.costType == "paid" && this.getTitle() == "Book"
-                ? () => this.setState({ clickPopup: true })
-                : this.sessionAction.bind(this)
-            }
+            onPress={() => {
+              const title = this.getTitle();
+              this.setState({ title: title });
+              if (this.getTitle() === "Cancel Your Booking") {
+                this.setState({ showBookAlert: true });
+              } else if (item.costType == "paid" && this.getTitle() == "Book") {
+                this.setState({ clickPopup: true });
+                return;
+              } else {
+                this.sessionAction();
+                return;
+              }
+            }}
           ></Button>
         </View>
         {this.state.clickPopup && (
@@ -679,6 +718,73 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 paymentAlertTitle: "Success",
               });
             }}
+          />
+        )}
+        {this.state.showBookAlert && (
+          <AwesomeAlert
+            show={this.state.showBookAlert}
+            showProgress={false}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            customView={
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: WIDTH * 0.058,
+                    marginVertical: HEIGHT * 0.015,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  Your session is starting in :
+                </Text>
+                <CountdownTimer targetTime={item.startTime} />
+                <Text
+                  style={{
+                    fontSize: WIDTH * 0.04,
+                    textAlign: "center",
+                    marginVertical: HEIGHT * 0.015,
+                  }}
+                >
+                  Are you sure you want to cancel your booking?
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: WIDTH * 0.5,
+                  }}
+                >
+                  <Button
+                    title="Yes"
+                    buttonStyle={{
+                      backgroundColor: "#DD6B55",
+                      width: WIDTH * 0.2,
+                    }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                      this.sessionAction();
+                    }}
+                  />
+
+                  <Button
+                    title="No"
+                    buttonStyle={{
+                      backgroundColor: "#34983CAF",
+                      width: WIDTH * 0.2,
+                    }}
+                    onPress={() => {
+                      this.setState({ showBookAlert: false });
+                    }}
+                  />
+                </View>
+              </View>
+            }
           />
         )}
       </View>
