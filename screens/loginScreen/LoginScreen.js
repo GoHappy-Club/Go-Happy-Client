@@ -144,7 +144,7 @@ class LoginScreen extends Component {
       this.setState(
         {
           phoneNumberError:
-            "Please Enter a phone number first.",
+            "Please enter a phone number first.",
         },
         () => {
           this.setState({ showPhoneNumberError: true });
