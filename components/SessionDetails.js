@@ -202,14 +202,27 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
     return "Book";
   }
-  handleBelowAge() {
-    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient&hl=en_CA&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-    const shareMessage = "Hi ! I found this fantastic app designed specifically for seniors to stay connected and enjoy various features tailored for them. I think you’ll love it! Here’s the link to download:"+link+". Give it a try and let me know what you think! 😊";
+  handleBelowAge(type, item, url) {
+    let link, shareMessage;
+    if (type == "iconShare") {
+      link = url;
+      shareMessage =
+        "Hi! GoHappy Club mein ek naya session shuru ho raha hai jo seniors ke liye bohot useful aur interesting hai. Is session ka naam hai " +
+        toUnicodeVariant(item.eventName, "bold italic") +
+        " Mujhe lagta hai aapko yeh zaroor pasand aayega. Yeh raha session ka link: " +
+        link +
+        ". Join karke batayein kaisa laga!";
+    } else {
+      link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
+      shareMessage =
+        "Hi! Yeh ek bohot hi accha app hai jo seniors ke liye specially design kiya gaya hai. Isme kaafi interesting features hain jo aapko pasand aayenge. Yeh link hai download karne ka: " +
+        link +
+        ". Try karke batayein kaisa laga! 😊";
+    }
     Share.share({
       message: shareMessage,
     })
-      .then((result) => {
-      })
+      .then((result) => {})
       .catch((errorMsg) => {
         console.log("error in sharing", errorMsg);
       });
@@ -281,6 +294,14 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
   }
   shareMessage = async (item) => {
+    if (this.props.profile.age < 50) {
+      this.handleBelowAge(
+        "iconShare",
+        item,
+        "https://www.gohappyclub.in/session_details/" + item.id
+      );
+      return;
+    }
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage

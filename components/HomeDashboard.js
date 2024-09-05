@@ -184,8 +184,11 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return isParticipantInSameEvent;
   }
   handleBelowAge() {
-    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient&hl=en_CA&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-    const shareMessage = "Hi ! I found this fantastic app designed specifically for seniors to stay connected and enjoy various features tailored for them. I think you’ll love it! Here’s the link to download:"+link+". Give it a try and let me know what you think! 😊";
+    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
+    const shareMessage =
+      "Hi! Yeh ek bohot hi accha app hai jo seniors ke liye specially design kiya gaya hai. Isme kaafi interesting features hain jo aapko pasand aayenge. Yeh link hai download karne ka: " +
+      link +
+      ". Try karke batayein kaisa laga! 😊";
     Share.share({
       message: shareMessage,
     })
