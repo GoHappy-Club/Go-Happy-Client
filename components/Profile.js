@@ -43,7 +43,6 @@ class Profile extends Component {
       state: "",
       image: null,
       logoutPopup: false,
-      whatsAppAlert: false,
     };
     this._retrieveData();
   }
@@ -156,16 +155,27 @@ class Profile extends Component {
       this._retrieveData();
     });
   };
-  openWhatsApp = () => {
-    // let msg = this.state.message;
-    // let mobile = this.state.mobileNo;
-    // let url = "https://chat.whatsapp.com/FnEL0tDNlRtEOjYUhehZ1F";
-    let url = "https://chat.whatsapp.com/GXcaodDZLKLGrCMdK8FpUi";
-    Linking.openURL(url)
-      .then((data) => {})
-      .catch(() => {
-        alert("Make sure WhatsApp installed on your device");
-      });
+  openWhatsApp = async () => {
+    var url = SERVER_URL + "/properties/list";
+    try {
+      const response = await axios.get(url);
+      if (response.data) {
+        const properties = response.data.properties;
+        if (properties && properties.length > 0) {
+          const now = new Date();
+          const days = Math.ceil(
+            (now.getTime() - Number(this.props.profile.dateOfJoining)) / (1000 * 3600 * 24)
+          )
+          if(days<10 || Number(this.props.profile.sessionsAttended)<5){
+            Linking.openURL(properties[0].whatsappLink[0]);
+          }else{
+            Linking.openURL(properties[0].whatsappLink[1]);
+          }
+        }
+      }
+    } catch (error) {
+      this.error = true;
+    }
   };
   render() {
     if (this.state.loader == true) {
@@ -409,11 +419,11 @@ class Profile extends Component {
                 borderTopWidth: 1,
                 borderColor: "#E0E0E0",
               }}
-              onPress={() => this.setState({ whatsAppAlert: true })}
+              onPress={this.openWhatsApp}
             >
               <View>
                 <Text style={styles.optionList}>
-                  Join Whatsapp Official Group
+                  Join Whatsapp Group
                 </Text>
               </View>
             </TouchableOpacity>
@@ -452,29 +462,6 @@ class Profile extends Component {
                 onCancelPressed={() => {
                   this.setState({ logoutPopup: false });
                   this._signout();
-                }}
-              />
-            )}
-            {this.state.whatsAppAlert && (
-              <AwesomeAlert
-                show={this.state.whatsAppAlert}
-                showProgress={false}
-                title="Join WhatsApp Group"
-                message={"This group is only for new members"}
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={true}
-                showCancelButton={true}
-                showConfirmButton={true}
-                confirmText="Join"
-                confirmButtonColor="#29BFC2"
-                cancelButtonColor="gray"
-                cancelText="Cancel"
-                onConfirmPressed={() => {
-                  this.setState({ whatsAppAlert: false });
-                  this.openWhatsApp();
-                }}
-                onCancelPressed={() => {
-                  this.setState({ whatsAppAlert: false });
                 }}
               />
             )}

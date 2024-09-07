@@ -4,32 +4,38 @@ import { FAB } from "react-native-paper";
 import { Linking } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import AwesomeAlert from "react-native-awesome-alerts";
+import { useSelector } from "react-redux";
+
 const WhatsAppFAB = ({ url }) => {
-  const [showAlert, setShowAlert] = useState(false);
+  const profile = useSelector((state) => state.profile.profile);
+
   const handlePress = async () => {
-    if (url == " " || url == undefined) {
-      var url = SERVER_URL + "/properties/list";
-      try {
-        const response = await axios.get(url);
-        if (response.data) {
-          const properties = response.data.properties;
-          if (properties && properties.length > 0) {
-            Linking.openURL(properties[0].whatsappLink);
+    var url = SERVER_URL + "/properties/list";
+    try {
+      const response = await axios.get(url);
+      if (response.data) {
+        const properties = response.data.properties;
+        if (properties && properties.length > 0) {
+          const now = new Date();
+          const days = Math.ceil(
+            (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
+          )
+          if(days<10 || Number(profile.sessionsAttended)<5){
+            Linking.openURL(properties[0].whatsappLink[0]);
+          }else{
+            Linking.openURL(properties[0].whatsappLink[1]);
           }
         }
-      } catch (error) {
-        this.error = true;
       }
-    } else {
-      Linking.openURL(url);
+    } catch (error) {
+      this.error = true;
     }
   };
 
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => setShowAlert(true)}>
+        <TouchableOpacity onPress={handlePress}>
           <FAB
             style={styles.fab}
             icon={() => (
@@ -41,26 +47,6 @@ const WhatsAppFAB = ({ url }) => {
           />
         </TouchableOpacity>
       </View>
-      {showAlert && <AwesomeAlert
-                show={showAlert}
-                showProgress={false}
-                title="Join WhatsApp Group"
-                message={"Only for new Members"}
-                closeOnTouchOutside={false}
-                closeOnHardwareBackPress={false}
-                showCancelButton={true}
-                showConfirmButton={true}
-                confirmText="Join"
-                confirmButtonColor="#29BFC2"
-                cancelButtonColor="gray"
-                cancelText="Cancel"
-                onConfirmPressed={() => {
-                  Linking.openURL(url);
-                }}
-                onCancelPressed={() => {
-                  setShowAlert(false);
-                }}
-              />}
     </>
   );
 };
