@@ -255,7 +255,6 @@ export default function App() {
       .onMessage(async (remoteMessage) => {
         const incomingDeepLink = remoteMessage.data.deepLink;
         const priority = remoteMessage.data.priority;
-        console.log("bla", remoteMessage);
         if (priority && priority == "HIGH") {
           setNotify(remoteMessage);
         } else {
