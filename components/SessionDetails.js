@@ -172,7 +172,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
   }
   getTitle() {
-    if (this.props.profile.age < 50) {
+    if (this.props.profile.age != null && this.props.profile.age < 50) {
       return "Share";
     }
     var currTime = Date.now();
@@ -294,7 +294,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
   }
   shareMessage = async (item) => {
-    if (this.props.profile.age < 50) {
+    if (this.props.profile.age != null && this.props.profile.age < 50) {
       this.handleBelowAge(
         "iconShare",
         item,
@@ -649,7 +649,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 : "center",
             alignItems:
               this.state.title == "Cancel Your Booking" ? "center" : "",
-            gap: WIDTH*0.02,
+            gap: WIDTH * 0.02,
           }}
         >
           {this.state.title == "Cancel Your Booking" && (
@@ -665,7 +665,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2", minWidth: WIDTH*0.55 }}
+            buttonStyle={{ backgroundColor: "#29BFC2", minWidth: WIDTH * 0.55 }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={() => {

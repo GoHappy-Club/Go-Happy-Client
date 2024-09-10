@@ -412,7 +412,26 @@ class Profile extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          {profile.age > 50 && (
+          {profile.age != null ? (
+            profile.age > 50 && (
+              <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+                <TouchableOpacity
+                  style={{
+                    width: "100%",
+                    borderTopWidth: 1,
+                    borderColor: "#E0E0E0",
+                  }}
+                  onPress={this.openWhatsApp}
+                >
+                  <View>
+                    <Text style={styles.optionList}>
+                      Join Whatsapp Group
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )
+          ) : (
             <View style={{ width: Dimensions.get("window").width * 0.9 }}>
               <TouchableOpacity
                 style={{
@@ -424,7 +443,7 @@ class Profile extends Component {
               >
                 <View>
                   <Text style={styles.optionList}>
-                    Join Whatsapp Support Group
+                    Join Whatsapp Group
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -475,8 +494,17 @@ class Profile extends Component {
 							</View>
 					</View> */}
         </ScrollView>
-
-        {profile.age > 50 && (
+        {profile.age != null ? (
+          profile.age > 50 && (
+            <FAB
+              style={styles.fab}
+              icon={({ size, color }) => (
+                <FontAwesomeIcon icon={faComment} color={"white"} size={25} />
+              )}
+              onPress={this.openWhatsApp}
+            />
+          )
+        ) : (
           <FAB
             style={styles.fab}
             icon={({ size, color }) => (

@@ -184,7 +184,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return isParticipantInSameEvent;
   }
   handleBelowAge() {
-    const link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
+    const link =
+      "https://play.google.com/store/apps/details?id=com.gohappyclient";
     const shareMessage =
       "Hi! Yeh ek bohot hi accha app hai jo seniors ke liye specially design kiya gaya hai. Isme kaafi interesting features hain jo aapko pasand aayenge. Yeh link hai download karne ka: " +
       link +
@@ -192,17 +193,14 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     Share.share({
       message: shareMessage,
     })
-      .then((result) => {
-      })
-      .catch((errorMsg) => {
-        console.log("error in sharing", errorMsg);
-      });
+      .then((result) => {})
+      .catch((errorMsg) => {});
   }
 
   updateEventBook(item) {
     //console.log("item clicked is", item)
     this.setState({ bookingLoader: true });
-    if(this.getTitle(item)=="Share"){
+    if (this.getTitle(item) == "Share") {
       this.handleBelowAge();
       return;
     }
@@ -260,7 +258,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return finalTime;
   }
   getTitle(item) {
-    if (this.props.profile.age < 50) {
+    if (this.props.profile.age != null && this.props.profile.age < 50) {
       return "Share";
     }
     const isOngoing = this.isOngoingEvent(item);
