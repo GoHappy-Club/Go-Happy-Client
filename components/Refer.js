@@ -374,10 +374,10 @@ class Refer extends Component {
               <ListItem key="1">
                 <ListItem.Content>
                   <ListItem.Title>
-                    <View style={{ flex: 1, maxWidth: screenWidth }}>
+                    <View style={{ flex: 1, maxWidth: screenWidth*0.9,justifyContent:"center" }}>
                       <RenderHtml
-                        style={{ width: "100%" }}
-                        // contentWidth={screenWidth}
+                        style={{ width: "auto" }}
+                        contentWidth={"90%"}
                         source={{
                           html: this.state.conditionText,
                         }}
