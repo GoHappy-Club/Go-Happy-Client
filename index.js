@@ -11,6 +11,7 @@ import React from "react";
 import store from "./store/store";
 import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
+import StepNumber from "./commonComponents/StepNumber";
 // const my_store = store();
 
 const RNRedux = () => {
@@ -23,6 +24,7 @@ const RNRedux = () => {
       tooltipComponent={CustomTooltip}
       overlay="svg"
       svgMaskPath={rectangleSvgPath}
+      stepNumberComponent={StepNumber}
     >
       <Provider store={store()}>
         <App />

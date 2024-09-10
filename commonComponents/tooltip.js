@@ -24,40 +24,52 @@ const CustomTooltip = () => {
     registerStep,
   } = useCopilot();
 
-
   const handleSkip = () => {
-    AsyncStorage.setItem("showTour","false")
+    AsyncStorage.setItem("showTour", "false");
     stop();
   };
   const handleFinish = () => {
-    AsyncStorage.setItem("showTour","false")
+    AsyncStorage.setItem("showTour", "false");
     stop();
   };
 
   return (
-    <View style={[styles.container, { width: 280 }]}>
+    <View style={[styles.container, { width: "auto" }]}>
       <Text style={styles.tooltipText}>{currentStep.text}</Text>
       <View style={styles.buttonContainer}>
-        {!isFirstStep && (
-          <TouchableOpacity onPress={goToPrev} style={styles.button}>
-            <Text style={styles.buttonText}>Previous</Text>
+        {!isLastStep && (
+          <TouchableOpacity
+            onPress={handleSkip}
+            style={[styles.button, { backgroundColor: "transparent" }]}
+          >
+            <Text style={[styles.buttonText, { color: "gray" }]}>skip</Text>
           </TouchableOpacity>
         )}
-        {!isLastStep && (
-          <>
-            <TouchableOpacity onPress={handleSkip} style={styles.button}>
-              <Text style={styles.buttonText}>Skip</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            width: isLastStep ? "100%" : "auto",
+            gap: 5,
+          }}
+        >
+          {!isFirstStep && (
+            <TouchableOpacity onPress={goToPrev} style={styles.button}>
+              <Text style={styles.buttonText}>Prev</Text>
             </TouchableOpacity>
+          )}
+          {!isLastStep && (
             <TouchableOpacity onPress={goToNext} style={styles.button}>
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
-          </>
-        )}
-        {isLastStep && (
-          <TouchableOpacity onPress={handleFinish} style={styles.button}>
-            <Text style={styles.buttonText}>Finish</Text>
-          </TouchableOpacity>
-        )}
+          )}
+          {isLastStep && (
+            <TouchableOpacity onPress={handleFinish} style={styles.button}>
+              <Text style={styles.buttonText}>Finish</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -65,14 +77,10 @@ const CustomTooltip = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: "4%",
+    paddingTop: 0,
     backgroundColor: "white",
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 1,
     alignSelf: "center",
   },
   tooltipText: {
@@ -83,18 +91,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     gap: 15,
   },
   button: {
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     backgroundColor: "#29BFC2",
     borderRadius: 5,
   },
   buttonText: {
     color: "white",
-    fontSize: 14,
+    fontSize: 12,
   },
 });
 
