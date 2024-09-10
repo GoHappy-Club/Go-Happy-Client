@@ -95,11 +95,11 @@ class AdditionalDetails extends Component {
 
       return;
     }
-    if (this.state.age < 15) {
+    if (this.state.age < 16) {
       this.setState({
         showAlert: true,
         alertMessage:
-          "Sorry, you must be atleast 15 years old to log in.",
+          "Sorry, you must be atleast 16 years old to log in.",
       });
       return;
     }
