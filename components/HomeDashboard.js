@@ -47,6 +47,7 @@ class HomeDashboard extends Component {
       itemToBuy: null,
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+      belowAgePopUp: false,
     };
     //
 
@@ -187,9 +188,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     const link =
       "https://play.google.com/store/apps/details?id=com.gohappyclient";
     const shareMessage =
-      "Hi! Yeh ek bohot hi accha app hai jo seniors ke liye specially design kiya gaya hai. Isme kaafi interesting features hain jo aapko pasand aayenge. Yeh link hai download karne ka: " +
+      "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: " +
       link +
-      ". Try karke batayein kaisa laga! 😊";
+      ". Give it a try and let me know how you like it! 😊";
     Share.share({
       message: shareMessage,
     })
@@ -201,7 +202,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     //console.log("item clicked is", item)
     this.setState({ bookingLoader: true });
     if (this.getTitle(item) == "Share") {
-      this.handleBelowAge();
+      this.setState({ belowAgePopUp: true });
       return;
     }
     if (this.getTitle(item) == "Join") {
@@ -517,6 +518,22 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 paymentAlertMessage: "Your Payment is Successful!",
                 paymentAlertTitle: "Success",
               });
+            }}
+          />
+        )}
+        {this.state.belowAgePopUp && (
+          <AwesomeAlert
+            show={this.state.belowAgePopUp}
+            showProgress={false}
+            // title={""}
+            message={"GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Share"
+            confirmButtonColor="#29BFC2"
+            onConfirmPressed={() => {
+              this.handleBelowAge();
             }}
           />
         )}

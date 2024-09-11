@@ -44,8 +44,6 @@ class OverviewScreen extends Component {
     crashlytics().log(JSON.stringify(props.propProfile));
     this.walkthroughStarted = React.createRef();
     this.timer = null;
-    console.log("Prfile in overview==>", props);
-
     // alert(JSON.stringify(props));
   }
 

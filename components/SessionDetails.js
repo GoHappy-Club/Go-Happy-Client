@@ -50,6 +50,7 @@ class SessionDetails extends Component {
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
       showCountdown: false,
       title: "",
+      belowAgePopUp:false,
     };
     this.retrieveData();
   }
@@ -239,7 +240,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
         JSON.stringify(this.props.alreadyBookedSameDayEvent)
     );
     if (this.getTitle() === "Share") {
-      this.handleBelowAge();
+      this.setState({belowAgePopUp:true});
       return;
     }
     if (
@@ -830,6 +831,22 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 </View>
               </View>
             }
+          />
+        )}
+        {this.state.belowAgePopUp && (
+          <AwesomeAlert
+            show={this.state.belowAgePopUp}
+            showProgress={false}
+            // title={""}
+            message={"GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Share"
+            confirmButtonColor="#29BFC2"
+            onConfirmPressed={() => {
+              this.handleBelowAge();
+            }}
           />
         )}
       </View>
