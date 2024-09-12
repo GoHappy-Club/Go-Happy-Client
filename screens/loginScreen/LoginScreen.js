@@ -97,7 +97,15 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState({ verificationCode: verificationCode });
+      this.setState(
+        {
+          verificationCode: verificationCode,
+          loadingVerifyButton: true,
+        },
+        () => {
+          this.handleVerifyCode();
+        }
+      );
     }
   };
 
@@ -132,7 +140,7 @@ class LoginScreen extends Component {
       city: city,
       emergencyContact: emergencyContact,
       fcmToken: fcmToken,
-      age:age
+      age: age,
     };
     actions.setProfile(profile);
   }
@@ -140,11 +148,10 @@ class LoginScreen extends Component {
   validatePhoneNumber = () => {
     const regex = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     const unformattedNumber = this.state.unformattedNumber;
-    if(unformattedNumber ==null){
+    if (unformattedNumber == null) {
       this.setState(
         {
-          phoneNumberError:
-            "Please enter a phone number first.",
+          phoneNumberError: "Please enter a phone number first.",
         },
         () => {
           this.setState({ showPhoneNumberError: true });
@@ -207,19 +214,19 @@ class LoginScreen extends Component {
         .signInWithPhoneNumber(this.state.phoneNumber)
         .then((confirmResult) => {
           this.setState({ confirmResult });
-          firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-              this.setState({ userId: user.uid });
-              try {
-                this._backendSignIn(
-                  user.uid,
-                  user.displayName,
-                  "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-                  user.phoneNumber
-                );
-              } catch (error) {}
-            }
-          });
+          // firebase.auth().onAuthStateChanged((user) => {
+          //   if (user) {
+          //     this.setState({ userId: user.uid });
+          //     try {
+          //       this._backendSignIn(
+          //         user.uid,
+          //         user.displayName,
+          //         "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
+          //         user.phoneNumber
+          //       );
+          //     } catch (error) {}
+          //   }
+          // });
           if (resend) {
             this.setState({ loadingResendButton: false });
           } else {
@@ -282,7 +289,9 @@ class LoginScreen extends Component {
             "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
             user.user.phoneNumber
           );
+          this.setState({ loadingVerifyButton: false });
         } catch (error) {
+          this.setState({ loadingVerifyButton: false });
           console.log("Error in handleVerify==>", error);
         }
         //   this.setState({ loadingButton:false });
@@ -361,8 +370,8 @@ class LoginScreen extends Component {
         const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
         const city = await AsyncStorage.getItem("city");
         const emergencyContact = await AsyncStorage.getItem("emergencyContact");
-        const age = await AsyncStorage.getItem("age")        
-        
+        const age = await AsyncStorage.getItem("age");
+
         this.setProfile(
           name,
           email,
