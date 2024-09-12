@@ -50,7 +50,7 @@ class SessionDetails extends Component {
         "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
       showCountdown: false,
       title: "",
-      belowAgePopUp:false,
+      belowAgePopUp: false,
     };
     this.retrieveData();
   }
@@ -208,17 +208,17 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     if (type == "iconShare") {
       link = url;
       shareMessage =
-        "Hi! GoHappy Club mein ek naya session shuru ho raha hai jo seniors ke liye bohot useful aur interesting hai. Is session ka naam hai " +
+        "Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. The name of the session is " +
         toUnicodeVariant(item.eventName, "bold italic") +
-        " Mujhe lagta hai aapko yeh zaroor pasand aayega. Yeh raha session ka link: " +
+        ". I think you will definitely like it. Here is the link to the session: " +
         link +
-        ". Join karke batayein kaisa laga!";
+        ". Join in and let me know how you liked it!";
     } else {
       link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
       shareMessage =
-        "Hi! Yeh ek bohot hi accha app hai jo seniors ke liye specially design kiya gaya hai. Isme kaafi interesting features hain jo aapko pasand aayenge. Yeh link hai download karne ka: " +
+        "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: " +
         link +
-        ". Try karke batayein kaisa laga! 😊";
+        ". Give it a try and let me know how you like it! 😊";
     }
     Share.share({
       message: shareMessage,
@@ -240,7 +240,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
         JSON.stringify(this.props.alreadyBookedSameDayEvent)
     );
     if (this.getTitle() === "Share") {
-      this.setState({belowAgePopUp:true});
+      this.setState({ belowAgePopUp: true });
       return;
     }
     if (
@@ -838,7 +838,9 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             show={this.state.belowAgePopUp}
             showProgress={false}
             // title={""}
-            message={"GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."}
+            message={
+              "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
+            }
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
@@ -846,6 +848,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             confirmButtonColor="#29BFC2"
             onConfirmPressed={() => {
               this.handleBelowAge();
+              this.setState({ belowAgePopUp: false });
             }}
           />
         )}

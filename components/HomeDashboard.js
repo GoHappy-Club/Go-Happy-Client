@@ -526,7 +526,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             show={this.state.belowAgePopUp}
             showProgress={false}
             // title={""}
-            message={"GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."}
+            message={
+              "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
+            }
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
@@ -534,6 +536,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             confirmButtonColor="#29BFC2"
             onConfirmPressed={() => {
               this.handleBelowAge();
+              this.setState({ belowAgePopUp: false });
             }}
           />
         )}
