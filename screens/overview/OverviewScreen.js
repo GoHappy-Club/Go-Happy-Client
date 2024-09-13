@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Banner, Divider } from "react-native-paper";
-import { Image, View } from "react-native";
+import { Image, TouchableWithoutFeedback, View } from "react-native";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
 import PromotionSection from "../../components/overview/PromotionSection.js";
@@ -40,26 +40,64 @@ class OverviewScreen extends Component {
       trendingSessions: null,
       upcomingWorkshops: null,
       posters: [],
+      timer: null,
+      isInteractionBlocked: true,
     };
     crashlytics().log(JSON.stringify(props.propProfile));
+    this.scrollViewRef = React.createRef();
     this.walkthroughStarted = React.createRef();
-    this.timer = null;
+    // this.timer = null;
     // alert(JSON.stringify(props));
+    // let timer;
   }
 
   async componentDidMount() {
-    const showTour = await AsyncStorage.getItem("showTour");
-    if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
-      this.timer = setTimeout(() => {
-        this.props.start(false, this.scrollView);
-        this.walkthroughStarted.current = true;
-      }, 3000);
-    }
+    this.getOverviewData();
+    this.setupTimer();
+    this._unsubscribeFocus = this.props.navigation.addListener(
+      "focus",
+      this.onFocus
+    );
+    this._unsubscribeBlur = this.props.navigation.addListener(
+      "blur",
+      this.onBlur
+    );
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer);
+    this.cleanupTimer();
+    if (this._unsubscribeFocus) this._unsubscribeFocus();
+    if (this._unsubscribeBlur) this._unsubscribeBlur();
   }
+
+  onFocus = () => {
+    this.setupTimer();
+  };
+
+  onBlur = () => {
+    this.cleanupTimer();
+  };
+
+  setupTimer = async () => {
+    const showTour = await AsyncStorage.getItem("showTour");
+    if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
+      this.setState({
+        timer: setTimeout(() => {
+          if (this.state.timer != null) {
+            this.props.start(false, this.scrollViewRef.current);
+            this.walkthroughStarted.current = true;
+          }
+        }, 3000),
+      });
+    }
+  };
+
+  cleanupTimer = () => {
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
+  };
 
   async getOverviewData() {
     var url = SERVER_URL + "/home/overview";
@@ -105,7 +143,7 @@ class OverviewScreen extends Component {
     if (this.state.error == true) {
       return (
         <>
-          <ScrollView ref={(ref) => (this.scrollView = ref)}>
+          <ScrollView ref={this.scrollViewRef}>
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}
