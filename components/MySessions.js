@@ -16,6 +16,7 @@ import { WebView } from "react-native-webview";
 
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { format, fromUnixTime } from "date-fns";
+import { Colors } from "../assets/colors/color";
 
 export default class MySessions extends Component {
   constructor(props) {
@@ -72,8 +73,8 @@ export default class MySessions extends Component {
 
   loadDate(item) {
     const dt = fromUnixTime(item / 1000);
-  const finalTime = format(dt, 'hh:mm a');
-  return finalTime;
+    const finalTime = format(dt, "hh:mm a");
+    return finalTime;
   }
 
   sorry() {
@@ -110,12 +111,12 @@ export default class MySessions extends Component {
           marginLeft: 10,
           marginRight: 10,
           marginBottom: 10,
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
         }}
       >
         <TouchableOpacity
           style={{ ...styles.card, marginTop: 10 }}
-          underlayColor={"grey"}
+          underlayColor={Colors.grey.grey}
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
               event: item,
@@ -143,7 +144,11 @@ export default class MySessions extends Component {
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
                 <Text
-                  style={{ color: "#404040", fontSize: 14, fontWeight: "700" }}
+                  style={{
+                    color: Colors.grey["4"],
+                    fontSize: 14,
+                    fontWeight: "700",
+                  }}
                 >
                   {this.trimContent(item.eventName, 30)}
                 </Text>
@@ -169,7 +174,11 @@ export default class MySessions extends Component {
                   size={30}
                 />
                 <Title
-                  style={{ color: "#404040", fontSize: 13, paddingLeft: 10 }}
+                  style={{
+                    color: Colors.grey["4"],
+                    fontSize: 13,
+                    paddingLeft: 10,
+                  }}
                 >
                   {this.trimContent(item.expertName, 17)}
                 </Title>
@@ -183,7 +192,7 @@ export default class MySessions extends Component {
                       : false
                   }
                   title="Join"
-                  buttonStyle={{ backgroundColor: "#29BFC2" }}
+                  buttonStyle={{ backgroundColor: Colors.primary }}
                   onPress={this.startEvent.bind(this, item)}
                   loading={item.loadingButton}
                 />
@@ -197,7 +206,7 @@ export default class MySessions extends Component {
                       : false
                   }
                   title="View Recording"
-                  buttonStyle={{ backgroundColor: "#29BFC2" }}
+                  buttonStyle={{ backgroundColor: Colors.primary }}
                   onPress={this.videoPlayer.bind(this, item.recordingLink)}
                   loading={item.loadingButton}
                 />
@@ -232,7 +241,7 @@ export default class MySessions extends Component {
               </Text>
             )}
             {this.props.childLoader == true && (
-              <MaterialIndicator color="blue" />
+              <MaterialIndicator color={Colors.blue.blue} />
             )}
           </Text>
         )}
@@ -254,7 +263,7 @@ export default class MySessions extends Component {
               </Text>
             )}
             {this.props.childLoader == true && (
-              <MaterialIndicator color="blue" />
+              <MaterialIndicator color={Colors.blue.blue} />
             )}
           </Text>
         )}
@@ -269,7 +278,7 @@ export default class MySessions extends Component {
         {this.props.expiredEvents.length > 0 && (
           <Text h4 style={{ marginLeft: 5, marginTop: 20, marginBottom: 15 }}>
             {this.props.childLoader == true && (
-              <MaterialIndicator color="blue" />
+              <MaterialIndicator color={Colors.blue.blue} />
             )}
           </Text>
         )}
@@ -292,7 +301,7 @@ export default class MySessions extends Component {
             <WebView
               allowsFullscreenVideo
               javaScriptEnabled={true}
-              style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
+              style={{ flex: 1, borderColor: Colors.red, borderWidth: 1 }}
               source={{
                 uri: this.state.recordingLink,
               }}
@@ -306,19 +315,19 @@ export default class MySessions extends Component {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: Colors.white,
   },
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
   },
   input: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 15,
     marginBottom: 10,
   },
@@ -334,20 +343,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 150,
@@ -360,7 +369,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {},
   title: {
-    color: "white",
+    color: Colors.white,
     marginTop: 10,
     width: 160,
     opacity: 0.9,
@@ -370,14 +379,14 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,

@@ -7,6 +7,7 @@ import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 
 import { CopilotStep, walkthroughable } from "react-native-copilot";
+import { Colors } from "../assets/colors/color";
 
 const Walkthroughable = walkthroughable(View);
 
@@ -23,10 +24,10 @@ const WhatsAppFAB = ({ url }) => {
           const now = new Date();
           const days = Math.ceil(
             (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
-          )
-          if(days<10 || Number(profile.sessionsAttended)<5){
+          );
+          if (days < 10 || Number(profile.sessionsAttended) < 5) {
             Linking.openURL(properties[0].whatsappLink[0]);
-          }else{
+          } else {
             Linking.openURL(properties[0].whatsappLink[1]);
           }
         }
@@ -68,13 +69,13 @@ const styles = StyleSheet.create({
     right: 16,
   },
   fab: {
-    backgroundColor: "#25D366",
+    backgroundColor: Colors.whatsappButton,
   },
   logo: {
     width: 24,
     height: 24,
     alignSelf: "center",
-    backgroundColor: "white", // set background color for image
+    backgroundColor: Colors.white, // set background color for image
     borderRadius: 20, // make the image round
     padding: 4, // add some padding to the image
   },

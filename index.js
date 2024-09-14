@@ -12,6 +12,7 @@ import store from "./store/store";
 import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
+import { Colors } from "./assets/colors/color";
 // const my_store = store();
 
 const RNRedux = () => {
@@ -19,7 +20,7 @@ const RNRedux = () => {
   return (
     <CopilotProvider
       verticalOffset={20}
-      arrowColor="#9FA8DA"
+      arrowColor={Colors.copilotArrow}
       animated={true}
       tooltipComponent={CustomTooltip}
       overlay="svg"

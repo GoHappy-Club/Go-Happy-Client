@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
 import { loadDate, trimContent } from "../../commonComponents/helpers";
+import { Colors } from "../../assets/colors/color";
 
 class TripsList extends Component {
   constructor(props) {
@@ -88,7 +89,7 @@ class TripsList extends Component {
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              color: "#2f2f31",
+              color: Colors.greyishText,
             }}
           >
             No Upcoming Trips 😟
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     // alignItems: "center",
     borderRadius: 8,
-    borderColor: "grey",
+    borderColor: Colors.grey.grey,
     borderWidth: 0.2,
     margin: 10,
     borderRadius: 16,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 36,
-    color: "white",
+    color: Colors.white,
     // marginTop: "auto",
     alignSelf: "flex-start",
     // width: "10%",
@@ -125,16 +126,16 @@ const styles = StyleSheet.create({
     paddingRight: "5%",
     borderTopRightRadius: 16,
     borderBottomRightRadius: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: Colors.lowOpacityBlack,
     marginBottom: "2%",
     fontWeight: "bold",
   },
   subText: {
     alignSelf: "flex-start",
     fontSize: 12,
-    color: "white",
+    color: Colors.white,
     // marginTop: "auto",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backgroundColor: Colors.lowOpacityBlack,
     paddingBottom: "1%",
     marginRight: "20%",
 

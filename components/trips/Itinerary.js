@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RenderHTML from "react-native-render-html";
+import { Colors } from "../../assets/colors/color";
 
 export const Itinerary = ({ details }) => {
   const [activeSections, setActiveSections] = useState([]);
@@ -90,13 +91,13 @@ export const Itinerary = ({ details }) => {
         >
           <Text
             style={{
-              backgroundColor: "#29BFC2",
+              backgroundColor: Colors.primary,
               padding: 4,
               paddingLeft: 10,
               paddingRight: 10,
               borderRadius: 10,
               fontSize: 26,
-              color: "white",
+              color: Colors.white,
               textAlign: "center",
               marginBottom: "3%",
               fontWeight: "bold",
@@ -111,21 +112,25 @@ export const Itinerary = ({ details }) => {
           }}
         />
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faCalendarAlt} size={20} color="brown" />
+          <FontAwesomeIcon
+            icon={faCalendarAlt}
+            size={20}
+            color={Colors.brown}
+          />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
             {"  "}
             {loadOnlyDate(data.startTime)} - {loadOnlyDate(data.endTime)}
           </Text>
         </View>
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faCloudSun} size={20} color="blue" />
+          <FontAwesomeIcon icon={faCloudSun} size={20} color={Colors.blue.blue} />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
             {"  "}
             {data.duration}
           </Text>
         </View>
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faMapMarkerAlt} size={20} color="red" />
+          <FontAwesomeIcon icon={faMapMarkerAlt} size={20} color={Colors.red} />
           <Text
             style={{
               fontSize: 18,
@@ -137,7 +142,7 @@ export const Itinerary = ({ details }) => {
           </Text>
         </View>
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faMoneyBill} size={20} color="green" />
+          <FontAwesomeIcon icon={faMoneyBill} size={20} color={Colors.green} />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
             {"  "}₹ {data.cost}/- per person
           </Text>
@@ -159,7 +164,7 @@ export const Itinerary = ({ details }) => {
           style={{ marginHorizontal: "auto", marginLeft: "auto" }}
           icon={faArrowAltCircleDown}
           size={20}
-          color="black"
+          color={Colors.black}
         />
       </View>
     );
@@ -198,7 +203,7 @@ export const Itinerary = ({ details }) => {
         <View style={{ margin: 15 }}>
           <Button
             outline
-            style={{ backgroundColor: "#29BFC2" }}
+            style={{ backgroundColor: Colors.primary }}
             onPress={() => {
               let link = item.inquireNowLink;
               link = link.replace("${trip}", item.location);
@@ -206,7 +211,7 @@ export const Itinerary = ({ details }) => {
               return Linking.openURL(link);
             }}
           >
-            <Text style={{ color: "white", fontWeight: "bold" }}>
+            <Text style={{ color: Colors.white, fontWeight: "bold" }}>
               Inquire Now
             </Text>
           </Button>
@@ -223,7 +228,7 @@ const styles = StyleSheet.create({
     // marginTop: "5%",
   },
   header: {
-    backgroundColor: "pink",
+    backgroundColor: Colors.pink.pink,
     borderRadius: 8,
     padding: "5%",
     display: "flex",

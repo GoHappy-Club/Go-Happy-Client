@@ -44,6 +44,7 @@ import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { useCopilot } from "react-native-copilot";
 import axios from "./config/CustomAxios.js";
 import { JWT_TOKEN } from "@env";
+import { Colors } from "./assets/colors/color.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -93,7 +94,7 @@ const toastConfig = {
   success: (props) => (
     <BaseToast
       {...props}
-      style={{ borderLeftColor: "pink" }}
+      style={{ borderLeftColor: Colors.pink.pink }}
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{
         fontSize: 25,
@@ -381,7 +382,7 @@ export default function App() {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Close"
-          confirmButtonColor="deepskyblue"
+          confirmButtonColor={Colors.deepskyblue}
           onConfirmPressed={() => {
             setJustUpdated((justUpdated = false));
             setShowWhatsNewMessage((showWhatsNewMessage = false));
@@ -407,7 +408,7 @@ export default function App() {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Update Now"
-          confirmButtonColor="#29BFC2"
+          confirmButtonColor={Colors.primary}
           onConfirmPressed={() => {
             Linking.openURL(
               "https://play.google.com/store/apps/details?id=com.gohappyclient"
@@ -480,7 +481,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -502,7 +503,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -535,7 +536,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -557,7 +558,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -579,7 +580,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("OverviewScreen")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -601,7 +602,7 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("Trips")}
-                      underlayColor="#fff"
+                      underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
                     </TouchableOpacity>
@@ -637,8 +638,8 @@ export default function App() {
       {notify && (
         <AwesomeAlert
           confirmButtonStyle={{
-            backgroundColor: "#29BFC2",
-            color: "white",
+            backgroundColor: Colors.primary,
+            color: Colors.white,
             borderRadius: 5,
             // padding: 15,
           }}
@@ -662,7 +663,7 @@ export default function App() {
                 // backgroundColor: "blue",
                 margin: 0,
                 padding: 0,
-                shadowColor: "#ccc",
+                shadowColor: Colors.grey.c,
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.2,
                 shadowRadius: 4,
@@ -685,7 +686,7 @@ export default function App() {
                 style={{
                   fontFamily: "sans-serif",
                   fontSize: 16,
-                  color: "black",
+                  color: Colors.black,
                   lineHeight: 24,
                   // textAlign: "left",
                 }}
@@ -698,7 +699,7 @@ export default function App() {
           closeOnHardwareBackPress={true}
           showConfirmButton={true}
           confirmText={notify?.data?.confirmText}
-          confirmButtonColor="#29BFC2"
+          confirmButtonColor={Colors.primary}
           onDismiss={() => {
             setNotify(null);
           }}
@@ -715,17 +716,17 @@ export default function App() {
 const styles = StyleSheet.create({
   backButton: {
     padding: 4,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#fff",
-    shadowColor: "black",
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
     elevation: 10,
     shadowOffset: { height: 2 },
     shadowOpacity: 0.3,
   },
   backText: {
-    color: "#000",
+    color: Colors.black,
     textAlign: "center",
   },
 });

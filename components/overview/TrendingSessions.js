@@ -15,6 +15,7 @@ import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
 import { format, fromUnixTime } from "date-fns";
+import { Colors } from "../../assets/colors/color.js";
 
 const data = [
   {
@@ -47,8 +48,8 @@ class TrendingSessions extends Component {
 
   loadDate(time) {
     const dt = fromUnixTime(time / 1000);
-  const finalTime = format(dt, 'MMM d, h:mm aa');
-  return finalTime;
+    const finalTime = format(dt, "MMM d, h:mm aa");
+    return finalTime;
   }
   trimContent(text, cut) {
     if (text.length < cut) {
@@ -120,24 +121,25 @@ class TrendingSessions extends Component {
             </View>
           </View>
         )}
-        {this.props.trendingSessions && this.props.trendingSessions.length > 0 && (
-          <View style={styles.mainContainer}>
-            <View style={styles.headingContainer}>
-              <View style={styles.line} />
-              <Text style={styles.headingText}>Trending Sessions</Text>
-              <View style={styles.line} />
+        {this.props.trendingSessions &&
+          this.props.trendingSessions.length > 0 && (
+            <View style={styles.mainContainer}>
+              <View style={styles.headingContainer}>
+                <View style={styles.line} />
+                <Text style={styles.headingText}>Trending Sessions</Text>
+                <View style={styles.line} />
+              </View>
+              <View style={styles.scrollContainer}>
+                <FlatList
+                  horizontal={true}
+                  data={this.props.trendingSessions}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={this.renderRow.bind(this)}
+                  nestedScrollEnabled={true}
+                />
+              </View>
             </View>
-            <View style={styles.scrollContainer}>
-              <FlatList
-                horizontal={true}
-                data={this.props.trendingSessions}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={this.renderRow.bind(this)}
-                nestedScrollEnabled={true}
-              />
-            </View>
-          </View>
-        )}
+          )}
       </>
     );
   }
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // alignItems: "center",
     borderRadius: 8,
-    borderColor: "grey",
+    borderColor: Colors.grey.grey,
     borderWidth: 0.2,
     margin: 10,
   },
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: "grey",
+    backgroundColor: Colors.grey.grey,
   },
   text: {
     marginHorizontal: 10,

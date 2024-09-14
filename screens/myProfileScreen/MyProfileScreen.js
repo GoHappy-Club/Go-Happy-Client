@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
 import MyProfile from "../../components/Profile";
+import { Colors } from "../../assets/colors/color";
 
 export default class MyProfileScreen extends Component {
   constructor(props) {
@@ -21,8 +22,8 @@ export default class MyProfileScreen extends Component {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.materialIndicatorColor }}
         />
       );
     }
@@ -35,11 +36,11 @@ export default class MyProfileScreen extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
   },
   input: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 15,
     marginBottom: 10,
   },
@@ -55,20 +56,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 150,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {},
   title: {
-    color: "white",
+    color: Colors.white,
     marginTop: 10,
     width: 160,
     opacity: 0.9,
@@ -91,14 +92,14 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,

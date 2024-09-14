@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     width: ITEM_WIDTH + 10,
     height: SLIDER_HEIGHT,
     borderRadius: 8,
-    // borderColor: "black",
+    // borderColor: Colors.black,
     // borderWidth: 0.1,
   },
   header: {

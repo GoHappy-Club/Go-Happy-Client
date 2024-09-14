@@ -22,6 +22,7 @@ import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import tambola from "tambola";
+import { Colors } from "../assets/colors/color.js";
 
 class Membership extends Component {
   constructor(props) {
@@ -39,8 +40,8 @@ class Membership extends Component {
       membership: "",
       city: "Pune",
       state: "Maharashtra",
-      backgroundColor: "white",
-      textColor: "black",
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
       amount: "",
       success: false,
       payType: "o",
@@ -55,32 +56,32 @@ class Membership extends Component {
           {
             amount: 99,
             duration: "1 month",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Basic",
           },
           {
             amount: 249,
             duration: "3 months",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Silver",
           },
           {
             amount: 549,
             duration: "6 months",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Gold",
           },
           {
             amount: 1099,
             duration: "1 year",
-            textColor: "black",
-            backgroundColor: "white",
+            textColor: Colors.black,
+            backgroundColor: Colors.white,
             selected: false,
             name: "Premium",
           },
@@ -149,16 +150,16 @@ class Membership extends Component {
 
   planSelected(plan, index) {
     var allPlans = this.state.plans;
-    plan.backgroundColor = "blue";
-    plan.textColor = "white";
+    plan.backgroundColor = Colors.blue.blue;
+    plan.textColor = Colors.white;
     allPlans.planDetails[index] = plan;
     allPlans.selectedItem = index;
     for (var i = 0; i < allPlans.planDetails.length; i++) {
       if (i == index) {
         continue;
       }
-      allPlans.planDetails[i].backgroundColor = "white";
-      allPlans.planDetails[i].textColor = "black";
+      allPlans.planDetails[i].backgroundColor = Colors.white;
+      allPlans.planDetails[i].textColor = Colors.black;
     }
     this.setState({ plans: allPlans });
   }
@@ -183,7 +184,7 @@ class Membership extends Component {
         <TouchableOpacity
           style={{
             backgroundColor: plan.backgroundColor,
-            shadowColor: "black",
+            shadowColor: Colors.black,
             elevation: 10,
             shadowOffset: { height: 2 },
             shadowOpacity: 0.3,
@@ -222,8 +223,8 @@ class Membership extends Component {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.materialIndicatorColor }}
         />
       );
     }
@@ -232,7 +233,7 @@ class Membership extends Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
@@ -271,7 +272,7 @@ class Membership extends Component {
         {/* ------------------------------------------------------------------------------------ */}
         <ScrollView
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
             height: "100%",
           }}
           contentContainerStyle={{
@@ -355,7 +356,7 @@ class Membership extends Component {
             </View>
             <Text
               style={{
-                color: "black",
+                color: Colors.black,
                 fontWeight: "bold",
                 textAlign: "center",
                 fontSize: 18,
@@ -371,7 +372,7 @@ class Membership extends Component {
                 borderColor: "rgba(0,0,0,0.2)",
                 borderRadius: 10,
                 marginTop: "5%",
-                color: "black",
+                color: Colors.black,
                 width: Dimensions.get("window").width * 0.9,
                 textAlign: "justify",
                 lineHeight: 22,
@@ -431,8 +432,8 @@ class Membership extends Component {
                 closeOnHardwareBackPress={true}
                 showConfirmButton={true}
                 cancelText="Pay Now"
-                confirmButtonColor="gray"
-                cancelButtonColor="#29BFC2"
+                confirmButtonColor={Colors.grey.grey}
+                cancelButtonColor={Colors.primary}
                 onCancelPressed={() => {
                   this.phonePeWrapper("self");
                   this.setState({
@@ -480,7 +481,7 @@ class Membership extends Component {
               closeOnHardwareBackPress={false}
               showConfirmButton={true}
               confirmText="OK"
-              confirmButtonColor="#DD6B55"
+              confirmButtonColor={Colors.errorButton}
               onConfirmPressed={() => {
                 this.setState({
                   showPaymentAlert: false,
@@ -499,7 +500,7 @@ class Membership extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
   },
   cover: {
     flex: 1,
@@ -512,17 +513,17 @@ const styles = StyleSheet.create({
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: "white",
+    color: Colors.white,
   },
   checkoutButtonDisabled: {
     opacity: 0.5,
     alignItems: "center",
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     padding: 10,
   },
   checkoutButtonEnabled: {
     alignItems: "center",
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     padding: 10,
   },
   input: {
@@ -544,7 +545,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: "#d6d7da",
+    borderColor: Colors.grey.d,
     padding: 5,
     margin: "5%",
   },
@@ -557,7 +558,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     // width: "auto",
     // flex: 1,
-    color: "black",
+    color: Colors.black,
     fontSize: 36,
     fontWeight: "700",
   },
@@ -568,7 +569,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 1,
-    borderColor: "#d6d7da",
+    borderColor: Colors.grey.d,
     borderRadius: 20,
     paddingHorizontal: 8,
     paddingVertical: 4,

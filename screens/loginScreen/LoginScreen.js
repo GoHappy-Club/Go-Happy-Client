@@ -32,6 +32,7 @@ import RenderHtml from "react-native-render-html";
 import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 import RNOtpVerify from "react-native-otp-verify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "../../assets/colors/color.js";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -330,7 +331,7 @@ class LoginScreen extends Component {
           onPress={this.handleVerifyCode.bind(this, null)}
           ViewComponent={LinearGradient}
           linearGradientProps={{
-            colors: ["#4c669f", "#3b5998", "#192f6a"],
+            colors: Colors.linearGradient,
             start: { x: 0, y: 0.25 },
             end: { x: 0.5, y: 1 },
             locations: [0, 0.5, 0.6],
@@ -557,7 +558,7 @@ class LoginScreen extends Component {
           source={require("../../images/logo_splash.mp4")}
           style={{
             position: "absolute",
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
             top: 0,
             flex: 1,
             flexDirection: "column",
@@ -603,7 +604,7 @@ class LoginScreen extends Component {
             style={{
               fontWeight: "normal",
               fontSize: 30,
-              color: "black",
+              color: Colors.black,
               alignSelf: "center",
             }}
           >
@@ -631,29 +632,49 @@ class LoginScreen extends Component {
                   style={{
                     paddingTop: 10,
                     width: "80%",
-                    color: "grey",
+                    color: Colors.grey.grey,
                     fontSize: 12,
                   }}
                 >
                   By signing up, I agree to the{" "}
                 </Text>
                 <Text
-                  style={{ color: "blue", width: "80%", fontSize: 12 }}
+                  style={{
+                    color: Colors.blue.blue,
+                    width: "80%",
+                    fontSize: 12,
+                  }}
                   onPress={this.showConditions.bind(this, 0)}
                 >
                   Terms of Use
                 </Text>
-                <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
+                <Text
+                  style={{
+                    width: "80%",
+                    color: Colors.grey.grey,
+                    fontSize: 12,
+                  }}
+                >
                   {" "}
                   and{" "}
                 </Text>
                 <Text
-                  style={{ color: "blue", width: "80%", fontSize: 12 }}
+                  style={{
+                    color: Colors.blue.blue,
+                    width: "80%",
+                    fontSize: 12,
+                  }}
                   onPress={this.showConditions.bind(this, 1)}
                 >
                   Privacy Policy
                 </Text>
-                <Text style={{ width: "80%", color: "grey", fontSize: 12 }}>
+                <Text
+                  style={{
+                    width: "80%",
+                    color: Colors.grey.grey,
+                    fontSize: 12,
+                  }}
+                >
                   , including usage of cookies.
                 </Text>
               </Text>
@@ -678,7 +699,7 @@ class LoginScreen extends Component {
                   </ListItem>
                   <ListItem
                     key="2"
-                    containerStyle={{ backgroundColor: "blue" }}
+                    containerStyle={{ backgroundColor: Colors.blue.blue }}
                     onPress={this.showConditions.bind(this, 1)}
                   >
                     <ListItem.Content>
@@ -697,7 +718,7 @@ class LoginScreen extends Component {
                 loading={this.state.loadingButton}
                 ViewComponent={LinearGradient}
                 linearGradientProps={{
-                  colors: ["#4c669f", "#3b5998", "#192f6a"],
+                  colors: Colors.linearGradient,
                   start: { x: 0, y: 0.25 },
                   end: { x: 0.5, y: 1 },
                   locations: [0, 0.5, 0.6],
@@ -712,7 +733,7 @@ class LoginScreen extends Component {
                 }}
               >
                 <Text
-                  style={{ color: "#4c669f", fontSize: 14 }}
+                  style={{ color: Colors.blue.login, fontSize: 14 }}
                   // loading={this.state.loadingResendButton}
                 >
                   Trouble logging in? Contact Us
@@ -729,7 +750,7 @@ class LoginScreen extends Component {
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={true}
                 showConfirmButton={true}
-                confirmButtonColor="#29BFC2"
+                confirmButtonColor={Colors.primary}
                 confirmText="Try Again"
                 onConfirmPressed={() => {
                   this.setState({ showPhoneNumberError: false });
@@ -758,7 +779,7 @@ class LoginScreen extends Component {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Try Again"
-          confirmButtonColor="#DD6B55"
+          confirmButtonColor={Colors.errorButton}
           onConfirmPressed={() => {
             this.setState({ showAlert: false });
           }}
@@ -773,13 +794,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     alignSelf: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    backgroundColor: Colors.grey.f,
   },
   containerX: {
     marginTop: 20,
@@ -818,7 +839,7 @@ const styles = StyleSheet.create({
   },
 
   buttonBottomSheet: {
-    color: "white",
+    color: Colors.white,
     alignSelf: "center",
   },
 
@@ -830,27 +851,27 @@ const styles = StyleSheet.create({
 
   buttonLabel: {
     fontSize: 14,
-    color: "#FFF",
+    color: Colors.white,
     alignSelf: "center",
   },
   container1: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    backgroundColor: Colors.grey.f,
     justifyContent: "space-around",
   },
   otp_input: {
     height: 60,
-    borderColor: "gray",
+    borderColor: Colors.grey.grey,
     borderWidth: 1,
     paddingHorizontal: 10,
     fontSize: 18,
     borderRadius: 8,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
   },
   input: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 15,
     marginBottom: 10,
   },
@@ -866,20 +887,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 200,
@@ -898,7 +919,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
@@ -906,7 +927,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#aaa",
   },
   title2: {
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
@@ -928,7 +949,7 @@ const styles = StyleSheet.create({
   textInput: {
     width: "90%",
     height: 40,
-    borderColor: "#555",
+    borderColor: Colors.phoneInputBorder,
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
@@ -944,7 +965,7 @@ const styles = StyleSheet.create({
   themeButtonTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: Colors.white,
   },
   verificationView: {
     width: "100%",
@@ -952,12 +973,12 @@ const styles = StyleSheet.create({
     // marginTop: 50
   },
   underlineStyleBase: {
-    borderColor: "black",
-    color: "black",
+    borderColor: Colors.black,
+    color: Colors.black,
   },
 
   underlineStyleHighLighted: {
-    borderColor: "black",
+    borderColor: Colors.black,
   },
 });
 
