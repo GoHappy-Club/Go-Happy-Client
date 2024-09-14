@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { format, fromUnixTime } from "date-fns";
+import { Colors } from "../../assets/colors/color.js";
 
 const data = [
   {
@@ -65,8 +66,8 @@ class UpcomingWorkshops extends Component {
 
   loadDate(time) {
     const dt = fromUnixTime(time / 1000);
-  const finalTime = format(dt, 'MMM d, h:mm aa');
-  return finalTime;
+    const finalTime = format(dt, "MMM d, h:mm aa");
+    return finalTime;
   }
   trimContent(text, cut) {
     if (text.length < cut) {
@@ -162,14 +163,14 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: "grey",
+    backgroundColor: Colors.grey.grey,
   },
 
   container: {
     // flexDirection: "row",
     // alignItems: "center",
     borderRadius: 8,
-    borderColor: "grey",
+    borderColor: Colors.grey.grey,
     borderWidth: 0.2,
     margin: 10,
     width: 200,

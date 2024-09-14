@@ -26,6 +26,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { launchImageLibrary } from "react-native-image-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Platform } from "react-native";
+import { Colors } from "../assets/colors/color.js";
 
 class Profile extends Component {
   constructor(props) {
@@ -164,11 +165,12 @@ class Profile extends Component {
         if (properties && properties.length > 0) {
           const now = new Date();
           const days = Math.ceil(
-            (now.getTime() - Number(this.props.profile.dateOfJoining)) / (1000 * 3600 * 24)
-          )
-          if(days<10 || Number(this.props.profile.sessionsAttended)<5){
+            (now.getTime() - Number(this.props.profile.dateOfJoining)) /
+              (1000 * 3600 * 24)
+          );
+          if (days < 10 || Number(this.props.profile.sessionsAttended) < 5) {
             Linking.openURL(properties[0].whatsappLink[0]);
-          }else{
+          } else {
             Linking.openURL(properties[0].whatsappLink[1]);
           }
         }
@@ -182,8 +184,8 @@ class Profile extends Component {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.materialIndicatorColor }}
         />
       );
     }
@@ -210,13 +212,13 @@ class Profile extends Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
         <ScrollView
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
             height: "100%",
           }}
           contentContainerStyle={{
@@ -226,8 +228,8 @@ class Profile extends Component {
         >
           <View
             style={{
-              backgroundColor: "white",
-              shadowColor: "black",
+              backgroundColor: Colors.white,
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               width: "100%",
@@ -265,7 +267,7 @@ class Profile extends Component {
                   overflow: "hidden",
                   backgroundColor: "rgba(41,191,194,0.9)",
                   padding: 4,
-                  color: "white",
+                  color: Colors.white,
                   borderRadius: 10,
                 }}
               >
@@ -276,8 +278,8 @@ class Profile extends Component {
 
           <View
             style={{
-              backgroundColor: "#29BFC2",
-              shadowColor: "black",
+              backgroundColor: Colors.primary,
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               borderRadius: 10,
@@ -424,9 +426,7 @@ class Profile extends Component {
                   onPress={this.openWhatsApp}
                 >
                   <View>
-                    <Text style={styles.optionList}>
-                      Join Whatsapp Group
-                    </Text>
+                    <Text style={styles.optionList}>Join Whatsapp Group</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -442,9 +442,7 @@ class Profile extends Component {
                 onPress={this.openWhatsApp}
               >
                 <View>
-                  <Text style={styles.optionList}>
-                    Join Whatsapp Group
-                  </Text>
+                  <Text style={styles.optionList}>Join Whatsapp Group</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -474,8 +472,8 @@ class Profile extends Component {
                 showCancelButton={true}
                 showConfirmButton={true}
                 confirmText="Cancel" //confirm action is for cancelling to swap positions of the two
-                confirmButtonColor="#29BFC2"
-                cancelButtonColor="gray"
+                confirmButtonColor={Colors.primary}
+                cancelButtonColor={Colors.grey.grey}
                 cancelText="Logout"
                 onConfirmPressed={() => {
                   this.setState({ logoutPopup: false });
@@ -499,7 +497,11 @@ class Profile extends Component {
             <FAB
               style={styles.fab}
               icon={({ size, color }) => (
-                <FontAwesomeIcon icon={faComment} color={"white"} size={25} />
+                <FontAwesomeIcon
+                  icon={faComment}
+                  color={Colors.white}
+                  size={25}
+                />
               )}
               onPress={this.openWhatsApp}
             />
@@ -508,7 +510,11 @@ class Profile extends Component {
           <FAB
             style={styles.fab}
             icon={({ size, color }) => (
-              <FontAwesomeIcon icon={faComment} color={"white"} size={25} />
+              <FontAwesomeIcon
+                icon={faComment}
+                color={Colors.white}
+                size={25}
+              />
             )}
             onPress={this.openWhatsApp}
           />
@@ -521,7 +527,7 @@ class Profile extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
   },
   coverContainer: {
     overflow: "hidden",
@@ -533,15 +539,15 @@ const styles = StyleSheet.create({
   cardText: {
     textAlign: "center",
     marginTop: 10,
-    color: "white",
+    color: Colors.white,
   },
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: "#424242",
+    color: Colors.grey.optionList,
   },
   fab: {
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     position: "absolute",
     margin: 16,
     right: 0,
@@ -562,13 +568,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: "deepskyblue",
+    backgroundColor: Colors.deepskyblue,
   },
   logoutButton: {
-    backgroundColor: "gray",
+    backgroundColor: Colors.grey.grey,
   },
   buttonText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
   },
 });

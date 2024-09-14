@@ -15,6 +15,7 @@ import {
 import { BackgroundImage } from "react-native-elements/dist/config";
 // import { ScrollView } from "reac t-native-gesture-handler";
 import * as Progress from "react-native-progress";
+import { Colors } from "../assets/colors/color";
 
 const screenWidth = Dimensions.get("window").width;
 export default class ReferralsList extends React.Component {
@@ -61,8 +62,8 @@ export default class ReferralsList extends React.Component {
           <Progress.Bar
             style={styles.progressBar}
             //animated={false}
-            color="#29BFC2"
-            borderColor="#29BFC2"
+            color={Colors.primary}
+            borderColor={Colors.primary}
             progress={1.0}
             width={barWidth}
             height={barHeight}
@@ -128,7 +129,7 @@ export default class ReferralsList extends React.Component {
                 fontSize: 15,
                 marginLeft: 20,
                 marginBottom: 5,
-                color: "white",
+                color: Colors.white,
               }}
             >
               ({openedChestCount} level completed)
@@ -143,8 +144,8 @@ export default class ReferralsList extends React.Component {
           <View style={{ flexDirection: "row" }}>
             <Progress.Bar
               style={styles.progressBar}
-              color="white"
-              borderColor="white"
+              color={Colors.white}
+              borderColor={Colors.white}
               // indeterminateAnimationDuration={10000}
               progress={currentCount / 7}
               width={barWidth}
@@ -177,14 +178,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    color: "white",
+    color: Colors.white,
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
     marginLeft: 20,
   },
   label1: {
-    color: "white",
+    color: Colors.white,
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 20,
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderWidth: 5,
-    color: "black",
+    color: Colors.black,
   },
   profilePic: {
     marginLeft: 20,
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderTopWidth: 0.5,
-    borderColor: "grey",
+    borderColor: Colors.grey.grey,
   },
   referralsItem: {
     height: 50,
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
     // alignContent: "center",
   },
   referralsTitle: {
-    color: "white",
+    color: Colors.white,
     fontSize: 17,
     fontWeight: "bold",
   },
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   questContainer: {
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     width: screenWidth * 0.9,
     borderRadius: 20,
     // marginBottom: 20,
@@ -270,6 +271,6 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.9,
     borderRadius: 20,
     // borderTopWidth: 0.5,
-    // borderColor: "grey",
+    // borderColor: Colors.grey.grey,
   },
 });

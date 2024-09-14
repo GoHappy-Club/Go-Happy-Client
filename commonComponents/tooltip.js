@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useCopilot } from "react-native-copilot";
+import { Colors } from "../assets/colors/color";
 
 const CustomTooltip = () => {
   const {
@@ -40,9 +41,11 @@ const CustomTooltip = () => {
         {!isLastStep && (
           <TouchableOpacity
             onPress={handleSkip}
-            style={[styles.button, { backgroundColor: "transparent" }]}
+            style={[styles.button, { backgroundColor: Colors.transparent }]}
           >
-            <Text style={[styles.buttonText, { color: "gray" }]}>skip</Text>
+            <Text style={[styles.buttonText, { color: Colors.grey.grey }]}>
+              skip
+            </Text>
           </TouchableOpacity>
         )}
         <View
@@ -79,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     padding: "4%",
     paddingTop: 0,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 10,
     alignSelf: "center",
   },
@@ -97,11 +100,11 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 5,
     paddingHorizontal: 8,
-    backgroundColor: "#29BFC2",
+    backgroundColor: Colors.primary,
     borderRadius: 5,
   },
   buttonText: {
-    color: "white",
+    color: Colors.white,
     fontSize: 12,
   },
 });

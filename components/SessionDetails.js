@@ -31,6 +31,7 @@ import CountdownTimer from "../commonComponents/countdown.js";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { connect } from "react-redux";
+import { Colors } from "../assets/colors/color.js";
 class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -415,8 +416,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     if (this.state.loader == true) {
       return (
         <MaterialIndicator
-          color="white"
-          style={{ backgroundColor: "#0A1045" }}
+          color={Colors.white}
+          style={{ backgroundColor: Colors.materialIndicatorColor }}
         />
       );
     }
@@ -425,21 +426,21 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     return (
       <View
         style={{
-          backgroundColor: "white",
+          backgroundColor: Colors.white,
           flex: 1,
         }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           style={{
-            backgroundColor: "white",
+            backgroundColor: Colors.white,
           }}
         >
           <View
             style={{
-              backgroundColor: "white",
+              backgroundColor: Colors.white,
               borderRadius: 50,
-              shadowColor: "black",
+              shadowColor: Colors.black,
               shadowOffset: { height: 2 },
               shadowOpacity: 0.3,
               width: "100%",
@@ -468,9 +469,9 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               <Text
                 style={{
                   overflow: "hidden",
-                  backgroundColor: "white",
+                  backgroundColor: Colors.white,
                   padding: 4,
-                  color: "black",
+                  color: Colors.black,
                   borderRadius: 4,
                 }}
               >
@@ -493,27 +494,27 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 <TouchableOpacity onPress={this.shareMessage.bind(this, item)}>
                   <FontAwesomeIcon
                     icon={faShareAlt}
-                    color={"black"}
+                    color={Colors.black}
                     size={25}
                   />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* <Text h5 style={{ color: "grey", marginTop: 5 }}>
+            {/* <Text h5 style={{ color: Colors.grey.grey, marginTop: 5 }}>
               {item.expertName}
             </Text> */}
             {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
             <View style={{ flexDirection: "row" }}>
               <FontAwesomeIcon
                 icon={faClock}
-                color={"grey"}
+                color={Colors.grey.grey}
                 size={15}
                 style={{ marginTop: "6%" }}
               />
               <Text
                 style={{
-                  color: "grey",
+                  color: Colors.grey.grey,
                   marginTop: "5%",
                   fontSize: 15,
                   marginLeft: 5,
@@ -526,7 +527,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             <View
               style={{
                 marginTop: 2,
-                borderBottomColor: "grey",
+                borderBottomColor: Colors.grey.grey,
                 borderBottomWidth: 1,
               }}
             />
@@ -540,7 +541,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   <Text
                     style={{
                       fontSize: 17,
-                      color: "grey",
+                      color: Colors.grey.grey,
                       marginTop: "5%",
                       fontWeight: "bold",
                       marginBottom: "3%",
@@ -570,7 +571,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   <View
                     style={{
                       marginTop: "5%",
-                      borderBottomColor: "grey",
+                      borderBottomColor: Colors.grey.grey,
                       borderBottomWidth: 1,
                     }}
                   />
@@ -583,7 +584,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             <Text
               style={{
                 fontSize: 17,
-                color: "grey",
+                color: Colors.grey.grey,
                 marginTop: 20,
                 fontWeight: "bold",
               }}
@@ -591,7 +592,13 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               About
             </Text>
             {item.description && item.description.length > 0 && (
-              <Text style={{ fontSize: 17, color: "grey", marginTop: "5%" }}>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: Colors.grey.grey,
+                  marginTop: "5%",
+                }}
+              >
                 {item.description}
               </Text>
             )}
@@ -607,7 +614,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             <View
               style={{
                 marginTop: "5%",
-                borderBottomColor: "grey",
+                borderBottomColor: Colors.grey.grey,
                 borderBottomWidth: 1,
               }}
             />
@@ -630,7 +637,11 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   size={30}
                 />
                 <Title
-                  style={{ color: "#404040", fontSize: 13, paddingLeft: 10 }}
+                  style={{
+                    color: Colors.grey["4"],
+                    fontSize: 13,
+                    paddingLeft: 10,
+                  }}
                 >
                   {item.expertName}
                 </Title>
@@ -666,7 +677,10 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           <Button
             disabled={this.isDisabled()}
             outline
-            buttonStyle={{ backgroundColor: "#29BFC2", minWidth: WIDTH * 0.55 }}
+            buttonStyle={{
+              backgroundColor: Colors.primary,
+              minWidth: WIDTH * 0.55,
+            }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
             onPress={() => {
@@ -694,8 +708,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             closeOnHardwareBackPress={true}
             showConfirmButton={true}
             cancelText="Pay Now"
-            confirmButtonColor="gray"
-            cancelButtonColor="#29BFC2"
+            confirmButtonColor={Colors.grey.grey}
+            cancelButtonColor={Colors.primary}
             onCancelPressed={() => {
               this.phonePeWrapper("self", item);
               this.setState({
@@ -723,7 +737,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             <WebView
               javaScriptEnabled={true}
               allowsFullscreenVideo
-              style={{ flex: 1, borderColor: "red", borderWidth: 1 }}
+              style={{ flex: 1, borderColor: Colors.red, borderWidth: 1 }}
               source={{
                 uri: item.recordingLink,
               }}
@@ -740,7 +754,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Try Again"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
@@ -756,7 +770,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="OK"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({
                 showPaymentAlert: false,
@@ -809,7 +823,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   <Button
                     title="Yes"
                     buttonStyle={{
-                      backgroundColor: "#DD6B55",
+                      backgroundColor: Colors.errorButton,
                       width: WIDTH * 0.2,
                     }}
                     onPress={() => {
@@ -845,7 +859,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Share"
-            confirmButtonColor="#29BFC2"
+            confirmButtonColor={Colors.primary}
             onConfirmPressed={() => {
               this.handleBelowAge();
               this.setState({ belowAgePopUp: false });
@@ -861,16 +875,16 @@ const contentHtmlStyles = StyleSheet.create({
   table: {
     borderTopWidth: 1,
     borderLeftWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
     marginBottom: 7,
   },
   tr: {
     borderBottomWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
   },
   td: {
     borderRightWidth: 1,
-    borderColor: "#ccc",
+    borderColor: Colors.grey.c,
     padding: 5,
   },
 });
@@ -878,11 +892,11 @@ const contentHtmlStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
   },
   input: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 15,
     marginBottom: 10,
   },
@@ -906,20 +920,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 150,
@@ -932,7 +946,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {},
   title: {
-    color: "white",
+    color: Colors.white,
     marginTop: 10,
     width: 160,
     opacity: 0.9,
@@ -942,14 +956,14 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
     padding: 25,
   },
   title2: {
-    color: "white",
+    color: Colors.white,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,

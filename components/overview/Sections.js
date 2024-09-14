@@ -10,6 +10,7 @@ import {
 import { Linking } from "react-native";
 //import axios from "axios";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
+import { Colors } from "../../assets/colors/color";
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
@@ -19,30 +20,34 @@ export default function Sections(props) {
   const data1 = [
     {
       title: "Free Sessions",
-      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
       link: "HomeScreen",
-      text: "Click here to explore and book free sessions tailored just for you!"
+      text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
       title: "Contribute",
-      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
       link: "MembershipScreen",
-      text: "Help us make a difference! Click here to learn how you can contribute."
+      text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
       title: "Trips",
-      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
       link: "Trips",
-      text: "Discover exciting trips and adventures! Click here to see our upcoming trips."
+      text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
       title: "Get Help",
-      imgUrl: "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
+      imgUrl:
+        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
       link: "props.helpUrl",
       type: "external",
-      text: "Need assistance? Click here to get help and find the support you need."
-    }
-  ];  
+      text: "Need assistance? Click here to get help and find the support you need.",
+    },
+  ];
 
   // useEffect(() => {
   //   if (!walktroughStarted.current) {
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: "grey",
+    backgroundColor: Colors.grey.grey,
   },
   container: {
     margin: 0,
@@ -166,11 +171,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   startButton: {
-    color: "#29BFC2",
+    color: Colors.primary,
     textAlign: "center",
     margin: 10,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderRadius: 5,
   },
   walkthroughableView: {

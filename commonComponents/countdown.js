@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { Colors } from "../assets/colors/color";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const CountdownTimer = ({
   targetTime,
-  width=40,
-  height=40,
+  width = 40,
+  height = 40,
   separatorSize = 30,
   textSize = 20,
   showText,
@@ -51,7 +52,7 @@ const CountdownTimer = ({
         style={[
           styles.container,
           {
-            backgroundColor: "#8a8888",
+            backgroundColor: Colors.grey.countdown,
             padding: 8,
             borderRadius: 5,
             height: showText && "100%",
@@ -99,24 +100,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    backgroundColor: "#8a8888",
+    backgroundColor: Colors.grey.countdown,
     marginHorizontal: 1,
     textAlign: "center",
   },
   timeText: {
     fontWeight: "bold",
-    color: "#FFF",
+    color: Colors.white,
   },
   colon: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "#8a8888",
+    color: Colors.grey.countdown,
     marginHorizontal: 2,
   },
   dayText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
+    color: Colors.white,
   },
 });
 

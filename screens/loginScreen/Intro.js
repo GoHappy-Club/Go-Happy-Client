@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Image } from "react-native-elements";
+import { Colors } from "../../assets/colors/color";
 
 export default class Intro extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export default class Intro extends Component {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
-    backgroundColor: "#0A1045",
+    backgroundColor: Colors.materialIndicatorColor,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 20,
     textAlign: "center",
     marginBottom: 20,
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: "#EBC1C1",
-    color: "#000",
+    backgroundColor: Colors.pink.intro,
+    color: Colors.black,
     padding: 14,
     borderRadius: 10,
   },

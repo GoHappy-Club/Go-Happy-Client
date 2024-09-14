@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { walkthroughable, CopilotStep } from "react-native-copilot";
+import { Colors } from "../../assets/colors/color";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
@@ -27,19 +28,21 @@ export default class PromotionSection extends Component {
       {
         id: 1,
         title: "Refer Banner",
-        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
+        image:
+          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
         to: "Refer",
-        text: "Invite friends to join and benefit! Click here to refer and earn rewards."
+        text: "Invite friends to join and benefit! Click here to refer and earn rewards.",
       },
       {
         id: 2,
         title: "Contribute Banner",
-        image: "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
+        image:
+          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
         to: "MembershipScreen",
-        text: "Support our mission! Click here to learn how you can contribute and make an impact."
-      }
+        text: "Support our mission! Click here to learn how you can contribute and make an impact.",
+      },
     ];
-    
+
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headingContainer}>
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: "grey",
+    backgroundColor: Colors.grey.grey,
   },
   headingText: {
     marginHorizontal: 10,

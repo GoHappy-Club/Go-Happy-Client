@@ -15,6 +15,7 @@ import { Tab, TabView } from "@rneui/themed";
 import { View } from "react-native";
 import Accordion from "react-native-collapsible/Accordion";
 import { Itinerary } from "./Itinerary.js";
+import { Colors } from "../../assets/colors/color.js";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
   textContainer: {
     padding: 16,
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   coverTitle: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "white",
+    color: Colors.white,
     marginBottom: 0,
   },
   scrollContainer: {

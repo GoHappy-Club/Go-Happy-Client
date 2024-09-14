@@ -10,6 +10,7 @@ import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
 import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Colors } from "../assets/colors/color.js";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -98,8 +99,7 @@ class AdditionalDetails extends Component {
     if (this.state.age < 16) {
       this.setState({
         showAlert: true,
-        alertMessage:
-          "Sorry, you must be atleast 16 years old to log in.",
+        alertMessage: "Sorry, you must be atleast 16 years old to log in.",
       });
       return;
     }
@@ -135,7 +135,7 @@ class AdditionalDetails extends Component {
           if (response.data.age != null) {
             AsyncStorage.setItem("age", response.data.age);
           }
-          if(response.data.token != null){
+          if (response.data.token != null) {
             AsyncStorage.setItem("token", response.data.token);
           }
           // this.state.navigation.navigate('DrawerNavigator');
@@ -153,7 +153,7 @@ class AdditionalDetails extends Component {
           this.setState({ loader: true });
 
           // this.props.route.params.navigation.replace("Intro");
-          AsyncStorage.setItem("showTour","true");
+          AsyncStorage.setItem("showTour", "true");
           this.props.navigation.navigate("GoHappy Club");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
@@ -182,7 +182,7 @@ class AdditionalDetails extends Component {
         <View style={styles.inputs}>
           <TextInput
             style={styles.input}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid={Colors.transparent}
             placeholder="Name *"
             placeholderTextColor="#000"
             autoCapitalize="none"
@@ -191,7 +191,7 @@ class AdditionalDetails extends Component {
           />
           <TextInput
             style={styles.input}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid={Colors.transparent}
             keyboardType="numeric"
             placeholder="Age *"
             maxLength={2}
@@ -202,7 +202,7 @@ class AdditionalDetails extends Component {
           />
           <TextInput
             style={styles.input}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid={Colors.transparent}
             placeholder="Email"
             placeholderTextColor="#000"
             autoCapitalize="none"
@@ -212,7 +212,7 @@ class AdditionalDetails extends Component {
 
           <TextInput
             style={styles.input}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid={Colors.transparent}
             placeholder="City"
             placeholderTextColor="#000"
             value={this.state.city}
@@ -220,7 +220,7 @@ class AdditionalDetails extends Component {
           />
           <TextInput
             style={styles.input}
-            underlineColorAndroid="transparent"
+            underlineColorAndroid={Colors.transparent}
             placeholder="Emergency Contact Number"
             placeholderTextColor="#000"
             value={this.state.emergencyContact}
@@ -230,7 +230,7 @@ class AdditionalDetails extends Component {
           <Text
             style={{
               fontSize: 14,
-              color: "black",
+              color: Colors.black,
               marginTop: "5%",
               alignSelf: "center",
               alignContent: "center",
@@ -243,7 +243,7 @@ class AdditionalDetails extends Component {
           {/* <Pressable onPress={() => this.setState({open:true})} >
 						<View pointerEvents="none">
 							<TextInput style = {styles.input}
-								underlineColorAndroid = "transparent"
+								underlineColorAndroid = {Colors.transparent}
 								placeholder = "Date Of Birth *"
 								editable={false}
 								placeholderTextColor = "#000"
@@ -274,7 +274,7 @@ class AdditionalDetails extends Component {
           buttonStyle={{ width: "50%", alignSelf: "center", marginTop: "5%" }}
           ViewComponent={LinearGradient}
           linearGradientProps={{
-            colors: ["#4c669f", "#3b5998", "#192f6a"],
+            colors: Colors.linearGradient,
             start: { x: 0, y: 0.25 },
             end: { x: 0.5, y: 1 },
             locations: [0, 0.5, 0.6],
@@ -283,7 +283,7 @@ class AdditionalDetails extends Component {
         />
         {/* <Button  buttonStyle = {styles.dateInput}
 					// buttonStyle={{backgroundColor:'white'}}
-					titleStyle={{color:'#29BFC2'}}
+					titleStyle={{color:Colors.primary}}
 					title="Set Date of Birth"
 					onPress={() => this.setState({open:true})} /> */}
 
@@ -296,7 +296,7 @@ class AdditionalDetails extends Component {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="Try Again"
-          confirmButtonColor="#DD6B55"
+          confirmButtonColor={Colors.errorButton}
           onConfirmPressed={() => {
             this.setState({ showAlert: false });
           }}
@@ -310,22 +310,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.black,
     marginTop: "15%",
     alignSelf: "center",
   },
   container1: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    backgroundColor: Colors.grey.f,
   },
   input: {
     fontSize: 18,
-    color: "black",
+    color: Colors.black,
     marginTop: "5%",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     paddingLeft: 15,
-    borderColor: "black",
+    borderColor: Colors.black,
     borderWidth: 1,
     borderRadius: 5,
     width: "70%",
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: "5%",
     alignSelf: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     width: "40%",
   },
   btnContainer: {
@@ -354,20 +354,20 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontSize: 20,
     textAlign: "center",
-    color: "black",
+    color: Colors.black,
     fontWeight: "700",
   },
   registerTxt: {
     marginTop: 5,
     fontSize: 15,
     textAlign: "center",
-    color: "white",
+    color: Colors.white,
   },
   welcome: {
     fontSize: 30,
     textAlign: "center",
     margin: 10,
-    color: "white",
+    color: Colors.white,
   },
   logo: {
     width: 250,
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "rgba(255,255,255,0.2)",
     marginBottom: 10,
-    color: "white",
+    color: Colors.white,
     paddingHorizontal: 10,
   },
   container2: {
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#aaa",
   },
   title2: {
-    color: "black",
+    color: Colors.black,
     marginTop: "30%",
     marginBottom: 10,
     opacity: 0.9,
@@ -406,11 +406,11 @@ const styles = StyleSheet.create({
   textInput: {
     width: "90%",
     height: 40,
-    borderColor: "#555",
+    borderColor: Colors.phoneInputBorder,
     borderWidth: 2,
     borderRadius: 5,
     paddingLeft: 10,
-    color: "#fff",
+    color: Colors.white,
     fontSize: 16,
   },
   themeButton: {
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
   themeButtonTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: Colors.white,
   },
   verificationView: {
     width: "100%",

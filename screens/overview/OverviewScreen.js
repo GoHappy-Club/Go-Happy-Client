@@ -193,7 +193,7 @@ class OverviewScreen extends Component {
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
-        // <ScrollView style={{ backgroundColor: "white" }}>
+        // <ScrollView style={{ backgroundColor: Colors.white }}>
         <Video
           source={require("../../images/logo_splash.mp4")}
           style={{

@@ -24,6 +24,7 @@ import { setSessionAttended } from "../services/events/EventService";
 import phonepe_payments from "./PhonePe/Payments.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import tambola from "tambola";
+import { Colors } from "../assets/colors/color.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -245,7 +246,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          color: "#2f2f31",
+          color: Colors.greyishText,
         }}
       >
         {/* No Sessions Available 😟 */}
@@ -311,12 +312,16 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           marginLeft: 30,
           marginRight: 30,
           marginBottom: 15,
-          backgroundColor: "#29BFC2",
+          backgroundColor: Colors.primary,
         }}
       >
         <TouchableOpacity
-          style={{ ...styles.card, marginTop: 10, backgroundColor: "#29BFC2" }}
-          underlayColor={"#29BFC2"}
+          style={{
+            ...styles.card,
+            marginTop: 10,
+            backgroundColor: Colors.primary,
+          }}
+          underlayColor={Colors.primary}
           onPress={() =>
             this.props.navigation.navigate("Session Details", {
               phoneNumber: profile.phoneNumber,
@@ -341,18 +346,22 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 <Badge
                   value={item.costType == "paid" ? "Workshop" : item.category}
                   badgeStyle={styles.badge}
-                  textStyle={{ color: "#2f2f31" }}
+                  textStyle={{ color: Colors.greyishText }}
                 />
-                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
+                <Text
+                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
+                >
                   {this.loadDate(item)} |
                 </Text>
-                <Text style={{ color: "white", fontSize: 14, paddingLeft: 4 }}>
+                <Text
+                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
+                >
                   {item.seatsLeft} seats left
                 </Text>
                 {item.costType == "paid" && (
                   <Text
                     style={{
-                      color: "white",
+                      color: Colors.white,
                       fontSize: 14,
                       paddingLeft: 4,
                       position: "absolute",
@@ -366,7 +375,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </View>
               {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
-            <Title style={{ color: "white", fontSize: 20, padding: 4 }}>
+            <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
               {this.trimContent(item.eventName, 30)}
             </Title>
 
@@ -390,7 +399,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   size={30}
                 />
                 <Title
-                  style={{ color: "white", fontSize: 13, paddingLeft: 10 }}
+                  style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}
                 >
                   {this.trimContent(item.expertName, 17)}
                 </Title>
@@ -410,9 +419,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                     : this.updateEventBook.bind(this, item)
                 }
                 loading={item.loadingButton}
-                loadingProps={{ size: "small", color: "black" }}
-                buttonStyle={{ backgroundColor: "white" }}
-                titleStyle={{ color: "#2f2f31" }}
+                loadingProps={{ size: "small", color: Colors.black }}
+                buttonStyle={{ backgroundColor: Colors.white }}
+                titleStyle={{ color: Colors.greyishText }}
               />
             </View>
           </Cd.Content>
@@ -420,7 +429,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       </Cd>
     );
     return (
-      <View style={{ flex: 1, backgroundColor: "#f0f0f0" }}>
+      <View style={{ flex: 1, backgroundColor: Colors.grey.f0 }}>
         <CalendarDays
           numberOfDays={15}
           daysInView={3}
@@ -433,13 +442,13 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             marginLeft: 30,
             marginTop: 20,
             marginBottom: 15,
-            color: "#2f2f31",
+            color: Colors.greyishText,
           }}
         >
           {this.state.selectedDate}
         </Text>
         {this.props.childLoader == true && (
-          <MaterialIndicator color="#29BFC2" />
+          <MaterialIndicator color={Colors.primary} />
         )}
         {this.props.childLoader == false &&
           this.props.events.filter((item) => item.endTime > Date.now()).length >
@@ -470,7 +479,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Try Again"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
@@ -486,8 +495,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             closeOnHardwareBackPress={true}
             showConfirmButton={true}
             cancelText="Pay Now"
-            confirmButtonColor="gray"
-            cancelButtonColor="#29BFC2"
+            confirmButtonColor={Colors.grey.grey}
+            cancelButtonColor={Colors.primary}
             onCancelPressed={() => {
               this.phonePeWrapper("self", this.state.itemToBuy);
               this.setState({
@@ -511,7 +520,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="OK"
-            confirmButtonColor="#DD6B55"
+            confirmButtonColor={Colors.errorButton}
             onConfirmPressed={() => {
               this.setState({
                 showPaymentAlert: false,
@@ -533,7 +542,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             closeOnHardwareBackPress={false}
             showConfirmButton={true}
             confirmText="Share"
-            confirmButtonColor="#29BFC2"
+            confirmButtonColor={Colors.primary}
             onConfirmPressed={() => {
               this.handleBelowAge();
               this.setState({ belowAgePopUp: false });
@@ -553,7 +562,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 8,
   },
   image: {
@@ -563,7 +572,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "lightgrey",
+    backgroundColor: Colors.grey.lightgrey,
     paddingBottom: 50,
     margin: 40,
   },
@@ -571,23 +580,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#29BFC2",
+    borderColor: Colors.primary,
   },
   badge: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     alignSelf: "flex-start",
-    color: "#29BFC2",
+    color: Colors.primary,
     // padding:4
   },
   fav: {
     alignSelf: "flex-start",
   },
   bookButton: {
-    backgroundColor: "green",
+    backgroundColor: Colors.green,
   },
 });
 
