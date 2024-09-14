@@ -10,6 +10,7 @@ import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
 import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AutocompleteCityInput from "./Autocomplete.js";
 import { Colors } from "../assets/colors/color.js";
 class AdditionalDetails extends Component {
   constructor(props) {
@@ -209,15 +210,7 @@ class AdditionalDetails extends Component {
             value={this.state.email}
             onChangeText={(text) => this.setState({ email: text })}
           />
-
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="City"
-            placeholderTextColor="#000"
-            value={this.state.city}
-            onChangeText={(text) => this.setState({ city: text })}
-          />
+          <AutocompleteCityInput />
           <TextInput
             style={styles.input}
             underlineColorAndroid={Colors.transparent}
