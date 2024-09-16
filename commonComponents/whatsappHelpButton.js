@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { FAB } from "react-native-paper";
 import { Linking } from "react-native";
@@ -11,8 +11,14 @@ import { Colors } from "../assets/colors/color";
 
 const Walkthroughable = walkthroughable(View);
 
-const WhatsAppFAB = ({ url }) => {
+const WhatsAppFAB = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const [link, setLink] = useState("");
+
+  useEffect(() => {
+    handlePress();
+  }, [])
+  
 
   const handlePress = async () => {
     var url = SERVER_URL + "/properties/list";
@@ -26,9 +32,9 @@ const WhatsAppFAB = ({ url }) => {
             (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
           );
           if (days < 10 || Number(profile.sessionsAttended) < 5) {
-            Linking.openURL(properties[0].whatsappLink[0]);
+            setLink(properties[0].whatsappLink[0]);
           } else {
-            Linking.openURL(properties[0].whatsappLink[1]);
+            setLink(properties[0].whatsappLink[1]);
           }
         }
       }
@@ -45,7 +51,7 @@ const WhatsAppFAB = ({ url }) => {
         text="Click here to contact us on WhatsApp"
       >
         <Walkthroughable>
-          <TouchableOpacity onPress={handlePress}>
+          <TouchableOpacity onPress={()=>Linking.openURL(link)}>
             <FAB
               style={styles.fab}
               icon={() => (

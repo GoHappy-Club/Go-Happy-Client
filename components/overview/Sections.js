@@ -68,7 +68,7 @@ export default function Sections(props) {
         if (response.data) {
           const properties = response.data.properties;
           if (properties && properties.length > 0) {
-            setWhatsappLink(properties[0].whatsappLink);
+            setWhatsappLink(properties[0].whatsappHelpLink);
           }
         }
       } catch (error) {

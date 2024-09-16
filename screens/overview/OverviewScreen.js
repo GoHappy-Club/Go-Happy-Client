@@ -127,7 +127,7 @@ class OverviewScreen extends Component {
         if (properties && properties.length > 0 && redux_profile) {
           redux_profile.properties = properties[0];
           actions.setProfile(redux_profile);
-          this.setState({ whatsappLink: properties[0].whatsappLink });
+          this.setState({ whatsappLink: properties[0].whatsappHelpLink });
         }
       }
     } catch (error) {
@@ -170,23 +170,9 @@ class OverviewScreen extends Component {
             <PromotionSection navigation={this.props.navigation} />
           </ScrollView>
           {this.props.profile.age != null ? (
-            this.props.profile.age > 50 && (
-              <WhatsAppFAB
-                url={
-                  this.props.profile.properties
-                    ? this.props.profile.properties.whatsappLink
-                    : this.state.whatsappLink
-                }
-              />
-            )
+            this.props.profile.age > 50 && <WhatsAppFAB />
           ) : (
-            <WhatsAppFAB
-              url={
-                this.props.profile.properties
-                  ? this.props.profile.properties.whatsappLink
-                  : this.state.whatsappLink
-              }
-            />
+            <WhatsAppFAB />
           )}
         </>
       );
