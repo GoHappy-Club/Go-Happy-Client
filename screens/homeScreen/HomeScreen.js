@@ -79,22 +79,10 @@ class HomeScreen extends Component {
           />
           {this.props.profile.age != null ? (
             this.props.profile.age > 50 && (
-              <WhatsAppFAB
-                url={
-                  this.props.profile.properties
-                    ? this.props.profile.properties.whatsappLink
-                    : this.state.whatsappLink
-                }
-              />
+              <WhatsAppFAB/>
             )
           ) : (
-            <WhatsAppFAB
-              url={
-                this.props.profile.properties
-                  ? this.props.profile.properties.whatsappLink
-                  : this.state.whatsappLink
-              }
-            />
+            <WhatsAppFAB/>
           )}
         </>
       );

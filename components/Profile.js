@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import { changeCount, setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faPeopleArrows } from "@fortawesome/free-solid-svg-icons";
 //import axios from "axios";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
@@ -44,9 +44,11 @@ class Profile extends Component {
       state: "",
       image: null,
       logoutPopup: false,
+      whatsappLink: "",
     };
     this._retrieveData();
   }
+
   componentDidUpdate() {
     this.refreshProfile();
   }
@@ -155,6 +157,7 @@ class Profile extends Component {
     this.focusListener = this.props.navigation.addListener("focus", () => {
       this._retrieveData();
     });
+    this.openWhatsApp();
   };
   openWhatsApp = async () => {
     var url = SERVER_URL + "/properties/list";
@@ -169,9 +172,11 @@ class Profile extends Component {
               (1000 * 3600 * 24)
           );
           if (days < 10 || Number(this.props.profile.sessionsAttended) < 5) {
-            Linking.openURL(properties[0].whatsappLink[0]);
+            // Linking.openURL(properties[0].whatsappLink[0]);
+            this.setState({ whatsappLink: properties[0].whatsappLink[0] });
           } else {
-            Linking.openURL(properties[0].whatsappLink[1]);
+            // Linking.openURL(properties[0].whatsappLink[1]);
+            this.setState({ whatsappLink: properties[0].whatsappLink[1] });
           }
         }
       }
@@ -423,7 +428,7 @@ class Profile extends Component {
                     borderTopWidth: 1,
                     borderColor: "#E0E0E0",
                   }}
-                  onPress={this.openWhatsApp}
+                  onPress={() => Linking.openURL(this.state.whatsappLink)}
                 >
                   <View>
                     <Text style={styles.optionList}>Join Whatsapp Group</Text>
@@ -439,7 +444,7 @@ class Profile extends Component {
                   borderTopWidth: 1,
                   borderColor: "#E0E0E0",
                 }}
-                onPress={this.openWhatsApp}
+                onPress={() => Linking.openURL(this.state.whatsappLink)}
               >
                 <View>
                   <Text style={styles.optionList}>Join Whatsapp Group</Text>
@@ -503,7 +508,7 @@ class Profile extends Component {
                   size={25}
                 />
               )}
-              onPress={this.openWhatsApp}
+              onPress={() => Linking.openURL(this.state.whatsappLink)}
             />
           )
         ) : (
@@ -516,7 +521,7 @@ class Profile extends Component {
                 size={25}
               />
             )}
-            onPress={this.openWhatsApp}
+            onPress={() => Linking.openURL(this.state.whatsappLink)}
           />
         )}
       </View>
