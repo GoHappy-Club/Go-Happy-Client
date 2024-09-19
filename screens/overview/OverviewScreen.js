@@ -153,7 +153,7 @@ class OverviewScreen extends Component {
               navigation={this.props.navigation}
               helpUrl={
                 this.props.profile.properties
-                  ? this.props.profile.properties.whatsappLink
+                  ? this.props.profile.properties.whatsappHelpLink
                   : this.state.whatsappLink
               }
             />

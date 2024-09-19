@@ -32,9 +32,9 @@ const WhatsAppFAB = () => {
             (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
           );
           if (days < 10 || Number(profile.sessionsAttended) < 5) {
-            setLink(properties[0].whatsappLink[0]);
+            setLink(properties[0].whatsappGroupLink[0]);
           } else {
-            setLink(properties[0].whatsappLink[1]);
+            setLink(properties[0].whatsappGroupLink[1]);
           }
         }
       }
