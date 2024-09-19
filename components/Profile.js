@@ -172,11 +172,9 @@ class Profile extends Component {
               (1000 * 3600 * 24)
           );
           if (days < 10 || Number(this.props.profile.sessionsAttended) < 5) {
-            // Linking.openURL(properties[0].whatsappLink[0]);
-            this.setState({ whatsappLink: properties[0].whatsappLink[0] });
+            this.setState({ whatsappLink: properties[0].whatsappGroupLink[0] });
           } else {
-            // Linking.openURL(properties[0].whatsappLink[1]);
-            this.setState({ whatsappLink: properties[0].whatsappLink[1] });
+            this.setState({ whatsappLink: properties[0].whatsappGroupLink[1] });
           }
         }
       }

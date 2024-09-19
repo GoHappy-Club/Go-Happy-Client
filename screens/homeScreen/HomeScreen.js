@@ -53,7 +53,7 @@ class HomeScreen extends Component {
         if (properties && properties.length > 0 && redux_profile) {
           redux_profile.properties = properties[0];
           actions.setProfile(redux_profile);
-          this.setState({ whatsappLink: properties[0].whatsappLink });
+          this.setState({ whatsappLink: properties[0].whatsappHelpLink });
         }
       }
     } catch (error) {
