@@ -98,15 +98,7 @@ class LoginScreen extends Component {
     const otpList = message.match(/\b\d{6}\b/);
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
-      this.setState(
-        {
-          verificationCode: verificationCode,
-          loadingVerifyButton: true,
-        },
-        () => {
-          this.handleVerifyCode();
-        }
-      );
+      this.setState({ verificationCode: verificationCode });
     }
   };
 
@@ -215,19 +207,19 @@ class LoginScreen extends Component {
         .signInWithPhoneNumber(this.state.phoneNumber)
         .then((confirmResult) => {
           this.setState({ confirmResult });
-          // firebase.auth().onAuthStateChanged((user) => {
-          //   if (user) {
-          //     this.setState({ userId: user.uid });
-          //     try {
-          //       this._backendSignIn(
-          //         user.uid,
-          //         user.displayName,
-          //         "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-          //         user.phoneNumber
-          //       );
-          //     } catch (error) {}
-          //   }
-          // });
+          firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+              this.setState({ userId: user.uid });
+              try {
+                this._backendSignIn(
+                  user.uid,
+                  user.displayName,
+                  "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
+                  user.phoneNumber
+                );
+              } catch (error) {}
+            }
+          });
           if (resend) {
             this.setState({ loadingResendButton: false });
           } else {
@@ -290,9 +282,7 @@ class LoginScreen extends Component {
             "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
             user.user.phoneNumber
           );
-          this.setState({ loadingVerifyButton: false });
         } catch (error) {
-          this.setState({ loadingVerifyButton: false });
           console.log("Error in handleVerify==>", error);
         }
         //   this.setState({ loadingButton:false });
@@ -425,6 +415,7 @@ class LoginScreen extends Component {
     if (name == null) {
       name = "";
     }
+    this.setState({ loadingVerifyButton: true });
     var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {
@@ -517,13 +508,16 @@ class LoginScreen extends Component {
             });
             this.setState({ loader: true });
             this.props.navigation.replace("GoHappy Club");
+            this.setState({ loadingVerifyButton: false });
             this.setState({ loader: false });
           }
         } else if (response.data == "ERROR") {
-          this.setState({ showAlert: true, loader: false });
+          this.setState({ showAlert: true, loader: false,loadingVerifyButton:false });
         }
+        this.setState({ loadingVerifyButton: false });
       })
       .catch((error) => {
+        this.setState({ loadingVerifyButton: false });
         console.log("Error in backendSignin", error);
       });
   }
