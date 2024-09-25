@@ -387,20 +387,22 @@ class Profile extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ width: Dimensions.get("window").width * 0.9 }}>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                borderTopWidth: 1,
-                borderColor: "#E0E0E0",
-              }}
-              onPress={() => this.props.navigation.navigate("PastSessions")}
-            >
-              <View>
-                <Text style={styles.optionList}>Check Past Sessions</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          {profile.age == null || profile.age > 50 ? (
+            <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  borderTopWidth: 1,
+                  borderColor: "#E0E0E0",
+                }}
+                onPress={() => this.props.navigation.navigate("PastSessions")}
+              >
+                <View>
+                  <Text style={styles.optionList}>Check Past Sessions</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : null}
           <View style={{ width: Dimensions.get("window").width * 0.9 }}>
             <TouchableOpacity
               style={{
@@ -417,24 +419,7 @@ class Profile extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          {profile.age != null ? (
-            profile.age > 50 && (
-              <View style={{ width: Dimensions.get("window").width * 0.9 }}>
-                <TouchableOpacity
-                  style={{
-                    width: "100%",
-                    borderTopWidth: 1,
-                    borderColor: "#E0E0E0",
-                  }}
-                  onPress={() => Linking.openURL(this.state.whatsappLink)}
-                >
-                  <View>
-                    <Text style={styles.optionList}>Join Whatsapp Group</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )
-          ) : (
+          {profile.age == null || profile.age > 50 ? (
             <View style={{ width: Dimensions.get("window").width * 0.9 }}>
               <TouchableOpacity
                 style={{
@@ -449,7 +434,7 @@ class Profile extends Component {
                 </View>
               </TouchableOpacity>
             </View>
-          )}
+          ) : null}
           <View style={{ width: Dimensions.get("window").width * 0.9 }}>
             <TouchableOpacity
               style={{
@@ -495,21 +480,7 @@ class Profile extends Component {
 							</View>
 					</View> */}
         </ScrollView>
-        {profile.age != null ? (
-          profile.age > 50 && (
-            <FAB
-              style={styles.fab}
-              icon={({ size, color }) => (
-                <FontAwesomeIcon
-                  icon={faComment}
-                  color={Colors.white}
-                  size={25}
-                />
-              )}
-              onPress={() => Linking.openURL(this.state.whatsappLink)}
-            />
-          )
-        ) : (
+        {profile.age == null || profile.age > 50 ? (
           <FAB
             style={styles.fab}
             icon={({ size, color }) => (
@@ -521,7 +492,7 @@ class Profile extends Component {
             )}
             onPress={() => Linking.openURL(this.state.whatsappLink)}
           />
-        )}
+        ) : null}
       </View>
     );
   }

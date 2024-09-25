@@ -11,10 +11,13 @@ import {
 } from "react-native";
 import { walkthroughable, CopilotStep } from "react-native-copilot";
 import { Colors } from "../../assets/colors/color";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { setProfile } from "../../redux/actions/counts";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
-export default class PromotionSection extends Component {
+class PromotionSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +33,7 @@ export default class PromotionSection extends Component {
         title: "Refer Banner",
         image:
           "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
-        to: "Refer",
+        to: this.props.profile.age ==null || this.props.profile.age > 50 ? "Refer" : "OverviewScreen",
         text: "Invite friends to join and benefit! Click here to refer and earn rewards.",
       },
       {
@@ -129,3 +132,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+});
+
+const ActionCreators = Object.assign({}, { setProfile });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(PromotionSection);
