@@ -43,8 +43,10 @@ import Intro from "./screens/loginScreen/Intro";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { useCopilot } from "react-native-copilot";
 import axios from "./config/CustomAxios.js";
-import { JWT_TOKEN } from "@env";
+// import { ZOOM_JWT_TOKEN } from "@env";
+import { ZOOM_JWT_TOKEN } from "./config/tokens.js";
 import { Colors } from "./assets/colors/color.js";
+import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -423,6 +425,14 @@ export default function App() {
           linking={token == true && linking}
           ref={navigationRef}
         >
+        <ZoomSDKProvider
+          config={{
+            jwtToken: ZOOM_JWT_TOKEN,
+            domain: "zoom.us",
+            enableLog: true,
+            logSize: 5,
+          }}
+        >
           <Stack.Navigator>
             <>
               <Stack.Screen
@@ -612,6 +622,7 @@ export default function App() {
               />
             </>
           </Stack.Navigator>
+          </ZoomSDKProvider>
         </NavigationContainer>
       ) : (
         <Video

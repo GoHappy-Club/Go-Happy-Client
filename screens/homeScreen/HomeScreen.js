@@ -77,9 +77,13 @@ class HomeScreen extends Component {
             registerStep={this.props.registerStep}
             copilotEvents={this.props.copilotEvents}
           />
-          {this.props.profile.age != null || this.props.profile.age > 50 ? (
-            <WhatsAppFAB />
-          ) : null}
+          {this.props.profile.age != null ? (
+            this.props.profile.age > 50 && (
+              <WhatsAppFAB/>
+            )
+          ) : (
+            <WhatsAppFAB/>
+          )}
         </>
       );
     } else {

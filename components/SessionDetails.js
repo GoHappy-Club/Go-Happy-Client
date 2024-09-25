@@ -211,15 +211,15 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
       shareMessage =
         "Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. The name of the session is " +
         toUnicodeVariant(item.eventName, "bold italic") +
-        ". I think you will definitely like it. Here is the link to the session: \n" +
+        ". I think you will definitely like it. Here is the link to the session: " +
         link +
-        ".\n Join in and let me know how you liked it!";
+        ". Join in and let me know how you liked it!";
     } else {
       link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
       shareMessage =
-        "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: \n" +
+        "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: " +
         link +
-        ". \nGive it a try and let me know how you like it! 😊";
+        ". Give it a try and let me know how you like it! 😊";
     }
     Share.share({
       message: shareMessage,

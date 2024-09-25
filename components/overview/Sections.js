@@ -6,17 +6,20 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Linking } from "react-native";
 //import axios from "axios";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import { Colors } from "../../assets/colors/color";
+import { useZoom } from "@zoom/meetingsdk-react-native";
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const [whatsappLink, setWhatsappLink] = useState("");
   const { start, copilotEvents } = useCopilot();
   const walktroughStarted = useRef(false);
+  const zoom = useZoom();
   const data1 = [
     {
       title: "Free Sessions",
@@ -78,6 +81,23 @@ export default function Sections(props) {
 
     handleHelp();
   }, []);
+
+  
+  const joinMeeting = async () => {
+    try {
+      if (!zoom.isInitialized()) {
+        Alert.alert("Zoom not initialized");
+      }
+      await zoom.joinMeeting({
+        meetingNumber: " 83707946835",
+        userName: "John Doe",
+        password: "xcEdj5",
+      });
+    } catch (error) {
+      Alert.alert("" + error);
+    }
+  };
+
   return (
     <View style={styles.mainContainer}>
       {/* <Button title="Start tutorial" onPress={() => start()} /> */}
@@ -86,6 +106,9 @@ export default function Sections(props) {
         <Text style={styles.headingText}>Explore</Text>
         <View style={styles.line} />
       </View>
+      <TouchableOpacity onPress={joinMeeting}>
+        <Text>Start</Text>
+      </TouchableOpacity>
 
       <View style={styles.sectionsContainer}>
         {data1.map((item, index) => (

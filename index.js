@@ -13,6 +13,7 @@ import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
 import { Colors } from "./assets/colors/color";
+
 // const my_store = store();
 
 const RNRedux = () => {

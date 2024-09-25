@@ -169,9 +169,11 @@ class OverviewScreen extends Component {
             />
             <PromotionSection navigation={this.props.navigation} />
           </ScrollView>
-          {this.props.profile.age == null || this.props.profile.age > 50 ? (
+          {this.props.profile.age != null ? (
+            this.props.profile.age > 50 && <WhatsAppFAB />
+          ) : (
             <WhatsAppFAB />
-          ) : null}
+          )}
         </>
       );
     } else {

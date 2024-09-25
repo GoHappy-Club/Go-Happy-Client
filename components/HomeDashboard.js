@@ -189,9 +189,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     const link =
       "https://play.google.com/store/apps/details?id=com.gohappyclient";
     const shareMessage =
-      "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: \n" +
+      "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: " +
       link +
-      ".\nGive it a try and let me know how you like it! 😊";
+      ". Give it a try and let me know how you like it! 😊";
     Share.share({
       message: shareMessage,
     })

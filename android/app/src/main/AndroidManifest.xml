@@ -2,7 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.gohappyclient">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- In Meeting Kubi Functions will need the following Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <!-- <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -12,11 +15,59 @@
     <uses-permission
         android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" /> -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- "Connect to the network" will need the following Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- In Meeting "Audio With VOIP" will need the following Permissions -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- In Meeting "Kubi Device/Audio with bluetooth" will need the following Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+    <!-- In Meeting "Audio With VOIP/Share Screen Audio" will need the following Permissions -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- "Preview/In Meeting Video/VirtualBackground/Share Camera" will need the following
+    Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <!-- "Keep the CPU on in meeting when screen off" will need the following Permissions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- In Meeting "audio with Dial in" will need the following Permissions -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- In Meeting "share screen/MiniMeeting" will need the following Permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- "Foreground services and notifications"  will need the following Permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- New Android T(14) permission -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- In Meeting PIP Mode will need the following Permissions -->
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
 
     <application
         android:requestLegacyExternalStorage="true"
@@ -75,8 +126,10 @@
             android:resource="@color/white" />
         <!-- or @android:color/{name} to use a standard color -->
 
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+        <receiver
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
+        <receiver
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
         <receiver
             android:exported="true"
             android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
@@ -87,7 +140,8 @@
             </intent-filter>
         </receiver>
 
-        <!-- <service android:name=".MyFirebaseMessagingService" android:exported="false" android:directBootAware="true">
+        <!-- <service android:name=".MyFirebaseMessagingService" android:exported="false"
+        android:directBootAware="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
