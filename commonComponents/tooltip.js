@@ -44,7 +44,7 @@ const CustomTooltip = () => {
             style={[styles.button, { backgroundColor: Colors.transparent }]}
           >
             <Text style={[styles.buttonText, { color: Colors.grey.grey }]}>
-              skip
+              Skip
             </Text>
           </TouchableOpacity>
         )}

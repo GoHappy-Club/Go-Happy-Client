@@ -127,22 +127,24 @@ export default function BottomNavigator() {
           tabBarInactiveTintColor: Colors.grey.grey,
         }}
       />
-      <Tab.Screen
-        name="Refer"
-        children={(props) => <ReferScreen propProfile={profile} {...props} />}
-        options={{
-          tabBarLabel: "Refer",
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faTrophy}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      />
+      {profile.profile.age == null || profile.profile.age > 50 ? (
+        <Tab.Screen
+          name="Refer"
+          children={(props) => <ReferScreen propProfile={profile} {...props} />}
+          options={{
+            tabBarLabel: "Refer",
+            elevation: 0, // remove shadow on Android
+            shadowOpacity: 0,
+            tabBarIcon: ({ color }) => (
+              <FontAwesomeIcon
+                icon={faTrophy}
+                color={Colors.greyishText}
+                size={25}
+              />
+            ),
+          }}
+        />
+      ) : null}
       <Tab.Screen
         name="MyProfile"
         children={(props) => (
