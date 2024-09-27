@@ -49,6 +49,7 @@ class HomeDashboard extends Component {
       profileImage:
         "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
       belowAgePopUp: false,
+      itemClicked: null,
     };
     //
 
@@ -185,13 +186,19 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     });
     return isParticipantInSameEvent;
   }
-  handleBelowAge() {
-    const link =
-      "https://play.google.com/store/apps/details?id=com.gohappyclient";
+  handleBelowAge(item, url) {
+    const link = url;
     const shareMessage =
-      "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: \n" +
+      "👋 Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. \n\n" +
+      "📚 The name of the session is *" +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      "*.\n\n" +
+      "I think you will definitely like it! 😊 \n\n" +
+      "👉 Here is the link to the session: \n" +
       link +
-      ".\nGive it a try and let me know how you like it! 😊";
+      ".\n\n" +
+      "💬 Join in and let me know how you liked it! 👍";
+
     Share.share({
       message: shareMessage,
     })
@@ -201,7 +208,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
 
   updateEventBook(item) {
     //console.log("item clicked is", item)
-    this.setState({ bookingLoader: true });
+    this.setState({ bookingLoader: true, itemClicked: item });
     if (this.getTitle(item) == "Share") {
       this.setState({ belowAgePopUp: true });
       return;
@@ -544,7 +551,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             confirmText="Share"
             confirmButtonColor={Colors.primary}
             onConfirmPressed={() => {
-              this.handleBelowAge();
+              this.handleBelowAge(
+                this.state.itemClicked,
+                "https://www.gohappyclub.in/session_details/" + this.state.itemClicked.id
+              );
               this.setState({ belowAgePopUp: false });
             }}
           />
