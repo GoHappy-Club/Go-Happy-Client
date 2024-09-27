@@ -204,23 +204,19 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
     return "Book";
   }
-  handleBelowAge(type, item, url) {
+  handleBelowAge(item, url) {
     let link, shareMessage;
-    if (type == "iconShare") {
-      link = url;
-      shareMessage =
-        "Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. The name of the session is " +
-        toUnicodeVariant(item.eventName, "bold italic") +
-        ". I think you will definitely like it. Here is the link to the session: \n" +
-        link +
-        ".\n Join in and let me know how you liked it!";
-    } else {
-      link = "https://play.google.com/store/apps/details?id=com.gohappyclient";
-      shareMessage =
-        "Hi! This is a great app specially designed for seniors. It has many interesting features that you will love. Here is the link to download it: \n" +
-        link +
-        ". \nGive it a try and let me know how you like it! 😊";
-    }
+    link = url;
+    shareMessage =
+      "👋 Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. \n\n" +
+      "📚 The name of the session is *" +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      "*.\n\n" +
+      "I think you will definitely like it! 😊 \n\n" +
+      "👉 Here is the link to the session: \n" +
+      link +
+      ".\n\n" +
+      "💬 Join in and let me know how you liked it! 👍";
     Share.share({
       message: shareMessage,
     })
@@ -298,7 +294,6 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
   shareMessage = async (item) => {
     if (this.props.profile.age != null && this.props.profile.age < 50) {
       this.handleBelowAge(
-        "iconShare",
         item,
         "https://www.gohappyclub.in/session_details/" + item.id
       );
@@ -861,7 +856,10 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             confirmText="Share"
             confirmButtonColor={Colors.primary}
             onConfirmPressed={() => {
-              this.handleBelowAge();
+              this.handleBelowAge(
+                item,
+                "https://www.gohappyclub.in/session_details/" + item.id
+              );
               this.setState({ belowAgePopUp: false });
             }}
           />
