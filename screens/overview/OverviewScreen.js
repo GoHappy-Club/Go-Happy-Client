@@ -5,7 +5,6 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 // var tambola = require('tambola-generator');
 import tambola from "tambola";
 import Video from "react-native-video";
-import { EventReminderNotification } from "../../services/LocalPushController.js";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";

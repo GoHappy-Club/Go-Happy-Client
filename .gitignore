@@ -86,3 +86,4 @@ buck-out/
 android/.gradle/*
 *.bin
 .env
+.vscode/settings.json
