@@ -5,7 +5,6 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 // var tambola = require('tambola-generator');
 import tambola from "tambola";
 import Video from "react-native-video";
-import { EventReminderNotification } from "../../services/LocalPushController";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
@@ -150,19 +149,6 @@ class HomeScreen extends Component {
       .then((response) => {
         if (response.data) {
           if (response.data == "SUCCESS") {
-            //EventNotification({channelId: 'events',event:item});
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime) - 1000 * 60 * 10),
-              bigText: "Your session starts in a few minutes.",
-            });
-            EventReminderNotification({
-              channelId: "events",
-              event: item,
-              fireTime: new Date(parseInt(item.startTime)),
-              bigText: "Your session has been started. Join Now!",
-            });
             var tempEvents = this.state.events;
             for (var i = 0; i < tempEvents.length; i++) {
               if (tempEvents[i].id == item.id) {
