@@ -87,3 +87,6 @@ android/.gradle/*
 *.bin
 .env
 .vscode/settings.json
+android/app/src/main/res/
+android/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java
+android/.gradle/buildOutputCleanup/outputFiles.bin

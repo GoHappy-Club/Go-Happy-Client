@@ -13,6 +13,9 @@ import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
 import { Colors } from "./assets/colors/color";
+import { ZoomSDKProvider } from "zoom-msdk-rn";
+import { ZOOM_JWT_TOKEN } from "./config/tokens";
+import { generateZoomSignature } from "./services/zoom/zoomTokenGenerator";
 // const my_store = store();
 
 const RNRedux = () => {
@@ -28,7 +31,16 @@ const RNRedux = () => {
       stepNumberComponent={StepNumber}
     >
       <Provider store={store()}>
-        <App />
+        <ZoomSDKProvider
+          config={{
+            jwtToken: String(generateZoomSignature()),
+            domain: "zoom.us",
+            enableLog: true,
+            logSize: 5,
+          }}
+        >
+          <App />
+        </ZoomSDKProvider>
       </Provider>
     </CopilotProvider>
   );
