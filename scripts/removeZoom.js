@@ -1,4 +1,46 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+const fs = require('fs').promises;
+const path = require('path');
+
+const rootDir = path.resolve(__dirname, '..');
+
+async function revertSettingsGradle() {
+  const filePath = path.join(rootDir, 'android', 'settings.gradle');
+  let content = await fs.readFile(filePath, 'utf8');
+  content = content.replace(/include ':mobilertc'\s+/, '');
+  await fs.writeFile(filePath, content, 'utf8');
+  console.log('Reverted settings.gradle');
+}
+
+async function revertAppBuildGradle() {
+  const filePath = path.join(rootDir, 'android', 'app', 'build.gradle');
+  let content = await fs.readFile(filePath, 'utf8');
+  content = content.replace(/implementation group: 'com\.google\.android\.flexbox', name: 'flexbox', version: '3\.0\.0'\s+/, '');
+  content = content.replace(/implementation project\(':mobilertc'\)\s+/, '');
+  content = content.replace(/compileOptions {\s+sourceCompatibility JavaVersion\.VERSION_17\s+targetCompatibility JavaVersion\.VERSION_17\s+}\s+kotlinOptions {\s+jvmTarget = '17'\s+}/, '');
+  await fs.writeFile(filePath, content, 'utf8');
+  console.log('Reverted app/build.gradle');
+}
+
+async function revertRootBuildGradle() {
+  const filePath = path.join(rootDir, 'android', 'build.gradle');
+  let content = await fs.readFile(filePath, 'utf8');
+  content = content.replace(/jcenter\(\)/, '// jcenter()');
+  content = content.replace(/minSdkVersion = 23/, 'minSdkVersion = 21');
+  await fs.writeFile(filePath, content, 'utf8');
+  console.log('Reverted root build.gradle');
+}
+
+async function revertAndroidManifestDebug() {
+  const filePath = path.join(rootDir, 'android', 'app', 'src', 'debug', 'AndroidManifest.xml');
+  let content = await fs.readFile(filePath, 'utf8');
+  content = content.replace(/\s+tools:replace="android:usesCleartextTraffic"/, '');
+  await fs.writeFile(filePath, content, 'utf8');
+  console.log('Reverted debug AndroidManifest.xml');
+}
+
+async function revertAndroidManifestMain() {
+  const filePath = path.join(rootDir, 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
+  const originalContent = `<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.gohappyclient">
 
@@ -103,3 +145,58 @@
         </service>
     </application>
 </manifest>
+`;
+  await fs.writeFile(filePath, originalContent, 'utf8');
+  console.log('Reverted main AndroidManifest.xml');
+}
+
+async function removeDownloadedFiles() {
+  const mobilertcDir = path.join(rootDir, 'android', 'mobilertc');
+  try {
+    await fs.rm(mobilertcDir, { recursive: true, force: true });
+    console.log('Removed mobilertc directory');
+  } catch (error) {
+    console.error('Error removing mobilertc directory:', error);
+  }
+}
+
+async function removeZoomSDK() {
+  const zoomSDKDirectory = path.join(rootDir, 'node_modules', 'zoom-msdk-rn');
+  try {
+    await fs.rm(zoomSDKDirectory, { recursive: true, force: true });
+    console.log('Removed zoom SDK directory');
+  } catch (error) {
+    console.error('Error removing Zoom SDK directory:', error);
+  }
+}
+
+async function removeGeneratedAssets() {
+  const assetsDir = path.join(rootDir, 'android', 'app', 'src', 'main', 'assets');
+  try {
+    const files = await fs.readdir(assetsDir);
+    for (const file of files) {
+      await fs.unlink(path.join(assetsDir, file));
+    }
+    console.log('Removed generated assets');
+  } catch (error) {
+    console.error('Error removing generated assets:', error);
+  }
+}
+
+async function revertZoomSDKChanges() {
+  try {
+    await revertSettingsGradle();
+    await revertAppBuildGradle();
+    await revertRootBuildGradle();
+    await revertAndroidManifestDebug();
+    await revertAndroidManifestMain();
+    await removeDownloadedFiles();
+    await removeGeneratedAssets();
+    await removeZoomSDK();
+    console.log('All changes have been reverted successfully.');
+  } catch (error) {
+    console.error('Error reverting changes:', error);
+  }
+}
+
+revertZoomSDKChanges();

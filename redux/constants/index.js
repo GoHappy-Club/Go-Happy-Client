@@ -1,2 +1,3 @@
 export const COUNTER_CHANGE = 'COUNTER_CHANGE';
 export const PROFILE_SET = 'PROFILE_SET';
+export const ZOOM_TOKEN_SET = 'ZOOM_TOKEN_SET';
