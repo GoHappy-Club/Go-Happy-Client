@@ -1,6 +1,7 @@
 
 import {KJUR} from 'jsrsasign'
-import {ZoomKey,ZoomSecret} from "@env"
+// import {ZoomKey,ZoomSecret} from "@env"
+import { ZoomKey,ZoomSecret } from '../../config/tokens'
 
 export function generateZoomSignature(key=ZoomKey, secret=ZoomSecret, meetingNumber=0, role=0) {
 

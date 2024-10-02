@@ -71,7 +71,6 @@ async function modifyRootBuildGradle() {
   fs.readFile(manifestPath, "utf8", (err, data) => {
     if (err) return console.log(err);
 
-    const data1 = data.replace("// jcenter()", `jcenter()`);
     const result = data1.replace("minSdkVersion = 21", `minSdkVersion = 23`);
 
     fs.writeFile(manifestPath, result, "utf8", (err) => {

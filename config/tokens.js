@@ -1,5 +1,7 @@
 // put zoom generated token here
-export const ZOOM_JWT_TOKEN = ""
+export const ZoomKey = ''
+
+export const ZoomSecret = ''
 
 
 // put app's jwt token here

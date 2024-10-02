@@ -24,7 +24,6 @@ async function revertAppBuildGradle() {
 async function revertRootBuildGradle() {
   const filePath = path.join(rootDir, 'android', 'build.gradle');
   let content = await fs.readFile(filePath, 'utf8');
-  content = content.replace(/jcenter\(\)/, '// jcenter()');
   content = content.replace(/minSdkVersion = 23/, 'minSdkVersion = 21');
   await fs.writeFile(filePath, content, 'utf8');
   console.log('Reverted root build.gradle');
