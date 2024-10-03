@@ -716,6 +716,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             onConfirmPressed={() => {
               this.phonePeWrapper("share", item);
             }}
+            onDismiss={() => this.setState({ clickPopup: false })}
           />
         )}
 
@@ -753,6 +754,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
+            onDismiss={() => this.setState({ showAlert: false })}
           />
         )}
         {this.state.showPaymentAlert && (
@@ -773,6 +775,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 paymentAlertTitle: "Success",
               });
             }}
+            onDismiss={() => this.setState({ showPaymentAlert: false })}
           />
         )}
         {this.state.showBookAlert && (
@@ -840,6 +843,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 </View>
               </View>
             }
+            onDismiss={() => this.setState({ showBookAlert: false })}
           />
         )}
         {this.state.belowAgePopUp && (
@@ -862,6 +866,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               );
               this.setState({ belowAgePopUp: false });
             }}
+            onDismiss={() => this.setState({ belowAgePopUp: false })}
           />
         )}
       </View>

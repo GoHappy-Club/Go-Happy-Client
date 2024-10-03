@@ -490,6 +490,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             onConfirmPressed={() => {
               this.setState({ showAlert: false });
             }}
+            onDismiss={() => this.setState({ showAlert: false })}
           />
         )}
         {this.state.clickPopup && (
@@ -515,6 +516,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             onConfirmPressed={() => {
               this.phonePeWrapper("share", this.state.itemToBuy);
             }}
+            onDismiss={() => this.setState({ clickPopup: false })}
           />
         )}
         {this.state.showPaymentAlert && (
@@ -535,6 +537,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 paymentAlertTitle: "Success",
               });
             }}
+            onDismiss={() => this.setState({ showPaymentAlert: false })}
           />
         )}
         {this.state.belowAgePopUp && (
@@ -557,6 +560,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               );
               this.setState({ belowAgePopUp: false });
             }}
+            onDismiss={() => this.setState({ belowAgePopUp: false })}
           />
         )}
       </View>
