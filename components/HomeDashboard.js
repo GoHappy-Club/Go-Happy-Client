@@ -25,6 +25,7 @@ import phonepe_payments from "./PhonePe/Payments.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
 import tambola from "tambola";
 import { Colors } from "../assets/colors/color.js";
+import SearchBar from "./SearchBar.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -436,134 +437,142 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       </Cd>
     );
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.grey.f0 }}>
-        <CalendarDays
-          numberOfDays={15}
-          daysInView={3}
-          paginate={true}
-          onDateSelect={(date) => this.changeSelectedDate(date)}
-        />
-        <Text
-          h4
-          style={{
-            marginLeft: 30,
-            marginTop: 20,
-            marginBottom: 15,
-            color: Colors.greyishText,
-          }}
-        >
-          {this.state.selectedDate}
-        </Text>
-        {this.props.childLoader == true && (
-          <MaterialIndicator color={Colors.primary} />
-        )}
-        {this.props.childLoader == false &&
+      <>
+        <View>
+          <SearchBar
+            loadCaller={this.loadCaller}
+            checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
+          />
+        </View>
+        <View style={{ flex: 1, backgroundColor: Colors.grey.f0 }}>
+          <CalendarDays
+            numberOfDays={15}
+            daysInView={3}
+            paginate={true}
+            onDateSelect={(date) => this.changeSelectedDate(date)}
+          />
+          <Text
+            h4
+            style={{
+              marginLeft: 30,
+              marginTop: 20,
+              marginBottom: 15,
+              color: Colors.greyishText,
+            }}
+          >
+            {this.state.selectedDate}
+          </Text>
+          {this.props.childLoader == true && (
+            <MaterialIndicator color={Colors.primary} />
+          )}
+          {this.props.childLoader == false &&
           this.props.events.filter((item) => item.endTime > Date.now()).length >
             0 && (
-            <SafeAreaView style={{ flex: 1 }}>
-              <FlatList
-                contentContainerStyle={{ flexGrow: 1 }}
-                data={this.props.events.filter(
-                  (item) => item.endTime > Date.now()
-                )}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-              />
-            </SafeAreaView>
-          )}
+              <SafeAreaView style={{ flex: 1 }}>
+                <FlatList
+                  contentContainerStyle={{ flexGrow: 1 }}
+                  data={this.props.events.filter(
+                    (item) => item.endTime > Date.now()
+                  )}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                />
+              </SafeAreaView>
+            )}
         {this.props.events.filter((item) => item.endTime > Date.now()).length ==
           0 &&
-          this.props.childLoader == false &&
-          this.sorry()}
-        {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
-        {this.state.showAlert && (
-          <AwesomeAlert
-            show={this.state.showAlert}
-            showProgress={false}
-            title="Oops!"
-            message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Try Again"
-            confirmButtonColor={Colors.errorButton}
-            onConfirmPressed={() => {
-              this.setState({ showAlert: false });
-            }}
-            onDismiss={() => this.setState({ showAlert: false })}
-          />
-        )}
-        {this.state.clickPopup && (
-          <AwesomeAlert
-            show={this.state.clickPopup}
-            showProgress={false}
-            title="Payment Confirmation"
-            message="Would you like to pay this yourself or share the payment link with a family member?"
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={true}
-            showConfirmButton={true}
-            cancelText="Pay Now"
-            confirmButtonColor={Colors.grey.grey}
-            cancelButtonColor={Colors.primary}
-            onCancelPressed={() => {
-              this.phonePeWrapper("self", this.state.itemToBuy);
-              this.setState({
-                clickPopup: false,
-              });
-            }}
-            confirmText="Share"
-            showCancelButton={true}
-            onConfirmPressed={() => {
-              this.phonePeWrapper("share", this.state.itemToBuy);
-            }}
-            onDismiss={() => this.setState({ clickPopup: false })}
-          />
-        )}
-        {this.state.showPaymentAlert && (
-          <AwesomeAlert
-            show={this.state.showPaymentAlert}
-            showProgress={false}
-            title={this.state.paymentAlertTitle}
-            message={this.state.paymentAlertMessage}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="OK"
-            confirmButtonColor={Colors.errorButton}
-            onConfirmPressed={() => {
-              this.setState({
-                showPaymentAlert: false,
-                paymentAlertMessage: "Your Payment is Successful!",
-                paymentAlertTitle: "Success",
-              });
-            }}
-            onDismiss={() => this.setState({ showPaymentAlert: false })}
-          />
-        )}
-        {this.state.belowAgePopUp && (
-          <AwesomeAlert
-            show={this.state.belowAgePopUp}
-            showProgress={false}
-            // title={""}
-            message={
-              "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
-            }
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Share"
-            confirmButtonColor={Colors.primary}
-            onConfirmPressed={() => {
-              this.handleBelowAge(
-                this.state.itemClicked,
+            this.props.childLoader == false &&
+            this.sorry()}
+          {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
+          {this.state.showAlert && (
+            <AwesomeAlert
+              show={this.state.showAlert}
+              showProgress={false}
+              title="Oops!"
+              message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showConfirmButton={true}
+              confirmText="Try Again"
+              confirmButtonColor={Colors.errorButton}
+              onConfirmPressed={() => {
+                this.setState({ showAlert: false });
+              }}
+              onDismiss={() => this.setState({ showAlert: false })}
+            />
+          )}
+          {this.state.clickPopup && (
+            <AwesomeAlert
+              show={this.state.clickPopup}
+              showProgress={false}
+              title="Payment Confirmation"
+              message="Would you like to pay this yourself or share the payment link with a family member?"
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              cancelText="Pay Now"
+              confirmButtonColor={Colors.grey.grey}
+              cancelButtonColor={Colors.primary}
+              onCancelPressed={() => {
+                this.phonePeWrapper("self", this.state.itemToBuy);
+                this.setState({
+                  clickPopup: false,
+                });
+              }}
+              confirmText="Share"
+              showCancelButton={true}
+              onConfirmPressed={() => {
+                this.phonePeWrapper("share", this.state.itemToBuy);
+              }}
+              onDismiss={() => this.setState({ clickPopup: false })}
+            />
+          )}
+          {this.state.showPaymentAlert && (
+            <AwesomeAlert
+              show={this.state.showPaymentAlert}
+              showProgress={false}
+              title={this.state.paymentAlertTitle}
+              message={this.state.paymentAlertMessage}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showConfirmButton={true}
+              confirmText="OK"
+              confirmButtonColor={Colors.errorButton}
+              onConfirmPressed={() => {
+                this.setState({
+                  showPaymentAlert: false,
+                  paymentAlertMessage: "Your Payment is Successful!",
+                  paymentAlertTitle: "Success",
+                });
+              }}
+              onDismiss={() => this.setState({ showPaymentAlert: false })}
+            />
+          )}
+          {this.state.belowAgePopUp && (
+            <AwesomeAlert
+              show={this.state.belowAgePopUp}
+              showProgress={false}
+              // title={""}
+              message={
+                "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
+              }
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showConfirmButton={true}
+              confirmText="Share"
+              confirmButtonColor={Colors.primary}
+              onConfirmPressed={() => {
+                this.handleBelowAge(
+                  this.state.itemClicked,
                 "https://www.gohappyclub.in/session_details/" + this.state.itemClicked.id
-              );
-              this.setState({ belowAgePopUp: false });
-            }}
-            onDismiss={() => this.setState({ belowAgePopUp: false })}
-          />
-        )}
-      </View>
+                );
+                this.setState({ belowAgePopUp: false });
+              }}
+              onDismiss={() => this.setState({ belowAgePopUp: false })}
+            />
+          )}
+        </View>
+      </>
     );
   }
 }
