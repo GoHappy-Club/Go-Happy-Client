@@ -456,9 +456,8 @@ export default function App() {
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View />,
-                  headerTransparent: true,
-                  title: null,
+                  headerShown: false,
+                  title: "Home screen",
                   elevation: 0,
                   shadowOpacity: 0,
                   headerShadowVisible: false,
