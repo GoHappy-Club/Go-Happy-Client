@@ -39,15 +39,17 @@ const Header = () => {
           resizeMode="cover"
           style={styles.profileImage}
         />
-        <Text style={styles.username} adjustsFontSizeToFit={true}>Hello {profile.name}</Text>
+        <Text style={styles.username} numberOfLines={1}>
+          Hello {profile.name}
+        </Text>
       </Pressable>
       {/* <View style={styles.rightWrapper}>
         <TouchableOpacity style={styles.upgradeButton}>
           <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
           <GradientText
             text="Upgrade"
-            style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}
-            colors={["#FCF6BA", "#E3D088", "#B38728"]}
+            style={styles.upgradeText}
+            colors={Colors.headerLinearGradient}
           />
         </TouchableOpacity>
         <View style={styles.credits}>
@@ -57,7 +59,6 @@ const Header = () => {
       </View> */}
     </View>
   );
-  // return <View style={{backgroundColor:"grey",width:"100%"}}><Text>jkldsaafjl</Text></View>
 };
 
 const styles = StyleSheet.create({
@@ -66,14 +67,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 8,
     paddingVertical: 0.25 * StatusBar.currentHeight,
-    backgroundColor: "#F2F2F2",
-    elevation:50,
-    // marginRight:30
-    // marginLeft:-20
-    // position:"relative",
-    // width:"auto"
+    backgroundColor: Colors.grey.header,
+    elevation: 30,
   },
   userInfo: {
     flexDirection: "row",
@@ -83,19 +80,21 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     fontWeight: "bold",
+    maxWidth: width * 0.4,
   },
   upgradeButton: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "black",
+    backgroundColor: Colors.black,
     paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingVertical: 4,
     borderRadius: 40,
-    borderColor:"#FBC65F",
-    borderWidth:1
+    borderColor: Colors.upgradeBorder,
+    borderWidth: 1,
   },
+  upgradeText: { fontSize: 14, fontWeight: "bold", textAlign: "center" },
   credits: {
     flexDirection: "row",
     alignItems: "center",
@@ -114,12 +113,12 @@ const styles = StyleSheet.create({
     objectFit: "cover",
     borderWidth: 0.1,
   },
-  rightWrapper:{
-    flexDirection:'row',
-    gap:10,
-    alignItems:'center',
-    justifyContent:'center',
-  }
+  rightWrapper: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default Header;
