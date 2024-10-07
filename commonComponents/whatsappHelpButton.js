@@ -48,7 +48,7 @@ const WhatsAppFAB = () => {
       <CopilotStep
         name="whatsapp"
         order={7}
-        text="Click here to contact us on WhatsApp"
+        text="Click here to join our WhatsApp Group."
       >
         <Walkthroughable>
           <TouchableOpacity onPress={()=>Linking.openURL(link)}>
