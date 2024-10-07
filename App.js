@@ -45,6 +45,8 @@ import { useCopilot } from "react-native-copilot";
 import axios from "./config/CustomAxios.js";
 import { JWT_TOKEN } from "@env";
 import { Colors } from "./assets/colors/color.js";
+import Header from "./components/HeaderComponent.js";
+import MyProfile from "./components/Profile.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -436,32 +438,15 @@ export default function App() {
                 }}
               />
               <Stack.Screen
-                name="Intro"
-                children={(props) => <Intro {...props} />}
-                options={{
-                  headerLeft: () => <View />,
-                  headerTransparent: true,
-                  title: null,
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  headerShadowVisible: false,
-                  // headerStyle: {
-                  //   backgroundColor: 'white'
-                  // },
-                }}
-              />
-              <Stack.Screen
                 name="GoHappy Club"
                 children={(props) => (
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
                 options={{
-                  headerLeft: () => <View />,
-                  headerTransparent: true,
-                  title: null,
+                  header:(props)=>(<Header {...props}/>),
                   elevation: 0,
                   shadowOpacity: 0,
-                  headerShadowVisible: false,
+                  headerShadowVisible: true,
                 }}
               />
               <Stack.Screen
@@ -535,7 +520,7 @@ export default function App() {
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                      onPress={() => navigation.navigate("MyProfile")}
                       underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
@@ -557,7 +542,7 @@ export default function App() {
                   headerLeft: () => (
                     <TouchableOpacity
                       style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                      onPress={() => navigation.navigate("MyProfile")}
                       underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
@@ -602,6 +587,27 @@ export default function App() {
                     <TouchableOpacity
                       style={styles.backButton}
                       onPress={() => navigation.navigate("Trips")}
+                      underlayColor={Colors.white}
+                    >
+                      <Text style={styles.backText}>back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                })}
+              />
+              <Stack.Screen
+                name="MyProfile"
+                children={(props) => (
+                  <MyProfile {...props} propProfile={profile} />
+                )}
+                options={({ navigation }) => ({
+                  headerTransparent: true,
+                  title: null,
+                  headerBackTitle: "back",
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.backButton}
+                      onPress={() => navigation.navigate("GoHappy Club")}
                       underlayColor={Colors.white}
                     >
                       <Text style={styles.backText}>back</Text>
