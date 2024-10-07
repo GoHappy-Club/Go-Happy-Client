@@ -145,24 +145,6 @@ export default function BottomNavigator() {
           }}
         />
       ) : null}
-      <Tab.Screen
-        name="MyProfile"
-        children={(props) => (
-          <MyProfileScreen propProfile={profile} {...props} />
-        )}
-        options={{
-          tabBarLabel: "Profile",
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faChild}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
