@@ -2,7 +2,7 @@
  * @format
  */
 
-import { AppRegistry, Text, useWindowDimensions, View } from "react-native";
+import { AppRegistry, StatusBar, Text, useWindowDimensions, View } from "react-native";
 import App from "./App";
 import { name as appName } from "./app.json";
 import { Provider } from "react-redux";
@@ -19,7 +19,7 @@ const RNRedux = () => {
   const { height } = useWindowDimensions();
   return (
     <CopilotProvider
-      verticalOffset={20}
+      verticalOffset={StatusBar.currentHeight}
       arrowColor={Colors.copilotArrow}
       animated={true}
       tooltipComponent={CustomTooltip}

@@ -41,6 +41,7 @@ class OverviewScreen extends Component {
       posters: [],
       timer: null,
       isInteractionBlocked: true,
+      isBlocking: false,
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     this.scrollViewRef = React.createRef();
@@ -80,14 +81,16 @@ class OverviewScreen extends Component {
   setupTimer = async () => {
     const showTour = await AsyncStorage.getItem("showTour");
     if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
-      this.setState({
-        timer: setTimeout(() => {
-          if (this.state.timer != null) {
-            this.props.start(false, this.scrollViewRef.current);
-            this.walkthroughStarted.current = true;
-          }
-        }, 3000),
-      });
+    this.setState({ isBlocking: true });
+    this.setState({
+      timer: setTimeout(() => {
+        if (this.state.timer != null) {
+          this.props.start(false, this.scrollViewRef.current);
+          this.walkthroughStarted.current = true;
+          this.setState({ isBlocking: false });
+        }
+      }, 3000),
+    });
     }
   };
 
@@ -141,7 +144,7 @@ class OverviewScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <>
+        <View pointerEvents={this.state.isBlocking ? "none" : "auto"}>
           <ScrollView ref={this.scrollViewRef}>
             <TopBanner
               navigation={this.props.navigation}
@@ -171,7 +174,7 @@ class OverviewScreen extends Component {
           {this.props.profile.age == null || this.props.profile.age > 50 ? (
             <WhatsAppFAB />
           ) : null}
-        </>
+        </View>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
