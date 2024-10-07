@@ -444,21 +444,9 @@ export default function App() {
                 )}
                 options={{
                   header:(props)=>(<Header {...props}/>),
-                  // headerTitle: (props) => (
-                  //   <Header {...props} />
-                  // ),
                   elevation: 0,
                   shadowOpacity: 0,
                   headerShadowVisible: true,
-                  headerStyle: {
-                    backgroundColor: "red",
-                  },
-                  contentStyle:{
-                    padding:0,
-                    margin:0,
-                  },
-                  headerRight:null,
-                  headerLeft:null
                 }}
               />
               <Stack.Screen
