@@ -28,9 +28,11 @@ export const Colors = {
     d: "#d6d7da",
     4: "#404040",
     optionList: "#424242",
-    countdown:"#8a8888"
+    countdown:"#8a8888",
+    header:"#F2F2F2"
   },
   linearGradient: ["#4c669f", "#3b5998", "#192f6a"],
+  headerLinearGradient:["#FCF6BA", "#E3D088", "#B38728"],
   phoneInputBorder: "#555",
   errorButton: "#DD6B55",
   transparent: "transparent",
@@ -40,5 +42,6 @@ export const Colors = {
     intro: "#EBC1C1",
     sessionDetails: "#eda29b",
   },
-  copilotArrow:"#9FA8DA"
+  copilotArrow:"#9FA8DA",
+  upgradeBorder:"#FBC65F"
 };
