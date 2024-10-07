@@ -239,6 +239,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     }
   }
   loadCaller() {
+    this.props.navigation.navigate("HomeScreen");
     this.props.loadEvents(this.state.selectedDateRaw);
   }
 

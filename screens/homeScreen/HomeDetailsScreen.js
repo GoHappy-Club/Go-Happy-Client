@@ -100,16 +100,16 @@ export default class HomeDetailsScreen extends Component {
         })
         .then((response) => {
           if (response.data) {
-            PushNotification.cancelLocalNotification({
-              id: String(this.state.event.id),
-            });
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
+              return;
             }
             if (this.props.navigation.canGoBack()) {
               this.props.navigation.goBack();
+              return;
             } else {
               this.props.navigation.replace("GoHappy Club");
+              return;
             }
           }
         })
@@ -125,16 +125,19 @@ export default class HomeDetailsScreen extends Component {
       axios
         .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
         .then((response) => {
-          if (response.data) {
+          if (response.data) {           
             if (response.data == "SUCCESS") {
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
+                return;
               }
-
+              
               if (this.props.navigation.canGoBack()) {
                 this.props.navigation.goBack();
+                return;
               } else {
                 this.props.navigation.replace("GoHappy Club");
+                return;
               }
               // _callback();
               return response.data;
