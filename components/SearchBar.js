@@ -15,9 +15,10 @@ import {
 import { SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
 import { Colors } from "../assets/colors/color";
-import { format, fromUnixTime } from "date-fns";
+import { format, fromUnixTime, getUnixTime, startOfDay } from "date-fns";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { MaterialIndicator } from "react-native-indicators";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,7 +31,11 @@ const Item = ({ item, onPress }) => {
 
   return (
     <Pressable onPress={() => onPress(item)} style={styles.item}>
-      <Image source={{ uri: item.coverImage }} style={styles.coverImage} />
+      <Image
+        source={{ uri: item.coverImage }}
+        style={styles.coverImage}
+        resizeMode="cover"
+      />
       <View style={styles.textContainer}>
         <Text style={styles.eventName}>{item.eventName}</Text>
         <Text style={styles.startTime}>{formatDate(item.startTime)}</Text>
@@ -39,7 +44,7 @@ const Item = ({ item, onPress }) => {
   );
 };
 
-const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
+const SearchBar = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [events, setEvents] = useState(null);
@@ -85,14 +90,39 @@ const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
     }
   };
 
+  const comeBack = () => {
+    navigation.navigate("HomeScreen");
+    handleSearch();
+  };
+
   const handleClick = (item) => {
     navigation.navigate("Session Details", {
       phoneNumber: profile.phoneNumber,
       profile: profile,
       deepId: item.id,
-      onGoBack: () => loadCaller(),
+      onGoBack: () => comeBack(),
       alreadyBookedSameDayEvent: checkIsParticipantInSameEvent(item),
     });
+  };
+
+  const checkIsParticipantInSameEvent = (item) => {
+    let isParticipantInSameEvent = false;
+    if (item.sameDayEventId === null) {
+      return false;
+    }
+    events.map((event) => {
+      if (
+        getUnixTime(startOfDay(fromUnixTime(event.eventDate / 1000))) ==
+          getUnixTime(startOfDay(fromUnixTime(item.eventDate / 1000))) &&
+        !isParticipantInSameEvent
+      ) {
+        isParticipantInSameEvent =
+          event.startTime != item.startTime &&
+          event.sameDayEventId == item.sameDayEventId &&
+          event.participantList.includes(profile.phoneNumber);
+      }
+    });
+    return isParticipantInSameEvent;
   };
 
   return (
@@ -101,10 +131,21 @@ const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
         onPress={toggleSearch}
         style={[
           styles.searchIcon,
-          { display: isSearchActive ? "none" : "flex" },
+          {
+            display: isSearchActive ? "none" : "flex",
+            width: width * 0.9,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: Colors.white,
+            borderRadius: 40,
+            paddingHorizontal: 15,
+            marginBottom: 20,
+          },
         ]}
       >
-        <SearchIcon color="#000" size={24} />
+        <TextInput style={styles.searchInput} placeholder="Search..." editable={false} selectTextOnFocus={false} />
+        <SearchIcon color="#000" size={30} />
       </TouchableOpacity>
 
       <Animated.View
@@ -125,14 +166,16 @@ const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
           <TouchableOpacity
             style={{
               padding: 4,
-              backgroundColor: Colors.primary,
+              backgroundColor: Colors.pink.pink,
               borderRadius: 20,
               justifyContent: "center",
               alignItems: "center",
             }}
             onPress={handleSearch}
           >
-            <Text style={{ color: "#fff" }}>Search</Text>
+            <Text style={{ color: Colors.greyishText, fontWeight: "bold" }}>
+              Search
+            </Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={toggleSearch} style={styles.closeButton}>
@@ -140,7 +183,10 @@ const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
         </TouchableOpacity>
       </Animated.View>
       {isSearchActive &&
-        (searchText != "" ? (
+        !loading &&
+        searchText != "" &&
+        events &&
+        Object.keys(events).length >= 0 && (
           <>
             <FlatList
               data={events}
@@ -154,18 +200,77 @@ const SearchBar = ({ loadCaller, checkIsParticipantInSameEvent }) => {
               }}
             />
           </>
-        ) : (
+        )}
+      {isSearchActive && searchText == "" && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 3 * StatusBar.currentHeight,
+            display: isSearchActive && searchText == "" ? "flex" : "none",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: height * 0.03,
+              textAlign: "center",
+              width: width * 0.8,
+            }}
+          >
+            Kindly type what you're looking for in the search bar to get your
+            results.
+          </Text>
+          <Image
+            source={require("../images/eventSearchEmpty.png")}
+            resizeMode="cover"
+            style={{
+              width: width,
+              height: height * 0.4,
+            }}
+          />
+        </View>
+      )}
+      {isSearchActive && loading && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 5 * StatusBar.currentHeight,
+            position: "absolute",
+            top: "100%",
+            left: "45%",
+          }}
+        >
+          <MaterialIndicator color={Colors.primary} />
+        </View>
+      )}
+      {isSearchActive &&
+        events &&
+        Object.keys(events).length == 0 &&
+        searchText != "" && (
           <View
             style={{
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 2 * StatusBar.currentHeight,
+              marginTop: 3 * StatusBar.currentHeight,
+              // display: events && Object.keys(events).length == 0 && searchText != "" ? "flex" : "none",
+              position: "absolute",
             }}
           >
-            <Text>Enter something above first.</Text>
+            <Image
+              source={require("../images/noSearchResult.png")}
+              resizeMode="cover"
+              style={{
+                width: width,
+                height: height * 0.4,
+                objectFit: "cover",
+              }}
+            />
           </View>
-        ))}
+        )}
     </View>
   );
 };
@@ -174,13 +279,10 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 1000,
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
   searchIcon: {
-    position: "relative",
     top: 10,
-    right: 10,
-    padding: 10,
     zIndex: 1001,
   },
   searchInputContainer: {
@@ -189,14 +291,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: height,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     paddingTop: 50,
     paddingHorizontal: 10,
   },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: Colors.grey.f0,
     borderRadius: 20,
     paddingHorizontal: 15,
     marginBottom: 20,
@@ -214,34 +316,36 @@ const styles = StyleSheet.create({
     top: 10,
     right: 15,
     padding: 6,
-    backgroundColor: Colors.grey.grey,
+    backgroundColor: Colors.grey.f0,
     borderRadius: 40,
   },
   item: {
-    backgroundColor: Colors.grey.countdown,
+    backgroundColor: Colors.primary,
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 20,
   },
   coverImage: {
     width: "100%",
-    height: height * 0.2,
+    height: height * 0.25,
     borderRadius: 20,
     marginBottom: 10,
     objectFit: "cover",
   },
-  textContainer: {},
+  textContainer: {
+    padding: 4,
+    gap: 2,
+  },
   eventName: {
     fontSize: height * 0.025,
-    color: "white",
+    color: Colors.black,
     letterSpacing: 2,
     fontWeight: "bold",
   },
   startTime: {
     fontSize: height * 0.015,
-    color: "white",
+    color: Colors.black,
     letterSpacing: 2,
-    fontWeight: "bold",
   },
 });
 
