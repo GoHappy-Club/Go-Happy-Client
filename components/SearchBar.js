@@ -207,7 +207,7 @@ const SearchBar = () => {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 3 * StatusBar.currentHeight,
+            marginTop: height*0.25,
             display: isSearchActive && searchText == "" ? "flex" : "none",
           }}
         >
@@ -255,7 +255,7 @@ const SearchBar = () => {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 3 * StatusBar.currentHeight,
+              marginTop: height*0.25,
               // display: events && Object.keys(events).length == 0 && searchText != "" ? "flex" : "none",
               position: "absolute",
             }}

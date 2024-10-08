@@ -675,7 +675,6 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             buttonStyle={{
               backgroundColor: Colors.primary,
               minWidth: WIDTH * 0.55,
-              height:HEIGHT * 0.05
             }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
