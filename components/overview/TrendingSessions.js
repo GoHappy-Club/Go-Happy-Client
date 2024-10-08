@@ -84,6 +84,7 @@ class TrendingSessions extends Component {
           phoneNumber: this.props.profile.phoneNumber,
           profile: this.props.profile,
           onGoBack: () => {
+            this.props.navigation.navigate("GoHappy Club");
             this.props.reloadOverview();
           },
           alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(
