@@ -52,6 +52,8 @@ class SessionDetails extends Component {
       showCountdown: false,
       title: "",
       belowAgePopUp: false,
+      payButtonLoading: false,
+      shareButtonLoading: false,
     };
     this.retrieveData();
   }
@@ -67,17 +69,26 @@ class SessionDetails extends Component {
         _this.props.navigation.navigate("GoHappy Club");
       } else {
         this.sessionAction();
-        this.setState({ showPaymentAlert: true });
+        this.setState({
+          showPaymentAlert: true,
+          clickPopup: false,
+          payButtonLoading: false,
+        });
       }
     };
     const _errorHandler = () => {
       this.setState({
         paymentAlertMessage: phonepe_payments.PaymentError(),
         paymentAlertTitle: "Oops!",
+        clickPopup: false,
+        payButtonLoading: false,
       });
       this.setState({ showPaymentAlert: true });
     };
     if (type == "share") {
+      this.setState({
+        shareButtonLoading: true,
+      });
       const tambolaTicket = tambola.generateTicket();
       phonepe_payments
         .phonePeShare(
@@ -106,6 +117,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           })
             .then((result) => {
               this.setState({
+                shareButtonLoading: false,
                 clickPopup: false,
               });
             })
@@ -114,6 +126,9 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             });
         });
     } else {
+      this.setState({
+        payButtonLoading: true,
+      });
       phonepe_payments.phonePe(
         this.props.phoneNumber,
         item.cost,
@@ -675,6 +690,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             buttonStyle={{
               backgroundColor: Colors.primary,
               minWidth: WIDTH * 0.55,
+              height: HEIGHT * 0.05,
             }}
             title={this.getTitle()}
             loading={this.state.loadingButton}
@@ -697,25 +713,42 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           <AwesomeAlert
             show={this.state.clickPopup}
             showProgress={false}
-            title="Payment Confirmation"
-            message="Would you like to pay this yourself or share the payment link with a family member?"
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={true}
-            showConfirmButton={true}
-            cancelText="Pay Now"
-            confirmButtonColor={Colors.grey.grey}
-            cancelButtonColor={Colors.primary}
-            onCancelPressed={() => {
-              this.phonePeWrapper("self", item);
-              this.setState({
-                clickPopup: false,
-              });
-            }}
-            confirmText="Share"
-            showCancelButton={true}
-            onConfirmPressed={() => {
-              this.phonePeWrapper("share", item);
-            }}
+            closeOnTouchOutside={
+              this.state.payButtonLoading || this.state.shareButtonLoading
+                ? false
+                : true
+            }
+            customView={
+              <View style={styles.AAcontainer}>
+                <Text style={styles.AAtitle}>Payment Confirmation</Text>
+                <Text style={styles.AAmessage}>
+                  Would you like to pay this yourself or share the payment link
+                  with a family member?
+                </Text>
+                <View style={styles.AAbuttonContainer}>
+                  <Button
+                    outline
+                    title={"Pay Now"}
+                    loading={this.state.payButtonLoading}
+                    buttonStyle={[styles.AApayButton, styles.AAbutton]}
+                    onPress={() => {
+                      this.phonePeWrapper("self", item);
+                    }}
+                    disabled={this.state.payButtonLoading}
+                  />
+                  <Button
+                    outline
+                    title={"Share"}
+                    loading={this.state.shareButtonLoading}
+                    buttonStyle={[styles.AAshareButton, styles.AAbutton]}
+                    onPress={() => {
+                      this.phonePeWrapper("share", item);
+                    }}
+                    disabled={this.state.shareButtonLoading}
+                  />
+                </View>
+              </View>
+            }
             onDismiss={() => this.setState({ clickPopup: false })}
           />
         )}
@@ -979,6 +1012,46 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  AAcontainer: {
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  AAtitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: Colors.grey.grey,
+  },
+  AAmessage: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 20,
+    color: Colors.grey.grey,
+  },
+  AAbuttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 20,
+  },
+  AAbutton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    minWidth: 100,
+  },
+  AApayButton: {
+    backgroundColor: Colors.primary,
+  },
+  AAshareButton: {
+    backgroundColor: Colors.grey.grey,
+  },
+  AAbuttonText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
 
