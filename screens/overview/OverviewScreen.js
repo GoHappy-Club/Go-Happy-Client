@@ -81,16 +81,12 @@ class OverviewScreen extends Component {
   setupTimer = async () => {
     const showTour = await AsyncStorage.getItem("showTour");
     if (showTour && showTour == "true" && !this.walkthroughStarted.current) {
-    this.setState({ isBlocking: true });
-    this.setState({
-      timer: setTimeout(() => {
-        if (this.state.timer != null) {
-          this.props.start(false, this.scrollViewRef.current);
-          this.walkthroughStarted.current = true;
-          this.setState({ isBlocking: false });
-        }
-      }, 3000),
-    });
+      this.setState({ isBlocking: true });
+      if (this.state.trendingSessions != null) {
+        this.props.start(false, this.scrollViewRef.current);
+        this.walkthroughStarted.current = true;
+        this.setState({ isBlocking: false });
+      }
     }
   };
 
@@ -112,6 +108,7 @@ class OverviewScreen extends Component {
           upcomingWorkshops: response.data.upcomingWorkshops,
           posters: response.data.posters,
         });
+        this.setupTimer();
       }
     } catch (error) {
       this.error = true;
