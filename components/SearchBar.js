@@ -11,6 +11,7 @@ import {
   FlatList,
   Image,
   StatusBar,
+  Keyboard,
 } from "react-native";
 import { SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
@@ -60,12 +61,12 @@ const SearchBar = () => {
   const slideAnim = useRef(new Animated.Value(-height)).current;
 
   const toggleSearch = () => {
+    setIsSearchActive(!isSearchActive);
     if (isSearchActive) {
       inputRef.current.blur();
     } else {
       inputRef.current.focus();
     }
-    setIsSearchActive(!isSearchActive);
     Animated.timing(slideAnim, {
       toValue: isSearchActive ? -height : 0,
       duration: 300,
@@ -74,6 +75,7 @@ const SearchBar = () => {
   };
 
   const handleSearch = async () => {
+    Keyboard.dismiss
     inputRef.current.blur();
     setLoading(true);
     setError(false);
@@ -119,7 +121,7 @@ const SearchBar = () => {
         isParticipantInSameEvent =
           event.startTime != item.startTime &&
           event.sameDayEventId == item.sameDayEventId &&
-          event.participantList.includes(profile.phoneNumber);
+          event.participantList?.includes(profile.phoneNumber);
       }
     });
     return isParticipantInSameEvent;
@@ -140,11 +142,16 @@ const SearchBar = () => {
             backgroundColor: Colors.white,
             borderRadius: 40,
             paddingHorizontal: 15,
-            marginBottom: 20,
+            marginBottom: height*0.025,
           },
         ]}
       >
-        <TextInput style={styles.searchInput} placeholder="Search..." editable={false} selectTextOnFocus={false} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          editable={false}
+          selectTextOnFocus={false}
+        />
         <SearchIcon color="#000" size={30} />
       </TouchableOpacity>
 
@@ -162,6 +169,9 @@ const SearchBar = () => {
             placeholder="Search..."
             value={searchText}
             onChangeText={setSearchText}
+            selectTextOnFocus={true}
+            returnKeyType="search"
+            returnKeyLabel="search"
           />
           <TouchableOpacity
             style={{
@@ -195,9 +205,10 @@ const SearchBar = () => {
               )}
               ItemSeparatorComponent={<View style={{ margin: 4 }} />}
               style={{
-                marginTop: 2 * StatusBar.currentHeight,
-                paddingHorizontal: 10,
+                marginTop: height * 0.14,
+                padding: width*0.01,
               }}
+              keyboardDismissMode="on-drag"
             />
           </>
         )}
@@ -207,13 +218,13 @@ const SearchBar = () => {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: height*0.25,
+            marginTop: height * 0.25,
             display: isSearchActive && searchText == "" ? "flex" : "none",
           }}
         >
           <Text
             style={{
-              fontSize: height * 0.03,
+              fontSize: height * 0.02,
               textAlign: "center",
               width: width * 0.8,
             }}
@@ -237,7 +248,7 @@ const SearchBar = () => {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 5 * StatusBar.currentHeight,
+            marginTop: height * 0.4,
             position: "absolute",
             top: "100%",
             left: "45%",
@@ -246,7 +257,7 @@ const SearchBar = () => {
           <MaterialIndicator color={Colors.primary} />
         </View>
       )}
-      {isSearchActive &&
+      {isSearchActive && !loading &&
         events &&
         Object.keys(events).length == 0 &&
         searchText != "" && (
@@ -255,8 +266,7 @@ const SearchBar = () => {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: height*0.25,
-              // display: events && Object.keys(events).length == 0 && searchText != "" ? "flex" : "none",
+              marginTop: height * 0.25,
               position: "absolute",
             }}
           >
@@ -282,7 +292,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   searchIcon: {
-    top: 10,
+    top: 15,
     zIndex: 1001,
   },
   searchInputContainer: {
@@ -292,7 +302,7 @@ const styles = StyleSheet.create({
     right: 0,
     height: height,
     backgroundColor: Colors.white,
-    paddingTop: 50,
+    paddingTop: height*0.07,
     paddingHorizontal: 10,
   },
   searchBar: {
@@ -301,7 +311,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.f0,
     borderRadius: 20,
     paddingHorizontal: 15,
-    marginBottom: 20,
   },
   searchBarIcon: {
     marginRight: 10,
@@ -314,26 +323,26 @@ const styles = StyleSheet.create({
   closeButton: {
     position: "absolute",
     top: 10,
-    right: 15,
+    right: 10,
     padding: 6,
     backgroundColor: Colors.grey.f0,
     borderRadius: 40,
   },
   item: {
     backgroundColor: Colors.primary,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
     borderRadius: 20,
   },
   coverImage: {
     width: "100%",
     height: height * 0.25,
-    borderRadius: 20,
-    marginBottom: 10,
+    borderTopRightRadius:20,
+    borderTopLeftRadius:20,
+    marginBottom: 5,
     objectFit: "cover",
   },
   textContainer: {
     padding: 4,
+    paddingHorizontal: 10,
     gap: 2,
   },
   eventName: {
