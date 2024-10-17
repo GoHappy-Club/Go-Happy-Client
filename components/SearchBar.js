@@ -6,11 +6,9 @@ import {
   Animated,
   StyleSheet,
   Dimensions,
-  ScrollView,
   Text,
   FlatList,
   Image,
-  StatusBar,
   Keyboard,
 } from "react-native";
 import { SearchIcon, X } from "lucide-react-native";
@@ -24,12 +22,18 @@ import { MaterialIndicator } from "react-native-indicators";
 const { width, height } = Dimensions.get("window");
 
 const Item = ({ item, onPress }) => {
-  const formatDate = (startTime) => {
-    const dt = fromUnixTime(startTime / 1000);
+  const loadDate = (item) => {
+    const dt = fromUnixTime(item.startTime / 1000);
     const finalTime = format(dt, "MMM d, h:mm aa");
     return finalTime;
   };
 
+  const trimContent = (text) => {
+    if (text.length < 20) {
+      return text;
+    }
+    return text.substring(0, 20) + "...";
+  };
   return (
     <Pressable onPress={() => onPress(item)} style={styles.item}>
       <Image
@@ -38,8 +42,8 @@ const Item = ({ item, onPress }) => {
         resizeMode="cover"
       />
       <View style={styles.textContainer}>
-        <Text style={styles.eventName}>{item.eventName}</Text>
-        <Text style={styles.startTime}>{formatDate(item.startTime)}</Text>
+        <Text style={styles.eventName}>{trimContent(item.eventName)}</Text>
+        <Text style={styles.startTime}>{loadDate(item)}</Text>
       </View>
     </Pressable>
   );
@@ -75,7 +79,7 @@ const SearchBar = () => {
   };
 
   const handleSearch = async () => {
-    Keyboard.dismiss
+    Keyboard.dismiss;
     inputRef.current.blur();
     setLoading(true);
     setError(false);
@@ -142,7 +146,7 @@ const SearchBar = () => {
             backgroundColor: Colors.white,
             borderRadius: 40,
             paddingHorizontal: 15,
-            marginBottom: height*0.025,
+            marginBottom: height * 0.025,
           },
         ]}
       >
@@ -176,14 +180,21 @@ const SearchBar = () => {
           <TouchableOpacity
             style={{
               padding: 4,
-              backgroundColor: Colors.pink.pink,
+              backgroundColor: Colors.primary,
               borderRadius: 20,
               justifyContent: "center",
               alignItems: "center",
             }}
             onPress={handleSearch}
           >
-            <Text style={{ color: Colors.greyishText, fontWeight: "bold" }}>
+            <Text
+              style={{
+                color: Colors.white,
+                fontWeight: "400",
+                paddingLeft: "1%",
+                paddingRight: "1%",
+              }}
+            >
               Search
             </Text>
           </TouchableOpacity>
@@ -206,7 +217,7 @@ const SearchBar = () => {
               ItemSeparatorComponent={<View style={{ margin: 4 }} />}
               style={{
                 marginTop: height * 0.14,
-                padding: width*0.01,
+                padding: width * 0.01,
               }}
               keyboardDismissMode="on-drag"
             />
@@ -257,7 +268,8 @@ const SearchBar = () => {
           <MaterialIndicator color={Colors.primary} />
         </View>
       )}
-      {isSearchActive && !loading &&
+      {isSearchActive &&
+        !loading &&
         events &&
         Object.keys(events).length == 0 &&
         searchText != "" && (
@@ -302,7 +314,7 @@ const styles = StyleSheet.create({
     right: 0,
     height: height,
     backgroundColor: Colors.white,
-    paddingTop: height*0.07,
+    paddingTop: height * 0.07,
     paddingHorizontal: 10,
   },
   searchBar: {
@@ -330,13 +342,18 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: Colors.primary,
+    marginBottom: "2%",
+    marginLeft: "2%",
+    marginRight: "2%",
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.primary,
   },
   coverImage: {
     width: "100%",
-    height: height * 0.25,
-    borderTopRightRadius:20,
-    borderTopLeftRadius:20,
+    height: height * 0.2,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     marginBottom: 5,
     objectFit: "cover",
   },
@@ -347,13 +364,13 @@ const styles = StyleSheet.create({
   },
   eventName: {
     fontSize: height * 0.025,
-    color: Colors.black,
+    color: Colors.white,
     letterSpacing: 2,
     fontWeight: "bold",
   },
   startTime: {
     fontSize: height * 0.015,
-    color: Colors.black,
+    color: Colors.white,
     letterSpacing: 2,
   },
 });

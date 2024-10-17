@@ -382,7 +382,6 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   </Text>
                 )}
               </View>
-              {/* <FontAwesomeIcon style={styles.fav} icon={ test } color={ 'black' } size={20} />      */}
             </View>
             <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
               {this.trimContent(item.eventName, 30)}
@@ -467,8 +466,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
             <MaterialIndicator color={Colors.primary} />
           )}
           {this.props.childLoader == false &&
-          this.props.events.filter((item) => item.endTime > Date.now()).length >
-            0 && (
+            this.props.events.filter((item) => item.endTime > Date.now())
+              .length > 0 && (
               <SafeAreaView style={{ flex: 1 }}>
                 <FlatList
                   contentContainerStyle={{ flexGrow: 1 }}
@@ -480,8 +479,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 />
               </SafeAreaView>
             )}
-        {this.props.events.filter((item) => item.endTime > Date.now()).length ==
-          0 &&
+          {this.props.events.filter((item) => item.endTime > Date.now())
+            .length == 0 &&
             this.props.childLoader == false &&
             this.sorry()}
           {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
@@ -565,7 +564,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               onConfirmPressed={() => {
                 this.handleBelowAge(
                   this.state.itemClicked,
-                "https://www.gohappyclub.in/session_details/" + this.state.itemClicked.id
+                  "https://www.gohappyclub.in/session_details/" +
+                    this.state.itemClicked.id
                 );
                 this.setState({ belowAgePopUp: false });
               }}
