@@ -3,7 +3,8 @@ export async function getPayload(
   amount,
   paymentType,
   orderId,
-  tambolaTicket
+  tambolaTicket,
+  membershipType="FREE"
 ) {
   var url = SERVER_URL + "/phonePe/generatePayload";
   try {
@@ -13,6 +14,7 @@ export async function getPayload(
       paymentType: paymentType,
       orderId: orderId,
       tambolaTicket: tambolaTicket,
+      membershipType: membershipType,
     });
     if (response.data) {
       return response.data;

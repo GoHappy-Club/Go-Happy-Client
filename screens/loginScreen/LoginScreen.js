@@ -379,6 +379,8 @@ class LoginScreen extends Component {
           fcmToken,
           age
         );
+        console.log("<===Running user/update===>");
+        
         axios
           .post(SERVER_URL + "/user/update", {
             fcmToken: fcmToken,
