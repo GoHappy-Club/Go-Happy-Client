@@ -12,8 +12,11 @@ import {
   Image,
 } from "react-native";
 import Video from "react-native-video";
-import { setProfile } from "./redux/actions/counts.js";
-import { NavigationContainer } from "@react-navigation/native";
+import { setProfile, setMembership } from "./redux/actions/counts.js";
+import {
+  NavigationContainer,
+  usePreventRemoveContext,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen/LoginScreen";
 import BottomNavigator from "./components/navigators/BottomNavigator";
@@ -24,7 +27,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud/config.json";
+import * as configData from "./config/local/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -136,10 +139,15 @@ export default function App() {
   // });
   const [isConnected, setIsConnected] = useState(true);
   const [token, setToken] = useState(false);
-  const profile = useSelector((state) => state.profile.profile); // Replace 'data' with your actual state slice name
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership);
   const dispatch = useDispatch();
 
   const { copilotEvents } = useCopilot();
+
+  const setNewMembership = (membership) => {
+    dispatch(setMembership(membership));
+  };
 
   const setNewProfile = (
     name,
@@ -205,7 +213,6 @@ export default function App() {
             phoneNumber,
             profileImage,
             token_temp,
-            membership,
             sessionsAttended,
             dateOfJoining,
             selfInviteCode,
@@ -213,6 +220,8 @@ export default function App() {
             emergencyContact,
             age
           );
+
+          setNewMembership(JSON.parse(membership));
         }
       } catch (error) {
         console.error("Error retrieving data from AsyncStorage:", error);
@@ -221,7 +230,6 @@ export default function App() {
     setToken(true);
     fetchData();
     firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log("onNotificationOpened ", remoteMessage);
       if (remoteMessage == null) {
         return;
       }
@@ -261,12 +269,39 @@ export default function App() {
           console.log(e);
         }
       });
+    updateUser();
     const unsubscribe = firebase
       .messaging()
       .onMessage(async (remoteMessage) => {
         const incomingDeepLink = remoteMessage.data.deepLink;
         const priority = remoteMessage.data.priority;
         if (priority && priority == "HIGH") {
+          if (remoteMessage.data?.runUpdate == "true") {
+            const paymentProgress = await AsyncStorage.getItem(
+              "paymentProgress"
+            );
+            const paymentProgressTime = await AsyncStorage.getItem(
+              "paymentProgressTime"
+            );
+            if (
+              paymentProgress &&
+              paymentProgress == "true" &&
+              paymentProgressTime &&
+              new Date().getTime() - paymentProgressTime < 20 * 60 * 60 * 1000
+            ) {
+              updateUser();
+            } else if (
+              paymentProgress &&
+              paymentProgress == "true" &&
+              paymentProgressTime &&
+              new Date().getTime() - paymentProgressTime > 20 * 60 * 60 * 1000
+            ) {
+              AsyncStorage.setItem("paymentProgress", "false");
+              AsyncStorage.setItem("paymentProgressTime", null);
+              updateUser();
+            }
+            return;
+          }
           setNotify(remoteMessage);
         } else {
           Toast.show({
@@ -281,9 +316,59 @@ export default function App() {
           });
         }
       });
-
     return unsubscribe;
   }, []);
+
+  const updateUser = async () => {
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/memberships/getUserUpdates`,
+        {
+          phoneNumber: profile.phoneNumber,
+        }
+      );
+      const userProfile = response.data.userProfile;
+      const userMembership = response.data.userMembership;
+
+      // if membership's type is changed then it means that payment was done successsfully.
+      if (membership.membershipType != userMembership.membershipType) {
+        AsyncStorage.setItem("paymentProgress", "false");
+        AsyncStorage.setItem("paymentProgressTime", null);
+
+        //store membership and user profile in AsyncStorage
+        AsyncStorage.setItem("membership", JSON.stringify(userMembership));
+        AsyncStorage.setItem("name", userProfile.name);
+        AsyncStorage.setItem("email", userProfile.email);
+        AsyncStorage.setItem("phoneNumber", userProfile.phoneNumber);
+        AsyncStorage.setItem("profileImage", userProfile.profileImage);
+        AsyncStorage.setItem("token", userProfile.token);
+        AsyncStorage.setItem("sessionsAttended", userProfile.sessionsAttended);
+        AsyncStorage.setItem("dateOfJoining", userProfile.dateOfJoining);
+        AsyncStorage.setItem("selfInviteCode", userProfile.selfInviteCode);
+        AsyncStorage.setItem("city", userProfile.city);
+        AsyncStorage.setItem("emergencyContact", userProfile.emergencyContact);
+        AsyncStorage.setItem("age", userProfile.age);
+
+        //set membership and user profile in redux
+        setNewMembership(userMembership);
+        setNewProfile(
+          userProfile.name,
+          userProfile.email,
+          userProfile.phoneNumber,
+          userProfile.profileImage,
+          userProfile.token,
+          userProfile.sessionsAttended,
+          userProfile.dateOfJoining,
+          userProfile.selfInviteCode,
+          userProfile.city,
+          userProfile.emergencyContact,
+          userProfile.age
+        );
+      }
+    } catch (error) {
+      console.log("Error in update user==>", error);
+    }
+  };
 
   const recheck = async () => {
     try {
@@ -443,7 +528,7 @@ export default function App() {
                   <BottomNavigator {...props} propProfile={profile} />
                 )}
                 options={{
-                  header:(props)=>(<Header {...props}/>),
+                  header: (props) => <Header {...props} />,
                   elevation: 0,
                   shadowOpacity: 0,
                   headerShadowVisible: true,

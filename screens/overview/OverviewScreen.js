@@ -20,6 +20,11 @@ import Sections from "../../components/overview/Sections.js";
 import { Text } from "react-native";
 import { CopilotStep, walkthroughable } from "react-native-copilot";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FreeCard from "../../commonComponents/FreeCard.js";
+import SilverCard from "../../commonComponents/SilverCard.js";
+import GoldCard from "../../commonComponents/GoldCard.js";
+import { TouchableOpacity } from "react-native";
+import { getPayload } from "../../services/PhonePe/PaymentServices.js";
 
 const Walkthroughable = walkthroughable(View);
 

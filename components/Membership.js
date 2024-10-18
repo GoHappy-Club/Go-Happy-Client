@@ -182,7 +182,7 @@ The Link will Expire in 20 Minutes.`;
       const name = await AsyncStorage.getItem("name");
       const email = await AsyncStorage.getItem("email");
       const profileImage = await AsyncStorage.getItem("profileImage");
-      const membership = await AsyncStorage.getItem("membership");
+      // const membership = await AsyncStorage.getItem("membership");
       this.setState({ name: name });
       this.setState({ email: email });
       this.setState({ profileImage: profileImage });
