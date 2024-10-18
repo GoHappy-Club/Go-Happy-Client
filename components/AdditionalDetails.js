@@ -210,7 +210,7 @@ class AdditionalDetails extends Component {
             value={this.state.email}
             onChangeText={(text) => this.setState({ email: text })}
           />
-          <AutocompleteCityInput />
+          <AutocompleteCityInput input={this.state.city} setInput={(city)=>this.setState({city:city})} />
           <TextInput
             style={styles.input}
             underlineColorAndroid={Colors.transparent}

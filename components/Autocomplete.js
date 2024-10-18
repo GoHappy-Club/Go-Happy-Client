@@ -11,8 +11,7 @@ const uuidv4 = () => {
   });
 };
 
-const AutocompleteCityInput = () => {
-  const [input, setInput] = useState("");
+const AutocompleteCityInput = ({ input, setInput }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [correlationId] = useState(uuidv4());
 
@@ -49,7 +48,7 @@ const AutocompleteCityInput = () => {
   );
 
   useEffect(() => {
-    if (input.length > 2) {
+    if (input?.length > 2) {
       debouncedFetchSuggestions(input);
     } else {
       setSuggestions([]);
