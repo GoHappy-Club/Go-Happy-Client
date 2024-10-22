@@ -50,6 +50,9 @@ import { JWT_TOKEN } from "@env";
 import { Colors } from "./assets/colors/color.js";
 import Header from "./components/HeaderComponent.js";
 import MyProfile from "./components/Profile.js";
+import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
+import { ArrowLeft, ChevronLeft } from "lucide-react-native";
+import { hp, wp } from "./helpers/common.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -145,8 +148,21 @@ export default function App() {
 
   const { copilotEvents } = useCopilot();
 
-  const setNewMembership = (membership) => {
-    dispatch(setMembership(membership));
+  const setNewMembership = ({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+  }) => {
+    const newMembership = {
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+    };
+    dispatch(setMembership(newMembership));
   };
 
   const setNewProfile = (
@@ -155,7 +171,6 @@ export default function App() {
     phoneNumber,
     profileImage,
     token,
-    plan,
     sessionsAttended,
     // dob,
     dateOfJoining,
@@ -170,7 +185,6 @@ export default function App() {
       phoneNumber: phoneNumber,
       profileImage: profileImage,
       token: token,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       // dob: dob,
       dateOfJoining: dateOfJoining,
@@ -181,6 +195,7 @@ export default function App() {
     };
     dispatch(setProfile(new_profile));
   };
+
   useEffect(() => {
     recheck();
     checkVersion();
@@ -199,13 +214,23 @@ export default function App() {
           );
           const city = await AsyncStorage.getItem("city");
           const profileImage = await AsyncStorage.getItem("profileImage");
-          const membership = await AsyncStorage.getItem("membership");
           const sessionsAttended = await AsyncStorage.getItem(
             "sessionsAttended"
           );
           const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
           const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
           const age = await AsyncStorage.getItem("age");
+
+          // now retrieve membership specific data
+          const membershipType = await AsyncStorage.getItem("membershipType");
+          const id = await AsyncStorage.getItem("membershipId");
+          const membershipStartDate = await AsyncStorage.getItem(
+            "membershipStartDate"
+          );
+          const membershipEndDate = await AsyncStorage.getItem(
+            "membershipEndDate"
+          );
+          const coins = await AsyncStorage.getItem("coins");
 
           setNewProfile(
             name,
@@ -221,7 +246,13 @@ export default function App() {
             age
           );
 
-          setNewMembership(JSON.parse(membership));
+          setNewMembership({
+            membershipType: membershipType,
+            id: id,
+            membershipStartDate: membershipStartDate,
+            membershipEndDate: membershipEndDate,
+            coins: coins,
+          });
         }
       } catch (error) {
         console.error("Error retrieving data from AsyncStorage:", error);
@@ -234,9 +265,9 @@ export default function App() {
         return;
       }
       try {
-        const incomingDeepLink = remoteMessage.data.deepLink;
-        const priority = remoteMessage.data.priority;
-        if (priority && priority == "HIGH") {
+        const incomingDeepLink = remoteMessage.data?.deepLink;
+        const type = remoteMessage.data?.type;
+        if (type && type == "highPriorityReminder") {
           setNotify(remoteMessage);
         } else {
           if (incomingDeepLink) {
@@ -256,9 +287,9 @@ export default function App() {
           return;
         }
         try {
-          const incomingDeepLink = remoteMessage.data.deepLink;
-          const priority = remoteMessage.data.priority;
-          if (priority && priority == "HIGH") {
+          const incomingDeepLink = remoteMessage.data?.deepLink;
+          const type = remoteMessage.data?.type;
+          if (type && type == "highPriorityReminder") {
             setNotify(remoteMessage);
           } else {
             if (incomingDeepLink) {
@@ -269,41 +300,24 @@ export default function App() {
           console.log(e);
         }
       });
-    updateUser();
     const unsubscribe = firebase
       .messaging()
       .onMessage(async (remoteMessage) => {
-        const incomingDeepLink = remoteMessage.data.deepLink;
-        const priority = remoteMessage.data.priority;
-        if (priority && priority == "HIGH") {
-          if (remoteMessage.data?.runUpdate == "true") {
-            const paymentProgress = await AsyncStorage.getItem(
-              "paymentProgress"
-            );
-            const paymentProgressTime = await AsyncStorage.getItem(
-              "paymentProgressTime"
-            );
-            if (
-              paymentProgress &&
-              paymentProgress == "true" &&
-              paymentProgressTime &&
-              new Date().getTime() - paymentProgressTime < 20 * 60 * 60 * 1000
-            ) {
-              updateUser();
-            } else if (
-              paymentProgress &&
-              paymentProgress == "true" &&
-              paymentProgressTime &&
-              new Date().getTime() - paymentProgressTime > 20 * 60 * 60 * 1000
-            ) {
-              AsyncStorage.setItem("paymentProgress", "false");
-              AsyncStorage.setItem("paymentProgressTime", null);
-              updateUser();
-            }
-            return;
-          }
-          setNotify(remoteMessage);
-        } else {
+        const incomingDeepLink = remoteMessage.data?.deepLink;
+        const type = remoteMessage.data?.type;
+        if (type && type == "subscriptionUpdate") {
+          const userMembership = JSON.parse(remoteMessage.data.userMembership);
+          updateUser({
+            membershipType: userMembership.membershipType,
+            id: userMembership.id,
+            membershipStartDate: userMembership.membershipStartDate,
+            membershipEndDate: userMembership.membershipEndDate,
+            coins: userMembership.coins,
+          });
+          return;
+        }
+        if (type && type == "highPriorityReminder") setNotify(remoteMessage);
+        else {
           Toast.show({
             config: { toastConfig },
             text1: remoteMessage.notification.title,
@@ -319,55 +333,27 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  const updateUser = async () => {
-    try {
-      const response = await axios.post(
-        `${SERVER_URL}/memberships/getUserUpdates`,
-        {
-          phoneNumber: profile.phoneNumber,
-        }
-      );
-      const userProfile = response.data.userProfile;
-      const userMembership = response.data.userMembership;
-
-      // if membership's type is changed then it means that payment was done successsfully.
-      if (membership.membershipType != userMembership.membershipType) {
-        AsyncStorage.setItem("paymentProgress", "false");
-        AsyncStorage.setItem("paymentProgressTime", null);
-
-        //store membership and user profile in AsyncStorage
-        AsyncStorage.setItem("membership", JSON.stringify(userMembership));
-        AsyncStorage.setItem("name", userProfile.name);
-        AsyncStorage.setItem("email", userProfile.email);
-        AsyncStorage.setItem("phoneNumber", userProfile.phoneNumber);
-        AsyncStorage.setItem("profileImage", userProfile.profileImage);
-        AsyncStorage.setItem("token", userProfile.token);
-        AsyncStorage.setItem("sessionsAttended", userProfile.sessionsAttended);
-        AsyncStorage.setItem("dateOfJoining", userProfile.dateOfJoining);
-        AsyncStorage.setItem("selfInviteCode", userProfile.selfInviteCode);
-        AsyncStorage.setItem("city", userProfile.city);
-        AsyncStorage.setItem("emergencyContact", userProfile.emergencyContact);
-        AsyncStorage.setItem("age", userProfile.age);
-
-        //set membership and user profile in redux
-        setNewMembership(userMembership);
-        setNewProfile(
-          userProfile.name,
-          userProfile.email,
-          userProfile.phoneNumber,
-          userProfile.profileImage,
-          userProfile.token,
-          userProfile.sessionsAttended,
-          userProfile.dateOfJoining,
-          userProfile.selfInviteCode,
-          userProfile.city,
-          userProfile.emergencyContact,
-          userProfile.age
-        );
-      }
-    } catch (error) {
-      console.log("Error in update user==>", error);
-    }
+  const updateUser = ({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+  }) => {
+    //store membership in AsyncStorage
+    AsyncStorage.setItem("membershipType", membershipType);
+    AsyncStorage.setItem("membershipId", id);
+    AsyncStorage.setItem("membershipStartDate", membershipStartDate);
+    AsyncStorage.setItem("membershipEndDate", membershipEndDate);
+    AsyncStorage.setItem("coins", coins.toString());
+    //set membership in redux
+    setNewMembership({
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+    });
   };
 
   const recheck = async () => {
@@ -701,6 +687,27 @@ export default function App() {
                   headerShadowVisible: false,
                 })}
               />
+              <Stack.Screen
+                name="SubscriptionPlans"
+                children={(props) => <SubscriptionScreen />}
+                options={({ navigation }) => ({
+                  headerTransparent: true,
+                  title: null,
+                  headerBackTitle: "back",
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.newBackButton}
+                      onPress={() => navigation.navigate("GoHappy Club")}
+                    >
+                      <ChevronLeft size={wp(10)} color={Colors.black} />
+                      <Text style={styles.newBackText}>Back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                  presentation: "modal",
+                  animation: "slide_from_bottom",
+                })}
+              />
             </>
           </Stack.Navigator>
         </NavigationContainer>
@@ -815,6 +822,17 @@ const styles = StyleSheet.create({
     elevation: 10,
     shadowOffset: { height: 2 },
     shadowOpacity: 0.3,
+  },
+  newBackButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginLeft: -10,
+  },
+  newBackText: {
+    color: Colors.black,
+    textAlign: "center",
+    fontSize: 18,
   },
   backText: {
     color: Colors.black,

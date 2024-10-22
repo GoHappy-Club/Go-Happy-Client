@@ -1,32 +1,16 @@
 import React, { Component } from "react";
-// import axios from "../../config/CustomAxios.js";
-import HomeDashboard from "../../components/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
-import tambola from "tambola";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
-import { Banner, Divider } from "react-native-paper";
-import { Image, TouchableWithoutFeedback, View } from "react-native";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
 import PromotionSection from "../../components/overview/PromotionSection.js";
 import { ScrollView } from "react-native-gesture-handler";
 import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
-import LottieView from "lottie-react-native";
 import Sections from "../../components/overview/Sections.js";
-import { Text } from "react-native";
-import { CopilotStep, walkthroughable } from "react-native-copilot";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FreeCard from "../../commonComponents/FreeCard.js";
-import SilverCard from "../../commonComponents/SilverCard.js";
-import GoldCard from "../../commonComponents/GoldCard.js";
-import { TouchableOpacity } from "react-native";
-import { getPayload } from "../../services/PhonePe/PaymentServices.js";
-
-const Walkthroughable = walkthroughable(View);
 
 class OverviewScreen extends Component {
   constructor(props) {

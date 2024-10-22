@@ -39,9 +39,10 @@ const MyProfile = ({ navigation }) => {
     logoutPopup: false,
     whatsappLink: "",
   });
-  
 
   const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state?.membership?.membership);
+
   const dispatch = useDispatch();
 
   const retrieveData = useCallback(async () => {
@@ -49,13 +50,11 @@ const MyProfile = ({ navigation }) => {
       const name = await AsyncStorage.getItem("name");
       const email = await AsyncStorage.getItem("email");
       const profileImage = await AsyncStorage.getItem("profileImage");
-      const membership = await AsyncStorage.getItem("membership");
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         name,
         email,
         profileImage,
-        membership
       }));
     } catch (error) {
       // Error retrieving data
@@ -192,7 +191,7 @@ const MyProfile = ({ navigation }) => {
 
         {/* Stats card */}
         <View style={styles.statsCard}>
-          <View style={styles.statItem}>
+          <View style={[styles.statItem, styles.borderRight]}>
             <Text style={styles.cardText}>Sessions Attended</Text>
             <Text style={[styles.cardText, styles.boldText]}>
               {profile.sessionsAttended}
@@ -201,7 +200,7 @@ const MyProfile = ({ navigation }) => {
           <View style={[styles.statItem, styles.borderRight]}>
             <Text style={styles.cardText}>Membership</Text>
             <Text style={[styles.cardText, styles.boldText]}>
-              Free
+              {membership && membership.membershipType}
             </Text>
           </View>
           <View style={styles.statItem}>
@@ -217,7 +216,7 @@ const MyProfile = ({ navigation }) => {
           <TouchableOpacity style={styles.menuItem} onPress={handleSelectImage}>
             <Text style={styles.optionList}>Update Profile Picture</Text>
           </TouchableOpacity>
-          
+
           {(profile.age == null || profile.age > 50) && (
             <>
               <TouchableOpacity
@@ -234,14 +233,14 @@ const MyProfile = ({ navigation }) => {
               </TouchableOpacity>
             </>
           )}
-          
+
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate("About GoHappy Club")}
           >
             <Text style={styles.optionList}>About GoHappy Club</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={[styles.menuItem, styles.borderBottom]}
             onPress={() => setState(prevState => ({ ...prevState, logoutPopup: true }))}
