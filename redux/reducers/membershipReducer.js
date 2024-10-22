@@ -7,7 +7,7 @@ const membershipReducer = (state = initialState, action) => {
     case MEMBERSHIP_SET:
       return {
         ...state,
-        profile: action.payload,
+        membership: action.payload,
       };
     default:
       return state;

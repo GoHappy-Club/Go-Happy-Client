@@ -55,12 +55,11 @@ class AdditionalDetails extends Component {
     name,
     age,
     profileImage,
-    plan,
     sessionsAttended,
     selfInviteCode,
     city,
-    emergencyContact
-  ) {
+    emergencyContact,
+  ) {    
     let { profile, actions } = this.props;
 
     profile = {
@@ -73,7 +72,6 @@ class AdditionalDetails extends Component {
       phoneNumber: profile.phoneNumber,
       token: profile.token,
       profileImage: profileImage,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       city: city,
       emergencyContact: emergencyContact,
@@ -83,7 +81,6 @@ class AdditionalDetails extends Component {
   }
 
   updateDetails() {
-    //  || this.state.uiDate=='' || this.state.uiDate==null
     if (
       this.state.name == null ||
       this.state.name == "" ||
@@ -120,36 +117,34 @@ class AdditionalDetails extends Component {
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
-          if (response.data.phoneNumber != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.phoneNumber);
+          if (response.data.user.phoneNumber != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.user.phoneNumber);
           }
-          // AsyncStorage.setItem('fullName',response.data.fullName);
-          if (response.data.name != null) {
-            AsyncStorage.setItem("name", response.data.name);
+          // AsyncStorage.setItem('fullName',response.data.user.fullName);
+          if (response.data.user.name != null) {
+            AsyncStorage.setItem("name", response.data.user.name);
           }
-          if (response.data.email != null) {
-            AsyncStorage.setItem("email", response.data.email);
+          if (response.data.user.email != null) {
+            AsyncStorage.setItem("email", response.data.user.email);
           }
-          if (response.data.profileImage != null) {
-            AsyncStorage.setItem("profileImage", response.data.profileImage);
+          if (response.data.user.profileImage != null) {
+            AsyncStorage.setItem("profileImage", response.data.user.profileImage);
           }
-          if (response.data.age != null) {
-            AsyncStorage.setItem("age", response.data.age);
+          if (response.data.user.age != null) {
+            AsyncStorage.setItem("age", response.data.user.age);
           }
-          if (response.data.token != null) {
-            AsyncStorage.setItem("token", response.data.token);
+          if (response.data.user.token != null) {
+            AsyncStorage.setItem("token", response.data.user.token);
           }
           // this.state.navigation.navigate('DrawerNavigator');
           this.setProfile(
-            response.data.name,
-            response.data.age,
-            response.data.profileImage,
-            response.data.membership,
-            response.data.sessionsAttended,
-            response.data.selfInviteCode,
-            response.data.city,
-            response.data.emergencyContact,
-            response.data.age
+            response.data.user.name,
+            response.data.user.age,
+            response.data.user.profileImage,
+            response.data.user.sessionsAttended,
+            response.data.user.selfInviteCode,
+            response.data.user.city,
+            response.data.user.emergencyContact,
           );
           this.setState({ loader: true });
 
@@ -158,10 +153,10 @@ class AdditionalDetails extends Component {
           this.props.navigation.navigate("GoHappy Club");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
-            phoneNumber: response.data.phoneNumber,
-            email: response.data.email,
-            age: response.data.age,
-            name: response.data.name,
+            phoneNumber: response.data.user.phoneNumber,
+            email: response.data.user.email,
+            age: response.data.user.age,
+            name: response.data.user.name,
           });
         } else if (response.data == "ERROR") {
           this.setState({ showAlert: true, loader: false });
@@ -172,7 +167,6 @@ class AdditionalDetails extends Component {
         this.setState({ loadingButton: false });
       });
   }
-  setDate() {}
 
   render() {
     var open = this.state.open;

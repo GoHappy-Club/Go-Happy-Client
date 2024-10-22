@@ -19,7 +19,10 @@ import { useNavigation } from "@react-navigation/native";
 const width = Dimensions.get("window").width;
 
 const Header = () => {
+
   const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state?.membership?.membership);
+
   const navigation = useNavigation();
 
   const handleNavigate = () => {
@@ -43,8 +46,8 @@ const Header = () => {
           Hello {profile.name}
         </Text>
       </Pressable>
-      {/* <View style={styles.rightWrapper}>
-        <TouchableOpacity style={styles.upgradeButton}>
+      <View style={styles.rightWrapper}>
+        <TouchableOpacity style={styles.upgradeButton} onPress={()=>navigation.navigate("SubscriptionPlans")}>
           <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
           <GradientText
             text="Upgrade"
@@ -53,10 +56,19 @@ const Header = () => {
           />
         </TouchableOpacity>
         <View style={styles.credits}>
-          <Text style={styles.creditsText}>{200}</Text>
+          <Text
+            style={[
+              styles.creditsText,
+              {
+                color: membership.active ? Colors.black : Colors.grey.countdown,
+              },
+            ]}
+          >
+            {membership.coins}
+          </Text>
           <FontAwesomeIcon icon={faWallet} />
         </View>
-      </View> */}
+      </View>
     </View>
   );
 };
@@ -67,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     paddingVertical: 0.25 * StatusBar.currentHeight,
     backgroundColor: Colors.grey.header,
     elevation: 30,
@@ -100,12 +112,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.grey.lightgrey,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 4,
     borderRadius: 15,
   },
   creditsText: {
     marginRight: 5,
     fontWeight: "bold",
+    fontSize: 18,
   },
   profileImage: {
     borderRadius: 20,
