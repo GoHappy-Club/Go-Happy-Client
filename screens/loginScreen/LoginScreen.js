@@ -24,7 +24,7 @@ import { Button } from "react-native-elements";
 import { BottomSheet, ListItem } from "react-native-elements";
 
 import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import LinearGradient from "react-native-linear-gradient";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
@@ -102,13 +102,31 @@ class LoginScreen extends Component {
     }
   };
 
+  setMembership({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+  }) {
+    let { membership, actions } = this.props;
+
+    membership = {
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+    };
+    actions.setMembership(membership);
+  }
+
   setProfile(
     name,
     email,
     phoneNumber,
     profileImage,
     token,
-    plan,
     sessionsAttended,
     // dob,
     dateOfJoining,
@@ -125,7 +143,6 @@ class LoginScreen extends Component {
       phoneNumber: phoneNumber,
       profileImage: profileImage,
       token: token,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       // dob: dob,
       dateOfJoining: dateOfJoining,
@@ -353,7 +370,6 @@ class LoginScreen extends Component {
         const email = await AsyncStorage.getItem("email");
         const profileImage = await AsyncStorage.getItem("profileImage");
         const token = await AsyncStorage.getItem("token");
-        const membership = await AsyncStorage.getItem("membership");
         const phoneNumber = await AsyncStorage.getItem("phoneNumber");
         const sessionsAttended = await AsyncStorage.getItem("sessionsAttended");
         // const dob = await AsyncStorage.getItem("dob");
@@ -363,15 +379,24 @@ class LoginScreen extends Component {
         const emergencyContact = await AsyncStorage.getItem("emergencyContact");
         const age = await AsyncStorage.getItem("age");
 
+        //retreive membership object to save separately in redux
+        const membershipType = await AsyncStorage.getItem("membershipType");
+        const id = await AsyncStorage.getItem("membershipId");
+        const membershipStartDate = await AsyncStorage.getItem(
+          "membershipStartDate"
+        );
+        const membershipEndDate = await AsyncStorage.getItem(
+          "membershipEndDate"
+        );
+        const coins = await AsyncStorage.getItem("coins");
+
         this.setProfile(
           name,
           email,
           phoneNumber,
           profileImage,
           token,
-          membership,
           sessionsAttended,
-          // dob,
           dateOfJoining,
           selfInviteCode,
           city,
@@ -379,25 +404,36 @@ class LoginScreen extends Component {
           fcmToken,
           age
         );
-        console.log("<===Running user/update===>");
-        
+        this.setMembership({
+          membershipType,
+          id,
+          membershipStartDate,
+          membershipEndDate,
+          coins,
+        });
+
         axios
           .post(SERVER_URL + "/user/update", {
             fcmToken: fcmToken,
             phone: phoneNumber,
           })
-          .then((response) => {})
+          .then((response) => {
+            this.setMembership({
+              membershipType:response.data.membership.membershipType,
+              id:response.data.membership.id,
+              membershipStartDate:response.data.membership.membershipStartDate,
+              membershipEndDate:response.data.membership.membershipEndDate,
+              coins:response.data.membership.coins,
+            });
+          })
           .catch((error) => {
             console.log(error);
           });
-        // this.props.navigation.replace('GoHappy Club');
-        // this.setState({loader:false});
         this.props.navigation.replace("Additional Details", {
           navigation: this.props.navigation,
           email: email,
           phoneNumber: phoneNumber,
           name: name,
-          // dob: dob,
           dateOfJoining: dateOfJoining,
           city: city,
           emergencyContact: emergencyContact,
@@ -431,74 +467,101 @@ class LoginScreen extends Component {
       })
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
-          // this.setState({fullName: userInfo.fullName});
-          if (response.data.phone != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.phone);
+          this.setProfile(
+            response.data.user.name,
+            response.data.user.email,
+            response.data.user.phone,
+            response.data.user.profileImage,
+            token,
+            response.data.user.sessionsAttended,
+            // response.data.user.dob,
+            response.data.user.dateOfJoining,
+            response.data.user.selfInviteCode,
+            response.data.user.city,
+            response.data.user.emergencyContact,
+            this.state.fcmToken,
+            response.data.user.age
+          );
+          this.setMembership({
+            membershipType: response.data.membership.membershipType,
+            id: response.data.membership.id,
+            membershipStartDate: response.data.membership.membershipStartDate,
+            membershipEndDate: response.data.membership.membershipEndDate,
+            coins: response.data.membership.coins,
+          });
+          if (response.data.user.phone != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.user.phone);
           }
-          // AsyncStorage.setItem('fullName',response.data.fullName);
-
-          if (response.data.name != null) {
-            AsyncStorage.setItem("name", response.data.name);
+          if (response.data.user.name != null) {
+            AsyncStorage.setItem("name", response.data.user.name);
           }
-          if (response.data.email != null) {
-            AsyncStorage.setItem("email", response.data.email);
+          if (response.data.user.email != null) {
+            AsyncStorage.setItem("email", response.data.user.email);
           }
-          if (response.data.emergencyContact != null) {
+          if (response.data.user.emergencyContact != null) {
             AsyncStorage.setItem(
               "emergencyContact",
-              response.data.emergencyContact
+              response.data.user.emergencyContact
             );
           }
-          if (response.data.city != null) {
-            AsyncStorage.setItem("city", response.data.city);
+          if (response.data.user.city != null) {
+            AsyncStorage.setItem("city", response.data.user.city);
           }
-          if (response.data.profileImage != null) {
-            AsyncStorage.setItem("profileImage", response.data.profileImage);
+          if (response.data.user.profileImage != null) {
+            AsyncStorage.setItem(
+              "profileImage",
+              response.data.user.profileImage
+            );
           }
           AsyncStorage.setItem("token", token);
-          AsyncStorage.setItem("membership", response.data.membership);
           AsyncStorage.setItem(
             "sessionsAttended",
-            response.data.sessionsAttended
+            response.data.user.sessionsAttended
           );
-          // AsyncStorage.setItem("dob", response.data.dob);
-          AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
-          AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
-          AsyncStorage.setItem("age", response.data.age);
-          this.setProfile(
-            response.data.name,
-            response.data.email,
-            response.data.phone,
-            response.data.profileImage,
-            token,
-            response.data.membership,
-            response.data.sessionsAttended,
-            // response.data.dob,
-            response.data.dateOfJoining,
-            response.data.selfInviteCode,
-            response.data.city,
-            response.data.emergencyContact,
-            this.state.fcmToken,
-            response.data.age
+          AsyncStorage.setItem(
+            "dateOfJoining",
+            response.data.user.dateOfJoining
           );
+          AsyncStorage.setItem(
+            "selfInviteCode",
+            response.data.user.selfInviteCode
+          );
+          AsyncStorage.setItem("age", response.data.user.age);
+
+          // store membership details in async storage
+          AsyncStorage.setItem(
+            "membershipType",
+            response.data.membership.membershipType
+          );
+          AsyncStorage.setItem("membershipId", response.data.membership.id);
+          AsyncStorage.setItem(
+            "membershipStartDate",
+            response.data.membership.membershipStartDate
+          );
+          AsyncStorage.setItem(
+            "membershipEndDate",
+            response.data.membership.membershipEndDate
+          );
+          AsyncStorage.setItem("coins", String(response.data.membership.coins));
+
           this.setState({
-            name: response.data.name,
-            email: response.data.email,
-            phoneNumber: response.data.phone,
-            city: response.data.city,
-            emergencyContact: response.data.emergencyContact,
-            // dob: response.data.dob,
+            name: response.data.user.name,
+            email: response.data.user.email,
+            phoneNumber: response.data.user.phone,
+            city: response.data.user.city,
+            emergencyContact: response.data.user.emergencyContact,
+            // dob: response.data.user.dob,
           });
-          if (this.pending(response.data.name, response.data.phone)) {
+          if (this.pending(response.data.user.name, response.data.user.phone)) {
             this.props.navigation.replace("Additional Details", {
               navigation: this.props.navigation,
-              email: response.data.email,
-              phoneNumber: response.data.phone,
-              name: response.data.name,
+              email: response.data.user.email,
+              phoneNumber: response.data.user.phone,
+              name: response.data.user.name,
               state: this.state.state,
-              city: response.data.city,
-              emergencyContact: response.data.emergencyContact,
-              // dob: response.data.dob,
+              city: response.data.user.city,
+              emergencyContact: response.data.user.emergencyContact,
+              // dob: response.data.user.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
             return;
@@ -514,7 +577,11 @@ class LoginScreen extends Component {
             this.setState({ loader: false });
           }
         } else if (response.data == "ERROR") {
-          this.setState({ showAlert: true, loader: false,loadingVerifyButton:false });
+          this.setState({
+            showAlert: true,
+            loader: false,
+            loadingVerifyButton: false,
+          });
         }
         this.setState({ loadingVerifyButton: false });
       })
@@ -982,7 +1049,7 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-const ActionCreators = Object.assign({}, { setProfile });
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
