@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Button } from "react-native-elements";
+import phonepe_payments from "../PhonePe/Payments";
 
 const predefinedPackages = [
   { id: 1, amount: 100, coins: 100, description: "Starter Pack" },
@@ -31,6 +32,7 @@ const WalletTopUp = () => {
   const [payButtonLoading, setPayButtonLoading] = useState(false);
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
+  const [error, setError] = useState(false);
 
   const navigation = useNavigation();
 
@@ -53,7 +55,7 @@ const WalletTopUp = () => {
       setShareButtonLoading(false);
       navigation.navigate("PaymentFailed", {
         type: "normal",
-        navigateTo: "WalletScreen",
+        navigateTo: "TopUpScreen",
       });
     };
     if (type == "share") {
@@ -104,6 +106,18 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     }
   };
 
+  const validateAmount = () => {
+    if (amount.length == 0) {
+      setError(true);
+      return false;
+    }
+    if (!/^\d+$/.test(amount)) {
+      setError(true);
+      return false;
+    }
+    return true;
+  };
+
   return (
     <>
       <ScrollView
@@ -119,18 +133,34 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               placeholder="Enter amount (₹)"
               keyboardType="numeric"
               value={amount}
-              onChangeText={setAmount}
+              onChangeText={(text) => {
+                setError(false);
+                setAmount(text);
+              }}
               style={styles.amountInput}
               placeholderTextColor={Colors.grey.d}
             />
           </View>
+            {error && (
+              <Text
+                style={{
+                  color: Colors.red,
+                  fontSize: 12,
+                  marginLeft: 10,
+                }}
+              >
+                Please enter valid amount.
+              </Text>
+            )}
 
           <Pressable
             style={({ pressed }) => [
               styles.topUpButton,
               { opacity: pressed ? 0.8 : 1 },
             ]}
-            onPress={() => setPaymentSharePopUp(true)}
+            onPress={() => {
+              if (validateAmount()) setPaymentSharePopUp(true);
+            }}
           >
             <Text style={styles.buttonText}>Top Up</Text>
           </Pressable>
@@ -146,7 +176,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 styles.packageButton,
                 { opacity: pressed ? 0.9 : 1 },
               ]}
-              onPress={() => handleTopUp(item.amount)}
+              onPress={() => {
+                setAmount(item.amount);
+              }}
             >
               <View style={styles.packageContent}>
                 <Text style={styles.packageText}>₹ {item.amount}</Text>
@@ -317,10 +349,10 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
   },
   packageCoins: {
-    fontSize: hp(2.2),
-    fontWeight: "600",
+    fontSize: hp(3),
     color: Colors.pink.sessionDetails,
     marginTop: hp(0.3),
+    fontFamily: "Montserrat-SemiBold",
   },
   AAcontainer: {
     padding: 10,
