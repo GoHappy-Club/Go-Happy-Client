@@ -8,12 +8,14 @@ import { ActivityIndicator } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
 const SubscriptionScreen = () => {
-
   // pass this subscription plans as a prop to the child component
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const membership = useSelector((state) => state.membership.membership);
 
   const navigation = useNavigation();
 
@@ -23,8 +25,10 @@ const SubscriptionScreen = () => {
     try {
       setLoading(true);
       const response = await axios.get(url);
-      const plansToBeShown = response.data.filter((plan) => plan.membershipType!="Free");
-      setPlans(plansToBeShown);
+      const plansToShow = response.data
+        .filter((plan) => plan.membershipType != "Free")
+        .filter((plan) => plan.membershipType != membership.membershipType);
+      setPlans(plansToShow);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -45,7 +49,7 @@ const SubscriptionScreen = () => {
             justifyContent: "flex-end",
             paddingHorizontal: 20,
             paddingVertical: 10,
-            width:wp(100)
+            width: wp(100),
           }}
         >
           <View style={styles.goHappyClubLogoWrapper}>
@@ -76,7 +80,7 @@ const SubscriptionScreen = () => {
         <SafeAreaView
           style={{
             flex: 1,
-            backgroundColor:Colors.grey.f0
+            backgroundColor: Colors.grey.f0,
           }}
         >
           <RenderHeader />

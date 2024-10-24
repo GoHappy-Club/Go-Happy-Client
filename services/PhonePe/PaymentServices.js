@@ -2,9 +2,9 @@ export async function getPayload(
   phone,
   amount,
   paymentType,
-  orderId,
-  tambolaTicket,
-  membershipType="FREE"
+  orderId=null,
+  tambolaTicket=null,
+  membershipId
 ) {
   var url = SERVER_URL + "/phonePe/generatePayload";
   try {
@@ -14,7 +14,7 @@ export async function getPayload(
       paymentType: paymentType,
       orderId: orderId,
       tambolaTicket: tambolaTicket,
-      membershipType: membershipType,
+      membershipId: membershipId,
     });
     if (response.data) {
       return response.data;
