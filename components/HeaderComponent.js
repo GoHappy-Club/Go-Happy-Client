@@ -111,14 +111,14 @@ const Header = () => {
               styles.creditsText,
               {
                 color:
-                  membership.membershipType != "Free"
+                  membership?.membershipType != "Free"
                     ? Colors.black
                     : Colors.grey.countdown,
               },
             ]}
           >
           {/* show high numbers with K/L */}
-            {trimContent(membership.coins.toString())}
+            {trimContent(membership?.coins.toString())}
           </Text>
         </TouchableOpacity>
       </View>
