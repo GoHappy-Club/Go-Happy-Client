@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import phonepe_payments from "./PhonePe/Payments.js";
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
@@ -32,6 +31,8 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { connect } from "react-redux";
 import { Colors } from "../assets/colors/color.js";
+import { wp } from "../helpers/common.js";
+
 class SessionDetails extends Component {
   constructor(props) {
     super(props);
@@ -54,89 +55,10 @@ class SessionDetails extends Component {
       belowAgePopUp: false,
       payButtonLoading: false,
       shareButtonLoading: false,
+      nonMemberPopUp: false,
+      lowCoinsPopUp:false,
     };
     this.retrieveData();
-  }
-
-  async phonePeWrapper(type, item) {
-    var _this = this;
-    const _callback = (id) => {
-      this.setState({ success: true, loadingButton: false });
-
-      var _this = this;
-      if (id === "") {
-        this.props.route.params.onGoBack();
-        _this.props.navigation.navigate("GoHappy Club");
-      } else {
-        this.sessionAction();
-        this.setState({
-          showPaymentAlert: true,
-          clickPopup: false,
-          payButtonLoading: false,
-        });
-      }
-    };
-    const _errorHandler = () => {
-      this.setState({
-        paymentAlertMessage: phonepe_payments.PaymentError(),
-        paymentAlertTitle: "Oops!",
-        clickPopup: false,
-        payButtonLoading: false,
-      });
-      this.setState({ showPaymentAlert: true });
-    };
-    if (type == "share") {
-      this.setState({
-        shareButtonLoading: true,
-      });
-      const tambolaTicket = tambola.generateTicket();
-      phonepe_payments
-        .phonePeShare(
-          this.props.phoneNumber,
-          item.cost,
-          _errorHandler,
-          "workshop",
-          item.id,
-          tambolaTicket
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(
-  this.state.name,
-  "italic"
-)} is requesting a payment of ₹${toUnicodeVariant(
-            String(item.cost),
-            "bold"
-          )} for ${toUnicodeVariant(item.eventName, "bold")}.
-Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              this.setState({
-                shareButtonLoading: false,
-                clickPopup: false,
-              });
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-            });
-        });
-    } else {
-      this.setState({
-        payButtonLoading: true,
-      });
-      phonepe_payments.phonePe(
-        this.props.phoneNumber,
-        item.cost,
-        _callback,
-        _errorHandler,
-        "workshop"
-      );
-    }
   }
 
   retrieveData = async () => {
@@ -180,8 +102,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
   isDisabled() {
     var title = this.getTitle();
     if (
-      title == "Seats Full" ||
-      (title == "Cancel Your Booking" && this.props.event.costType == "paid")
+      title == "Seats Full"
     ) {
       return true;
     } else {
@@ -275,6 +196,24 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     var output = this.props.sessionAction("book");
     this.setState({ loadingButton: true });
   }
+  isBookingAllowed() {
+    if (
+      this.props.membership &&
+      this.props.membership?.membershipType == "Free"
+    ) {
+      this.setState({ nonMemberPopUp: true });
+      return false;
+    } else if (
+      this.props.membership &&
+      this.props.membership?.coins < this.props.event.cost
+    ) {
+      this.setState({ lowCoinsPopUp: true });
+      return false;
+    }
+
+    return true
+  }
+
   loadDate(item) {
     const dt = fromUnixTime(item / 1000);
     const finalTime = format(dt, "hh:mm a");
@@ -700,7 +639,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               if (this.getTitle() === "Cancel Your Booking") {
                 this.setState({ showBookAlert: true });
               } else if (item.costType == "paid" && this.getTitle() == "Book") {
-                this.setState({ clickPopup: true });
+                if(!this.isBookingAllowed()) return;
+                this.sessionAction();
                 return;
               } else {
                 this.sessionAction();
@@ -709,55 +649,6 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             }}
           ></Button>
         </View>
-        {this.state.clickPopup && (
-          <AwesomeAlert
-            show={this.state.clickPopup}
-            showProgress={false}
-            closeOnTouchOutside={
-              this.state.payButtonLoading || this.state.shareButtonLoading
-                ? false
-                : true
-            }
-            closeOnHardwareBackPress = {
-              this.state.payButtonLoading || this.state.shareButtonLoading
-                ? false
-                : true
-            }
-            customView={
-              <View style={styles.AAcontainer}>
-                <Text style={styles.AAtitle}>Payment Confirmation</Text>
-                <Text style={styles.AAmessage}>
-                  Would you like to pay this yourself or share the payment link
-                  with a family member?
-                </Text>
-                <View style={styles.AAbuttonContainer}>
-                  <Button
-                    outline
-                    title={"Pay Now"}
-                    loading={this.state.payButtonLoading}
-                    buttonStyle={[styles.AApayButton, styles.AAbutton]}
-                    onPress={() => {
-                      this.phonePeWrapper("self", item);
-                    }}
-                    disabled={this.state.payButtonLoading}
-                  />
-                  <Button
-                    outline
-                    title={"Share"}
-                    loading={this.state.shareButtonLoading}
-                    buttonStyle={[styles.AAshareButton, styles.AAbutton]}
-                    onPress={() => {
-                      this.phonePeWrapper("share", item);
-                    }}
-                    disabled={this.state.shareButtonLoading}
-                  />
-                </View>
-              </View>
-            }
-            onDismiss={() => this.setState({ clickPopup: false })}
-          />
-        )}
-
         {item.recordingLink != null && (
           <Modal
             style={{}}
@@ -907,6 +798,65 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             onDismiss={() => this.setState({ belowAgePopUp: false })}
           />
         )}
+        {this.state.nonMemberPopUp && (
+            <AwesomeAlert
+              show={this.state.nonMemberPopUp}
+              showProgress={false}
+              title={"Booking Failed"}
+              message={
+                "You are not a member of GoHappy Club, Join us by clicking below button."
+              }
+              messageStyle={{
+                textAlign: "center",
+                fontFamily: "Poppins-Regular",
+              }}
+              titleStyle={{
+                fontSize: wp(5),
+                fontFamily: "NunitoSans-SemiBold",
+                color: Colors.red,
+              }}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              showCancelButton={false}
+              confirmText="Join Now"
+              confirmButtonColor={Colors.primary}
+              onConfirmPressed={() => {
+                this.props.navigation.navigate("SubscriptionPlans");
+              }}
+              onDismiss={() => this.setState({ nonMemberPopUp: false })}
+            />
+          )}
+          {this.state.lowCoinsPopUp && (
+            <AwesomeAlert
+              show={this.state.lowCoinsPopUp}
+              showProgress={false}
+              title={"Booking Failed"}
+              message={
+                "You don't have enough coins, Please top-up coins to book this session."
+              }
+              messageStyle={{
+                textAlign: "center",
+                fontFamily: "Poppins-Regular",
+                color:Colors.black,
+              }}
+              titleStyle={{
+                fontSize: wp(5),
+                fontFamily: "NunitoSans-SemiBold",
+                color: Colors.red,
+              }}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              showCancelButton={false}
+              confirmText="Top up Now"
+              confirmButtonColor={Colors.primary}
+              onConfirmPressed={() => {
+                this.props.navigation.navigate("TopUpScreen");
+              }}
+              onDismiss={() => this.setState({ lowCoinsPopUp: false })}
+            />
+          )}
       </View>
     );
   }
@@ -1062,6 +1012,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
+  membership : state.membership.membership
 });
 
 export default connect(mapStateToProps)(SessionDetails);

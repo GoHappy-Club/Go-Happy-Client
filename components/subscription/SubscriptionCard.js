@@ -14,7 +14,7 @@ const MAPPING = {
     gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
     textColor: Colors.black,
     logo: require("../../images/darkWordLogo.png"),
-    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    textShadowColor: "rgba(0, 0, 0, 0.4)",
     borderColor: Colors.grey.f0,
   },
   Gold: {
@@ -164,7 +164,10 @@ const SubscriptionCard = () => {
       <Text
         style={[
           styles.membershipType,
-          { color: MAPPING[membership?.membershipType]["textColor"] },
+          { color: MAPPING[membership?.membershipType]["textColor"],
+            textShadowColor:
+                  MAPPING[membership?.membershipType]["textShadowColor"],
+           },
         ]}
       >
         {membership.membershipType}
@@ -172,7 +175,10 @@ const SubscriptionCard = () => {
       <Text
         style={[
           styles.membershipText,
-          { color: MAPPING[membership?.membershipType]["textColor"] },
+          { color: MAPPING[membership?.membershipType]["textColor"],
+            textShadowColor:
+                  MAPPING[membership?.membershipType]["textShadowColor"],
+           },
         ]}
       >
         Membership

@@ -6,8 +6,11 @@ import { Linking, StyleSheet } from "react-native";
 import SessionDetails from "../../components/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from "../../services/events/EventService";
+import { setMembership, setProfile } from "../../redux/actions/counts";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-export default class HomeDetailsScreen extends Component {
+class HomeDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,6 +103,11 @@ export default class HomeDetailsScreen extends Component {
         })
         .then((response) => {
           if (response.data) {
+            //refund coins to user's membership
+            let { membership, actions } = this.props;
+            membership.coins = membership.coins + this.state.event.cost;
+            actions.setMembership(membership);
+            
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
               return;
@@ -125,13 +133,17 @@ export default class HomeDetailsScreen extends Component {
       axios
         .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
         .then((response) => {
-          if (response.data) {           
+          if (response.data) {
             if (response.data == "SUCCESS") {
+              // deduct coins from user's membership data in redux
+              let {membership,actions} = this.props;
+              membership.coins = membership.coins - this.state.event.cost;
+              actions.setMembership(membership);
+
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
                 return;
               }
-              
               if (this.props.navigation.canGoBack()) {
                 this.props.navigation.goBack();
                 return;
@@ -139,15 +151,12 @@ export default class HomeDetailsScreen extends Component {
                 this.props.navigation.replace("GoHappy Club");
                 return;
               }
-              // _callback();
-              return response.data;
-
-              // item.seatsLeft = item.seatsLeft - 1
             }
           }
         })
         .catch((error) => {
           crashlytics().recordError(JSON.stringify(error));
+          console.log("Error is ==>",error)
           this.error = true;
 
           return false;
@@ -198,3 +207,15 @@ export default class HomeDetailsScreen extends Component {
 }
 
 const styles = StyleSheet.create({});
+
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+  membership: state.membership.membership,
+});
+
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeDetailsScreen);
