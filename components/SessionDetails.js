@@ -718,6 +718,11 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 ? false
                 : true
             }
+            closeOnHardwareBackPress = {
+              this.state.payButtonLoading || this.state.shareButtonLoading
+                ? false
+                : true
+            }
             customView={
               <View style={styles.AAcontainer}>
                 <Text style={styles.AAtitle}>Payment Confirmation</Text>
