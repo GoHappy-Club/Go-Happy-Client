@@ -51,13 +51,14 @@ import { Colors } from "./assets/colors/color.js";
 import Header from "./components/HeaderComponent.js";
 import MyProfile from "./components/Profile.js";
 import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
-import { ArrowLeft, ChevronLeft } from "lucide-react-native";
+import { ChevronLeft } from "lucide-react-native";
 import { hp, wp } from "./helpers/common.js";
-import SubscriptionFailed from "./components/subscription/SubscriptionFailed.js";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import WalletScreen from "./screens/subscriptionScreen/WalletScreen.js";
-import SubscriptionSuccessful from "./components/subscription/SubscriptionSuccessful.js";
+import TopUpScreen from "./screens/subscriptionScreen/TopUpScreen.js";
+import PaymentFailed from "./components/PaymentFailed.js";
+import PaymentSuccessful from "./components/PaymentSuccessful.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -735,8 +736,29 @@ export default function App() {
                 })}
               />
               <Stack.Screen
-                name="SubscriptionFailed"
-                children={(props) => <SubscriptionFailed />}
+                name="TopUpScreen"
+                children={(props) => <TopUpScreen />}
+                options={({ navigation }) => ({
+                  title: null,
+                  headerBackTitle: "back",
+                  headerStyle:{
+                    backgroundColor:Colors.grey.f0
+                  },
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.newBackButton}
+                      onPress={() => navigation.goBack()}
+                    >
+                      <ChevronLeft size={wp(10)} color={Colors.black} />
+                      <Text style={styles.newBackText}>Back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                })}
+              />
+              <Stack.Screen
+                name="PaymentFailed"
+                children={(props) => <PaymentFailed />}
                 options={({ navigation }) => ({
                   headerShown:false,
                   animation:"slide_from_right"
@@ -744,7 +766,7 @@ export default function App() {
               />
               <Stack.Screen
                 name="SubscriptionSuccessful"
-                children={(props) => <SubscriptionSuccessful />}
+                children={(props) => <PaymentSuccessful />}
                 options={({ navigation }) => ({
                   headerShown:false,
                   animation:"slide_from_right"

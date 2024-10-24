@@ -13,17 +13,23 @@ const MAPPING = {
   Silver: {
     gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
     textColor: Colors.black,
-    logo: require("../../images/wordLogo.png"),
+    logo: require("../../images/darkWordLogo.png"),
+    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    borderColor: Colors.grey.f0,
   },
   Gold: {
     gradient: ["#FFD700", "#FDB931", "#A85F05"],
     textColor: Colors.black,
     logo: require("../../images/wordLogo.png"),
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    borderColor: "#FF8C00",
   },
   Platinum: {
     gradient: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
     textColor: Colors.white,
     logo: require("../../images/darkWordLogo.png"),
+    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    borderColor: Colors.grey.f0,
   },
 };
 
@@ -37,7 +43,7 @@ const SubscriptionCard = () => {
 
   if (membership?.membershipType == "Free") {
     return (
-      <View style={{ position: "relative" }}>
+      <>
         <LinearGradient
           colors={["#ff9a9e", "#fad0c4"]}
           style={styles.card}
@@ -95,14 +101,19 @@ const SubscriptionCard = () => {
             height: hp(22),
           }}
         />
-      </View>
+        </>
     );
   }
 
   return (
     <LinearGradient
       colors={MAPPING[membership?.membershipType]["gradient"]}
-      style={styles.card}
+      style={[
+        styles.card,
+        {
+          borderColor: MAPPING[membership?.membershipType]["borderColor"],
+        },
+      ]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
@@ -116,7 +127,11 @@ const SubscriptionCard = () => {
           <Text
             style={[
               styles.name,
-              { color: MAPPING[membership?.membershipType]["textColor"] },
+              {
+                color: MAPPING[membership?.membershipType]["textColor"],
+                textShadowColor:
+                  MAPPING[membership?.membershipType]["textShadowColor"],
+              },
             ]}
           >
             {profile.name}
@@ -124,7 +139,11 @@ const SubscriptionCard = () => {
           <Text
             style={[
               styles.expiry,
-              { color: MAPPING[membership?.membershipType]["textColor"] },
+              {
+                color: MAPPING[membership?.membershipType]["textColor"],
+                textShadowColor:
+                  MAPPING[membership?.membershipType]["textShadowColor"],
+              },
             ]}
           >
             {loadDate(membership.membershipEndDate)}
@@ -176,8 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     borderWidth: 1,
-    // borderColor: "#FF8C00",
-    borderColor: Colors.grey.countdown,
     justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -195,7 +212,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontFamily: "Poppins-Light",
-    textShadowColor: "rgba(0, 0, 0, 0.5)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
     textTransform: "capitalize",
