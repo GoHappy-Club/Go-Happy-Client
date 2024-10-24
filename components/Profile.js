@@ -89,7 +89,7 @@ const MyProfile = ({ navigation }) => {
     } catch (error) {
       // Handle error
       console.log("Error in openWhatsApp:", error);;
-      
+
     }
   }, [profile]);
 
@@ -200,7 +200,7 @@ const MyProfile = ({ navigation }) => {
           <View style={[styles.statItem, styles.borderRight]}>
             <Text style={styles.cardText}>Membership</Text>
             <Text style={[styles.cardText, styles.boldText]}>
-              {membership && membership.membershipType}
+              {(membership && membership.membershipType) || "Free"}
             </Text>
           </View>
           <View style={styles.statItem}>
