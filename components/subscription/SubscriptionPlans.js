@@ -94,15 +94,22 @@ const SubscriptionPlans = ({ plans }) => {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
       setShareButtonLoading(false);
-      navigation.navigate("GoHappy Club");
+      navigation.navigate("PaymentSuccessful",{
+        type:"",
+        navigateTo:""
+      });
     };
 
     const _errorHandler = () => {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
       setShareButtonLoading(false);
-      navigation.navigate("SubscriptionFailed");
+      navigation.navigate("PaymentFailed",{
+        type:"",
+        navigateTo:""
+      });
     };
+
     if (type == "share") {
       setShareButtonLoading(true);
       phonepe_payments
