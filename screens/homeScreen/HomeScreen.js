@@ -6,7 +6,7 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 import tambola from "tambola";
 import Video from "react-native-video";
 import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 class HomeScreen extends Component {
   constructor(props) {
@@ -143,6 +143,8 @@ class HomeScreen extends Component {
     //console.log('phone is', phoneNumber)
     var id = item.id;
     var url = SERVER_URL + "/event/bookEvent";
+    let {membership,actions} = this.props;
+    
 
     axios
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
@@ -159,6 +161,11 @@ class HomeScreen extends Component {
                 break;
               }
             }
+
+            // deduct coins from user's membership data in redux
+            membership.coins = membership.coins - item.cost;
+            actions.setMembership(membership);
+
             this.loadEvents(selectedDate);
             // _callback();
             // item.seatsLeft = item.seatsLeft - 1;
@@ -181,8 +188,9 @@ class HomeScreen extends Component {
 const mapStateToProps = (state) => ({
   count: state.count.count,
   profile: state.profile.profile,
+  membership : state.membership.membership,
 });
-const ActionCreators = Object.assign({}, { setProfile });
+const ActionCreators = Object.assign({}, { setProfile,setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
