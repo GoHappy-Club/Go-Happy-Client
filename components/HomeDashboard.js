@@ -54,8 +54,6 @@ class HomeDashboard extends Component {
       payButtonLoading: false,
       shareButtonLoading: false,
     };
-    //
-
     this._retrieveData();
   }
 

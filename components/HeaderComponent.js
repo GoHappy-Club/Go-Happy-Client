@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faWallet, faCrown } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   Image,
   Dimensions,
   Pressable,
+  Animated,
+  Easing,
 } from "react-native";
 import { Colors } from "../assets/colors/color";
 import { useSelector } from "react-redux";
@@ -18,15 +20,40 @@ import { useNavigation } from "@react-navigation/native";
 
 const width = Dimensions.get("window").width;
 
-const Header = () => {
+const rotateAnim = new Animated.Value(0);
 
+const Header = () => {
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state?.membership?.membership);
 
   const navigation = useNavigation();
 
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, []);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
   const handleNavigate = () => {
     navigation.navigate("MyProfile");
+  };
+
+  const trimContent = (content) => {
+    if (content.length > 7) {
+      return content.substring(0, 7) + "...";
+    }
+    return content;
   };
 
   return (
@@ -42,12 +69,24 @@ const Header = () => {
           resizeMode="cover"
           style={styles.profileImage}
         />
-        <Text style={styles.username} numberOfLines={1}>
-          Hello {profile.name}
-        </Text>
+        {/* <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
+          <Text style={styles.helloText}>Hello</Text>
+          <Text style={styles.username}>
+            {trimContent(profile.name.split(" ")[0])}
+          </Text>
+        </View> */}
       </Pressable>
       <View style={styles.rightWrapper}>
-        <TouchableOpacity style={styles.upgradeButton} onPress={()=>navigation.navigate("SubscriptionPlans")}>
+        <TouchableOpacity
+          style={styles.upgradeButton}
+          onPress={() => navigation.navigate("SubscriptionPlans")}
+        >
           <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
           <GradientText
             text="Upgrade"
@@ -55,19 +94,33 @@ const Header = () => {
             colors={Colors.headerLinearGradient}
           />
         </TouchableOpacity>
-        <View style={styles.credits}>
+        <TouchableOpacity
+          style={styles.credits}
+          onPress={() => navigation.navigate("WalletScreen")}
+        >
+          <Animated.Image
+            source={require("../images/GoCoins.png")}
+            style={{
+              height: 25,
+              width: 25,
+              transform: [{ rotateY: spin }],
+            }}
+          />
           <Text
             style={[
               styles.creditsText,
               {
-                color: membership.active ? Colors.black : Colors.grey.countdown,
+                color:
+                  membership.membershipType != "Free"
+                    ? Colors.black
+                    : Colors.grey.countdown,
               },
             ]}
           >
-            {membership.coins}
+          {/* show high numbers with K/L */}
+            {trimContent(membership.coins.toString())}
           </Text>
-          <FontAwesomeIcon icon={faWallet} />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -88,11 +141,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  helloText: {
+    marginLeft: 12,
+    fontSize: 14,
+    maxWidth: width * 0.4,
+    fontFamily: "Poppins-Regular",
+  },
   username: {
     marginLeft: 12,
     fontSize: 16,
-    fontWeight: "bold",
     maxWidth: width * 0.4,
+    fontFamily: "Poppins-Regular",
   },
   upgradeButton: {
     flexDirection: "row",
@@ -114,6 +173,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 15,
+    gap: 5,
   },
   creditsText: {
     marginRight: 5,

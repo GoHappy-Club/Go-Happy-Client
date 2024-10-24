@@ -3,13 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   ScrollView,
   Platform,
+  Share,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import phonepe_payments from "../PhonePe/Payments";
+import toUnicodeVariant from "../toUnicodeVariant";
 import { useSelector } from "react-redux";
+import { Button } from "react-native-elements";
 import Accordion from "react-native-collapsible/Accordion";
 import { TouchableOpacity } from "react-native";
 import { hp, wp } from "../../helpers/common";
@@ -19,59 +21,148 @@ import LinearGradient from "react-native-linear-gradient";
 import Animated from "react-native-reanimated";
 import GradientText from "../../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
-import Svg, { Path } from "react-native-svg";
+import AwesomeAlert from "react-native-awesome-alerts";
+import BottomSheet from "../BottomSheet";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const colorMapping = {
   Silver: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
-  Gold: ["#FFD700", "#FDB931", "#FF8C00"],
+  Gold: ["#FFD700", "#FDB931", "#A85F05"],
   Platinum: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
 };
 
 const SubscriptionPlans = ({ plans }) => {
   const PLANS = plans;
-  const [activeSections, setActiveSections] = useState([0]);
-  const [selectedPlan, setSelectedPlan] = useState(PLANS[0]);
+  const [activeSections, setActiveSections] = useState([1]);
+  const [selectedPlan, setSelectedPlan] = useState(PLANS[1]);
+  const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
+  const [payButtonLoading, setPayButtonLoading] = useState(false);
+  const [shareButtonLoading, setShareButtonLoading] = useState(false);
+  const [buttonTitle, setButtonTitle] = useState("");
+
+  const modalRef = useRef();
+
+  useEffect(() => {
+    // openRenewModal();
+    checkForRenew();
+    setButtonTitle(getTitle());
+  }, []);
+
+  const openRenewModal = () => {
+    modalRef.current.present();
+  };
+
+  const closeRenewModal = () => {
+    modalRef.current.dismiss();
+  };
+
+  const checkForRenew = () => {
+    const membershipType = membership.membershipType;
+    const membershipEndDate = membership.membershipEndDate;
+    const currentTime = new Date().getTime();
+    const diff = membershipEndDate - currentTime;
+
+    if (membershipType == "Free") return;
+    if (
+      (membershipType == "Silver" ||
+        membershipType == "Gold" ||
+        membershipType == "Platinum") &&
+      diff < 60 * 24 * 60 * 60 * 1000
+    ) {
+      openRenewModal();
+    }
+  };
 
   const navigation = useNavigation();
 
-  const handleBuyPlan = async (plan) => {
-    //handle buy plan logic
-    console.log(plan);
-    
-    const _callback = () => {};
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
+
+  const getTitle = () => {
+    if (membership.membershipType == "Free") {
+      return "Join now";
+    } else if (membership.membershipType == "Platinum") {
+      return "Not Available";
+    } else {
+      return "Upgrade now";
+    }
+  };
+
+  const phonePe = async (type, plan, paymentType) => {
+    const _callback = () => {
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
+      setShareButtonLoading(false);
+      navigation.navigate("GoHappy Club");
+    };
 
     const _errorHandler = () => {
-      navigation.navigate("MembershipSubscriptionFailed");
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
+      setShareButtonLoading(false);
+      navigation.navigate("SubscriptionFailed");
     };
-    // if (type == "share") {
-    //   phonepe_payments
-    //     .phonePeShare(
-    //       profile.phoneNumber,
-    //       plan.subscriptionFees,
-    //       _errorHandler,
-    //       "subscription"
-    //     )
-    //     .then((link) => {});
-    // } else {
-    //   phonepe_payments.phonePe(
-    //     profile.phoneNumber,
-    //     plan.subscriptionFees,
-    //     _callback,
-    //     _errorHandler,
-    //     "subscription"
-    //   );
-    // }
-    // set AsyncStorage items 'paymentProgress' & 'paymentProgressTime' too.
+    if (type == "share") {
+      setShareButtonLoading(true);
+      phonepe_payments
+        .phonePeShare(
+          profile.phoneNumber,
+          Number.parseInt(plan.subscriptionFees),
+          _errorHandler,
+          paymentType,
+          null,
+          null,
+          plan.id
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(plan.subscriptionFees),"bold")} for GoHappy Club Membership.
+Please make the payment using the link below:
+${link}
+${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
+    `;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              setPaymentSharePopUp(false);
+              setShareButtonLoading(false);
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+              setPaymentSharePopUp(false);
+              setShareButtonLoading(false);
+            });
+        });
+    } else {
+      setPayButtonLoading(true);
+      phonepe_payments.phonePe(
+        profile.phoneNumber,
+        plan.subscriptionFees,
+        _callback,
+        _errorHandler,
+        paymentType,
+        null,
+        null,
+        plan.id
+      );
+    }
   };
 
-  const handleUpgradePlan = async (plan) => {
+  const handleBuyPlan = async (type, plan) => {
+    phonePe(type, plan, "subscription");
+  };
+
+  const handleUpgradePlan = async (type, plan) => {
     // handle upgrade plan logic
+    phonePe(type, plan, "upgrade");
   };
 
-  const handleRenewPlan = async (plan) => {
+  const handleRenewPlan = async (type, plan) => {
     //handle renew plan logic
+    phonePe(type, plan, "renewal");
   };
 
   const handleSectionChange = (sections) => {
@@ -86,28 +177,28 @@ const SubscriptionPlans = ({ plans }) => {
 
     return (
       <TouchableOpacity
+        delayPressIn={150}
         activeOpacity={0.8}
         onPress={() => handleSectionChange([index])}
         style={[
           styles.headerContainer,
           { marginBottom: isSelected ? 0 : hp(2) },
+          {
+            borderBottomLeftRadius: isSelected ? 0 : 8,
+            borderBottomRightRadius: isSelected ? 0 : 8,
+          },
         ]}
       >
         <AnimatedLinearGradient
           colors={
             isSelected
-              ? ["#7c3aed", "#9333ea", "#4f46e5"]
-              : ["#f5f3ff", "#faf5ff"]
+              ? // ? ["#7c3aed", "#9333ea", "#4f46e5"]
+                colorMapping[selectedPlan?.membershipType]
+              : [Colors.referLinkBackground, Colors.referLinkBackground]
           }
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={[
-            styles.gradientContainer,
-            {
-              borderBottomLeftRadius: isSelected ? 0 : 8,
-              borderBottomRightRadius: isSelected ? 0 : 8,
-            },
-          ]}
+          style={[styles.gradientContainer]}
         >
           <Text
             style={[
@@ -124,13 +215,64 @@ const SubscriptionPlans = ({ plans }) => {
 
   const renderContent = (section) => {
     const isSelected = selectedPlan?.membershipType === section.membershipType;
+    // make each features list
+    const features = {
+      Silver: [
+        {
+          name: "Feature - 1",
+          available: true,
+        },
+        {
+          name: "Feature - 2",
+          available: true,
+        },
+        {
+          name: "Feature - 3",
+          available: false,
+        },
+        {
+          name: "Feature - 4",
+          available: false,
+        },
+      ],
+      Gold: [
+        {
+          name: "Feature - 1",
+          available: true,
+        },
+        {
+          name: "Feature - 2",
+          available: true,
+        },
+        {
+          name: "Feature - 3",
+          available: true,
+        },
+        {
+          name: "Feature - 4",
+          available: false,
+        },
+      ],
+      Platinum: [
+        {
+          name: "Feature - 1",
+          available: true,
+        },
+        {
+          name: "Feature - 2",
+          available: true,
+        },
+        {
+          name: "Feature - 3",
+          available: true,
+        },
+        {
+          name: "Feature - 4",
+          available: true,
+        },
+      ],
+    };
 
-    const features = [
-      { name: "Feature 1", available: true },
-      { name: "Feature 2", available: true },
-      { name: "Feature 3", available: true },
-      { name: "Feature 4", available: false },
-    ];
 
     return (
       <View
@@ -141,7 +283,7 @@ const SubscriptionPlans = ({ plans }) => {
           },
         ]}
       >
-        {features.map((feature, index) => (
+        {features[selectedPlan?.membershipType].map((feature, index) => (
           <View
             key={index}
             style={[
@@ -209,14 +351,14 @@ const SubscriptionPlans = ({ plans }) => {
                 opacity: pressed ? 0.8 : 1,
               },
               {
-                backgroundColor: Colors.pink.sessionDetails,
+                backgroundColor: Colors.referLinkBackground,
                 padding: 10,
                 borderRadius: 6,
                 justifyContent: "center",
                 alignItems: "center",
               },
             ]}
-            onPress={() => handleBuyPlan(selectedPlan)}
+            onPress={() => setPaymentSharePopUp(true)}
           >
             <View
               style={{
@@ -226,12 +368,61 @@ const SubscriptionPlans = ({ plans }) => {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.footerButtonText}>Join now</Text>
-              <MoveRight size={24} color="white" />
+              <Text style={styles.footerButtonText}>{getTitle()}</Text>
+              <MoveRight size={24} color={Colors.black} />
             </View>
           </Pressable>
         </View>
       </>
+      <BottomSheet modalRef={modalRef} closeModal={closeRenewModal} />
+
+      {paymentSharePopUp && (
+        <AwesomeAlert
+          show={paymentSharePopUp}
+          showProgress={false}
+          closeOnTouchOutside={
+            payButtonLoading || shareButtonLoading ? false : true
+          }
+          customView={
+            <View style={styles.AAcontainer}>
+              <Text style={styles.AAtitle}>Payment Confirmation</Text>
+              <Text style={styles.AAmessage}>
+                Would you like to pay this yourself or share the payment link
+                with a family member?
+              </Text>
+              <View style={styles.AAbuttonContainer}>
+                <Button
+                  outline
+                  title={"Pay Now"}
+                  loading={payButtonLoading}
+                  buttonStyle={[styles.AApayButton, styles.AAbutton]}
+                  onPress={() => {
+                    if (buttonTitle == "Join now")
+                      handleBuyPlan("self", selectedPlan);
+                    else if (buttonTitle == "Upgrade now")
+                      handleUpgradePlan("self", selectedPlan);
+                  }}
+                  disabled={payButtonLoading}
+                />
+                <Button
+                  outline
+                  title={"Share"}
+                  loading={shareButtonLoading}
+                  buttonStyle={[styles.AAshareButton, styles.AAbutton]}
+                  onPress={() => {
+                    if (buttonTitle == "Join now")
+                      handleBuyPlan("share", selectedPlan);
+                    else if (buttonTitle == "Upgrade now")
+                      handleUpgradePlan("share", selectedPlan);
+                  }}
+                  disabled={shareButtonLoading}
+                />
+              </View>
+            </View>
+          }
+          onDismiss={() => setPaymentSharePopUp(false)}
+        />
+      )}
     </>
   );
 };
@@ -253,11 +444,15 @@ const styles = StyleSheet.create({
   headerContainer: {
     borderRadius: 8,
     overflow: "hidden",
-    elevation: 5,
+    // elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 1,
   },
   gradientContainer: {
     padding: 15,
-    borderRadius: 8,
   },
   headerText: {
     fontSize: 26,
@@ -308,7 +503,6 @@ const styles = StyleSheet.create({
   footerTitleText: {
     fontSize: hp(3),
     fontWeight: "bold",
-    color: Colors.black,
     fontFamily: Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
     textTransform: "uppercase",
     letterSpacing: 3,
@@ -322,7 +516,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.black,
   },
   footerButtonText: {
-    color: Colors.white,
+    color: Colors.black,
     fontSize: hp(2.5),
     fontWeight: "bold",
   },
@@ -356,5 +550,45 @@ const styles = StyleSheet.create({
   },
   featureUnavailable: {
     color: "#ef4444",
+  },
+  AAcontainer: {
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  AAtitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: Colors.grey.grey,
+  },
+  AAmessage: {
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 20,
+    color: Colors.grey.grey,
+  },
+  AAbuttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 20,
+  },
+  AAbutton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    minWidth: 100,
+  },
+  AApayButton: {
+    backgroundColor: Colors.primary,
+  },
+  AAshareButton: {
+    backgroundColor: Colors.grey.grey,
+  },
+  AAbuttonText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });

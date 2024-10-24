@@ -3,6 +3,7 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
+import { View } from "react-native";
 import { bindActionCreators } from "redux";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";

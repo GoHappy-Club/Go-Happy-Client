@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-clipboard/clipboard
 import com.reactnativecommunity.clipboard.ClipboardPackage;
+// @react-native-community/blur
+import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-firebase/analytics
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 // @react-native-firebase/app
@@ -29,6 +31,8 @@ import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 // @react-native-google-signin/google-signin
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
+// @react-native-masked-view/masked-view
+import org.reactnative.maskedview.RNCMaskedViewPackage;
 // lottie-react-native
 import com.airbnb.android.react.lottie.LottiePackage;
 // react-native-branch
@@ -53,6 +57,8 @@ import com.faizal.OtpVerify.OtpVerifyPackage;
 import com.phonepepaymentsdk.PhonePePaymentSDKPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+// react-native-reanimated
+import com.swmansion.reanimated.ReanimatedPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -114,6 +120,7 @@ public class PackageList {
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
       new ClipboardPackage(),
+      new BlurViewPackage(),
       new ReactNativeFirebaseAnalyticsPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
@@ -121,6 +128,7 @@ public class PackageList {
       new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseMessagingPackage(),
       new RNGoogleSigninPackage(),
+      new RNCMaskedViewPackage(),
       new LottiePackage(),
       new RNBranchPackage(),
       new ReactNativeContacts(),
@@ -133,6 +141,7 @@ public class PackageList {
       new OtpVerifyPackage(),
       new PhonePePaymentSDKPackage(),
       new ReactNativePushNotificationPackage(),
+      new ReanimatedPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSharePackage(),

@@ -36,15 +36,17 @@ class Payments extends Component {
     amount,
     error_handler,
     paymentType,
-    orderId,
-    tambolaTicket
+    orderId=null,
+    tambolaTicket=null,
+    membershipId
   ) {
     payload = await getPayload(
       phone,
       amount * 100,
       paymentType,
       orderId,
-      tambolaTicket
+      tambolaTicket,
+      membershipId
     );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
@@ -62,7 +64,6 @@ class Payments extends Component {
     };
     try {
       const response = await axios.request(options);
-      console.log(response);
       let shareableLink =
         response.data.data.instrumentResponse.redirectInfo.url;
       const shortenLinkApi =
@@ -84,7 +85,7 @@ class Payments extends Component {
       error_handler();
     }
   }
-  phonePe(phone, amount, callback, error_handler, paymentType) {
+  phonePe(phone, amount, callback, error_handler, paymentType,orderId=null,tambolaTicket=null,membershipId) {
     //console.log('phonepe')
     PhonePePaymentSDK.init(
       this.state.environmentDropDownValue,
@@ -93,16 +94,13 @@ class Payments extends Component {
       true
     )
       .then((result) => {
-        this.setState({
-          message: "Message: SDK Initialisation ->" + JSON.stringify(result),
-        });
-        //console.log(result)
         this.startTransaction(
           phone,
           amount,
           callback,
           error_handler,
-          paymentType
+          paymentType,
+          membershipId
         );
       })
       .catch((error) => {
@@ -113,8 +111,8 @@ class Payments extends Component {
       });
     //console.log(error)
   }
-  async startTransaction(phone, amount, callback, error_handler, paymentType) {
-    payload = await getPayload(phone, amount * 100, paymentType);
+  async startTransaction(phone, amount, callback, error_handler, paymentType,membershipId) {
+    payload = await getPayload(phone, amount * 100, paymentType,null,null,membershipId);
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     PhonePePaymentSDK.startTransaction(

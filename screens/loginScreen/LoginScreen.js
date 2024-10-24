@@ -419,11 +419,11 @@ class LoginScreen extends Component {
           })
           .then((response) => {
             this.setMembership({
-              membershipType:response.data.membership.membershipType,
-              id:response.data.membership.id,
-              membershipStartDate:response.data.membership.membershipStartDate,
-              membershipEndDate:response.data.membership.membershipEndDate,
-              coins:response.data.membership.coins,
+              membershipType: response.data.membership.membershipType,
+              id: response.data.membership.id,
+              membershipStartDate: response.data.membership.membershipStartDate,
+              membershipEndDate: response.data.membership.membershipEndDate,
+              coins: response.data.membership.coins,
             });
           })
           .catch((error) => {
@@ -534,14 +534,16 @@ class LoginScreen extends Component {
             response.data.membership.membershipType
           );
           AsyncStorage.setItem("membershipId", response.data.membership.id);
-          AsyncStorage.setItem(
-            "membershipStartDate",
-            response.data.membership.membershipStartDate
-          );
-          AsyncStorage.setItem(
-            "membershipEndDate",
-            response.data.membership.membershipEndDate
-          );
+          if (response.data.membership.membershipStartDate != null)
+            AsyncStorage.setItem(
+              "membershipStartDate",
+              response.data.membership.membershipStartDate
+            );
+          if (response.data.membership.membershipEndDate != null)
+            AsyncStorage.setItem(
+              "membershipEndDate",
+              response.data.membership.membershipEndDate
+            );
           AsyncStorage.setItem("coins", String(response.data.membership.coins));
 
           this.setState({
