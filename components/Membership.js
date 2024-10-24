@@ -417,6 +417,11 @@ The Link will Expire in 20 Minutes.`;
                   ? false
                   : true
               }
+              closeOnHardwareBackPress= {
+                this.state.payButtonLoading || this.state.shareButtonLoading
+                  ? false
+                  : true
+              }
               customView={
                 <View style={styles.AAcontainer}>
                   <Text style={styles.AAtitle}>Payment Confirmation</Text>
