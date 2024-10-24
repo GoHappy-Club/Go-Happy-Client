@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -9,15 +9,17 @@ import {
   Text,
   FlatList,
   Image,
-  Keyboard,
 } from "react-native";
-import { SearchIcon, X } from "lucide-react-native";
+import { Clock, SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
 import { Colors } from "../assets/colors/color";
 import { format, fromUnixTime, getUnixTime, startOfDay } from "date-fns";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { MaterialIndicator } from "react-native-indicators";
+import { debounce } from "lodash";
+import { Avatar, Title } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,6 +46,26 @@ const Item = ({ item, onPress }) => {
       <View style={styles.textContainer}>
         <Text style={styles.eventName}>{trimContent(item.eventName)}</Text>
         <Text style={styles.startTime}>{loadDate(item)}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Avatar.Image
+            source={
+              item.expertImage
+                ? {
+                    uri: item.expertImage,
+                  }
+                : require("../images/profile_image.jpeg")
+            }
+            size={30}
+          />
+          <Title style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}>
+            {trimContent(item.expertName, 17)}
+          </Title>
+        </View>
       </View>
     </Pressable>
   );
@@ -55,6 +77,7 @@ const SearchBar = () => {
   const [events, setEvents] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
 
   const profile = useSelector((state) => state.profile.profile);
 
@@ -63,6 +86,43 @@ const SearchBar = () => {
   const inputRef = useRef(null);
 
   const slideAnim = useRef(new Animated.Value(-height)).current;
+
+  useEffect(() => {
+    loadRecentSearches();
+  }, []);
+
+  const loadRecentSearches = async () => {
+    try {
+      const searches = await AsyncStorage.getItem("recent_searches");
+      if (searches) {
+        setRecentSearches(JSON.parse(searches));
+      }
+    } catch (error) {
+      console.error("Error loading recent searches:", error);
+    }
+  };
+
+  const saveRecentSearch = async (search) => {
+    if (search?.length < 4) return;
+    try {
+      setRecentSearches((prevSearches) => {
+        const searches = [...prevSearches];
+        const filteredSearches = searches.filter((item) => item !== search);
+        filteredSearches.unshift(search);
+        const trimmedSearches = filteredSearches.slice(0, 3);
+        AsyncStorage.setItem(
+          "recent_searches",
+          JSON.stringify(trimmedSearches)
+        ).catch((error) =>
+          console.error("Error saving to AsyncStorage:", error)
+        );
+
+        return trimmedSearches;
+      });
+    } catch (error) {
+      console.error("Error saving recent search:", error);
+    }
+  };
 
   const toggleSearch = () => {
     setIsSearchActive(!isSearchActive);
@@ -78,22 +138,48 @@ const SearchBar = () => {
     }).start();
   };
 
-  const handleSearch = async () => {
-    Keyboard.dismiss;
-    inputRef.current.blur();
+  const handleSearch = async (text) => {
+    if (!text.trim()) {
+      setEvents(null);
+      return;
+    }
+
     setLoading(true);
     setError(false);
     try {
       const response = await axios.get(
-        `${SERVER_URL}/event/searchEvents?inputSearch=${searchText}`
+        `${SERVER_URL}/event/searchEvents?inputSearch=${text}`
       );
       setEvents(response.data);
-      setLoading(false);
+      // Save to recent searches only if the search was successful
+      await saveRecentSearch(text);
     } catch (error) {
       console.log(error);
-      setLoading(false);
       setError(true);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const debouncedSearch = useRef(
+    debounce((text) => handleSearch(text), 500)
+  ).current;
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, []);
+
+  const handleSearchTextChange = (text) => {
+    setSearchText(text);
+    debouncedSearch(text);
+  };
+
+  const handleRecentSearchPress = (search) => {
+    setSearchText(search);
+    debouncedSearch(search);
   };
 
   const comeBack = () => {
@@ -130,6 +216,22 @@ const SearchBar = () => {
     });
     return isParticipantInSameEvent;
   };
+
+  const RecentSearches = () => (
+    <View style={styles.recentSearchesContainer}>
+      <Text style={styles.recentSearchesTitle}>Recent Searches</Text>
+      {recentSearches.map((search, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.recentSearchItem}
+          onPress={() => handleRecentSearchPress(search)}
+        >
+          <Clock size={16} color={Colors.grey.grey} />
+          <Text style={styles.recentSearchText}>{search}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -170,34 +272,13 @@ const SearchBar = () => {
           <TextInput
             ref={inputRef}
             style={styles.searchInput}
-            placeholder="Search..."
+            placeholderTextColor={Colors.grey.grey}
+            placeholder="Search for Experts or Event names"
             value={searchText}
-            onChangeText={setSearchText}
-            selectTextOnFocus={true}
+            onChangeText={handleSearchTextChange}
             returnKeyType="search"
             returnKeyLabel="search"
           />
-          <TouchableOpacity
-            style={{
-              padding: 4,
-              backgroundColor: Colors.primary,
-              borderRadius: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            onPress={handleSearch}
-          >
-            <Text
-              style={{
-                color: Colors.white,
-                fontWeight: "400",
-                paddingLeft: "1%",
-                paddingRight: "1%",
-              }}
-            >
-              Search
-            </Text>
-          </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={toggleSearch} style={styles.closeButton}>
           <X color="#000" size={24} />
@@ -216,42 +297,24 @@ const SearchBar = () => {
               )}
               ItemSeparatorComponent={<View style={{ margin: 4 }} />}
               style={{
-                marginTop: height * 0.14,
+                marginTop: height * 0.15,
                 padding: width * 0.01,
               }}
               keyboardDismissMode="on-drag"
             />
           </>
         )}
-      {isSearchActive && searchText == "" && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: height * 0.25,
-            display: isSearchActive && searchText == "" ? "flex" : "none",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: height * 0.02,
-              textAlign: "center",
-              width: width * 0.8,
-            }}
-          >
-            Kindly type what you're looking for in the search bar to get your
-            results.
-          </Text>
-          <Image
-            source={require("../images/eventSearchEmpty.png")}
-            resizeMode="cover"
-            style={{
-              width: width,
-              height: height * 0.4,
-            }}
-          />
-        </View>
+      {isSearchActive && !searchText && recentSearches.length > 0 && (
+        <RecentSearches />
+      )}
+      {isSearchActive && !searchText && recentSearches.length == 0 && (
+        <Text style={{
+          textAlign: "center",
+          fontSize: 18,
+          marginTop:height*0.20,
+        }}>
+          Please type what you're looking for above.
+        </Text>
       )}
       {isSearchActive && loading && (
         <View
@@ -329,8 +392,9 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    height: 40,
+    // height: 40,
     fontSize: 16,
+    padding:width*0.01
   },
   closeButton: {
     position: "absolute",
@@ -339,6 +403,30 @@ const styles = StyleSheet.create({
     padding: 6,
     backgroundColor: Colors.grey.f0,
     borderRadius: 40,
+  },
+  recentSearchesContainer: {
+    width: width,
+    marginTop: height * 0.15,
+    padding: 16,
+    backgroundColor: Colors.white,
+  },
+  recentSearchesTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.grey[700],
+    marginBottom: 12,
+  },
+  recentSearchItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.grey[200],
+  },
+  recentSearchText: {
+    marginLeft: 12,
+    fontSize: 14,
+    color: Colors.grey[600],
   },
   item: {
     backgroundColor: Colors.primary,
