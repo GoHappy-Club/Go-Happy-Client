@@ -27,7 +27,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local/config.json";
+import * as configData from "./config/cloud/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -53,6 +53,11 @@ import MyProfile from "./components/Profile.js";
 import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
 import { ArrowLeft, ChevronLeft } from "lucide-react-native";
 import { hp, wp } from "./helpers/common.js";
+import SubscriptionFailed from "./components/subscription/SubscriptionFailed.js";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import WalletScreen from "./screens/subscriptionScreen/WalletScreen.js";
+import SubscriptionSuccessful from "./components/subscription/SubscriptionSuccessful.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -492,6 +497,8 @@ export default function App() {
       )}
 
       {isConnected == true && token != false ? (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
         <NavigationContainer
           linking={token == true && linking}
           ref={navigationRef}
@@ -708,9 +715,46 @@ export default function App() {
                   animation: "slide_from_bottom",
                 })}
               />
+              <Stack.Screen
+                name="WalletScreen"
+                children={(props) => <WalletScreen />}
+                options={({ navigation }) => ({
+                  headerTransparent: true,
+                  title: null,
+                  headerBackTitle: "back",
+                  headerLeft: () => (
+                    <TouchableOpacity
+                      style={styles.newBackButton}
+                      onPress={() => navigation.navigate("GoHappy Club")}
+                    >
+                      <ChevronLeft size={wp(10)} color={Colors.black} />
+                      <Text style={styles.newBackText}>Back</Text>
+                    </TouchableOpacity>
+                  ),
+                  headerShadowVisible: false,
+                })}
+              />
+              <Stack.Screen
+                name="SubscriptionFailed"
+                children={(props) => <SubscriptionFailed />}
+                options={({ navigation }) => ({
+                  headerShown:false,
+                  animation:"slide_from_right"
+                })}
+              />
+              <Stack.Screen
+                name="SubscriptionSuccessful"
+                children={(props) => <SubscriptionSuccessful />}
+                options={({ navigation }) => ({
+                  headerShown:false,
+                  animation:"slide_from_right"
+                })}
+              />
             </>
           </Stack.Navigator>
         </NavigationContainer>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
       ) : (
         <Video
           source={require("./images/logo_splash.mp4")}
