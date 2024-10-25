@@ -30,10 +30,15 @@ const AutocompleteCityInput = ({ input, setInput }) => {
         );
         const data = await response.json();
         if (data.status === "ok") {
-          const cities = data.predictions
-            .filter((prediction) => prediction.types.includes("locality"))
-            .map((prediction) => prediction.structured_formatting.main_text);
-          setSuggestions(cities);
+          const cities = Array.from(
+            new Set(
+              data.predictions
+                .filter((prediction) => prediction.types.includes("locality"))
+                .map((prediction) =>
+                  prediction.structured_formatting.main_text.toLowerCase()
+                )
+            )
+          );
         }
       } catch (error) {
         console.error("Error fetching suggestions:", error);
