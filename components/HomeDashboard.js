@@ -74,7 +74,8 @@ class HomeDashboard extends Component {
       this.props.membership &&
       this.props.membership?.membershipType == "Free"
     ) {
-      this.setState({ nonMemberPopUp: true });
+      // this.setState({ nonMemberPopUp: true });
+      this.props.navigation.navigate("SubscriptionPlans")
       return false;
     } else if (
       this.props.membership &&

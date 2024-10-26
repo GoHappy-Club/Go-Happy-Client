@@ -10,7 +10,7 @@ const CountdownTimer = ({
   width = 40,
   height = 40,
   separatorSize = 30,
-  textSize = 20,
+  textSize = 14,
   showText,
 }) => {
   const calculateTimeLeft = () => {

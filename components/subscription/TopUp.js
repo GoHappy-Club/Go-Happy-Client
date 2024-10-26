@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   ScrollView,
+  Image,
 } from "react-native";
 import { Colors } from "../../assets/colors/color";
 import { wp, hp } from "../../helpers/common";
@@ -14,17 +15,41 @@ import { useSelector } from "react-redux";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Button } from "react-native-elements";
 import phonepe_payments from "../PhonePe/Payments";
+import { TouchableOpacity } from "react-native";
 
 const predefinedPackages = [
-  { id: 1, amount: 100, coins: 100, description: "Starter Pack" },
-  { id: 2, amount: 250, coins: 275, description: "Value Pack (10% Bonus)" },
+  {
+    id: 1,
+    amount: 100,
+    coins: 100,
+    description: "Starter Pack",
+    backgroundColor: Colors.white,
+    textColor: Colors.black,
+  },
+  {
+    id: 2,
+    amount: 250,
+    coins: 275,
+    description: "Value Pack (10% Bonus)",
+    backgroundColor: Colors.white,
+    textColor: Colors.black,
+  },
   {
     id: 3,
     amount: 500,
     coins: 600,
     description: "Super Saver Pack (20% Bonus)",
+    backgroundColor: Colors.white,
+    textColor: Colors.black,
   },
-  { id: 4, amount: 1000, coins: 1250, description: "Mega Pack (25% Bonus)" },
+  {
+    id: 4,
+    amount: 1000,
+    coins: 1250,
+    description: "Mega Pack (25% Bonus)",
+    backgroundColor: Colors.white,
+    textColor: Colors.black,
+  },
 ];
 
 const WalletTopUp = () => {
@@ -33,6 +58,9 @@ const WalletTopUp = () => {
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
   const [error, setError] = useState(false);
+  const [plans, setPlans] = useState(null);
+
+  const inputRef = useRef();
 
   const navigation = useNavigation();
 
@@ -118,6 +146,20 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return true;
   };
 
+  const planSelected = (plan, key) => {
+    const selected = predefinedPackages.map((item, index) => {
+      if (index == key) {
+        item.backgroundColor = Colors.pink.sessionDetails;
+        item.textColor = Colors.white;
+        return;
+      }
+      item.backgroundColor = Colors.white;
+      item.textColor = Colors.grey.countdown;
+    });
+    setPlans(selected);
+    setAmount(String(plan.coins));
+  };
+
   return (
     <>
       <ScrollView
@@ -126,7 +168,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       >
         <Text style={styles.screenTitle}>Top Up Your Wallet</Text>
 
-        <View style={styles.cardContainer}>
+        {/* <View style={styles.cardContainer}>
           <Text style={styles.cardTitle}>Top Up Your Wallet</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -164,30 +206,153 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           >
             <Text style={styles.buttonText}>Top Up</Text>
           </Pressable>
+        </View> */}
+        <View style={{ flexDirection: "column", marginTop: "5%" }}>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                inputRef.current.focus();
+              }}
+              style={{
+                ...styles.paymentContainer,
+              }}
+            >
+              <Image
+                source={require("../../images/GoCoins.png")}
+                style={{
+                  height: 40,
+                  width: 40,
+                }}
+              />
+              <TextInput
+                ref={inputRef}
+                style={styles.paymentInput}
+                value={amount}
+                onChangeText={(text) => {
+                  setAmount(text);
+                }}
+                placeholder="0"
+                keyboardType="numeric"
+                // autoFocus={true}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                marginLeft: wp(5),
+                marginBottom:wp(2),
+                color: Colors.green,
+                fontFamily: "Poppins-Regular",
+              }}
+            >
+              {amount} coins = ₹500
+            </Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setAmount("501")}
+              >
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                  }}
+                />
+                <Text style={styles.buttonText}>501</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setAmount("1100")}
+              >
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                  }}
+                />
+                <Text style={styles.buttonText}>1100</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setAmount("2100")}
+              >
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                  }}
+                />
+                <Text style={styles.buttonText}>2100</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setAmount("5100")}
+              >
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                  }}
+                />
+                <Text style={styles.buttonText}>5100</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              disabled={amount < 1}
+              style={
+                (amount < 1 && styles.checkoutButtonDisabled) ||
+                styles.checkoutButtonEnabled
+              }
+              onPress={() => {
+                if (!validateAmount()) return;
+                setPaymentSharePopUp(true);
+              }}
+            >
+              <View>
+                <Text style={styles.optionList}>Click To Pay</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Text style={styles.orText}>OR</Text>
 
-        <View style={styles.packagesContainer}>
-          {predefinedPackages.map((item) => (
-            <Pressable
-              key={item.id}
-              style={({ pressed }) => [
-                styles.packageButton,
-                { opacity: pressed ? 0.9 : 1 },
-              ]}
-              onPress={() => {
-                setAmount(item.amount);
-              }}
-            >
-              <View style={styles.packageContent}>
-                <Text style={styles.packageText}>₹ {item.amount}</Text>
-                <Text style={styles.packageDescription}>
-                  {item.description}
-                </Text>
-                <Text style={styles.packageCoins}>{item.coins} Coins</Text>
-              </View>
-            </Pressable>
+        <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
+          {predefinedPackages.map((plan, index) => (
+            <View style={{ width: "50%" }} key={index}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: plan.backgroundColor,
+                  shadowColor: Colors.black,
+                  elevation: 10,
+                  shadowOffset: { height: 2 },
+                  shadowOpacity: 0.3,
+                  borderRadius: 10,
+                  height: 100,
+                  margin: 30,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => planSelected(plan, index)}
+              >
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <Text style={{ fontSize: 30, color: plan.textColor }}>
+                    ₹{plan.amount}
+                  </Text>
+                  <Text style={{ color: plan.textColor }}>
+                    {plan.description}
+                  </Text>
+                  <Text style={{ color: plan.textColor }}>
+                    {plan.coins} coins
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -288,17 +453,78 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1),
     fontWeight: "bold",
   },
-  topUpButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: hp(2),
-    borderRadius: 12,
-    width: "100%",
+  optionList: {
+    fontSize: 16,
+    padding: 10,
+    color: Colors.white,
+  },
+  checkoutButtonDisabled: {
+    opacity: 0.5,
     alignItems: "center",
-    marginTop: hp(2),
+    backgroundColor: Colors.primary,
+    padding: 10,
+    marginTop: wp(5),
+  },
+  checkoutButtonEnabled: {
+    alignItems: "center",
+    backgroundColor: Colors.primary,
+    padding: 10,
+    marginTop: wp(5),
+  },
+  input: {
+    height: "10%",
+    fontSize: 20,
+    // marginTop:-,
+    // borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    // marginTop:'20%',
+    width: "auto",
+    alignItems: "center",
+  },
+  paymentContainer: {
+    // width: "auto",
+    // minWidth: "40%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: Colors.grey.d,
+    padding: 5,
+    margin: "5%",
+  },
+  currencySymbol: {
+    fontSize: 36,
+    // marginRight: 10,
+    fontWeight: "700",
+  },
+  paymentInput: {
+    textAlign: "center",
+    // width: "auto",
+    // flex: 1,
+    color: Colors.black,
+    fontSize: 36,
+    fontWeight: "700",
+  },
+  buttonContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    // marginTop: "5%",
+  },
+  button: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.grey.d,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginHorizontal: 4,
   },
   buttonText: {
-    color: Colors.white,
-    fontSize: hp(2.5),
+    fontSize: 14,
     fontWeight: "bold",
   },
   orText: {
@@ -307,7 +533,7 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
   },
   packagesContainer: {
-    flexDirection: "row",
+    flexDirection: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
@@ -321,7 +547,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(3),
     paddingHorizontal: wp(5),
     borderRadius: 16,
-    width: wp(62),
+    width: wp(32),
     alignItems: "center",
     marginBottom: hp(2),
     elevation: 5,

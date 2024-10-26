@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PushNotification from "react-native-push-notification";
 import Video from "react-native-video";
 import { Linking, StyleSheet } from "react-native";
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import SessionDetails from "../../components/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from "../../services/events/EventService";
