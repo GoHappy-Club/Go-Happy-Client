@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Colors } from "../assets/colors/color";
 import { hp, wp } from "../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -14,22 +14,39 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const [timer, setTimer] = useState(7);
+
+  const timerRef = useRef();
+  const timingRef = useRef();
 
   const { type, navigateTo } = route?.params;
+
+  useEffect(() => {
+    timerRef.current = setTimeout(() => {
+      navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
+    }, 3000);
+
+    timingRef.current = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+
+    return () => {
+      clearTimeout(timerRef.current);
+      clearInterval(timingRef.current);
+    };
+  }, []);
 
   if (type && type == "normal")
     return (
       <View style={styles.container}>
-        <Image
-          source={require("../images/hurray.png")}
-          style={styles.image}
-        />
+        <Image source={require("../images/hurray.png")} style={styles.image} />
         <View style={styles.textWrapper}>
           <Text style={styles.plainText}>
             Congratulations! Your payment was successful.
           </Text>
         </View>
-        <Pressable
+        {/* <Pressable
           style={({ pressed }) => [
             {
               opacity: pressed ? 0.8 : 1,
@@ -50,7 +67,17 @@ const PaymentSuccessful = () => {
           >
             <Text style={styles.retryText}>Explore</Text>
           </View>
-        </Pressable>
+        </Pressable> */}
+        <Text>Redirecting you in {timer}. If not redirected please </Text>
+        <Text
+          style={{
+            color: "blue",
+            textDecorationStyle: "solid",
+            textDecorationLine: "underline",
+          }}
+        >
+          Click here
+        </Text>
       </View>
     );
 

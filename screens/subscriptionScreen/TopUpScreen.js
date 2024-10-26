@@ -14,7 +14,8 @@ const TopUpScreen = () => {
 
   useEffect(() => {
     if (membership.membershipType == "Free") {
-      setNonMemberPopUp(true);
+      // setNonMemberPopUp(true);
+      navigation.navigate("SubscriptionPlans");
     }
   });
   return (
@@ -34,6 +35,15 @@ const TopUpScreen = () => {
           message={
             "You are not a member of GoHappy Club, Join us by clicking below button."
           }
+          messageStyle={{
+            textAlign: "center",
+            fontFamily: "Poppins-Regular",
+          }}
+          titleStyle={{
+            fontSize: wp(5),
+            fontFamily: "NunitoSans-SemiBold",
+            color: Colors.red,
+          }}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={true}
           showConfirmButton={true}
@@ -41,6 +51,7 @@ const TopUpScreen = () => {
           confirmText="Join Now"
           confirmButtonColor={Colors.primary}
           onConfirmPressed={() => {
+            setNonMemberPopUp(false);
             navigation.navigate("SubscriptionPlans");
           }}
           onDismiss={() => setNonMemberPopUp(false)}

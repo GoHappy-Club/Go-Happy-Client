@@ -34,7 +34,7 @@ const Wallet = () => {
           {/* Inner Container with Text and Image */}
           <View style={styles.innerContainer}>
             <View style={{ justifyContent: "center" }}>
-              <Text style={styles.titleText}>Go Coins</Text>
+              <Text style={styles.titleText}>Happy Coins</Text>
               <Text
                 style={[
                   styles.coinsText,
@@ -63,7 +63,7 @@ const Wallet = () => {
             ]}
             onPress={() => {
               if (membership.membershipType === "Free") {
-                setNonMemberPopUp(true);
+                navigation.navigate("SubscriptionPlans");
                 return;
               }
               navigation.navigate("TopUpScreen");
@@ -74,7 +74,7 @@ const Wallet = () => {
                 source={require("../../images/GoCoins.png")}
                 style={styles.buttonImage}
               />
-              <Text style={styles.buttonText}>Add More Go Coins</Text>
+              <Text style={styles.buttonText}>Add More Happy Coins</Text>
             </View>
           </Pressable>
         </View>
@@ -83,10 +83,19 @@ const Wallet = () => {
         <AwesomeAlert
           show={nonMemberPopUp}
           showProgress={false}
-          title={"Not a Members"}
+          title={"Failed"}
           message={
             "You are not a member of GoHappy Club, Join us by clicking below button."
           }
+          messageStyle={{
+            textAlign: "center",
+            fontFamily: "Poppins-Regular",
+          }}
+          titleStyle={{
+            fontSize: wp(5),
+            fontFamily: "NunitoSans-SemiBold",
+            color: Colors.red,
+          }}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={true}
           showConfirmButton={true}
@@ -94,6 +103,7 @@ const Wallet = () => {
           confirmText="Join Now"
           confirmButtonColor={Colors.primary}
           onConfirmPressed={() => {
+            setNonMemberPopUp(false);
             navigation.navigate("SubscriptionPlans");
           }}
           onDismiss={() => setNonMemberPopUp(false)}

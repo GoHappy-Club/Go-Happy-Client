@@ -27,7 +27,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local/config.json";
+import * as configData from "./config/cloud/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -149,10 +149,32 @@ export default function App() {
   const [isConnected, setIsConnected] = useState(true);
   const [token, setToken] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
-  const membership = useSelector((state) => state.membership);
+  const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
 
   const { copilotEvents } = useCopilot();
+
+  useEffect(() => {
+    // logic to revoke user's membership if his membershipEndDate has arrived
+    const currentDate = new Date().getTime();
+    const membershipEndDate = membership?.membershipEndDate;
+    
+    if (membershipEndDate && (currentDate > membershipEndDate)) {
+      const url = `${SERVER_URL}/membership/expire?phoneNumber=${profile.phoneNumber}`;
+      axios
+        .get(url)
+        .then((res) => {
+          if (res.data) {
+            setNewMembership({
+              membershipType: response.data.membershipType,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [membership]);
 
   const setNewMembership = ({
     membershipType,
@@ -765,7 +787,7 @@ export default function App() {
                 })}
               />
               <Stack.Screen
-                name="SubscriptionSuccessful"
+                name="PaymentSuccessful"
                 children={(props) => <PaymentSuccessful />}
                 options={({ navigation }) => ({
                   headerShown:false,

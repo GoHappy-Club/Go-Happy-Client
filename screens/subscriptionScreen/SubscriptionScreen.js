@@ -9,6 +9,7 @@ import { TouchableHighlight } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
+import Video from "react-native-video";
 
 const SubscriptionScreen = () => {
   // pass this subscription plans as a prop to the child component
@@ -27,7 +28,6 @@ const SubscriptionScreen = () => {
       const response = await axios.get(url);
       const plansToShow = response.data
         .filter((plan) => plan.membershipType != "Free")
-        .filter((plan) => plan.membershipType != membership.membershipType);
       setPlans(plansToShow);
       setLoading(false);
     } catch (error) {
@@ -66,15 +66,24 @@ const SubscriptionScreen = () => {
   return (
     <>
       {loading && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
+        <Video
+        source={require("../../images/logo_splash.mp4")}
+        style={{
+          position: "absolute",
+          top: 0,
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 1,
+        }}
+        muted={true}
+        repeat={true}
+        resizeMode="cover"
+      />
       )}
       {!loading && (
         <SafeAreaView

@@ -56,6 +56,19 @@ const Header = () => {
     return content;
   };
 
+  function formatNumberWithSuffix(number) {
+    if (number >= 1e7) {
+        return (number / 1e7).toFixed(1) + 'Cr';
+    } else if (number >= 1e5) {
+        return (number / 1e5).toFixed(1) + 'L';
+    } else if (number >= 1e3) {
+        return (number / 1e3).toFixed(1) + 'K';
+    } else {
+        return number.toString();
+    }
+}
+
+
   return (
     <View style={styles.header}>
       <Pressable style={styles.userInfo} onPress={handleNavigate}>
@@ -118,7 +131,7 @@ const Header = () => {
             ]}
           >
           {/* show high numbers with K/L */}
-            {trimContent(membership?.coins.toString())}
+            {formatNumberWithSuffix(membership?.coins)}
           </Text>
         </TouchableOpacity>
       </View>

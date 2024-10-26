@@ -9,7 +9,7 @@ import { format, fromUnixTime } from "date-fns";
 import { BlurView } from "@react-native-community/blur";
 import { Colors } from "../../assets/colors/color";
 
-const MAPPING = {
+const COLORS_MAPPING = {
   Silver: {
     gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
     textColor: Colors.black,
@@ -38,7 +38,7 @@ const SubscriptionCard = () => {
   const membership = useSelector((state) => state.membership.membership);
 
   const loadDate = (time) => {
-    return format(fromUnixTime(time), "MM/yy");
+    return format(fromUnixTime(time/1000), "MM/yy");
   };
 
   if (membership?.membershipType == "Free") {
@@ -87,31 +87,31 @@ const SubscriptionCard = () => {
             <Text style={styles.identifier}>GoHappy Club</Text>
           </View>
           <Text style={styles.membershipType}>{membership.membershipType}</Text>
-        </LinearGradient>
-
-        <BlurView
+          <BlurView
           blurAmount={8}
           blurType="light"
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-            height: hp(22),
+            position: "fixed",
+            top: "-20%",
+            left: "-20%",
+            // bottom: 0,
+            // right: 0,
+            width:wp(150),
+            height: hp(23),
           }}
         />
-        </>
+        </LinearGradient>
+      </>
     );
   }
 
   return (
     <LinearGradient
-      colors={MAPPING[membership?.membershipType]["gradient"]}
+      colors={COLORS_MAPPING[membership?.membershipType]["gradient"]}
       style={[
         styles.card,
         {
-          borderColor: MAPPING[membership?.membershipType]["borderColor"],
+          borderColor: COLORS_MAPPING[membership?.membershipType]["borderColor"],
         },
       ]}
       start={{ x: 0, y: 0 }}
@@ -128,9 +128,9 @@ const SubscriptionCard = () => {
             style={[
               styles.name,
               {
-                color: MAPPING[membership?.membershipType]["textColor"],
+                color: COLORS_MAPPING[membership?.membershipType]["textColor"],
                 textShadowColor:
-                  MAPPING[membership?.membershipType]["textShadowColor"],
+                  COLORS_MAPPING[membership?.membershipType]["textShadowColor"],
               },
             ]}
           >
@@ -140,9 +140,9 @@ const SubscriptionCard = () => {
             style={[
               styles.expiry,
               {
-                color: MAPPING[membership?.membershipType]["textColor"],
+                color: COLORS_MAPPING[membership?.membershipType]["textColor"],
                 textShadowColor:
-                  MAPPING[membership?.membershipType]["textShadowColor"],
+                  COLORS_MAPPING[membership?.membershipType]["textShadowColor"],
               },
             ]}
           >
@@ -151,7 +151,7 @@ const SubscriptionCard = () => {
         </View>
       </View>
       <Image
-        source={MAPPING[membership?.membershipType]["logo"]}
+        source={COLORS_MAPPING[membership?.membershipType]["logo"]}
         style={{
           width: wp(20),
           height: wp(8),
@@ -164,10 +164,11 @@ const SubscriptionCard = () => {
       <Text
         style={[
           styles.membershipType,
-          { color: MAPPING[membership?.membershipType]["textColor"],
+          {
+            color: COLORS_MAPPING[membership?.membershipType]["textColor"],
             textShadowColor:
-                  MAPPING[membership?.membershipType]["textShadowColor"],
-           },
+              COLORS_MAPPING[membership?.membershipType]["textShadowColor"],
+          },
         ]}
       >
         {membership.membershipType}
@@ -175,10 +176,11 @@ const SubscriptionCard = () => {
       <Text
         style={[
           styles.membershipText,
-          { color: MAPPING[membership?.membershipType]["textColor"],
+          {
+            color: COLORS_MAPPING[membership?.membershipType]["textColor"],
             textShadowColor:
-                  MAPPING[membership?.membershipType]["textShadowColor"],
-           },
+              COLORS_MAPPING[membership?.membershipType]["textShadowColor"],
+          },
         ]}
       >
         Membership
