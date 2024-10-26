@@ -387,7 +387,7 @@ class Profile extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          {profile.age == null || profile.age > 50 ? (
+          {profile.age == null || profile.age >= 50 ? (
             <View style={{ width: Dimensions.get("window").width * 0.9 }}>
               <TouchableOpacity
                 style={{
@@ -419,7 +419,7 @@ class Profile extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          {profile.age == null || profile.age > 50 ? (
+          {profile.age == null || profile.age >= 50 ? (
             <View style={{ width: Dimensions.get("window").width * 0.9 }}>
               <TouchableOpacity
                 style={{
@@ -480,7 +480,7 @@ class Profile extends Component {
 							</View>
 					</View> */}
         </ScrollView>
-        {profile.age == null || profile.age > 50 ? (
+        {profile.age == null || profile.age >= 50 ? (
           <FAB
             style={styles.fab}
             icon={({ size, color }) => (

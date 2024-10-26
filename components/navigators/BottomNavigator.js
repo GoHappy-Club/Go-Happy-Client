@@ -127,7 +127,7 @@ export default function BottomNavigator() {
           tabBarInactiveTintColor: Colors.grey.grey,
         }}
       />
-      {profile.profile.age == null || profile.profile.age > 50 ? (
+      {profile.profile.age == null || profile.profile.age >= 50 ? (
         <Tab.Screen
           name="Refer"
           children={(props) => <ReferScreen propProfile={profile} {...props} />}
