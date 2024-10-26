@@ -453,7 +453,6 @@ class LoginScreen extends Component {
     if (name == null) {
       name = "";
     }
-    this.setState({ loadingVerifyButton: true });
     var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {

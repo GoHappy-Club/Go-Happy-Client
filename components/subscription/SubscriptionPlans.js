@@ -82,11 +82,8 @@ const SubscriptionPlans = ({ plans }) => {
   const getTitle = () => {
     if (membership.membershipType == "Free") {
       return "Join now";
-    } else if (membership.membershipType == "Platinum") {
-      return "Not Available";
-    } else {
-      return "Upgrade now";
     }
+    return "Upgrade now";
   };
 
   const phonePe = async (type, plan, paymentType) => {
@@ -94,9 +91,9 @@ const SubscriptionPlans = ({ plans }) => {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
       setShareButtonLoading(false);
-      navigation.navigate("PaymentSuccessful",{
-        type:"",
-        navigateTo:""
+      navigation.navigate("PaymentSuccessful", {
+        type: "",
+        navigateTo: "",
       });
     };
 
@@ -104,9 +101,9 @@ const SubscriptionPlans = ({ plans }) => {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
       setShareButtonLoading(false);
-      navigation.navigate("PaymentFailed",{
-        type:"",
-        navigateTo:""
+      navigation.navigate("PaymentFailed", {
+        type: "",
+        navigateTo: "",
       });
     };
 
@@ -199,8 +196,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         <AnimatedLinearGradient
           colors={
             isSelected
-              ? // ? ["#7c3aed", "#9333ea", "#4f46e5"]
-                colorMapping[selectedPlan?.membershipType]
+              ? colorMapping[selectedPlan?.membershipType]
               : [Colors.referLinkBackground, Colors.referLinkBackground]
           }
           start={{ x: 0, y: 0 }}
@@ -280,7 +276,6 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       ],
     };
 
-
     return (
       <View
         style={[
@@ -358,7 +353,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 opacity: pressed ? 0.8 : 1,
               },
               {
-                backgroundColor: Colors.referLinkBackground,
+                backgroundColor:
+                  membership.membershipType == selectedPlan?.membershipType
+                    ? Colors.grey.c
+                    : Colors.referLinkBackground,
                 padding: 10,
                 borderRadius: 6,
                 justifyContent: "center",
@@ -366,6 +364,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               },
             ]}
             onPress={() => setPaymentSharePopUp(true)}
+            disabled={membership.membershipType == selectedPlan?.membershipType}
           >
             <View
               style={{
@@ -375,7 +374,19 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 alignItems: "center",
               }}
             >
-              <Text style={styles.footerButtonText}>{getTitle()}</Text>
+              <Text
+                style={[
+                  styles.footerButtonText,
+                  {
+                    color:
+                      membership.membershipType == selectedPlan?.membershipType
+                        ? Colors.grey.f0
+                        : Colors.black,
+                  },
+                ]}
+              >
+                {getTitle()}
+              </Text>
               <MoveRight size={24} color={Colors.black} />
             </View>
           </Pressable>
@@ -410,6 +421,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                       handleUpgradePlan("self", selectedPlan);
                   }}
                   disabled={payButtonLoading}
+                  loadingStyle={{
+                    color: Colors.black,
+                  }}
                 />
                 <Button
                   outline

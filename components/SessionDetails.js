@@ -102,7 +102,9 @@ class SessionDetails extends Component {
   isDisabled() {
     var title = this.getTitle();
     if (
-      title == "Seats Full"
+      title == "Seats Full" ||
+      (this.props.event.costType == "paid" &&
+        this.props.event.startTime - new Date().getTime() < 60 * 60 * 1000)
     ) {
       return true;
     } else {
@@ -138,6 +140,10 @@ class SessionDetails extends Component {
     if (this.props.event.seatsLeft == 0) {
       return "Seats Full";
     }
+    if (this.props.event.costType == "paid")
+      return `Book with ${this.props.event.cost} ${
+        this.props.event.cost == 1 ? "coin" : "coins"
+      }`;
     return "Book";
   }
   handleBelowAge(item, url) {
@@ -196,12 +202,13 @@ class SessionDetails extends Component {
     var output = this.props.sessionAction("book");
     this.setState({ loadingButton: true });
   }
+
   isBookingAllowed() {
     if (
       this.props.membership &&
       this.props.membership?.membershipType == "Free"
     ) {
-      this.setState({ nonMemberPopUp: true });
+      this.props.navigation.navigate("SubscriptionPlans");
       return false;
     } else if (
       this.props.membership &&
@@ -618,7 +625,6 @@ class SessionDetails extends Component {
               targetTime={item.startTime}
               width={WIDTH * 0.1}
               height={HEIGHT * 0.05}
-              textSize={HEIGHT * 0.02}
               separatorSize={WIDTH * 0.07}
               showText={true}
             />
@@ -638,8 +644,8 @@ class SessionDetails extends Component {
               this.setState({ title: title });
               if (this.getTitle() === "Cancel Your Booking") {
                 this.setState({ showBookAlert: true });
-              } else if (item.costType == "paid" && this.getTitle() == "Book") {
-                if(!this.isBookingAllowed()) return;
+              } else if (item.costType == "paid" && this.getTitle().startsWith("Book")) {
+                if (!this.isBookingAllowed()) return;
                 this.sessionAction();
                 return;
               } else {
@@ -799,64 +805,66 @@ class SessionDetails extends Component {
           />
         )}
         {this.state.nonMemberPopUp && (
-            <AwesomeAlert
-              show={this.state.nonMemberPopUp}
-              showProgress={false}
-              title={"Booking Failed"}
-              message={
-                "You are not a member of GoHappy Club, Join us by clicking below button."
-              }
-              messageStyle={{
-                textAlign: "center",
-                fontFamily: "Poppins-Regular",
-              }}
-              titleStyle={{
-                fontSize: wp(5),
-                fontFamily: "NunitoSans-SemiBold",
-                color: Colors.red,
-              }}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={true}
-              showConfirmButton={true}
-              showCancelButton={false}
-              confirmText="Join Now"
-              confirmButtonColor={Colors.primary}
-              onConfirmPressed={() => {
-                this.props.navigation.navigate("SubscriptionPlans");
-              }}
-              onDismiss={() => this.setState({ nonMemberPopUp: false })}
-            />
-          )}
-          {this.state.lowCoinsPopUp && (
-            <AwesomeAlert
-              show={this.state.lowCoinsPopUp}
-              showProgress={false}
-              title={"Booking Failed"}
-              message={
-                "You don't have enough coins, Please top-up coins to book this session."
-              }
-              messageStyle={{
-                textAlign: "center",
-                fontFamily: "Poppins-Regular",
-                color:Colors.black,
-              }}
-              titleStyle={{
-                fontSize: wp(5),
-                fontFamily: "NunitoSans-SemiBold",
-                color: Colors.red,
-              }}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={true}
-              showConfirmButton={true}
-              showCancelButton={false}
-              confirmText="Top up Now"
-              confirmButtonColor={Colors.primary}
-              onConfirmPressed={() => {
-                this.props.navigation.navigate("TopUpScreen");
-              }}
-              onDismiss={() => this.setState({ lowCoinsPopUp: false })}
-            />
-          )}
+          <AwesomeAlert
+            show={this.state.nonMemberPopUp}
+            showProgress={false}
+            title={"Booking Failed"}
+            message={
+              "You are not a member of GoHappy Club, Join us by clicking below button."
+            }
+            messageStyle={{
+              textAlign: "center",
+              fontFamily: "Poppins-Regular",
+            }}
+            titleStyle={{
+              fontSize: wp(5),
+              fontFamily: "NunitoSans-SemiBold",
+              color: Colors.red,
+            }}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            showCancelButton={false}
+            confirmText="Join now"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              this.setState({ nonMemberPopUp: false });
+              this.props.navigation.navigate("SubscriptionPlans");
+            }}
+            onDismiss={() => this.setState({ nonMemberPopUp: false })}
+          />
+        )}
+        {this.state.lowCoinsPopUp && (
+          <AwesomeAlert
+            show={this.state.lowCoinsPopUp}
+            showProgress={false}
+            title={"Booking Failed"}
+            message={
+              "You don't have enough coins, Please top-up coins to book this session."
+            }
+            messageStyle={{
+              textAlign: "center",
+              fontFamily: "Poppins-Regular",
+              color: Colors.black,
+            }}
+            titleStyle={{
+              fontSize: wp(5),
+              fontFamily: "NunitoSans-SemiBold",
+              color: Colors.red,
+            }}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            showCancelButton={false}
+            confirmText="Top up now"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              this.setState({ lowCoinsPopUp: false });
+              this.props.navigation.navigate("TopUpScreen");
+            }}
+            onDismiss={() => this.setState({ lowCoinsPopUp: false })}
+          />
+        )}
       </View>
     );
   }
@@ -1012,7 +1020,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
-  membership : state.membership.membership
+  membership: state.membership.membership,
 });
 
 export default connect(mapStateToProps)(SessionDetails);
