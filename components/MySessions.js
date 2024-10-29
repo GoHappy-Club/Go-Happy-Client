@@ -17,8 +17,9 @@ import { WebView } from "react-native-webview";
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { format, fromUnixTime } from "date-fns";
 import { Colors } from "../assets/colors/color";
+import { connect } from "react-redux";
 
-export default class MySessions extends Component {
+class MySessions extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,11 +37,6 @@ export default class MySessions extends Component {
     };
     // alert(JSON.stringify(props));
     this._retrieveData();
-  }
-  componentDidMount() {
-    this.props.navigation.addListener("focus", (payload) => {
-      this._onRefresh();
-    });
   }
   _retrieveData = async () => {
     try {
@@ -63,13 +59,6 @@ export default class MySessions extends Component {
     }
     return text.substring(0, cut) + "...";
   }
-  _onRefresh() {
-    this.setState({ refreshing: true });
-    var _this = this;
-    this.props.loadMySessions("", function () {
-      _this.setState({ refreshing: false });
-    });
-  }
 
   loadDate(item) {
     const dt = fromUnixTime(item / 1000);
@@ -91,11 +80,12 @@ export default class MySessions extends Component {
           alignItems: "center",
         }}
       >
-        No Recordings Found 😟
+        {this.props.membership && this.props.membership.membershipType == "Free"
+          ? "Sorry, Recordings are not available for Free users"
+          : "No Recordings Found 😟"}
       </Text>
     );
   }
-  loadCaller() {}
   videoPlayer(link) {
     this.setState({ videoVisible1: true, recordingLink: link });
     return;
@@ -218,14 +208,7 @@ export default class MySessions extends Component {
     );
 
     return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh.bind(this)}
-          />
-        }
-      >
+      <ScrollView showsVerticalScrollIndicator={false}>
         {this.props.ongoingEvents.length == 0 &&
           this.props.upcomingEvents.length == 0 &&
           this.props.expiredEvents.length == 0 &&
@@ -394,3 +377,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
+
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+  membership: state.membership.membership,
+});
+
+export default connect(mapStateToProps)(MySessions);
