@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
 import { Colors } from "../../assets/colors/color";
+import Video from "react-native-video";
 
 export default class MySessionsScreen extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ export default class MySessionsScreen extends Component {
       phoneNumber: "",
       password: "",
       showAlert: false,
-      loader: false,
+      loading: false,
       ongoingEvents: [],
       expiredEvents: [],
       upcomingEvents: [],
@@ -37,32 +38,45 @@ export default class MySessionsScreen extends Component {
   loadMySessions(phoneNumber, _callback) {
     phoneNumber = this.state.phoneNumber;
     var url = SERVER_URL + "/event/mySessions";
+    this.setState({loading:true});
     axios
       .post(url, { phoneNumber: phoneNumber })
       .then((response) => {
         if (response.data) {
-          //
           this.setState({ expiredEvents: response.data.expiredEvents });
-          this.setState({ upcomingEvents: response.data.upcomingEvents });
-          this.setState({ ongoingEvents: response.data.ongoingEvents });
           this.setState({ error: false });
-          this.setState({ childLoader: false });
-
+          
           _callback();
         }
+        this.setState({ loading: false });
       })
       .catch((error) => {
+        console.log("Error in sessions =>",error);
+        this.setState({ loading: false });
         this.error = true;
       });
   }
   render() {
-    if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+    if (this.state.loading == true) {
       return (
-        <MaterialIndicator
-          color={Colors.white}
-          style={{ backgroundColor: Colors.materialIndicatorColor }}
-        />
+        <Video
+        source={require("../../images/logo_splash.mp4")}
+        style={{
+          position: "absolute",
+          top: 0,
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 1,
+        }}
+        muted={true}
+        repeat={true}
+        resizeMode="cover"
+      />
       );
     }
     const navigation = this.props.navigation;
