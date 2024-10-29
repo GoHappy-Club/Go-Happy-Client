@@ -33,9 +33,14 @@ const colorMapping = {
 };
 
 const SubscriptionPlans = ({ plans }) => {
+  console.log(plans);
+  
   const PLANS = plans;
+  const uniquePlans = Array.from(
+    new Set(plans.map((plan) => plan.membershipType))
+  ).map((type) => plans.find((plan) => plan.membershipType === type));
   const [activeSections, setActiveSections] = useState([1]);
-  const [selectedPlan, setSelectedPlan] = useState(PLANS[1]);
+  const [selectedPlan, setSelectedPlan] = useState(uniquePlans[1]);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
   const [payButtonLoading, setPayButtonLoading] = useState(false);
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
@@ -48,6 +53,10 @@ const SubscriptionPlans = ({ plans }) => {
     checkForRenew();
     setButtonTitle(getTitle());
   }, []);
+
+  useEffect(() => {
+    upgradeHelper();
+  }, [selectedPlan]);
 
   const openRenewModal = () => {
     modalRef.current.present();
@@ -86,7 +95,7 @@ const SubscriptionPlans = ({ plans }) => {
     return "Upgrade now";
   };
 
-  const phonePe = async (type, plan, paymentType) => {
+  const phonePe = async (type, plan, paymentType, amount) => {
     const _callback = () => {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
@@ -112,7 +121,7 @@ const SubscriptionPlans = ({ plans }) => {
       phonepe_payments
         .phonePeShare(
           profile.phoneNumber,
-          Number.parseInt(plan.subscriptionFees),
+          amount,
           _errorHandler,
           paymentType,
           null,
@@ -144,7 +153,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       setPayButtonLoading(true);
       phonepe_payments.phonePe(
         profile.phoneNumber,
-        plan.subscriptionFees,
+        amount,
         _callback,
         _errorHandler,
         paymentType,
@@ -156,28 +165,70 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
   };
 
   const handleBuyPlan = async (type, plan) => {
-    phonePe(type, plan, "subscription");
+    phonePe(type, plan, "subscription", plan.subscriptionFees);
   };
 
   const handleUpgradePlan = async (type, plan) => {
     // handle upgrade plan logic
-    phonePe(type, plan, "upgrade");
+    phonePe(type, plan, "upgrade", upgradeHelper());
+  };
+
+  const upgradeHelper = () => {
+    if (membership.membershipType == "Free") {
+      return selectedPlan?.subscriptionFees;
+    } else {
+      return getRemainingMembershipValue(
+        membership.membershipStartDate,
+        membership.membershipEndDate
+      ) < selectedPlan?.subscriptionFees
+        ? selectedPlan?.subscriptionFees -
+            getRemainingMembershipValue(
+              membership.membershipStartDate,
+              membership.membershipEndDate
+            )
+        : "100";
+    }
+  };
+
+  const getCurrentMembershipFees = (duration) => {
+    return plans
+      .filter((plan) => plan.membershipType == membership.membershipType)
+      .filter((plan) => plan.duration == Math.floor(duration));
+  };
+
+  const getRemainingMembershipValue = (
+    membershipStartDate,
+    membershipEndDate
+  ) => {
+    const currentTime = new Date().getTime();
+    const diff = currentTime - membershipStartDate;
+    const duration = membershipEndDate - membershipStartDate;
+    const subscriptionFees = getCurrentMembershipFees(
+      duration / (30 * 24 * 60 * 60 * 1000)
+    )[0]?.subscriptionFees;
+    console.log(subscriptionFees);
+
+    const usedValue = (diff / duration) * subscriptionFees;
+    console.log(usedValue);
+    console.log(subscriptionFees - usedValue);
+
+    return Math.round(subscriptionFees - usedValue);
   };
 
   const handleRenewPlan = async (type, plan) => {
     //handle renew plan logic
-    phonePe(type, plan, "renewal");
+    phonePe(type, plan, "renewal", plan.subscriptionFees);
   };
 
   const handleSectionChange = (sections) => {
     setActiveSections(sections);
     if (sections.length > 0) {
-      setSelectedPlan(PLANS[sections[0]]);
+      setSelectedPlan(uniquePlans[sections[0]]);
     }
   };
 
   const renderHeader = (section, index) => {
-    const isSelected = selectedPlan?.membershipType === section.membershipType;
+    const isSelected = selectedPlan?.id === section.id;
 
     return (
       <TouchableOpacity
@@ -285,6 +336,30 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           },
         ]}
       >
+        {/* {hasMultipleDurations && (
+          <View style={styles.durationContainer}>
+            {currentPlanOptions.map((plan) => (
+              <TouchableOpacity
+                key={plan.id}
+                style={[
+                  styles.durationButton,
+                  selectedDuration === plan.duration && styles.durationButtonSelected,
+                ]}
+                // onPress={() => handleDurationSelect(plan)}
+              >
+                <Text
+                  style={[
+                    styles.durationButtonText,
+                    selectedDuration === plan.duration && styles.durationButtonTextSelected,
+                  ]}
+                >
+                  {plan.duration} Months
+                  {plan.discount > 0 && ` (-${plan.discount}%)`}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )} */}
         {features[selectedPlan?.membershipType].map((feature, index) => (
           <View
             key={index}
@@ -319,7 +394,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         <View style={styles.container}>
           <Text style={styles.screenTitle}>Choose Your Plan</Text>
           <Accordion
-            sections={PLANS}
+            sections={uniquePlans}
             activeSections={activeSections}
             renderHeader={renderHeader}
             renderContent={renderContent}
@@ -341,9 +416,24 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   colors={colorMapping[selectedPlan?.membershipType]}
                   style={styles.footerTitleText}
                 />
-                <Text style={styles.pricingTitleText}>
-                  ₹ {selectedPlan?.subscriptionFees}
-                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 2,
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.pricingTitleText}>
+                    {buttonTitle == "Upgrade now"
+                      ? `₹ ${upgradeHelper()}`
+                      : `₹ ${selectedPlan?.subscriptionFees}`}
+                  </Text>
+                  {upgradeHelper() < selectedPlan?.subscriptionFees && (
+                    <Text style={styles.discountText}>
+                      ₹ {selectedPlan?.subscriptionFees}
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
           </View>
@@ -533,6 +623,12 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontWeight: "bold",
   },
+  discountText: {
+    fontSize: hp(2),
+    color: Colors.lowOpacityBlack,
+    fontWeight: "300",
+    textDecorationLine: "line-through",
+  },
   joinNowButton: {
     backgroundColor: Colors.black,
   },
@@ -571,6 +667,33 @@ const styles = StyleSheet.create({
   },
   featureUnavailable: {
     color: "#ef4444",
+  },
+  durationContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+  },
+  durationButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: "#f3f4f6",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  durationButtonSelected: {
+    backgroundColor: "#3b82f6",
+    borderColor: "#3b82f6",
+  },
+  durationButtonText: {
+    fontSize: 14,
+    color: "#4b5563",
+  },
+  durationButtonTextSelected: {
+    color: "#ffffff",
   },
   AAcontainer: {
     padding: 10,
