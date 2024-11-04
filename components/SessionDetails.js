@@ -32,6 +32,7 @@ const HEIGHT = Dimensions.get("window").height;
 import { connect } from "react-redux";
 import { Colors } from "../assets/colors/color.js";
 import { wp } from "../helpers/common.js";
+import { storeCompletedSession } from "../services/Startup.js";
 
 class SessionDetails extends Component {
   constructor(props) {
@@ -194,6 +195,11 @@ class SessionDetails extends Component {
       return;
     }
     if (this.getTitle() === "Join") {
+      storeCompletedSession(
+        this.props.event.id,
+        this.props.event.eventName,
+        this.props.event.coverImage
+      );
       setSessionAttended(this.props.phoneNumber);
       Linking.openURL(this.props.event.meetingLink);
       return;
