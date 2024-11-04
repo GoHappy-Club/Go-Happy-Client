@@ -27,6 +27,7 @@ import tambola from "tambola";
 import { Colors } from "../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
 import { wp } from "../helpers/common.js";
+import { storeCompletedSession } from "../services/Startup.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -178,6 +179,12 @@ class HomeDashboard extends Component {
       return;
     }
     if (this.getTitle(item) == "Join") {
+      
+      storeCompletedSession(
+        item.id,
+        item.eventName,
+        item.coverImage
+      );
       setSessionAttended(this.props.profile.phoneNumber);
       Linking.openURL(item.meetingLink);
       return;

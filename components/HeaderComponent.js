@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faWallet, faCrown } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import {
   Easing,
 } from "react-native";
 import { Colors } from "../assets/colors/color";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GradientText from "../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 
@@ -27,7 +27,6 @@ const Header = () => {
   const membership = useSelector((state) => state?.membership?.membership);
 
   const navigation = useNavigation();
-
 
   useEffect(() => {
     Animated.loop(
@@ -58,31 +57,31 @@ const Header = () => {
 
   function formatNumberWithSuffix(number) {
     if (number >= 1e7) {
-        return (number / 1e7).toFixed(1) + 'Cr';
+      return (number / 1e7)?.toFixed(1) + "Cr";
     } else if (number >= 1e5) {
-        return (number / 1e5).toFixed(1) + 'L';
+      return (number / 1e5)?.toFixed(1) + "L";
     } else if (number >= 1e3) {
-        return (number / 1e3).toFixed(1) + 'K';
+      return (number / 1e3)?.toFixed(1) + "K";
     } else {
-        return number.toString();
+      return number?.toString();
     }
-}
-
+  }
 
   return (
-    <View style={styles.header}>
-      <Pressable style={styles.userInfo} onPress={handleNavigate}>
-        <Image
-          source={{
-            uri: profile.profileImage,
-            height: 40,
-            width: 40,
-          }}
-          resizeMethod="resize"
-          resizeMode="cover"
-          style={styles.profileImage}
-        />
-        {/* <View
+    <>
+      <View style={styles.header}>
+        <Pressable style={styles.userInfo} onPress={handleNavigate}>
+          <Image
+            source={{
+              uri: profile.profileImage,
+              height: 40,
+              width: 40,
+            }}
+            resizeMethod="resize"
+            resizeMode="cover"
+            style={styles.profileImage}
+          />
+          {/* <View
           style={{
             flexDirection: "column",
             justifyContent: "center",
@@ -94,48 +93,49 @@ const Header = () => {
             {trimContent(profile.name.split(" ")[0])}
           </Text>
         </View> */}
-      </Pressable>
-      <View style={styles.rightWrapper}>
-        <TouchableOpacity
-          style={styles.upgradeButton}
-          onPress={() => navigation.navigate("SubscriptionPlans")}
-        >
-          <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
-          <GradientText
-            text="Upgrade"
-            style={styles.upgradeText}
-            colors={Colors.headerLinearGradient}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.credits}
-          onPress={() => navigation.navigate("WalletScreen")}
-        >
-          <Animated.Image
-            source={require("../images/GoCoins.png")}
-            style={{
-              height: 25,
-              width: 25,
-              transform: [{ rotateY: spin }],
-            }}
-          />
-          <Text
-            style={[
-              styles.creditsText,
-              {
-                color:
-                  membership?.membershipType != "Free"
-                    ? Colors.black
-                    : Colors.grey.countdown,
-              },
-            ]}
+        </Pressable>
+        <View style={styles.rightWrapper}>
+          <TouchableOpacity
+            style={styles.upgradeButton}
+            onPress={() => navigation.navigate("SubscriptionPlans")}
           >
-          {/* show high numbers with K/L */}
-            {formatNumberWithSuffix(membership?.coins)}
-          </Text>
-        </TouchableOpacity>
+            <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
+            <GradientText
+              text="Upgrade"
+              style={styles.upgradeText}
+              colors={Colors.headerLinearGradient}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.credits}
+            onPress={() => navigation.navigate("WalletScreen")}
+          >
+            <Animated.Image
+              source={require("../images/GoCoins.png")}
+              style={{
+                height: 25,
+                width: 25,
+                transform: [{ rotateY: spin }],
+              }}
+            />
+            <Text
+              style={[
+                styles.creditsText,
+                {
+                  color:
+                    membership?.membershipType != "Free"
+                      ? Colors.black
+                      : Colors.grey.countdown,
+                },
+              ]}
+            >
+              {/* show high numbers with K/L */}
+              {formatNumberWithSuffix(membership?.coins)}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
