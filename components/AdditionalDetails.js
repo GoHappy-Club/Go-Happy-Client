@@ -117,34 +117,34 @@ class AdditionalDetails extends Component {
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
-          if (response.data.user.phoneNumber != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.user.phoneNumber);
+          if (response.data.phoneNumber != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.phoneNumber);
           }
-          // AsyncStorage.setItem('fullName',response.data.user.fullName);
-          if (response.data.user.name != null) {
-            AsyncStorage.setItem("name", response.data.user.name);
+          // AsyncStorage.setItem('fullName',response.data.fullName);
+          if (response.data.name != null) {
+            AsyncStorage.setItem("name", response.data.name);
           }
-          if (response.data.user.email != null) {
-            AsyncStorage.setItem("email", response.data.user.email);
+          if (response.data.email != null) {
+            AsyncStorage.setItem("email", response.data.email);
           }
-          if (response.data.user.profileImage != null) {
-            AsyncStorage.setItem("profileImage", response.data.user.profileImage);
+          if (response.data.profileImage != null) {
+            AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
-          if (response.data.user.age != null) {
-            AsyncStorage.setItem("age", response.data.user.age);
+          if (response.data.age != null) {
+            AsyncStorage.setItem("age", response.data.age);
           }
-          if (response.data.user.token != null) {
-            AsyncStorage.setItem("token", response.data.user.token);
+          if (response.data.token != null) {
+            AsyncStorage.setItem("token", response.data.token);
           }
           // this.state.navigation.navigate('DrawerNavigator');
           this.setProfile(
-            response.data.user.name,
-            response.data.user.age,
-            response.data.user.profileImage,
-            response.data.user.sessionsAttended,
-            response.data.user.selfInviteCode,
-            response.data.user.city,
-            response.data.user.emergencyContact,
+            response.data.name,
+            response.data.age,
+            response.data.profileImage,
+            response.data.sessionsAttended,
+            response.data.selfInviteCode,
+            response.data.city,
+            response.data.emergencyContact,
           );
           this.setState({ loader: true });
 
