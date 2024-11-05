@@ -17,6 +17,9 @@ import { Colors } from "../assets/colors/color";
 import { useDispatch, useSelector } from "react-redux";
 import GradientText from "../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
+import BottomSheet from "./BottomSheet";
+import SessionRatingSheet from "./RatingSheet";
+import { activateFreeTrial, checkPendingFeedback, submitRating } from "../services/Startup";
 
 const width = Dimensions.get("window").width;
 
@@ -25,6 +28,53 @@ const rotateAnim = new Animated.Value(0);
 const Header = () => {
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state?.membership?.membership);
+
+  const [modalType, setModalType] = useState("");
+  const [showRating, setShowRating] = useState(false);
+  const [currentSession, setCurrentSession] = useState(null);
+
+  const modalRef = useRef();
+  const ratingModalRef = useRef();
+
+  useEffect(() => {
+    if (
+      membership.membershipType == "Free" &&
+      membership?.freeTrialUsed == false
+    ) {
+      setModalType("FreeTrial");
+    } else if (
+      membership.membershipType == "Free" &&
+      membership?.freeTrialUsed == true &&
+      checkFreeTrialExpired(membership)
+    ) {
+      deactivateFreeTrial();
+      setModalType("FreeTrialExpired");
+    }
+  }, [membership]);
+
+  // TODO : free trial modal
+  useEffect(() => {
+    if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
+      openGeneralModal(modalRef);
+  }, [modalType]);
+
+    // TODO : rating modal
+  useEffect(() => {
+    checkPendingFeedback(setShowRating, setCurrentSession);
+  }, []);
+
+  // TODO : open the rating modal
+  useEffect(() => {
+    if (showRating == true){
+      ratingModalRef.current?.present();}
+  }, [showRating, currentSession, ratingModalRef.current]);
+
+  const openGeneralModal = () => {
+    modalRef.current?.present();
+  };
+  const closeGeneralModal = () => {
+    modalRef.current?.dismiss();
+  };
 
   const navigation = useNavigation();
 
@@ -69,6 +119,26 @@ const Header = () => {
 
   return (
     <>
+      <BottomSheet
+        closeModal={() => closeGeneralModal()}
+        modalRef={modalRef}
+        type={modalType}
+        cta={() => activateFreeTrial(profile)}
+      />
+      <SessionRatingSheet
+        modalRef={ratingModalRef}
+        closeModal={() => {
+          submitRating(
+            currentSession,
+            setCurrentSession,
+            setShowRating,
+            0,
+            false
+          );
+          ratingModalRef.current?.dismiss();
+        }}
+        currentSession={currentSession}
+      />
       <View style={styles.header}>
         <Pressable style={styles.userInfo} onPress={handleNavigate}>
           <Image

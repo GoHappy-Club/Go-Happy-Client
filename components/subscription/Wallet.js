@@ -93,7 +93,13 @@ const Wallet = ({ transactions }) => {
               </View>
             </Pressable>
           </View>
-          <TransactionHistory transactions={transactions} />
+          <View style={{
+            width:wp(95),
+            justifyContent:"center",
+            alignItems:"center",
+          }}>
+          <TransactionHistory transactions={transactions} seeAll={true}/>
+          </View>
           {/* <TransactionHistory transactions={transactions}/> */}
       </ScrollView>
       {nonMemberPopUp && (
