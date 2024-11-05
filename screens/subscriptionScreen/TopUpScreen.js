@@ -5,28 +5,70 @@ import { useSelector } from "react-redux";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
+import Video from "react-native-video";
 
 const TopUpScreen = () => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const membership = useSelector((state) => state.membership.membership);
   const navigation = useNavigation();
 
+  const getCoinPackages = async () => {
+    //get all coins packages from api
+    const url = SERVER_URL + "/membership/listCoinPackages";
+    try {
+      setLoading(true);
+      const response = await axios.get(url);
+      console.log(response.data);
+      
+      setPackages(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("Error in fetching plans", error);
+    }
+  };
+
+  useEffect(() => {
+    getCoinPackages();
+  }, []);
+
   useEffect(() => {
     if (membership.membershipType == "Free") {
-      // setNonMemberPopUp(true);
       navigation.navigate("SubscriptionPlans");
     }
   });
   return (
     <>
-      <View
+      {loading && (
+        <Video
+          source={require("../../images/logo_splash.mp4")}
+          style={{
+            position: "absolute",
+            top: 0,
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 1,
+          }}
+          muted={true}
+          repeat={true}
+          resizeMode="cover"
+        />
+      )}
+      {!loading && <View
         style={{
           flex: 1,
         }}
       >
-        <WalletTopUp />
-      </View>
+        <WalletTopUp packages={packages} />
+      </View>}
       {nonMemberPopUp && (
         <AwesomeAlert
           show={nonMemberPopUp}
