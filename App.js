@@ -68,6 +68,7 @@ import {
   submitRating,
 } from "./services/Startup.js";
 import RatingBottomSheet from "./components/RatingSheet.js";
+import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -148,7 +149,6 @@ export default function App() {
   const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
     WhatsNewMessage().show
   );
-  const [modalType, setModalType] = useState("");
   const [updateRequired, setUpdateRequired] = useState(false);
   const width = Dimensions.get("window").width;
   const contentWidth = useWindowDimensions();
@@ -158,49 +158,12 @@ export default function App() {
   // });
   const [isConnected, setIsConnected] = useState(true);
   const [token, setToken] = useState(false);
-  const [showRating, setShowRating] = useState(false);
-  const [currentSession, setCurrentSession] = useState(null);
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
 
   const { copilotEvents } = useCopilot();
-  const modalRef = useRef();
-  const ratingModalRef = useRef();
-
-  useEffect(() => {
-    if (
-      membership.membershipType == "Free" &&
-      membership?.freeTrialUsed == false
-    ) {
-      setModalType("FreeTrial");
-    } else if (
-      membership.membershipType == "Free" &&
-      membership?.freeTrialUsed == true &&
-      checkFreeTrialExpired(membership)
-    ) {
-      deactivateFreeTrial();
-      setModalType("FreeTrialExpired");
-    }
-  }, [membership]);
-
-  // TODO : free trial modal
-  useEffect(() => {
-    if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
-      openGeneralModal(modalRef);
-  }, [modalType]);
-
-  // //   // TODO : rating modal
-  // useEffect(() => {
-  //   checkPendingFeedback(setShowRating, setCurrentSession);
-  // }, []);
-
-  // // // TODO : open the rating modal
-  // useEffect(() => {
-  //   if (showRating == true && membership){
-  //     ratingModalRef.current?.present();}
-  // }, [showRating, currentSession, ratingModalRef.current]);
 
   useEffect(() => {
     // logic to revoke user's membership if his membershipEndDate has arrived
@@ -270,13 +233,6 @@ export default function App() {
       age: age,
     };
     dispatch(setProfile(new_profile));
-  };
-
-  const openGeneralModal = () => {
-    modalRef.current?.present();
-  };
-  const closeGeneralModal = () => {
-    modalRef.current?.dismiss();
   };
 
   useEffect(() => {
@@ -581,28 +537,6 @@ export default function App() {
               linking={token == true && linking}
               ref={navigationRef}
             >
-              <BottomSheet
-                closeModal={() => closeGeneralModal()}
-                modalRef={modalRef}
-                type={modalType}
-                cta={() => activateFreeTrial(profile)}
-              />
-              <RatingBottomSheet
-                modalRef={ratingModalRef}
-                closeModal={() => {
-                  submitRating(
-                    currentSession,
-                    setCurrentSession,
-                    setShowRating,
-                    0,
-                    false
-                  );
-                  ratingModalRef.current?.dismiss();
-                }}
-                currentSession={currentSession}
-                // type={modalType}
-                // cta={() => activateFreeTrial(profile)}
-              />
               <Stack.Navigator>
                 <>
                   <Stack.Screen
@@ -901,6 +835,34 @@ export default function App() {
                     options={({ navigation }) => ({
                       headerShown: false,
                       animation: "slide_from_right",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="AllTransactions"
+                    children={(props) => <AllTransactions />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerStyle: {
+                        backgroundColor: "#FFF5D7",
+                      },
+                      headerLeft: () => (
+                        // <TouchableOpacity
+                        //   style={styles.newBackButton}
+                        //   onPress={() => navigation.goBack()}
+                        // >
+                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
+                        //   <Text style={styles.newBackText}>Back</Text>
+                        // </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
                     })}
                   />
                 </>
