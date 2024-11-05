@@ -171,7 +171,7 @@ class HomeDashboard extends Component {
       .catch((errorMsg) => {});
   }
 
-  updateEventBook(item) {
+  async updateEventBook(item) {
     //console.log("item clicked is", item)
     this.setState({ bookingLoader: true, itemClicked: item });
     if (this.getTitle(item) == "Share") {
@@ -180,13 +180,14 @@ class HomeDashboard extends Component {
     }
     if (this.getTitle(item) == "Join") {
       
-      storeCompletedSession(
+      await storeCompletedSession(
         item.id,
         item.eventName,
         item.coverImage
       );
       setSessionAttended(this.props.profile.phoneNumber);
-      Linking.openURL(item.meetingLink);
+      await Linking.openURL(item.meetingLink);
+      await this.giveRewards(item);
       return;
     }
     if (this.checkIsParticipantInSameEvent(item)) {
@@ -199,6 +200,21 @@ class HomeDashboard extends Component {
       this.props.profile.phoneNumber,
       this.state.selectedDateRaw
     );
+  }
+
+  async giveRewards(item){
+    let {membership,actions} = this.props;
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/event/giveReward`,{
+        phone: this.props.profile.phoneNumber,
+        eventId: item.id
+      })
+      membership.coins = response.data.coins;
+      actions.setMembership(membership);
+    } catch (error) {
+      console.log("Error in giveRewards ==>",error);      
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

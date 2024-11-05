@@ -171,7 +171,7 @@ export default function App() {
 
   useEffect(() => {
     if (
-      membership.membershipType != "Free" &&
+      membership.membershipType == "Free" &&
       membership?.freeTrialUsed == false
     ) {
       setModalType("FreeTrial");
@@ -590,7 +590,14 @@ export default function App() {
               <RatingBottomSheet
                 modalRef={ratingModalRef}
                 closeModal={() => {
-                  ratingModalRef.current.dismiss();
+                  submitRating(
+                    currentSession,
+                    setCurrentSession,
+                    setShowRating,
+                    0,
+                    false
+                  );
+                  ratingModalRef.current?.dismiss();
                 }}
                 currentSession={currentSession}
                 // type={modalType}

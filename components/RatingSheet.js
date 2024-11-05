@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import React, { useCallback, useState } from "react";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { X, Frown, Meh, Smile, SmilePlus } from "lucide-react-native";
+import { X } from "lucide-react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -10,6 +10,8 @@ import Animated, {
 import { BlurView } from "@react-native-community/blur";
 import { hp, wp } from "../helpers/common";
 import { Colors } from "../assets/colors/color";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faFrown, faGrinHearts, faMeh, faSmile, faSmileBeam } from "@fortawesome/free-solid-svg-icons";
 
 const SessionRatingSheet = ({
   modalRef,
@@ -52,7 +54,7 @@ const SessionRatingSheet = ({
     [closeModal]
   );
 
-  const renderEmoji = (Icon, rating) => (
+  const renderEmoji = (icon, rating) => (
     <TouchableOpacity
       onPress={() => setSelectedRating(rating)}
       style={[
@@ -60,8 +62,9 @@ const SessionRatingSheet = ({
         selectedRating === rating && styles.selectedEmoji,
       ]}
     >
-      <Icon
+      <FontAwesomeIcon
         size={28}
+        icon={icon}
         color={selectedRating === rating ? Colors.white : "#666"}
         style={styles.icon}
       />
@@ -93,23 +96,54 @@ const SessionRatingSheet = ({
         <View style={styles.contentContainer}>
           <Text style={styles.ratingTitle}>Drop your review</Text>
           <View style={styles.sessionContainer}>
-            <Image
+            {/* <Image
               source={{
                 uri: currentSession && currentSession[0]?.sessionImage,
               }}
               style={styles.sessionImage}
-            />
-            <Text style={styles.sessionName} numberOfLines={2}>
+            /> */}
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: wp(4),
+                  fontWeight: "400",
+                  color: Colors.black,
+                  textAlign: "center",
+                }}
+              >
+                You recently attended
+              </Text>
+              <Text style={styles.sessionName}>
+                {currentSession && currentSession[0]?.sessionName}
+              </Text>
+            </View>
+            {/* <Text style={styles.sessionName} numberOfLines={2}>
               {currentSession && currentSession[0]?.sessionName}
+            </Text> */}
+            <Text
+              style={{
+                fontSize: wp(4),
+                fontWeight: "400",
+                color: Colors.black,
+                textAlign: "center",
+              }}
+            >
+              Please rate our session so we can improve.
             </Text>
           </View>
 
           <View style={styles.emojiRow}>
-            {renderEmoji(Frown, 1)}
-            {renderEmoji(Meh, 2)}
-            {renderEmoji(Smile, 3)}
-            {renderEmoji(SmilePlus, 4)}
-            {renderEmoji(SmilePlus, 5)}
+            {renderEmoji(faFrown, 1)}
+            {renderEmoji(faMeh, 2)}
+            {renderEmoji(faSmile, 3)}
+            {renderEmoji(faSmileBeam, 4)}
+            {renderEmoji(faGrinHearts, 5)}
           </View>
 
           <TouchableOpacity
@@ -158,8 +192,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   sessionContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: wp(5),
     marginTop: 12,
     marginBottom: 32,
   },
@@ -170,10 +206,10 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   sessionName: {
-    flex: 1,
-    fontSize: wp(4),
+    fontSize: wp(7),
     fontWeight: "600",
     color: "#000",
+    textAlign: "center",
   },
   ratingTitle: {
     fontSize: 26,
@@ -184,7 +220,7 @@ const styles = StyleSheet.create({
   emojiRow: {
     flexDirection: "row",
     justifyContent: "center",
-    gap:0,
+    gap: 0,
     marginBottom: 32,
     paddingHorizontal: 12,
   },
@@ -199,7 +235,7 @@ const styles = StyleSheet.create({
   selectedEmoji: {
     borderColor: Colors.white,
     // backgroundColor: "#F0F8FF",
-    backgroundColor:Colors.primary
+    backgroundColor: Colors.primary,
   },
   submitButton: {
     padding: 16,
