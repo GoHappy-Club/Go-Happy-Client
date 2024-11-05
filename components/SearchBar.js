@@ -91,6 +91,13 @@ const SearchBar = () => {
     loadRecentSearches();
   }, []);
 
+  useEffect(() => {
+    if (isSearchActive){
+      navigation.addListener("blur", () => {
+        toggleSearch();
+      });}
+  }, []);
+
   const loadRecentSearches = async () => {
     try {
       const searches = await AsyncStorage.getItem("recent_searches");
@@ -308,11 +315,13 @@ const SearchBar = () => {
         <RecentSearches />
       )}
       {isSearchActive && !searchText && recentSearches.length == 0 && (
-        <Text style={{
-          textAlign: "center",
-          fontSize: 18,
-          marginTop:height*0.20,
-        }}>
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: 18,
+            marginTop: height * 0.2,
+          }}
+        >
           Please type what you're looking for above.
         </Text>
       )}
@@ -394,7 +403,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // height: 40,
     fontSize: 16,
-    padding:width*0.01
+    padding: width * 0.01,
   },
   closeButton: {
     position: "absolute",

@@ -284,7 +284,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     return finalTime;
   }
   getTitle(item) {
-    if (this.props.profile.age != null && this.props.profile.age <= 50) {
+    if (this.props.profile.age != null && this.props.profile.age < 50) {
       return "Share";
     }
     const isOngoing = this.isOngoingEvent(item);
