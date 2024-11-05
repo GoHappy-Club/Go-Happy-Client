@@ -10,8 +10,12 @@ import {
 } from "react-native";
 import { wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
+import { useNavigation } from "@react-navigation/native";
 
-const TransactionHistory = ({ transactions }) => {
+const TransactionHistory = ({ transactions,seeAll = false }) => {
+
+  const navigation = useNavigation();
+
   const loadDate = (timestamp) => {
     const dt = fromUnixTime(timestamp / 1000);
     const finalTime = format(dt, "MMM d, h:mm aa");
@@ -49,25 +53,25 @@ const TransactionHistory = ({ transactions }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Recent Transactions</Text>
-
+      <View style={styles.separator} />
       <FlatList
-        data={transactions.slice(0, 9)}
+        data={transactions}
         renderItem={renderTransaction}
         keyExtractor={(item) => item?.transactionDate.toString()}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         showsVerticalScrollIndicator={false}
       />
 
-      <TouchableOpacity style={styles.seeAllButton}>
+      {seeAll && <TouchableOpacity style={styles.seeAllButton} onPress={()=>navigation.navigate("AllTransactions")}>
         <Text style={styles.seeAllText}>See All</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: wp(95),
+    width: "100%",
     height: "auto",
     backgroundColor: "#FFF5D7",
     borderRadius: 20,
