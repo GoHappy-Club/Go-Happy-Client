@@ -14,7 +14,7 @@ const WalletScreen = () => {
       try {
         setLoading(true);
         const response = await axios.post(
-          `${SERVER_URL}/membership/getTransactions`,
+          `${SERVER_URL}/membership/getRecentTransactions`,
           {
             phone: profile.phoneNumber,
           }

@@ -24,8 +24,8 @@ const TransactionHistory = ({ transactions }) => {
     return (
       <View style={styles.transactionItem}>
         <View style={styles.leftContent}>
-          <Text style={styles.transactionTitle}>{item.source}</Text>
-          <Text style={styles.timestamp}>{loadDate(item.timestamp)}</Text>
+          <Text style={styles.transactionTitle}>{item.title}</Text>
+          <Text style={styles.timestamp}>{loadDate(item.transactionDate)}</Text>
         </View>
         <Text
           style={[
@@ -53,7 +53,7 @@ const TransactionHistory = ({ transactions }) => {
       <FlatList
         data={transactions.slice(0, 9)}
         renderItem={renderTransaction}
-        keyExtractor={(item) => item.timestamp.toString()}
+        keyExtractor={(item) => item?.transactionDate.toString()}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         showsVerticalScrollIndicator={false}
       />
