@@ -104,7 +104,7 @@ class SessionDetails extends Component {
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
-      (this.props.event.costType == "paid" &&
+      (title != "Join" && this.props.event.costType == "paid" &&
         this.props.event.startTime - new Date().getTime() < 60 * 60 * 1000)
     ) {
       return true;

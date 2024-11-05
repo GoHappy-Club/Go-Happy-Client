@@ -7,39 +7,257 @@ import {
   Platform,
   Share,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import phonepe_payments from "../PhonePe/Payments";
 import toUnicodeVariant from "../toUnicodeVariant";
 import { useSelector } from "react-redux";
 import { Button } from "react-native-elements";
-import Accordion from "react-native-collapsible/Accordion";
 import { TouchableOpacity } from "react-native";
 import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
-import { MoveRight } from "lucide-react-native";
+import { MoveRight, Star } from "lucide-react-native";
 import LinearGradient from "react-native-linear-gradient";
-import Animated from "react-native-reanimated";
+import Animated, {
+  FadeInUp,
+  withSequence,
+  withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import GradientText from "../../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import BottomSheet from "../BottomSheet";
+import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const colorMapping = {
-  Silver: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
-  Gold: ["#FFD700", "#FDB931", "#A85F05"],
-  Platinum: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
+  Silver: {
+    gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
+    borderColor: "#C0C0C0",
+    textColor: "black",
+  },
+  Gold: {
+    gradient: ["#FFD700", "#FDB931", "#A85F05"],
+    borderColor: "#A85F05",
+    textColor: "black",
+  },
+  Platinum: {
+    gradient: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
+    borderColor: "#304352",
+    textColor: "white",
+  },
+};
+
+const CARD_MARGIN = 8;
+
+const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
+  const [selectedDuration, setSelectedDuration] = useState(
+    membershipPlans && membershipPlans[0]?.duration
+  );
+  const shakeOffset = useSharedValue(0);
+
+  const selectedPlan = useMemo(() => {
+    return membershipPlans?.find((plan) => plan.duration === selectedDuration);
+  }, [membershipPlans, selectedDuration]);
+
+  const handleDurationSelect = (duration) => {
+    setSelectedDuration(duration);
+    const newSelectedPlan = membershipPlans.find(
+      (plan) => plan.duration === duration
+    );
+    onSelect(newSelectedPlan);
+  };
+
+  useEffect(() => {
+    if (isSelected) {
+      shakeOffset.value = withSequence(
+        withTiming(-10, { duration: 200 }),
+        withTiming(10, { duration: 200 }),
+        withTiming(0, { duration: 200 })
+      );
+    }
+  }, [isSelected]);
+
+  const animatedTextStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: shakeOffset.value }],
+    };
+  });
+  const monthlyPrice = selectedPlan?.subscriptionFees / selectedPlan?.duration;
+
+  return (
+    <TouchableOpacity
+      onPress={() => onSelect(selectedPlan)}
+      activeOpacity={0.8}
+    >
+      <AnimatedLinearGradient
+        colors={colorMapping[selectedPlan?.membershipType]?.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[
+          styles.card,
+          isSelected && {
+            borderWidth: 2,
+            borderColor:
+              colorMapping[selectedPlan?.membershipType]["borderColor"],
+          },
+        ]}
+        // activeOpacity={0.9}
+      >
+        {/* <Animated.View style={animatedTextStyle}>
+          <GradientText
+            text={selectedPlan?.membershipType}
+            colors={colorMapping[selectedPlan?.membershipType]?.gradient}
+            style={styles.footerTitleText}
+          />
+        </Animated.View> */}
+
+        <View style={styles.priceContainer}>
+          <Text
+            style={[
+              styles.price,
+              {
+                color: colorMapping[selectedPlan?.membershipType]["textColor"],
+              },
+            ]}
+          >
+            ₹{selectedPlan.subscriptionFees}
+          </Text>
+          <Text
+            style={[
+              styles.monthlyPrice,
+              {
+                color: colorMapping[selectedPlan?.membershipType]["textColor"],
+              },
+            ]}
+          >
+            ≈ ₹{monthlyPrice.toFixed(2)}/month
+          </Text>
+        </View>
+
+        <View style={styles.divider} />
+
+        <View style={styles.featuresContainer}>
+          <FeatureItem
+            title="Coins per Month"
+            value={`${selectedPlan.coinsPerMonth} coins`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          <FeatureItem
+            title="Reward Multiplier"
+            value={`${selectedPlan.rewardMultiplier}x`}
+            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
+          />
+          {selectedPlan.discount > 0 && (
+            <FeatureItem
+              title="Discount"
+              value={`${selectedPlan.discount}% OFF`}
+              textColor={
+                colorMapping[selectedPlan?.membershipType]["textColor"]
+              }
+              highlight
+            />
+          )}
+        </View>
+
+        {membershipPlans.length > 1 && (
+          <View style={styles.durationsContainer}>
+            <Text style={styles.durationTitle}>Select Duration:</Text>
+            <View style={styles.durationButtons}>
+              {membershipPlans.map((plan) => (
+                <DurationButton
+                  key={plan.duration}
+                  duration={plan.duration}
+                  isSelected={selectedDuration === plan.duration}
+                  onSelect={() => handleDurationSelect(plan.duration)}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+      </AnimatedLinearGradient>
+    </TouchableOpacity>
+  );
+};
+
+const FeatureItem = ({ title, value, highlight, textColor }) => {
+  return (
+    <Animated.View
+      entering={FadeInUp.delay(300).damping(10).springify()}
+      style={styles.featureRow}
+    >
+      <Star color={highlight ? "#FFD700" : "#666"} size={16} />
+      <Text style={[styles.featureTitle, { color: textColor }]}>
+        {title} :{" "}
+      </Text>
+      <Text
+        style={[
+          styles.featureValue,
+          highlight && styles.highlightedValue,
+          { color: textColor },
+        ]}
+      >
+        {value}
+      </Text>
+    </Animated.View>
+  );
+};
+
+const DurationButton = ({ duration, isSelected, onSelect }) => {
+  const getDurationText = (duration) => {
+    return `${duration} Months`;
+  };
+  return (
+    <TouchableOpacity
+      style={[
+        styles.durationButton,
+        isSelected && styles.selectedDurationButton,
+      ]}
+      onPress={onSelect}
+    >
+      <Text
+        style={[
+          styles.durationButtonText,
+          isSelected && styles.selectedDurationButtonText,
+        ]}
+      >
+        {getDurationText(duration)}
+      </Text>
+    </TouchableOpacity>
+  );
 };
 
 const SubscriptionPlans = ({ plans }) => {
-  console.log(plans);
-  
-  const PLANS = plans;
   const uniquePlans = Array.from(
     new Set(plans.map((plan) => plan.membershipType))
   ).map((type) => plans.find((plan) => plan.membershipType === type));
-  const [activeSections, setActiveSections] = useState([1]);
   const [selectedPlan, setSelectedPlan] = useState(uniquePlans[1]);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
   const [payButtonLoading, setPayButtonLoading] = useState(false);
@@ -47,6 +265,37 @@ const SubscriptionPlans = ({ plans }) => {
   const [buttonTitle, setButtonTitle] = useState("");
 
   const modalRef = useRef();
+  const scrollRef = useRef();
+
+  const navigation = useNavigation();
+
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (scrollRef.current) {
+        const scrollTo = wp(70) + CARD_MARGIN * 2;
+        scrollRef.current.scrollTo({ x: scrollTo, y: 0, animated: true });
+      }
+    }, 100);
+  }, []);
+
+  const groupedPlans = useMemo(() => {
+    const grouped = plans.reduce((acc, plan) => {
+      if (!acc[plan.membershipType]) {
+        acc[plan.membershipType] = [];
+      }
+      acc[plan.membershipType].push(plan);
+      return acc;
+    }, {});
+
+    Object.keys(grouped).forEach((membershipType) => {
+      grouped[membershipType].sort((a, b) => a.duration - b.duration);
+    });
+
+    return grouped;
+  }, [plans]);
 
   useEffect(() => {
     // openRenewModal();
@@ -55,7 +304,7 @@ const SubscriptionPlans = ({ plans }) => {
   }, []);
 
   useEffect(() => {
-    upgradeHelper();
+    pricingHelper();
   }, [selectedPlan]);
 
   const openRenewModal = () => {
@@ -83,10 +332,18 @@ const SubscriptionPlans = ({ plans }) => {
     }
   };
 
-  const navigation = useNavigation();
+  const isDisabled = () => {
+    const stDate = new Date(Number(membership.membershipStartDate));
+    const enDate = new Date(Number(membership.membershipEndDate));
 
-  const profile = useSelector((state) => state.profile.profile);
-  const membership = useSelector((state) => state.membership.membership);
+    const durationOfMembership = differenceInMonths(enDate, stDate);
+
+    if (
+      membership?.membershipType == selectedPlan?.membershipType &&
+      durationOfMembership == selectedPlan.duration
+    )
+      return true;
+  };
 
   const getTitle = () => {
     if (membership.membershipType == "Free") {
@@ -170,10 +427,11 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
 
   const handleUpgradePlan = async (type, plan) => {
     // handle upgrade plan logic
-    phonePe(type, plan, "upgrade", upgradeHelper());
+    phonePe(type, plan, "upgrade", pricingHelper());
   };
 
-  const upgradeHelper = () => {
+  const pricingHelper = () => {
+    if (isDisabled()) return "--";
     if (membership.membershipType == "Free") {
       return selectedPlan?.subscriptionFees;
     } else {
@@ -186,7 +444,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               membership.membershipStartDate,
               membership.membershipEndDate
             )
-        : "100";
+        : "101";
     }
   };
 
@@ -206,12 +464,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     const subscriptionFees = getCurrentMembershipFees(
       duration / (30 * 24 * 60 * 60 * 1000)
     )[0]?.subscriptionFees;
-    console.log(subscriptionFees);
-
     const usedValue = (diff / duration) * subscriptionFees;
-    console.log(usedValue);
-    console.log(subscriptionFees - usedValue);
-
     return Math.round(subscriptionFees - usedValue);
   };
 
@@ -220,188 +473,40 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     phonePe(type, plan, "renewal", plan.subscriptionFees);
   };
 
-  const handleSectionChange = (sections) => {
-    setActiveSections(sections);
-    if (sections.length > 0) {
-      setSelectedPlan(uniquePlans[sections[0]]);
-    }
-  };
-
-  const renderHeader = (section, index) => {
-    const isSelected = selectedPlan?.id === section.id;
-
-    return (
-      <TouchableOpacity
-        delayPressIn={150}
-        activeOpacity={0.8}
-        onPress={() => handleSectionChange([index])}
-        style={[
-          styles.headerContainer,
-          { marginBottom: isSelected ? 0 : hp(2) },
-          {
-            borderBottomLeftRadius: isSelected ? 0 : 8,
-            borderBottomRightRadius: isSelected ? 0 : 8,
-          },
-        ]}
-      >
-        <AnimatedLinearGradient
-          colors={
-            isSelected
-              ? colorMapping[selectedPlan?.membershipType]
-              : [Colors.referLinkBackground, Colors.referLinkBackground]
-          }
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={[styles.gradientContainer]}
-        >
-          <Text
-            style={[
-              styles.headerText,
-              { color: isSelected ? "#ffffff" : "#1f2937" },
-            ]}
-          >
-            {section.membershipType}
-          </Text>
-        </AnimatedLinearGradient>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderContent = (section) => {
-    const isSelected = selectedPlan?.membershipType === section.membershipType;
-    // make each features list
-    const features = {
-      Silver: [
-        {
-          name: "Feature - 1",
-          available: true,
-        },
-        {
-          name: "Feature - 2",
-          available: true,
-        },
-        {
-          name: "Feature - 3",
-          available: false,
-        },
-        {
-          name: "Feature - 4",
-          available: false,
-        },
-      ],
-      Gold: [
-        {
-          name: "Feature - 1",
-          available: true,
-        },
-        {
-          name: "Feature - 2",
-          available: true,
-        },
-        {
-          name: "Feature - 3",
-          available: true,
-        },
-        {
-          name: "Feature - 4",
-          available: false,
-        },
-      ],
-      Platinum: [
-        {
-          name: "Feature - 1",
-          available: true,
-        },
-        {
-          name: "Feature - 2",
-          available: true,
-        },
-        {
-          name: "Feature - 3",
-          available: true,
-        },
-        {
-          name: "Feature - 4",
-          available: true,
-        },
-      ],
-    };
-
-    return (
-      <View
-        style={[
-          styles.contentContainer,
-          {
-            marginBottom: isSelected ? hp(2) : 0,
-          },
-        ]}
-      >
-        {/* {hasMultipleDurations && (
-          <View style={styles.durationContainer}>
-            {currentPlanOptions.map((plan) => (
-              <TouchableOpacity
-                key={plan.id}
-                style={[
-                  styles.durationButton,
-                  selectedDuration === plan.duration && styles.durationButtonSelected,
-                ]}
-                // onPress={() => handleDurationSelect(plan)}
-              >
-                <Text
-                  style={[
-                    styles.durationButtonText,
-                    selectedDuration === plan.duration && styles.durationButtonTextSelected,
-                  ]}
-                >
-                  {plan.duration} Months
-                  {plan.discount > 0 && ` (-${plan.discount}%)`}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )} */}
-        {features[selectedPlan?.membershipType].map((feature, index) => (
-          <View
-            key={index}
-            style={[
-              styles.featureRow,
-              index !== features.length - 1 && styles.featureRowBorder,
-            ]}
-          >
-            <View style={styles.featureNameColumn}>
-              <Text style={styles.featureText}>{feature.name}</Text>
-            </View>
-            <View style={styles.featureStatusColumn}>
-              {feature.available ? (
-                <Text style={[styles.featureStatus, styles.featureAvailable]}>
-                  ✓
-                </Text>
-              ) : (
-                <Text style={[styles.featureStatus, styles.featureUnavailable]}>
-                  ✕
-                </Text>
-              )}
-            </View>
-          </View>
-        ))}
-      </View>
-    );
+  const handleSelectPlan = (plan) => {
+    setSelectedPlan(plan);
+    let index = 0;
+    uniquePlans.map((item, _index) => {
+      if (plan.id == item.id) index = _index;
+    });
+    const scrollTo = (wp(70) + CARD_MARGIN * 2) * index;
+    scrollRef.current.scrollTo({ x: scrollTo, y: 0, animated: true });
   };
 
   return (
     <>
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+      <Text style={[styles.heading, { marginBottom: hp(5) }]}>
+        Choose Your Plan
+      </Text>
+      <ScrollView
+        ref={scrollRef}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        contentContainerStyle={styles.scrollContent}
+        decelerationRate="fast"
+        snapToInterval={wp(30) + CARD_MARGIN * 2}
+      >
         <View style={styles.container}>
-          <Text style={styles.screenTitle}>Choose Your Plan</Text>
-          <Accordion
-            sections={uniquePlans}
-            activeSections={activeSections}
-            renderHeader={renderHeader}
-            renderContent={renderContent}
-            onChange={handleSectionChange}
-            duration={700}
-            expandMultiple={false}
-          />
+          {Object.entries(groupedPlans).map(
+            ([membershipType, membershipPlans], index) => (
+              <SubscriptionCard
+                key={membershipType}
+                membershipPlans={membershipPlans}
+                isSelected={selectedPlan?.membershipType === membershipType}
+                onSelect={handleSelectPlan}
+              />
+            )
+          )}
         </View>
       </ScrollView>
       {/* FooterComponent */}
@@ -413,7 +518,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               <View style={styles.pricingTitleView}>
                 <GradientText
                   text={selectedPlan?.membershipType}
-                  colors={colorMapping[selectedPlan?.membershipType]}
+                  colors={colorMapping[selectedPlan?.membershipType]?.gradient}
                   style={styles.footerTitleText}
                 />
                 <View
@@ -425,10 +530,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 >
                   <Text style={styles.pricingTitleText}>
                     {buttonTitle == "Upgrade now"
-                      ? `₹ ${upgradeHelper()}`
+                      ? `₹ ${pricingHelper()}`
                       : `₹ ${selectedPlan?.subscriptionFees}`}
                   </Text>
-                  {upgradeHelper() < selectedPlan?.subscriptionFees && (
+                  {pricingHelper() < selectedPlan?.subscriptionFees && (
                     <Text style={styles.discountText}>
                       ₹ {selectedPlan?.subscriptionFees}
                     </Text>
@@ -443,10 +548,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 opacity: pressed ? 0.8 : 1,
               },
               {
-                backgroundColor:
-                  membership.membershipType == selectedPlan?.membershipType
-                    ? Colors.grey.c
-                    : Colors.referLinkBackground,
+                backgroundColor: isDisabled()
+                  ? Colors.grey.c
+                  : Colors.referLinkBackground,
                 padding: 10,
                 borderRadius: 6,
                 justifyContent: "center",
@@ -454,7 +558,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               },
             ]}
             onPress={() => setPaymentSharePopUp(true)}
-            disabled={membership.membershipType == selectedPlan?.membershipType}
+            disabled={isDisabled()}
           >
             <View
               style={{
@@ -468,10 +572,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={[
                   styles.footerButtonText,
                   {
-                    color:
-                      membership.membershipType == selectedPlan?.membershipType
-                        ? Colors.grey.f0
-                        : Colors.black,
+                    color: isDisabled() ? Colors.grey.f0 : Colors.black,
                   },
                 ]}
               >
@@ -543,41 +644,145 @@ export default SubscriptionPlans;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: Colors.grey.f0,
+    backgroundColor: "#f5f5f5",
+    flexDirection: "row",
   },
-  screenTitle: {
-    fontSize: 24,
+  heading: {
+    fontSize: wp(8),
     fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+    color: "#1a1a1a",
+    fontFamily: "NunitoSans-SemiBold",
+  },
+  subheading: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "#666",
     marginBottom: 20,
-    textAlign: "center",
   },
-  headerContainer: {
-    borderRadius: 8,
-    overflow: "hidden",
-    // elevation: 5,
+  scrollContent: {
+    paddingHorizontal: wp(10),
+    paddingVertical: 10,
+  },
+  card: {
+    width: wp(70),
+    marginHorizontal: CARD_MARGIN,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    backdropFilter: "blur(12px)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 1,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+    height: hp(60),
   },
-  gradientContainer: {
-    padding: 15,
+  badge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    alignSelf: "flex-start",
+    marginBottom: 16,
   },
-  headerText: {
-    fontSize: 26,
-    textAlign: "center",
+  badgeText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1a1a1a",
+  },
+  priceContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  price: {
+    fontSize: 32,
     fontWeight: "bold",
-    textTransform: "uppercase",
+    color: "#1a1a1a",
   },
-  contentContainer: {
-    backgroundColor: Colors.white,
-    padding: 15,
-    borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 8,
+  duration: {
+    fontSize: 16,
+    color: "#666",
+    marginTop: 4,
   },
-  contentText: { fontSize: 16, color: "#333" },
+  monthlyPrice: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 4,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#e0e0e0",
+    marginVertical: 5,
+  },
+  featuresContainer: {
+    gap: 0,
+  },
+  featureTitle: {
+    fontSize: 14,
+    color: "#666",
+  },
+  featureValue: {
+    fontSize: hp(2),
+    fontWeight: "600",
+    color: "#1a1a1a",
+  },
+  highlightedValue: {
+    color: "#00A86B",
+  },
+  selectedPlanContainer: {
+    padding: 20,
+    backgroundColor: "white",
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+  },
+  durationsContainer: {
+    position: "absolute",
+    bottom:15,
+    left:15
+  },
+  durationTitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#666",
+    marginBottom: 8,
+  },
+  durationButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    gap: 8,
+  },
+  durationButton: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#007AFF",
+    backgroundColor: "white",
+  },
+  selectedDurationButton: {
+    backgroundColor: "#007AFF",
+  },
+  durationButtonText: {
+    fontSize: 12,
+    textAlign: "center",
+    color: "#007AFF",
+    fontWeight: "500",
+  },
+  selectedDurationButtonText: {
+    color: "white",
+  },
+  selectedPlanContainer: {
+    padding: 20,
+    backgroundColor: "white",
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+  },
   footerContainer: {
     backgroundColor: Colors.white,
     paddingVertical: hp(2),
@@ -639,34 +844,9 @@ const styles = StyleSheet.create({
   },
   featureRow: {
     flexDirection: "row",
-    paddingVertical: 12,
+    paddingVertical: 6,
     alignItems: "center",
-  },
-  featureRowBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.grey.f0,
-  },
-  featureNameColumn: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  featureStatusColumn: {
-    width: 40,
-    alignItems: "center",
-  },
-  featureText: {
-    fontSize: 16,
-    color: Colors.black,
-  },
-  featureStatus: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  featureAvailable: {
-    color: "#22c55e",
-  },
-  featureUnavailable: {
-    color: "#ef4444",
+    gap: wp(1),
   },
   durationContainer: {
     flexDirection: "row",

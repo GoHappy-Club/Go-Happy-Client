@@ -20,45 +20,38 @@ import { TouchableOpacity } from "react-native";
 const predefinedPackages = [
   {
     id: 1,
-    amount: 100,
     coins: 100,
-    description: "Starter Pack",
-    backgroundColor: Colors.white,
-    textColor: Colors.black,
+    title: "Starter Pack",
+    discountPercentage: 10,
   },
   {
     id: 2,
-    amount: 250,
-    coins: 275,
-    description: "Value Pack (10% Bonus)",
-    backgroundColor: Colors.white,
-    textColor: Colors.black,
+    coins: 200,
+    title: "Starter Pack",
+    discountPercentage: 10,
   },
   {
     id: 3,
-    amount: 500,
-    coins: 600,
-    description: "Super Saver Pack (20% Bonus)",
-    backgroundColor: Colors.white,
-    textColor: Colors.black,
+    coins: 300,
+    title: "Starter Pack",
+    discountPercentage: 10,
   },
   {
     id: 4,
-    amount: 1000,
-    coins: 1250,
-    description: "Mega Pack (25% Bonus)",
-    backgroundColor: Colors.white,
-    textColor: Colors.black,
+    coins: 400,
+    title: "Starter Pack",
+    discountPercentage: 10,
   },
 ];
 
-const WalletTopUp = () => {
+const WalletTopUp = ({ packages }) => {
+  const [coins, setCoins] = useState("");
   const [amount, setAmount] = useState("");
   const [payButtonLoading, setPayButtonLoading] = useState(false);
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
   const [error, setError] = useState(false);
-  const [plans, setPlans] = useState(null);
+  const [plan, setPlan] = useState(null);
 
   const inputRef = useRef();
 
@@ -96,7 +89,8 @@ const WalletTopUp = () => {
           paymentType,
           null,
           null,
-          null
+          null,
+          coins
         )
         .then((link) => {
           //prettier-ignore
@@ -129,17 +123,18 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         paymentType,
         null,
         null,
-        null
+        null,
+        coins
       );
     }
   };
 
   const validateAmount = () => {
-    if (amount.length == 0) {
+    if (coins.length == 0) {
       setError(true);
       return false;
     }
-    if (!/^\d+$/.test(amount)) {
+    if (!/^\d+$/.test(coins)) {
       setError(true);
       return false;
     }
@@ -156,8 +151,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       item.backgroundColor = Colors.white;
       item.textColor = Colors.grey.countdown;
     });
-    setPlans(selected);
-    setAmount(String(plan.coins));
+    setPlan(selected);
+    setCoins(String(plan.coins));
+    setAmount(String(plan.coins - plan.coins * (plan.discountPercentage / 100)))
   };
 
   return (
@@ -227,29 +223,33 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               <TextInput
                 ref={inputRef}
                 style={styles.paymentInput}
-                value={amount}
+                value={coins}
                 onChangeText={(text) => {
-                  setAmount(text);
+                  setCoins(text);
                 }}
                 placeholder="0"
                 keyboardType="numeric"
-                // autoFocus={true}
               />
             </TouchableOpacity>
-            <Text
-              style={{
-                marginLeft: wp(5),
-                marginBottom:wp(2),
-                color: Colors.green,
-                fontFamily: "Poppins-Regular",
-              }}
-            >
-              {amount} coins = ₹500
-            </Text>
+            {coins != "" && (
+              <Text
+                style={{
+                  marginLeft: wp(5),
+                  marginBottom: wp(2),
+                  color: Colors.green,
+                  fontFamily: "Poppins-Regular",
+                }}
+              >
+                {coins} coins = ₹{amount}
+              </Text>
+            )}
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setAmount("501")}
+                onPress={() => {
+                  setCoins("501");
+                  setAmount("501");
+                }}
               >
                 <Image
                   source={require("../../images/GoCoins.png")}
@@ -262,7 +262,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setAmount("1100")}
+                onPress={() => {
+                  setCoins("1100");
+                  setAmount("1100");
+                }}
               >
                 <Image
                   source={require("../../images/GoCoins.png")}
@@ -275,7 +278,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setAmount("2100")}
+                onPress={() => {
+                  setCoins("2100");
+                  setAmount("2100");
+                }}
               >
                 <Image
                   source={require("../../images/GoCoins.png")}
@@ -288,7 +294,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setAmount("5100")}
+                onPress={() => {
+                  setCoins("5100");
+                  setAmount("5100");
+                }}
               >
                 <Image
                   source={require("../../images/GoCoins.png")}
@@ -301,9 +310,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              disabled={amount < 1}
+              disabled={coins < 1}
               style={
-                (amount < 1 && styles.checkoutButtonDisabled) ||
+                (coins < 1 && styles.checkoutButtonDisabled) ||
                 styles.checkoutButtonEnabled
               }
               onPress={() => {
@@ -321,11 +330,11 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         <Text style={styles.orText}>OR</Text>
 
         <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
-          {predefinedPackages.map((plan, index) => (
+          {packages.map((plan, index) => (
             <View style={{ width: "50%" }} key={index}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: plan.backgroundColor,
+                  backgroundColor: Colors.beige,
                   shadowColor: Colors.black,
                   elevation: 10,
                   shadowOffset: { height: 2 },
@@ -342,11 +351,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
                   <Text style={{ fontSize: 30, color: plan.textColor }}>
-                    ₹{plan.amount}
+                    ₹{plan.coins - plan.coins * (plan.discountPercentage / 100)}
                   </Text>
-                  <Text style={{ color: plan.textColor }}>
-                    {plan.description}
-                  </Text>
+                  <Text style={{ color: plan.textColor }}>{plan.title}</Text>
                   <Text style={{ color: plan.textColor }}>
                     {plan.coins} coins
                   </Text>

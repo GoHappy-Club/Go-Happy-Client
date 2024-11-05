@@ -4,6 +4,7 @@ import {
   FlatList,
   Linking,
   Modal,
+  Pressable,
   RefreshControl,
   SafeAreaView,
   ScrollView,
@@ -18,6 +19,7 @@ import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { format, fromUnixTime } from "date-fns";
 import { Colors } from "../assets/colors/color";
 import { connect } from "react-redux";
+import { hp, wp } from "../helpers/common";
 
 class MySessions extends Component {
   constructor(props) {
@@ -68,22 +70,64 @@ class MySessions extends Component {
 
   sorry() {
     return (
-      <Text
-        h3
-        style={{
-          height: "100%",
-          marginTop: "20%",
-          alignSelf: "center",
-          textAlign: "center",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {this.props.membership && this.props.membership.membershipType == "Free"
-          ? "Sorry, Recordings are not available for Free users"
-          : "No Recordings Found 😟"}
-      </Text>
+      <>
+        <View style={{
+          height:hp(100),
+          justifyContent:"center",
+          alignItems:"center",
+        }}>
+          <Text
+            h3
+            style={{
+              marginTop: "20%",
+              alignSelf: "center",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {this.props.membership &&
+            this.props.membership.membershipType == "Free"
+              ? "Sorry😟, Recordings are not available for Free users"
+              : "No Recordings Found 😟"}
+          </Text>
+          {this.props.membership &&
+            this.props.membership.membershipType == "Free" && (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: hp(5),
+                }}
+              >
+                <Pressable
+                  style={{
+                    backgroundColor: Colors.primary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    borderRadius: 6,
+                  }}
+                  onPress={() => {
+                    this.props.navigation.navigate("SubscriptionPlans");
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: wp(5),
+                      color: Colors.white,
+                      paddingHorizontal:wp(1),
+                      paddingVertical:wp(1.5),
+                    }}
+                  >
+                    Become a member now
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+        </View>
+      </>
     );
   }
   videoPlayer(link) {

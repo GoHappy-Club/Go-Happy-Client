@@ -341,18 +341,18 @@ class HomeDashboard extends Component {
                   <Text
                     style={{
                       color: Colors.white,
-                      fontSize: wp(5),
+                      fontSize: 14,
                       paddingLeft: 4,
                       position: "absolute",
                       right: 0,
                     }}
                   >
-                    {item.cost}
+                    {item.cost}{" "} 
                     <Image
                       source={require("../images/GoCoins.png")}
                       style={{
-                        height: 20,
-                        width: 20,
+                        height: 15,
+                        width: 15,
                       }}
                     />
                   </Text>
