@@ -132,7 +132,6 @@ const SearchBar = () => {
   };
 
   const toggleSearch = () => {
-    setIsSearchActive(!isSearchActive);
     if (isSearchActive) {
       inputRef.current.blur();
     } else {
@@ -143,6 +142,7 @@ const SearchBar = () => {
       duration: 300,
       useNativeDriver: true,
     }).start();
+    setIsSearchActive(!isSearchActive);
   };
 
   const handleSearch = async (text) => {
