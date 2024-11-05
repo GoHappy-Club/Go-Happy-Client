@@ -6,6 +6,8 @@ export const Colors = {
   green: "green",
   brown: "brown",
   red: "red",
+  coinsRed:"#FF5C5C",
+  coinsGreen:"#00a67e",
   deepskyblue: "deepskyblue",
   primary: "#29BFC2",
   referPrimary: "#2bbdc3",

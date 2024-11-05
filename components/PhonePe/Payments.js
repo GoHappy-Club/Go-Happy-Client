@@ -38,7 +38,8 @@ class Payments extends Component {
     paymentType,
     orderId=null,
     tambolaTicket=null,
-    membershipId
+    membershipId,
+    coinsToGive=null
   ) {
     payload = await getPayload(
       phone,
@@ -46,7 +47,8 @@ class Payments extends Component {
       paymentType,
       orderId,
       tambolaTicket,
-      membershipId
+      membershipId,
+      coinsToGive
     );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
@@ -85,7 +87,7 @@ class Payments extends Component {
       error_handler();
     }
   }
-  phonePe(phone, amount, callback, error_handler, paymentType,orderId=null,tambolaTicket=null,membershipId) {
+  phonePe(phone, amount, callback, error_handler, paymentType,orderId=null,tambolaTicket=null,membershipId,coinsToGive=null) {
     //console.log('phonepe')
     PhonePePaymentSDK.init(
       this.state.environmentDropDownValue,
@@ -100,7 +102,8 @@ class Payments extends Component {
           callback,
           error_handler,
           paymentType,
-          membershipId
+          membershipId,
+          coinsToGive
         );
       })
       .catch((error) => {
@@ -111,8 +114,8 @@ class Payments extends Component {
       });
     //console.log(error)
   }
-  async startTransaction(phone, amount, callback, error_handler, paymentType,membershipId) {
-    payload = await getPayload(phone, amount * 100, paymentType,null,null,membershipId);
+  async startTransaction(phone, amount, callback, error_handler, paymentType,membershipId,coinsToGive) {
+    payload = await getPayload(phone, amount * 100, paymentType,null,null,membershipId,coinsToGive);
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     PhonePePaymentSDK.startTransaction(

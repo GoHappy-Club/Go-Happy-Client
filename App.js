@@ -27,7 +27,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud/config.json";
+import * as configData from "./config/local/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -160,7 +160,7 @@ export default function App() {
   const [token, setToken] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const [currentSession, setCurrentSession] = useState(null);
-  
+
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
@@ -171,7 +171,7 @@ export default function App() {
 
   useEffect(() => {
     if (
-      membership.membershipType == "Free" &&
+      membership.membershipType != "Free" &&
       membership?.freeTrialUsed == false
     ) {
       setModalType("FreeTrial");
@@ -186,28 +186,28 @@ export default function App() {
   }, [membership]);
 
   // TODO : free trial modal
-  // useEffect(() => {
-  //   if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
-  //     openGeneralModal(modalRef);
-  // }, [modalType]);
+  useEffect(() => {
+    if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
+      openGeneralModal(modalRef);
+  }, [modalType]);
 
-    // TODO : rating modal
+  // //   // TODO : rating modal
   // useEffect(() => {
   //   checkPendingFeedback(setShowRating, setCurrentSession);
   // }, []);
 
-
-  // TODO : open the rating modal
+  // // // TODO : open the rating modal
   // useEffect(() => {
-  //   ratingModalRef.current?.present();
-  // }, [showRating,currentSession]);
+  //   if (showRating == true && membership){
+  //     ratingModalRef.current?.present();}
+  // }, [showRating, currentSession, ratingModalRef.current]);
 
   useEffect(() => {
     // logic to revoke user's membership if his membershipEndDate has arrived
     const currentDate = new Date().getTime();
     const membershipEndDate = membership?.membershipEndDate;
-    
-    if (membershipEndDate && (currentDate > membershipEndDate)) {
+
+    if (membershipEndDate && currentDate > membershipEndDate) {
       const url = `${SERVER_URL}/membership/expire?phoneNumber=${profile.phoneNumber}`;
       axios
         .get(url)
@@ -575,12 +575,12 @@ export default function App() {
       )}
 
       {isConnected == true && token != false ? (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <NavigationContainer
-          linking={token == true && linking}
-          ref={navigationRef}
-        >
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <NavigationContainer
+              linking={token == true && linking}
+              ref={navigationRef}
+            >
               <BottomSheet
                 closeModal={() => closeGeneralModal()}
                 modalRef={modalRef}
@@ -596,205 +596,207 @@ export default function App() {
                 // type={modalType}
                 // cta={() => activateFreeTrial(profile)}
               />
-          <Stack.Navigator>
-            <>
-              <Stack.Screen
-                name="Login"
-                children={(props) => (
-                  <LoginScreen {...props} propProfile={profile} />
-                )}
-                options={{
-                  headerLeft: () => <View />,
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="GoHappy Club"
-                children={(props) => (
-                  <BottomNavigator {...props} propProfile={profile} />
-                )}
-                options={{
-                  header: (props) => <Header {...props} />,
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  headerShadowVisible: true,
-                }}
-              />
-              <Stack.Screen
-                name="Session Details"
-                children={(props) => (
-                  <HomeDetailsScreen
-                    {...props}
-                    propProfile={profile}
-                    copilotEvents={copilotEvents}
+              <Stack.Navigator>
+                <>
+                  <Stack.Screen
+                    name="Login"
+                    children={(props) => (
+                      <LoginScreen {...props} propProfile={profile} />
+                    )}
+                    options={{
+                      headerLeft: () => <View />,
+                      headerShown: false,
+                    }}
                   />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="Membership Details"
-                // component={MembershipScreen}
-                children={(props) => (
-                  <MembershipScreen {...props} propProfile={profile} />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="Additional Details"
-                // component={AdditionalDetails}
-                children={(props) => (
-                  <AdditionalDetails {...props} propProfile={profile} />
-                )}
-                options={{
-                  headerLeft: () => <View />,
-                  headerTransparent: true,
-                  title: null,
-                  headerShadowVisible: false,
-                }}
-              />
-              <Stack.Screen
-                name="About GoHappy Club"
-                // component={About}
-                children={(props) => <About {...props} propProfile={profile} />}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("MyProfile")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="PastSessions"
-                // component={About}
-                children={(props) => (
-                  <MySessionsScreen {...props} propProfile={profile} />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("MyProfile")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="Trips"
-                // component={HomeDetailsScreen}
-                children={(props) => (
-                  <TripsScreen {...props} propProfile={profile} />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("OverviewScreen")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="TripDetails"
-                // component={HomeDetailsScreen}
-                children={(props) => (
-                  <TripDetailsScreen {...props} propProfile={profile} />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("Trips")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="MyProfile"
-                children={(props) => (
-                  <MyProfile {...props} propProfile={profile} />
-                )}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
-                    <TouchableOpacity
-                      style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
-                      underlayColor={Colors.white}
-                    >
-                      <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="SubscriptionPlans"
-                children={(props) => <SubscriptionScreen />}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
+                  <Stack.Screen
+                    name="GoHappy Club"
+                    children={(props) => (
+                      <BottomNavigator {...props} propProfile={profile} />
+                    )}
+                    options={{
+                      header: (props) => <Header {...props} />,
+                      elevation: 0,
+                      shadowOpacity: 0,
+                      headerShadowVisible: true,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Session Details"
+                    children={(props) => (
+                      <HomeDetailsScreen
+                        {...props}
+                        propProfile={profile}
+                        copilotEvents={copilotEvents}
+                      />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("GoHappy Club")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Membership Details"
+                    // component={MembershipScreen}
+                    children={(props) => (
+                      <MembershipScreen {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("GoHappy Club")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Additional Details"
+                    // component={AdditionalDetails}
+                    children={(props) => (
+                      <AdditionalDetails {...props} propProfile={profile} />
+                    )}
+                    options={{
+                      headerLeft: () => <View />,
+                      headerTransparent: true,
+                      title: null,
+                      headerShadowVisible: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="About GoHappy Club"
+                    // component={About}
+                    children={(props) => (
+                      <About {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("MyProfile")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="PastSessions"
+                    // component={About}
+                    children={(props) => (
+                      <MySessionsScreen {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("MyProfile")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Trips"
+                    // component={HomeDetailsScreen}
+                    children={(props) => (
+                      <TripsScreen {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("OverviewScreen")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="TripDetails"
+                    // component={HomeDetailsScreen}
+                    children={(props) => (
+                      <TripDetailsScreen {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("Trips")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="MyProfile"
+                    children={(props) => (
+                      <MyProfile {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.navigate("GoHappy Club")}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="SubscriptionPlans"
+                    children={(props) => <SubscriptionScreen />}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
                         // <TouchableOpacity
                         //   style={styles.newBackButton}
                         //   onPress={() =>
@@ -807,7 +809,7 @@ export default function App() {
                         //   <Text style={styles.newBackText}>Back</Text>
                         // </TouchableOpacity>
 
-                    <TouchableOpacity
+                        <TouchableOpacity
                           style={styles.backButton}
                           onPress={() =>
                             navigation.canGoBack()
@@ -817,21 +819,21 @@ export default function App() {
                           underlayColor={Colors.white}
                         >
                           <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                  presentation: "modal",
-                  animation: "slide_from_bottom",
-                })}
-              />
-              <Stack.Screen
-                name="WalletScreen"
-                children={(props) => <WalletScreen />}
-                options={({ navigation }) => ({
-                  headerTransparent: true,
-                  title: null,
-                  headerBackTitle: "back",
-                  headerLeft: () => (
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      presentation: "modal",
+                      animation: "slide_from_bottom",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="WalletScreen"
+                    children={(props) => <WalletScreen />}
+                    options={({ navigation }) => ({
+                      headerTransparent: true,
+                      title: null,
+                      headerBackTitle: "back",
+                      headerLeft: () => (
                         // <TouchableOpacity
                         //   style={styles.newBackButton}
                         //   onPress={() => navigation.navigate("GoHappy Club")}
@@ -839,27 +841,27 @@ export default function App() {
                         //   <ChevronLeft size={wp(10)} color={Colors.black} />
                         //   <Text style={styles.newBackText}>Back</Text>
                         // </TouchableOpacity>
-                    <TouchableOpacity
+                        <TouchableOpacity
                           style={styles.backButton}
-                      onPress={() => navigation.navigate("GoHappy Club")}
+                          onPress={() => navigation.navigate("GoHappy Club")}
                           underlayColor={Colors.white}
-                    >
+                        >
                           <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="TopUpScreen"
-                children={(props) => <TopUpScreen />}
-                options={({ navigation }) => ({
-                  title: null,
-                  headerBackTitle: "back",
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="TopUpScreen"
+                    children={(props) => <TopUpScreen />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
                       headerStyle: {
                         backgroundColor: Colors.grey.f0,
-                  },
-                  headerLeft: () => (
+                      },
+                      headerLeft: () => (
                         // <TouchableOpacity
                         //   style={styles.newBackButton}
                         //   onPress={() => navigation.goBack()}
@@ -867,38 +869,38 @@ export default function App() {
                         //   <ChevronLeft size={wp(10)} color={Colors.black} />
                         //   <Text style={styles.newBackText}>Back</Text>
                         // </TouchableOpacity>
-                    <TouchableOpacity
+                        <TouchableOpacity
                           style={styles.backButton}
-                      onPress={() => navigation.goBack()}
+                          onPress={() => navigation.goBack()}
                           underlayColor={Colors.white}
-                    >
+                        >
                           <Text style={styles.backText}>back</Text>
-                    </TouchableOpacity>
-                  ),
-                  headerShadowVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="PaymentFailed"
-                children={(props) => <PaymentFailed />}
-                options={({ navigation }) => ({
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="PaymentFailed"
+                    children={(props) => <PaymentFailed />}
+                    options={({ navigation }) => ({
                       headerShown: false,
                       animation: "slide_from_right",
-                })}
-              />
-              <Stack.Screen
-                name="PaymentSuccessful"
-                children={(props) => <PaymentSuccessful />}
-                options={({ navigation }) => ({
+                    })}
+                  />
+                  <Stack.Screen
+                    name="PaymentSuccessful"
+                    children={(props) => <PaymentSuccessful />}
+                    options={({ navigation }) => ({
                       headerShown: false,
                       animation: "slide_from_right",
-                })}
-              />
-            </>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+                    })}
+                  />
+                </>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       ) : (
         <Video
           source={require("./images/logo_splash.mp4")}

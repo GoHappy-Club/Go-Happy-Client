@@ -14,8 +14,10 @@ import { useSelector } from "react-redux";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import TransactionHistory from "./TransactionHistory";
+import { ScrollView } from "react-native";
 
-const Wallet = () => {
+const Wallet = ({ transactions }) => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
 
   const membership = useSelector((state) => state.membership.membership);
@@ -23,62 +25,77 @@ const Wallet = () => {
 
   return (
     <>
-      <View
+      <ScrollView
         style={{
+          backgroundColor: Colors.white,
+          height: hp(100),
+        }}
+        contentContainerStyle={{
           paddingTop: hp(8),
           alignItems: "center",
+          minHeight:"100%"
+          // flex:1
         }}
       >
-        <SubscriptionCard />
-        <View style={styles.coinsContainer}>
-          {/* Inner Container with Text and Image */}
-          <View style={styles.innerContainer}>
-            <View style={{ justifyContent: "center" }}>
-              <Text style={styles.titleText}>Happy Coins</Text>
-              <Text
-                style={[
-                  styles.coinsText,
-                  {
-                    color:
-                      membership.membershipType !== "Free"
-                        ? Colors.black
-                        : Colors.grey.countdown,
-                  },
-                ]}
-              >
-                {membership.coins}
-              </Text>
-            </View>
-
-            <Image
-              source={require("../../images/GoCoins.png")}
-              style={styles.coinImage}
-            />
-          </View>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-            onPress={() => {
-              if (membership.membershipType === "Free") {
-                navigation.navigate("SubscriptionPlans");
-                return;
-              }
-              navigation.navigate("TopUpScreen");
+          <View
+            style={{
+              paddingHorizontal: wp(7),
+              width: "100%",
             }}
           >
-            <View style={styles.buttonContent}>
+            <SubscriptionCard />
+          </View>
+          <View style={styles.coinsContainer}>
+            {/* Inner Container with Text and Image */}
+            <View style={styles.innerContainer}>
+              <View style={{ justifyContent: "center" }}>
+                <Text style={styles.titleText}>Happy Coins</Text>
+                <Text
+                  style={[
+                    styles.coinsText,
+                    {
+                      color:
+                        membership.membershipType !== "Free"
+                          ? Colors.black
+                          : Colors.grey.countdown,
+                    },
+                  ]}
+                >
+                  {membership.coins}
+                </Text>
+              </View>
+
               <Image
                 source={require("../../images/GoCoins.png")}
-                style={styles.buttonImage}
+                style={styles.coinImage}
               />
-              <Text style={styles.buttonText}>Add More Happy Coins</Text>
             </View>
-          </Pressable>
-        </View>
-      </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+              onPress={() => {
+                if (membership.membershipType === "Free") {
+                  navigation.navigate("SubscriptionPlans");
+                  return;
+                }
+                navigation.navigate("TopUpScreen");
+              }}
+            >
+              <View style={styles.buttonContent}>
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={styles.buttonImage}
+                />
+                <Text style={styles.buttonText}>Add More Happy Coins</Text>
+              </View>
+            </Pressable>
+          </View>
+          <TransactionHistory transactions={transactions} />
+          {/* <TransactionHistory transactions={transactions}/> */}
+      </ScrollView>
       {nonMemberPopUp && (
         <AwesomeAlert
           show={nonMemberPopUp}

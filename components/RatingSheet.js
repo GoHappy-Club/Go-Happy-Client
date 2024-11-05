@@ -62,7 +62,7 @@ const SessionRatingSheet = ({
     >
       <Icon
         size={28}
-        color={selectedRating === rating ? Colors.primary : "#666"}
+        color={selectedRating === rating ? Colors.white : "#666"}
         style={styles.icon}
       />
     </TouchableOpacity>
@@ -91,7 +91,7 @@ const SessionRatingSheet = ({
         </TouchableOpacity>
 
         <View style={styles.contentContainer}>
-          <Text style={styles.ratingTitle}>Rate your session</Text>
+          <Text style={styles.ratingTitle}>Drop your review</Text>
           <View style={styles.sessionContainer}>
             <Image
               source={{
@@ -109,6 +109,7 @@ const SessionRatingSheet = ({
             {renderEmoji(Meh, 2)}
             {renderEmoji(Smile, 3)}
             {renderEmoji(SmilePlus, 4)}
+            {renderEmoji(SmilePlus, 5)}
           </View>
 
           <TouchableOpacity
@@ -182,21 +183,23 @@ const styles = StyleSheet.create({
   },
   emojiRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    gap:0,
     marginBottom: 32,
     paddingHorizontal: 12,
   },
   emojiContainer: {
     padding: 16,
     borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: "#E0E0E0",
+    // borderWidth: 1.5,
+    // borderColor: "#E0E0E0",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
   },
   selectedEmoji: {
-    borderColor: Colors.primary,
-    backgroundColor: "#F0F8FF",
+    borderColor: Colors.white,
+    // backgroundColor: "#F0F8FF",
+    backgroundColor:Colors.primary
   },
   submitButton: {
     padding: 16,
