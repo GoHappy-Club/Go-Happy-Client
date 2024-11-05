@@ -100,7 +100,10 @@ class Membership extends Component {
         payButtonLoading: false,
         success: true
       });
-      _this.props.navigation.navigate("GoHappy Club");
+      _this.props.navigation.navigate("PaymentSuccessful",{
+        type:"normal",
+        navigateTo:"MembershipScreen"
+      });
     };
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
@@ -111,7 +114,11 @@ class Membership extends Component {
         clickPopup: false,
         payButtonLoading: false,
       });
-      this.setState({ showPaymentAlert: true });
+      // this.setState({ showPaymentAlert: true });
+      _this.props.navigation.navigate("PaymentFailed",{
+        type:"normal",
+        navigateTo:""
+      });
     };
     //console.log('propro',this.props.profile)
     if (type == "share") {

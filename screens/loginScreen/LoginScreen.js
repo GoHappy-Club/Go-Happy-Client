@@ -108,6 +108,8 @@ class LoginScreen extends Component {
     membershipStartDate,
     membershipEndDate,
     coins,
+    vouchers,
+    freeTrialUsed,
   }) {
     let { membership, actions } = this.props;
 
@@ -117,6 +119,8 @@ class LoginScreen extends Component {
       membershipStartDate: membershipStartDate,
       membershipEndDate: membershipEndDate,
       coins: coins,
+      vouchers: vouchers,
+      freeTrialUsed: freeTrialUsed,
     };
     actions.setMembership(membership);
   }
@@ -389,7 +393,8 @@ class LoginScreen extends Component {
           "membershipEndDate"
         );
         const coins = await AsyncStorage.getItem("coins");
-
+        const vouchers = await AsyncStorage.getItem("vouchers");
+        const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
         this.setProfile(
           name,
           email,
@@ -405,11 +410,13 @@ class LoginScreen extends Component {
           age
         );
         this.setMembership({
-          membershipType,
-          id,
-          membershipStartDate,
-          membershipEndDate,
-          coins,
+          membershipType: membershipType,
+          id: id,
+          membershipStartDate: membershipStartDate,
+          membershipEndDate: membershipEndDate,
+          coins: coins,
+          vouchers: vouchers,
+          freeTrialUsed: freeTrialUsed
         });
 
         axios
@@ -418,12 +425,43 @@ class LoginScreen extends Component {
             phone: phoneNumber,
           })
           .then((response) => {
+            AsyncStorage.setItem(
+              "freeTrialActive",
+              String(response.data.freeTrialActive)
+            );
+            AsyncStorage.setItem(
+              "membershipType",
+              response.data.membershipType
+            );
+            AsyncStorage.setItem(
+              "membershipStartDate",
+              String(response.data?.membershipStartDate)
+            );
+            AsyncStorage.setItem(
+              "membershipEndDate",
+              String(response.data?.membershipEndDate)
+            );
+            AsyncStorage.setItem(
+              "coins",
+              String(response.data?.coins)
+            );
+            AsyncStorage.setItem(
+              "vouchers",
+              JSON.stringify(response.data?.vouchers)
+            );
+            AsyncStorage.setItem(
+              "freeTrialUsed",
+              String(response.data?.freeTrialUsed)
+            );
+
             this.setMembership({
-              membershipType: response.data.membership.membershipType,
-              id: response.data.membership.id,
-              membershipStartDate: response.data.membership.membershipStartDate,
-              membershipEndDate: response.data.membership.membershipEndDate,
-              coins: response.data.membership.coins,
+              membershipType: response.data.membershipType,
+              id: response.data.id,
+              membershipStartDate: response.data?.membershipStartDate,
+              membershipEndDate: response.data?.membershipEndDate,
+              coins: response.data.coins,
+              vouchers: response.data?.vouchers,
+              freeTrialUsed: response.data?.freeTrialUsed
             });
           })
           .catch((error) => {
@@ -439,7 +477,6 @@ class LoginScreen extends Component {
           emergencyContact: emergencyContact,
         });
         return;
-        // }
       }
       this.setState({ loader: false });
     } catch (error) {}
@@ -467,102 +504,112 @@ class LoginScreen extends Component {
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           this.setProfile(
-            response.data.user.name,
-            response.data.user.email,
-            response.data.user.phone,
-            response.data.user.profileImage,
+            response.data.name,
+            response.data.email,
+            response.data.phone,
+            response.data.profileImage,
             token,
-            response.data.user.sessionsAttended,
-            // response.data.user.dob,
-            response.data.user.dateOfJoining,
-            response.data.user.selfInviteCode,
-            response.data.user.city,
-            response.data.user.emergencyContact,
+            response.data.sessionsAttended,
+            // response.data.dob,
+            response.data.dateOfJoining,
+            response.data.selfInviteCode,
+            response.data.city,
+            response.data.emergencyContact,
             this.state.fcmToken,
-            response.data.user.age
+            response.data.age
           );
           this.setMembership({
-            membershipType: response.data.membership.membershipType,
-            id: response.data.membership.id,
-            membershipStartDate: response.data.membership.membershipStartDate,
-            membershipEndDate: response.data.membership.membershipEndDate,
-            coins: response.data.membership.coins,
+            membershipType: response.data.membershipType,
+            id: response.data.id,
+            membershipStartDate: response.data.membershipStartDate,
+            membershipEndDate: response.data.membershipEndDate,
+            coins: response.data.coins,
+            vouchers: response.data?.vouchers,
+            freeTrialUsed: response.data?.freeTrialUsed,
           });
-          if (response.data.user.phone != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.user.phone);
+          if (response.data.phone != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.phone);
           }
-          if (response.data.user.name != null) {
-            AsyncStorage.setItem("name", response.data.user.name);
+          if (response.data.name != null) {
+            AsyncStorage.setItem("name", response.data.name);
           }
-          if (response.data.user.email != null) {
-            AsyncStorage.setItem("email", response.data.user.email);
+          if (response.data.email != null) {
+            AsyncStorage.setItem("email", response.data.email);
           }
-          if (response.data.user.emergencyContact != null) {
+          if (response.data.emergencyContact != null) {
             AsyncStorage.setItem(
               "emergencyContact",
-              response.data.user.emergencyContact
+              response.data.emergencyContact
             );
           }
-          if (response.data.user.city != null) {
-            AsyncStorage.setItem("city", response.data.user.city);
+          if (response.data.city != null) {
+            AsyncStorage.setItem("city", response.data.city);
           }
-          if (response.data.user.profileImage != null) {
+          if (response.data.profileImage != null) {
             AsyncStorage.setItem(
               "profileImage",
-              response.data.user.profileImage
+              response.data.profileImage
             );
           }
           AsyncStorage.setItem("token", token);
           AsyncStorage.setItem(
             "sessionsAttended",
-            response.data.user.sessionsAttended
+            response.data.sessionsAttended
           );
           AsyncStorage.setItem(
             "dateOfJoining",
-            response.data.user.dateOfJoining
+            response.data.dateOfJoining
           );
           AsyncStorage.setItem(
             "selfInviteCode",
-            response.data.user.selfInviteCode
+            response.data.selfInviteCode
           );
-          AsyncStorage.setItem("age", response.data.user.age);
+          AsyncStorage.setItem("age", response.data.age);
 
           // store membership details in async storage
           AsyncStorage.setItem(
             "membershipType",
-            response.data.membership.membershipType
+            response.data.membershipType
           );
-          AsyncStorage.setItem("membershipId", response.data.membership.id);
-          if (response.data.membership.membershipStartDate != null)
+          AsyncStorage.setItem("membershipId", response.data.id);
+          if (response.data.membershipStartDate != null)
             AsyncStorage.setItem(
               "membershipStartDate",
-              response.data.membership.membershipStartDate
+              response.data.membershipStartDate
             );
-          if (response.data.membership.membershipEndDate != null)
+          if (response.data.membershipEndDate != null)
             AsyncStorage.setItem(
               "membershipEndDate",
-              response.data.membership.membershipEndDate
+              response.data.membershipEndDate
             );
-          AsyncStorage.setItem("coins", String(response.data.membership.coins));
+          AsyncStorage.setItem("coins", String(response.data.coins));
+          AsyncStorage.setItem(
+            "vouchers",
+            JSON.stringify(response.data?.vouchers)
+          );
+          AsyncStorage.setItem(
+            "freeTrialUsed",
+            String(response.data.freeTrialUsed)
+          );
 
           this.setState({
-            name: response.data.user.name,
-            email: response.data.user.email,
-            phoneNumber: response.data.user.phone,
-            city: response.data.user.city,
-            emergencyContact: response.data.user.emergencyContact,
-            // dob: response.data.user.dob,
+            name: response.data.name,
+            email: response.data.email,
+            phoneNumber: response.data.phone,
+            city: response.data.city,
+            emergencyContact: response.data.emergencyContact,
+            // dob: response.data.dob,
           });
-          if (this.pending(response.data.user.name, response.data.user.phone)) {
+          if (this.pending(response.data.name, response.data.phone)) {
             this.props.navigation.replace("Additional Details", {
               navigation: this.props.navigation,
-              email: response.data.user.email,
-              phoneNumber: response.data.user.phone,
-              name: response.data.user.name,
+              email: response.data.email,
+              phoneNumber: response.data.phone,
+              name: response.data.name,
               state: this.state.state,
-              city: response.data.user.city,
-              emergencyContact: response.data.user.emergencyContact,
-              // dob: response.data.user.dob,
+              city: response.data.city,
+              emergencyContact: response.data.emergencyContact,
+              // dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
             return;
