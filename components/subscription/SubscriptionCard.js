@@ -198,8 +198,8 @@ const SubscriptionCard = () => {
 
 const styles = StyleSheet.create({
   card: {
-    width: wp(70),
-    height: hp(20),
+    width: "100%",
+    height: hp(23),
     borderRadius: 10,
     padding: 20,
     borderWidth: 1,

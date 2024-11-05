@@ -15,7 +15,8 @@ const PaymentFailed = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { type, navigateTo } = route?.params;
+  // type -> normal, empty for subscription
+  const { type , navigateTo } = route?.params;
 
   if (type == "normal")
     return (

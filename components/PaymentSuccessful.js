@@ -14,11 +14,12 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [timer, setTimer] = useState(7);
+  const [timer, setTimer] = useState(8);
 
   const timerRef = useRef();
   const timingRef = useRef();
 
+  // type -> normal, empty for subscription
   const { type, navigateTo } = route?.params;
 
   useEffect(() => {
@@ -29,7 +30,6 @@ const PaymentSuccessful = () => {
     timingRef.current = setInterval(() => {
       setTimer((prev) => prev - 1);
     }, 1000);
-
 
     return () => {
       clearTimeout(timerRef.current);
