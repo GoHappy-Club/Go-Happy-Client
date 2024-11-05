@@ -36,14 +36,10 @@ export const checkPendingFeedback = async (
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
     const parsedSessions = sessions ? JSON.parse(sessions) : [];
-
     const sessionNeedingFeedback = parsedSessions.filter(
       (session) => session.hasGivenFeedback == false
     );
-    console.log("NEeding==>",sessionNeedingFeedback);
-    
-    if (sessionNeedingFeedback) {
-      console.log("setting true");
+    if (sessionNeedingFeedback.length>0) {
       setCurrentSession(sessionNeedingFeedback);
       setShowRating(true);
     }
@@ -74,7 +70,6 @@ export const storeCompletedSession = async (
       "completedSessions",
       JSON.stringify(parsedSessions)
     );
-    console.log("Session stored successfully", parsedSessions);
   } catch (error) {
     console.error("Error storing session:", error);
   }
@@ -92,10 +87,10 @@ export const submitRating = async (
     let parsedSessions = sessions ? JSON.parse(sessions) : [];
     if (!interested) {
       parsedSessions = parsedSessions.map((session) =>
-        session.sessionId === currentSession.sessionId
-          ? { ...session, hasGivenFeedback: true }
-          : session
-      );
+        session.sessionId === currentSession[0].sessionId
+      ? { ...session, hasGivenFeedback: true }
+      : session
+    );
       await AsyncStorage.setItem(
         "completedSessions",
         JSON.stringify(parsedSessions)
@@ -104,7 +99,6 @@ export const submitRating = async (
       setCurrentSession(null);
       return;
     }
-
     parsedSessions = parsedSessions.map((session) =>
       session.sessionId === currentSession.sessionId
         ? { ...session, hasGivenFeedback: true, rating }
@@ -115,7 +109,7 @@ export const submitRating = async (
       "completedSessions",
       JSON.stringify(parsedSessions)
     );
-    await sendRatingToBackend(currentSession.sessionId, rating);
+    sendRatingToBackend(currentSession.sessionId, rating);
 
     setShowRating(false);
     setCurrentSession(null);
