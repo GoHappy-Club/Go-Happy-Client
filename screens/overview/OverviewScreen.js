@@ -132,7 +132,7 @@ class OverviewScreen extends Component {
     if (this.state.error == true) {
       return (
         <View pointerEvents={this.state.isBlocking ? "none" : "auto"}>
-          <ScrollView ref={this.scrollViewRef}>
+          <ScrollView ref={this.scrollViewRef} showsVerticalScrollIndicator={false}>
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}
