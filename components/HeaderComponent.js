@@ -19,7 +19,12 @@ import GradientText from "../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 import BottomSheet from "./BottomSheet";
 import SessionRatingSheet from "./RatingSheet";
-import { activateFreeTrial, checkPendingFeedback, submitRating } from "../services/Startup";
+import {
+  activateFreeTrial,
+  checkPendingFeedback,
+  deactivateFreeTrial,
+  submitRating,
+} from "../services/Startup";
 
 const width = Dimensions.get("window").width;
 
@@ -58,16 +63,16 @@ const Header = () => {
       openGeneralModal(modalRef);
   }, [modalType]);
 
-    // TODO : rating modal
-  useEffect(() => {
-    checkPendingFeedback(setShowRating, setCurrentSession);
-  }, []);
+  //   // TODO : rating modal
+  // useEffect(() => {
+  //   checkPendingFeedback(setShowRating, setCurrentSession);
+  // }, []);
 
-  // TODO : open the rating modal
-  useEffect(() => {
-    if (showRating == true){
-      ratingModalRef.current?.present();}
-  }, [showRating, currentSession, ratingModalRef.current]);
+  // // TODO : open the rating modal
+  // useEffect(() => {
+  //   if (showRating == true){
+  //     ratingModalRef.current?.present();}
+  // }, [showRating, currentSession, ratingModalRef.current]);
 
   const openGeneralModal = () => {
     modalRef.current?.present();
