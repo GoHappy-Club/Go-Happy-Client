@@ -39,6 +39,7 @@ const AutocompleteCityInput = ({ input, setInput }) => {
                 )
             )
           );
+          setSuggestions(cities);
         }
       } catch (error) {
         console.error("Error fetching suggestions:", error);
