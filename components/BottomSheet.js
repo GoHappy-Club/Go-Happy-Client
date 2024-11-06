@@ -68,7 +68,7 @@ const BottomSheet = ({ modalRef, closeModal, type,cta }) => {
       enableDismissOnClose={true}
       enableGestureInteraction={true}
       handleStyle={{ display: "none" }}
-      backgroundStyle={{ borderRadius: 40, backgroundColor: Colors.grey.grey }}
+      backgroundStyle={{ borderRadius: 40, backgroundColor: Colors.white }}
       backdropComponent={renderBackdrop}
       onChange={(index) => {
         if (index === -1) {

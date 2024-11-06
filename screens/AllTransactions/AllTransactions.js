@@ -21,8 +21,6 @@ const AllTransactions = () => {
             phone: profile.phoneNumber,
           }
         );
-        console.log("All transactions ==>", response.data);
-
         setTransactions(response.data);
         setLoading(false);
       } catch (error) {
@@ -33,6 +31,7 @@ const AllTransactions = () => {
 
     getAllTransactions();
   }, []);
+  
   return (
     <>
       {loading && (
