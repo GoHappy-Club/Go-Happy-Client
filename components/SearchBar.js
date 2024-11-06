@@ -92,11 +92,13 @@ const SearchBar = () => {
   }, []);
 
   useEffect(() => {
-    if (isSearchActive){
-      navigation.addListener("blur", () => {
+    const listener = navigation.addListener("blur", () => {
+      if (isSearchActive) {
         toggleSearch();
-      });}
-  }, []);
+      }
+    });
+    return () => navigation.removeListener(listener);
+  }, [isSearchActive]);
 
   const loadRecentSearches = async () => {
     try {
