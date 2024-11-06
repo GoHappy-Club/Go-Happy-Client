@@ -211,7 +211,7 @@ class HomeDashboard extends Component {
         eventId: item.id
       })
       membership.coins = response.data.coins;
-      actions.setMembership(membership);
+      actions.setMembership({...membership});
     } catch (error) {
       console.log("Error in giveRewards ==>",error);      
     }

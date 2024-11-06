@@ -26,7 +26,7 @@ const AnimatedText = () => {
         style={{
           fontSize: 24,
           fontWeight: "bold",
-          color: Colors.white,
+          color: Colors.black,
           textAlign: "center",
         }}
       />

@@ -122,7 +122,7 @@ class LoginScreen extends Component {
       vouchers: vouchers,
       freeTrialUsed: freeTrialUsed,
     };
-    actions.setMembership(membership);
+    actions.setMembership({...membership});
   }
 
   setProfile(

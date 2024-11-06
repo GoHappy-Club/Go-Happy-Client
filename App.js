@@ -59,15 +59,6 @@ import WalletScreen from "./screens/subscriptionScreen/WalletScreen.js";
 import TopUpScreen from "./screens/subscriptionScreen/TopUpScreen.js";
 import PaymentFailed from "./components/PaymentFailed.js";
 import PaymentSuccessful from "./components/PaymentSuccessful.js";
-import BottomSheet from "./components/BottomSheet.js";
-import {
-  checkFreeTrialExpired,
-  activateFreeTrial,
-  deactivateFreeTrial,
-  checkPendingFeedback,
-  submitRating,
-} from "./services/Startup.js";
-import RatingBottomSheet from "./components/RatingSheet.js";
 import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
 
 global.axios = axios;
@@ -201,7 +192,7 @@ export default function App() {
       membershipEndDate: membershipEndDate,
       coins: coins,
     };
-    dispatch(setMembership(newMembership));
+    dispatch(setMembership({...newMembership}));
   };
 
   const setNewProfile = (

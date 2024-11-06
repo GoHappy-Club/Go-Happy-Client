@@ -105,7 +105,7 @@ class HomeDetailsScreen extends Component {
             //refund coins to user's membership
             let { membership, actions } = this.props;
             membership.coins = membership.coins + this.state.event.cost;
-            actions.setMembership(membership);
+            actions.setMembership({...membership});
             
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
@@ -137,7 +137,7 @@ class HomeDetailsScreen extends Component {
               // deduct coins from user's membership data in redux
               let {membership,actions} = this.props;
               membership.coins = membership.coins - this.state.event.cost;
-              actions.setMembership(membership);
+              actions.setMembership({...membership});
 
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
