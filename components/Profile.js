@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { changeCount, setProfile } from "../redux/actions/counts.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { launchImageLibrary } from "react-native-image-picker";
+import ImagePicker from "react-native-image-crop-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Colors } from "../assets/colors/color.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -70,26 +70,24 @@ const MyProfile = ({ navigation }) => {
         if (properties && properties.length > 0) {
           const now = new Date();
           const days = Math.ceil(
-            (now.getTime() - Number(profile.dateOfJoining)) /
-              (1000 * 3600 * 24)
+            (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
           );
           if (days < 10 || Number(profile.sessionsAttended) < 5) {
-            setState(prevState => ({
+            setState((prevState) => ({
               ...prevState,
-              whatsappLink: properties[0].whatsappGroupLink[0]
+              whatsappLink: properties[0].whatsappGroupLink[0],
             }));
           } else {
-            setState(prevState => ({
+            setState((prevState) => ({
               ...prevState,
-              whatsappLink: properties[0].whatsappGroupLink[1]
+              whatsappLink: properties[0].whatsappGroupLink[1],
             }));
           }
         }
       }
     } catch (error) {
       // Handle error
-      console.log("Error in openWhatsApp:", error);;
-
+      console.log("Error in openWhatsApp:", error);
     }
   }, [profile]);
 
@@ -102,16 +100,18 @@ const MyProfile = ({ navigation }) => {
 
   const handleSelectImage = async () => {
     try {
-      var options = {
-        mediaType: "photo",
-        maxHeight: 1024,
-        maxWidth: 1024,
-        quality: 0.5,
+      const options = {
+        width: 350,
+        height: 400,
+        cropping: true,
         includeBase64: true,
+        cropperCircleOverlay: true,
+        cropperChooseColor: true,
+        freeStyleCropEnabled: true,
       };
-      launchImageLibrary(options, (response) => {
-        if (!response.didCancel && !response.error) {
-          const base64Image = `data:${response.type};base64,${response.assets[0].base64}`;
+      ImagePicker.openPicker(options)
+        .then((image) => {
+          const base64Image = `data:${image.mime};base64,${image.data}`;
           var url = SERVER_URL + "/user/updateProfileImage";
           axios
             .post(url, {
@@ -120,14 +120,12 @@ const MyProfile = ({ navigation }) => {
             })
             .then(() => {
               dispatch(setProfile({ ...profile, profileImage: base64Image }));
-              setState(prevState => ({ ...prevState, image: base64Image }));
+              setState((prevState) => ({ ...prevState, image: base64Image }));
               AsyncStorage.setItem("profileImage", base64Image);
             })
-            .catch((error) => {
-              // Handle error
-            });
-        }
-      });
+            .catch((error) => {});
+        })
+        .catch((error) => {});
     } catch (error) {
       console.log("Error in handleSelectImage:", error);
     }
@@ -243,7 +241,9 @@ const MyProfile = ({ navigation }) => {
 
           <TouchableOpacity
             style={[styles.menuItem, styles.borderBottom]}
-            onPress={() => setState(prevState => ({ ...prevState, logoutPopup: true }))}
+            onPress={() =>
+              setState((prevState) => ({ ...prevState, logoutPopup: true }))
+            }
           >
             <Text style={styles.optionList}>Logout</Text>
           </TouchableOpacity>
@@ -264,9 +264,11 @@ const MyProfile = ({ navigation }) => {
         confirmButtonColor={Colors.primary}
         cancelButtonColor={Colors.grey.grey}
         cancelText="Logout"
-        onConfirmPressed={() => setState(prevState => ({ ...prevState, logoutPopup: false }))}
+        onConfirmPressed={() =>
+          setState((prevState) => ({ ...prevState, logoutPopup: false }))
+        }
         onCancelPressed={() => {
-          setState(prevState => ({ ...prevState, logoutPopup: false }));
+          setState((prevState) => ({ ...prevState, logoutPopup: false }));
           signout();
         }}
       />
@@ -276,11 +278,7 @@ const MyProfile = ({ navigation }) => {
         <FAB
           style={styles.fab}
           icon={({ size, color }) => (
-            <FontAwesomeIcon
-              icon={faComment}
-              color={Colors.white}
-              size={25}
-            />
+            <FontAwesomeIcon icon={faComment} color={Colors.white} size={25} />
           )}
           onPress={() => Linking.openURL(state.whatsappLink)}
         />
