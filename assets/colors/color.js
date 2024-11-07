@@ -44,6 +44,7 @@ export const Colors = {
     tambola: "#ffa1d2",
     intro: "#EBC1C1",
     sessionDetails: "#eda29b",
+    aboutText:"#ff8b81"
   },
   copilotArrow:"#9FA8DA",
   upgradeBorder:"#FBC65F"

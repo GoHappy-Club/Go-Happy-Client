@@ -8,6 +8,7 @@ import { getEvent } from "../../services/events/EventService";
 import { setMembership, setProfile } from "../../redux/actions/counts";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 class HomeDetailsScreen extends Component {
   constructor(props) {
@@ -155,7 +156,6 @@ class HomeDetailsScreen extends Component {
         })
         .catch((error) => {
           crashlytics().recordError(JSON.stringify(error));
-          console.log("Error is ==>",error)
           this.error = true;
 
           return false;
@@ -166,24 +166,7 @@ class HomeDetailsScreen extends Component {
   render() {
     if (this.state.loader == true) {
       return (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
       );
     }
     const navigation = this.props.navigation;
