@@ -62,7 +62,6 @@ class HomeDashboard extends Component {
     this._retrieveData();
   }
 
-
   handleClickBook(item) {
     if (!this.isBookingAllowed(item)) return;
     // this.setState({ itemToBuy: item }, () => {
@@ -77,7 +76,7 @@ class HomeDashboard extends Component {
       this.props.membership?.membershipType == "Free"
     ) {
       // this.setState({ nonMemberPopUp: true });
-      this.props.navigation.navigate("SubscriptionPlans")
+      this.props.navigation.navigate("SubscriptionPlans");
       return false;
     } else if (
       this.props.membership &&
@@ -180,12 +179,7 @@ class HomeDashboard extends Component {
       return;
     }
     if (this.getTitle(item) == "Join") {
-      
-      await storeCompletedSession(
-        item.id,
-        item.eventName,
-        item.coverImage
-      );
+      await storeCompletedSession(item.id, item.eventName, item.coverImage);
       setSessionAttended(this.props.profile.phoneNumber);
       await Linking.openURL(item.meetingLink);
       await this.giveRewards(item);
@@ -203,18 +197,18 @@ class HomeDashboard extends Component {
     );
   }
 
-  async giveRewards(item){
-    let {membership,actions} = this.props;
+  async giveRewards(item) {
+    let { membership, actions } = this.props;
 
     try {
-      const response = await axios.post(`${SERVER_URL}/event/giveReward`,{
+      const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
         phone: this.props.profile.phoneNumber,
-        eventId: item.id
-      })
+        eventId: item.id,
+      });
       membership.coins = response.data.coins;
-      actions.setMembership({...membership});
+      actions.setMembership({ ...membership });
     } catch (error) {
-      console.log("Error in giveRewards ==>",error);      
+      console.log("Error in giveRewards ==>", error);
     }
   }
 
@@ -364,7 +358,7 @@ class HomeDashboard extends Component {
                       right: 0,
                     }}
                   >
-                    {item.cost}{" "} 
+                    {item.cost}{" "}
                     <Image
                       source={require("../images/GoCoins.png")}
                       style={{

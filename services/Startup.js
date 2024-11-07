@@ -39,10 +39,20 @@ export const checkPendingFeedback = async (
     const sessionNeedingFeedback = parsedSessions.filter(
       (session) => session.hasGivenFeedback == false
     );
-    if (sessionNeedingFeedback.length>0) {
-      setCurrentSession(sessionNeedingFeedback);
+
+    if (sessionNeedingFeedback.length > 0) {
+      setCurrentSession(sessionNeedingFeedback[0]);
       setShowRating(true);
     }
+    // remove older sessions
+    const currentTime = new Date().getTime();
+    const updatedSessions = parsedSessions.filter(
+      (session) => currentTime - session.timestamp < 24 * 60 * 60 * 1000
+    );
+    await AsyncStorage.setItem(
+      "completedSessions",
+      JSON.stringify(updatedSessions)
+    );
   } catch (error) {
     console.error("Error checking feedback:", error);
   }
@@ -63,6 +73,7 @@ export const storeCompletedSession = async (
       sessionId,
       sessionName,
       sessionImage,
+      timestamp: new Date().getTime(),
       hasGivenFeedback: false,
     });
 
@@ -79,7 +90,7 @@ export const submitRating = async (
   currentSession,
   setCurrentSession,
   setShowRating,
-  rating,
+  rating=0,
   interested = true
 ) => {
   try {
@@ -87,10 +98,10 @@ export const submitRating = async (
     let parsedSessions = sessions ? JSON.parse(sessions) : [];
     if (!interested) {
       parsedSessions = parsedSessions.map((session) =>
-        session.sessionId === currentSession[0].sessionId
-      ? { ...session, hasGivenFeedback: true }
-      : session
-    );
+        session.sessionId === currentSession.sessionId
+          ? { ...session, hasGivenFeedback: true, rating }
+          : session
+      );
       await AsyncStorage.setItem(
         "completedSessions",
         JSON.stringify(parsedSessions)
@@ -110,14 +121,12 @@ export const submitRating = async (
       JSON.stringify(parsedSessions)
     );
     sendRatingToBackend(currentSession.sessionId, rating);
-
     setShowRating(false);
-    setCurrentSession(null);
   } catch (error) {
     console.error("Error submitting rating:", error);
   }
 };
 
-const sendRatingToBackend=()=>{
-  console.log("Rating saved in BE")
-}
+const sendRatingToBackend = () => {
+  console.log("Rating saved in BE");
+};

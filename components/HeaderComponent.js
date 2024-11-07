@@ -12,6 +12,7 @@ import {
   Pressable,
   Animated,
   Easing,
+  AppState,
 } from "react-native";
 import { Colors } from "../assets/colors/color";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,7 @@ import {
   deactivateFreeTrial,
   submitRating,
 } from "../services/Startup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("window").width;
 
@@ -40,6 +42,22 @@ const Header = () => {
 
   const modalRef = useRef();
   const ratingModalRef = useRef();
+  const [appState, setAppState] = useState(AppState.currentState);
+
+  useEffect(() => {
+    checkPendingFeedback(setShowRating, setCurrentSession);
+
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (appState.match(/inactive|background/) && nextAppState === "active") {
+        checkPendingFeedback(setShowRating, setCurrentSession);
+      }
+      setAppState(nextAppState);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
 
   useEffect(() => {
     if (
@@ -63,16 +81,17 @@ const Header = () => {
       openGeneralModal(modalRef);
   }, [modalType]);
 
-  //   // TODO : rating modal
+  // TODO : rating modal
   // useEffect(() => {
   //   checkPendingFeedback(setShowRating, setCurrentSession);
   // }, []);
 
-  // // TODO : open the rating modal
-  // useEffect(() => {
-  //   if (showRating == true){
-  //     ratingModalRef.current?.present();}
-  // }, [showRating, currentSession, ratingModalRef.current]);
+  // TODO : open the rating modal
+  useEffect(() => {
+    if (showRating == true) {
+      ratingModalRef.current?.present();
+    }
+  }, [showRating, currentSession, ratingModalRef.current]);
 
   const openGeneralModal = () => {
     modalRef.current?.present();
@@ -143,6 +162,16 @@ const Header = () => {
           ratingModalRef.current?.dismiss();
         }}
         currentSession={currentSession}
+        submitRating={() => {
+          submitRating(
+            currentSession,
+            setCurrentSession,
+            setShowRating,
+            0,
+            true
+          );
+          ratingModalRef.current?.dismiss();
+        }}
       />
       <View style={styles.header}>
         <Pressable style={styles.userInfo} onPress={handleNavigate}>

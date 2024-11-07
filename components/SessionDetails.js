@@ -33,6 +33,8 @@ import { connect } from "react-redux";
 import { Colors } from "../assets/colors/color.js";
 import { wp } from "../helpers/common.js";
 import { storeCompletedSession } from "../services/Startup.js";
+import { bindActionCreators } from "redux";
+import { setMembership, setProfile } from "../redux/actions/counts.js";
 
 class SessionDetails extends Component {
   constructor(props) {
@@ -104,7 +106,7 @@ class SessionDetails extends Component {
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
-      (title != "Join" && this.props.event.costType == "paid" &&
+      (title == "Cancel Your Booking" && this.props.event.costType == "paid" &&
         this.props.event.startTime - new Date().getTime() < 60 * 60 * 1000)
     ) {
       return true;
@@ -174,7 +176,7 @@ class SessionDetails extends Component {
     }
     return false;
   }
-  sessionAction() {
+  async sessionAction () {
     crashlytics().log(
       JSON.stringify(this.getTitle()) +
         JSON.stringify(this.props.alreadyBookedSameDayEvent)
@@ -195,18 +197,33 @@ class SessionDetails extends Component {
       return;
     }
     if (this.getTitle() === "Join") {
-      storeCompletedSession(
+      await storeCompletedSession(
         this.props.event.id,
         this.props.event.eventName,
         this.props.event.coverImage
       );
       setSessionAttended(this.props.phoneNumber);
-      Linking.openURL(this.props.event.meetingLink);
+      await Linking.openURL(this.props.event.meetingLink);
+      await this.giveRewards();
       return;
     }
 
     var output = this.props.sessionAction("book");
     this.setState({ loadingButton: true });
+  }
+  async giveRewards(item) {
+    let { membership, actions } = this.props;
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
+        phone: this.props.profile.phoneNumber,
+        eventId: this.props.event.id,
+      });
+      membership.coins = response.data.coins;
+      actions.setMembership({ ...membership });
+    } catch (error) {
+      console.log("Error in giveRewards ==>", error);
+    }
   }
 
   isBookingAllowed() {
@@ -1028,5 +1045,8 @@ const mapStateToProps = (state) => ({
   profile: state.profile.profile,
   membership: state.membership.membership,
 });
-
-export default connect(mapStateToProps)(SessionDetails);
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+export default connect(mapStateToProps,mapDispatchToProps)(SessionDetails);
