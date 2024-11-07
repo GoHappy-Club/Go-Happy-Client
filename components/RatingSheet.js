@@ -83,6 +83,7 @@ const SessionRatingSheet = ({
       backgroundStyle={{ borderRadius: 24 }}
       backdropComponent={renderBackdrop}
       onChange={(index) => {
+        setSelectedRating(0);
         if (index === -1) {
           closeModal();
         }
@@ -98,7 +99,7 @@ const SessionRatingSheet = ({
           <View style={styles.sessionContainer}>
             {/* <Image
               source={{
-                uri: currentSession && currentSession[0]?.sessionImage,
+                uri: currentSession?.sessionImage,
               }}
               style={styles.sessionImage}
             /> */}
@@ -120,11 +121,11 @@ const SessionRatingSheet = ({
                 You recently attended
               </Text>
               <Text style={styles.sessionName}>
-                {currentSession && currentSession[0]?.sessionName}
+                {currentSession?.sessionName}
               </Text>
             </View>
             {/* <Text style={styles.sessionName} numberOfLines={2}>
-              {currentSession && currentSession[0]?.sessionName}
+              {currentSession?.sessionName}
             </Text> */}
             <Text
               style={{

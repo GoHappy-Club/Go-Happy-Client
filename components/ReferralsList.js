@@ -155,15 +155,14 @@ export default class ReferralsList extends React.Component {
             <Text style={styles.label1}>{currentCount}/7</Text>
           </View>
         </View>
-        <View style={styles.statusListContainer}>
-          <ScrollView contentContainerStyle={styles.referralsList}>
-            {/* <View style={{ flex: 2 }}> */}
-            <FlatList
-              data={this.props.referrals}
-              renderItem={({ item }) => <ReferredProfileItem item={item} />}
-            />
-            {/* </View> */}
-          </ScrollView>
+        <View style={{ paddingTop: 10, height: "100%",paddingBottom:30 }}>
+          <FlatList
+            data={this.props.referrals}
+            renderItem={({ item }) => <ReferredProfileItem item={item} />}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={{ paddingBottom: 20 }}
+          />
         </View>
       </SafeAreaView>
     );
@@ -211,9 +210,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     marginRight: 10,
-    flex: 1,
+    // flex: 1,
     flexDirection: "row",
     justifyContent: "center",
+    backgroundColor: "red",
   },
   divider: {
     borderTopWidth: 0.5,
@@ -269,7 +269,10 @@ const styles = StyleSheet.create({
   },
   statusListContainer: {
     width: screenWidth * 0.9,
+    // flex:1,
+    height: "100%",
     borderRadius: 20,
+    backgroundColor: "red",
     // borderTopWidth: 0.5,
     // borderColor: Colors.grey.grey,
   },

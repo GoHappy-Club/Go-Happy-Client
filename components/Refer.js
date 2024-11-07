@@ -12,7 +12,11 @@ import {
   BackHandler,
   useWindowDimensions,
 } from "react-native";
-import { BottomSheet, ListItem, Text, Button } from "react-native-elements";
+import { Text } from "react-native-elements";
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../redux/actions/counts";
 import { bindActionCreators } from "redux";
@@ -27,6 +31,8 @@ import toUnicodeVariant from "./toUnicodeVariant.js";
 import ReferralsList from "./ReferralsList";
 import { FlatList } from "react-native-gesture-handler";
 import { Colors } from "../assets/colors/color.js";
+import { X } from "lucide-react-native";
+import { wp } from "../helpers/common.js";
 const screenWidth = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
@@ -54,6 +60,8 @@ class Refer extends Component {
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
     };
     this._retrieveData();
+    this.conditionsBottomSheetRef = React.createRef();
+    this.referralsBottomSheetRef = React.createRef();
   }
 
   shareMessage = () => {
@@ -102,15 +110,10 @@ class Refer extends Component {
   _onRefresh() {
     this.setState({ refreshing: true });
     var _this = this;
-    this.props.loadMySessions("", function () {
-      _this.setState({ refreshing: false });
-    });
+    // this.props.loadMySessions("", function () {
+    //   _this.setState({ refreshing: false });
+    // });
   }
-  // Item = ({ title }) => (
-  //   <View style={styles.item}>
-  //     <Text style={styles.title}>{title}</Text>
-  //   </View>
-  // );
   createDynamicReferralLink = async () => {
     let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
@@ -142,10 +145,6 @@ class Refer extends Component {
     actions.setProfile(profile);
   };
 
-  closeShowReferralsStatus() {
-    this.setState({ showReferralsStatus: false });
-  }
-
   requestReferrals() {
     ////console.log("requestReferrals");
     var output = this.props.requestReferrals((responseData) => {
@@ -171,14 +170,18 @@ class Refer extends Component {
       // }
     });
   }
+  closeShowReferralsStatus() {
+    this.referralsBottomSheetRef.current.close();
+    this.setState({ showReferralsStatus: false });
+  }
 
   onPressReferralsButton() {
     this.requestReferrals();
+    this.referralsBottomSheetRef.current.expand();
     this.setState({
       showReferralsStatus: true,
     });
   }
-
   componentDidMount() {
     let { profile } = this.props;
     if (profile.referralLink == null || profile.referralLink.length == 0) {
@@ -189,8 +192,12 @@ class Refer extends Component {
   }
 
   showConditions() {
-    var flag = !this.state.conditionDialog;
-    this.setState({ conditionDialog: flag });
+    this.setState({ conditionDialog: !this.state.conditionDialog });
+    if (this.state.conditionDialog) {
+      this.conditionsBottomSheetRef.current.close();
+    } else {
+      this.conditionsBottomSheetRef.current.expand();
+    }
   }
   render() {
     const { referralLink } = this.state;
@@ -202,17 +209,6 @@ class Refer extends Component {
             Members who will introduce atleast seven people (50+ of age) to join
             our GoHappy Club will get exciting gifts delivered at their homes!!
           </Text>
-          {/* <View
-          style={{
-            marginLeft: "8%",
-            marginTop: "15%",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
-          <FontAwesomeIcon icon={faInfoCircle} color={Colors.referCircle} size={20} />
-          <Text style={styles.info}>How it works</Text>
-        </View> */}
           <Image
             resizeMode="cover"
             style={{
@@ -295,14 +291,6 @@ class Refer extends Component {
               /> */}
             </View>
           </View>
-          {/* <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              width: "100%",
-            }}
-          > */}
           <TouchableOpacity
             style={
               referralLink.length == 0
@@ -360,7 +348,6 @@ class Refer extends Component {
               </Text>
             </View>
           </TouchableOpacity>
-          {/* </View> */}
           <Image
             resizeMode="cover"
             style={{
@@ -374,93 +361,126 @@ class Refer extends Component {
           />
 
           <>
-            <BottomSheet modalProps={{}} isVisible={this.state.conditionDialog}>
-              {/* <Text style={styles.title}>Please Read Below</Text> */}
-              <ListItem key="1">
-                <ListItem.Content>
-                  <ListItem.Title>
-                    <View
-                      style={{
-                        flex: 1,
-                        maxWidth: screenWidth * 0.9,
-                        justifyContent: "center",
-                      }}
-                    >
-                      <RenderHtml
-                        style={{ width: "auto" }}
-                        contentWidth={"90%"}
-                        source={{
-                          html: this.state.conditionText,
-                        }}
-                      />
-                    </View>
-                  </ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
-              <ListItem
-                key="2"
-                containerStyle={{ backgroundColor: Colors.primary }}
-                onPress={this.showConditions.bind(this)}
+            <BottomSheet
+              ref={this.conditionsBottomSheetRef}
+              // index={-1}
+              enablePanDownToClose={true}
+              snapPoints={["50%"]}
+              enableDismissOnClose={true}
+              enableGestureInteraction={true}
+              handleStyle={{ display: "none" }}
+              backgroundStyle={{
+                borderRadius: 40,
+                backgroundColor: Colors.white,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 2,
+                  height: 2,
+                },
+                shadowOpacity: 0.5,
+                shadowRadius: 3.84,
+                elevation: 20,
+              }}
+              onChange={(index) => {
+                if (index === -1) {
+                  this.setState({
+                    conditionDialog: false,
+                  });
+                }
+              }}
+            >
+              <BottomSheetView
+                style={{ flex: 1, justifyContent: "space-between" }}
               >
-                <ListItem.Content>
-                  <ListItem.Title style={{ color: Colors.white }}>
-                    Close
-                  </ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.conditionsBottomSheetRef.current.close();
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    padding: 6,
+                    backgroundColor: Colors.grey.f0,
+                    borderRadius: 40,
+                  }}
+                >
+                  <X color="#000" size={24} />
+                </TouchableOpacity>
+                <View
+                  style={{
+                    flex: 1,
+                    maxWidth: screenWidth * 0.9,
+                    marginTop: screenWidth * 0.1,
+                  }}
+                >
+                  <RenderHtml
+                    contentWidth={screenWidth * 0.9}
+                    source={{ html: this.state.conditionText }}
+                  />
+                </View>
+              </BottomSheetView>
             </BottomSheet>
           </>
           <>
             <BottomSheet
-              modalProps={{
-                fullScreen: true,
-                onRequestClose: () =>
-                  this.setState({ showReferralsStatus: false }),
+              ref={this.referralsBottomSheetRef}
+              // index={-1}
+              snapPoints={["50%", "75%"]}
+              enablePanDownToClose={true}
+              enableDismissOnClose={true}
+              handleStyle={{ display: "none" }}
+              backgroundStyle={{
+                borderRadius: 40,
+                backgroundColor: Colors.white,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 2,
+                  height: 2,
+                },
+                shadowOpacity: 0.5,
+                shadowRadius: 3.84,
+                elevation: 20,
               }}
-              isVisible={this.state.showReferralsStatus}
-              onClose={() => this.setState({ showReferralsStatus: false })}
-              // enablePanDownToClose={true}
+              onChange={(index) => {
+                if (index === -1) {
+                  this.setState({
+                    showReferralsStatus: false,
+                  });
+                }
+              }}
             >
-              {/* <ListItem
-                key="2"
-                // containerStyle={{ backgroundColor: Colors.white, margin: 0 }}
-                // onPress={this.closeShowReferralsStatus.bind(this)}
+              <BottomSheetScrollView
+                contentContainerStyle={{
+                  paddingHorizontal: 20,
+                  paddingVertical: 20,
+                }}
+                style={{
+                  flex: 1,
+                }}
               >
-                <ListItem.Content>
-                  <TouchableOpacity
-                    style={styles.backButton}
-                    onPress={this.closeShowReferralsStatus.bind(this)}
-                    underlayColor={Colors.white}
-                  >
-                    <Text style={styles.backText}>back</Text>
-                  </TouchableOpacity>
-                </ListItem.Content>
-              </ListItem> */}
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={this.closeShowReferralsStatus.bind(this)}
-                underlayColor={Colors.white}
-              >
-                <Text style={styles.backText}>Click to Exit</Text>
-              </TouchableOpacity>
-              <ListItem containerStyle={styles.BSContainer}>
-                <ListItem.Content>
-                  <ListItem.Title>
-                    <View style={{ flex: 1 }}>
-                      <ReferralsList
-                        numberReferrals={this.state.numberReferrals}
-                        referrals={this.state.referrals}
-                        trivialTitle1={this.state.trivialTitle1}
-                        trivialTitle2={this.state.trivialTitle2}
-                        // requestReferrals={async (_callback) => {
-                        //   await this.requestReferrals.bind(this);
-                        //   _callback();
-                        // }}
-                      />
-                    </View>
-                  </ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
+                <TouchableOpacity
+                  onPress={() => this.closeShowReferralsStatus()}
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    padding: 6,
+                    backgroundColor: Colors.grey.f0,
+                    borderRadius: 40,
+                  }}
+                >
+                  <X color="#000" size={24} />
+                </TouchableOpacity>
+                <View style={{ flex: 1, marginTop: screenWidth * 0.1 }}>
+                  <ReferralsList
+                    numberReferrals={this.state.numberReferrals}
+                    referrals={this.state.referrals}
+                    trivialTitle1={this.state.trivialTitle1}
+                    trivialTitle2={this.state.trivialTitle2}
+                  />
+                </View>
+              </BottomSheetScrollView>
             </BottomSheet>
           </>
         </ScrollView>
