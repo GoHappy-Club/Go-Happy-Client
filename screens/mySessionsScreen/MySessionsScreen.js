@@ -4,6 +4,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
 import { Colors } from "../../assets/colors/color";
 import Video from "react-native-video";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 export default class MySessionsScreen extends Component {
   constructor(props) {
@@ -59,24 +60,7 @@ export default class MySessionsScreen extends Component {
   render() {
     if (this.state.loading == true) {
       return (
-        <Video
-        source={require("../../images/logo_splash.mp4")}
-        style={{
-          position: "absolute",
-          top: 0,
-          flex: 1,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 1,
-        }}
-        muted={true}
-        repeat={true}
-        resizeMode="cover"
-      />
+        <GOHLoader/>
       );
     }
     const navigation = this.props.navigation;

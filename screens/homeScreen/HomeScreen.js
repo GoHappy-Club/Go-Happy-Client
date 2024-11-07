@@ -8,6 +8,7 @@ import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -85,24 +86,7 @@ class HomeScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
         // </ScrollView>
       );
     }

@@ -4,6 +4,7 @@ import TransactionHistory from "../../components/subscription/TransactionHistory
 import { useSelector } from "react-redux";
 import { wp } from "../../helpers/common";
 import Video from "react-native-video";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 const AllTransactions = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -35,24 +36,7 @@ const AllTransactions = () => {
   return (
     <>
       {loading && (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
       )}
       {!loading && (
         <View

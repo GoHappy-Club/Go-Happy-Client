@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Wallet from "../../components/subscription/Wallet";
 import { useSelector } from "react-redux";
 import Video from "react-native-video";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 const WalletScreen = () => {
   const [transactions, setTransactions] = useState([]);
@@ -31,24 +32,7 @@ const WalletScreen = () => {
   return (
     <>
       {loading && (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
       )}
       {!loading && (
         <View>

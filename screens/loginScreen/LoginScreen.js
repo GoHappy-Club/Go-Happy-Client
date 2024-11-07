@@ -33,6 +33,7 @@ import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 import RNOtpVerify from "react-native-otp-verify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -665,25 +666,7 @@ class LoginScreen extends Component {
   render() {
     if (this.state.loader == true) {
       return (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            backgroundColor: Colors.white,
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
       );
     }
     return (
