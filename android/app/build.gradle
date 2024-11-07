@@ -82,6 +82,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 136
         versionName "2.3.0"
+        vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
         debug {
