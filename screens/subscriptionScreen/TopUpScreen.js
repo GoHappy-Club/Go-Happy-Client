@@ -6,6 +6,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import Video from "react-native-video";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 const TopUpScreen = () => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
@@ -21,8 +22,6 @@ const TopUpScreen = () => {
     try {
       setLoading(true);
       const response = await axios.get(url);
-      console.log(response.data);
-      
       setPackages(response.data);
       setLoading(false);
     } catch (error) {
@@ -43,24 +42,7 @@ const TopUpScreen = () => {
   return (
     <>
       {loading && (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
       )}
       {!loading && <View
         style={{

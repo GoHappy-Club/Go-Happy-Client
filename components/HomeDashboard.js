@@ -23,6 +23,7 @@ import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import toUnicodeVariant from "./toUnicodeVariant.js";
+import GOHLoader from "../commonComponents/GOHLoader.js";
 import tambola from "tambola";
 import { Colors } from "../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
@@ -455,7 +456,15 @@ class HomeDashboard extends Component {
             {this.state.selectedDate}
           </Text>
           {this.props.childLoader == true && (
-            <MaterialIndicator color={Colors.primary} />
+            // <MaterialIndicator color={Colors.primary} />
+            <View style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: Colors.grey.f0
+            }}>
+              <GOHLoader />
+            </View>
           )}
           {this.props.childLoader == false &&
             this.props.events.filter((item) => item.endTime > Date.now())
