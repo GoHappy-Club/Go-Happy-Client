@@ -42,27 +42,27 @@ class ReferScreen extends Component {
       // Error retrieving data
     }
   };
-  loadMySessions(email, _callback) {
-    email = this.state.email;
-    var url = SERVER_URL + "/event/mySessions";
-    axios
-      .post(url, { email: email })
-      .then((response) => {
-        if (response.data) {
-          //
-          this.setState({ expiredEvents: response.data.expiredEvents });
-          this.setState({ upcomingEvents: response.data.upcomingEvents });
-          this.setState({ ongoingEvents: response.data.ongoingEvents });
-          this.setState({ error: false });
-          this.setState({ childLoader: false });
+  // loadMySessions(email, _callback) {
+  //   email = this.state.email;
+  //   var url = SERVER_URL + "/event/mySessions";
+  //   axios
+  //     .post(url, { email: email })
+  //     .then((response) => {
+  //       if (response.data) {
+  //         //
+  //         this.setState({ expiredEvents: response.data.expiredEvents });
+  //         this.setState({ upcomingEvents: response.data.upcomingEvents });
+  //         this.setState({ ongoingEvents: response.data.ongoingEvents });
+  //         this.setState({ error: false });
+  //         this.setState({ childLoader: false });
 
-          _callback();
-        }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
-  }
+  //         _callback();
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       this.error = true;
+  //     });
+  // }
   requestReferrals(_callback) {
     // fetching refferals
     ////console.log("In requestReferrals api");
@@ -95,7 +95,7 @@ class ReferScreen extends Component {
     const title = "Login";
     return (
       <Refer
-        loadMySessions={this.loadMySessions.bind(this)}
+        // loadMySessions={this.loadMySessions.bind(this)}
         navigation={this.props.navigation}
         ongoingEvents={this.state.ongoingEvents}
         upcomingEvents={this.state.upcomingEvents}
