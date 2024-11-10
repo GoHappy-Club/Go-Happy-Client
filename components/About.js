@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Image, ScrollView, View } from "react-native";
 
 import { Text } from "react-native-elements";
-import { wp } from "../helpers/common";
+import { hp, wp } from "../helpers/common";
 import { Colors } from "../assets/colors/color";
 
 export default class About extends Component {
@@ -16,9 +16,11 @@ export default class About extends Component {
       <ScrollView
         contentContainerStyle={{
           backgroundColor: "#f6f9ff",
-          flex: 1,
           alignItems: "center",
           justifyContent: "center",
+        }}
+        style={{
+          flex: 1,
         }}
       >
         <View
@@ -28,26 +30,37 @@ export default class About extends Component {
             alignItems: "center",
           }}
         >
-          <Text
+          <View
             style={{
-              fontSize: 30,
-              textAlign: "center",
-              marginBottom: "8%",
-              fontWeight: "bold",
+              width: wp(100),
+              borderRadius: 10,
+              padding: 10,
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: wp(3),
             }}
           >
-            About Us
-          </Text>
-          <Image
-            source={require("../images/about.jpeg")}
-            width={300}
-            height={300}
-            style={{
-              width: wp(95),
-              height: 300,
-              resizeMode: "contain",
-            }}
-          />
+            <Text
+              style={{
+                fontSize: 30,
+                textAlign: "center",
+                marginBottom: "8%",
+                fontWeight: "bold",
+              }}
+            >
+              About Us
+            </Text>
+            <Image
+              source={require("../images/about.jpeg")}
+              width={300}
+              height={300}
+              style={{
+                width: wp(95),
+                height: 300,
+                resizeMode: "contain",
+              }}
+            />
+          </View>
           <Text
             style={{
               fontSize: wp(5),

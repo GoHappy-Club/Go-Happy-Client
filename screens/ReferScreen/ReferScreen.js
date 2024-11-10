@@ -13,7 +13,7 @@ import {
 } from "react-native";
 // import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
-import Refer from "../../components/Refer";
+import Refer from "../../components/Refer/Refer";
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
 import { bindActionCreators } from "redux";
