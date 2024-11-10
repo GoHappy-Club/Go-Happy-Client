@@ -54,6 +54,11 @@ const TransactionHistory = ({ transactions,seeAll = false }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Recent Transactions</Text>
       <View style={styles.separator} />
+      {transactions.length === 0 && (
+        <Text style={{ textAlign: "center", marginTop: 16 }}>
+          No transactions found
+        </Text>
+      )}
       <FlatList
         data={transactions}
         renderItem={renderTransaction}

@@ -65,7 +65,7 @@ const SessionRatingSheet = ({
       <FontAwesomeIcon
         size={28}
         icon={icon}
-        color={selectedRating === rating ? Colors.white : "#666"}
+        color={selectedRating === rating ? "yellow" : "#666"}
         style={styles.icon}
       />
     </TouchableOpacity>

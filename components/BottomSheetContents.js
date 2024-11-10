@@ -36,10 +36,10 @@ export const FreeTrialContent = ({ cta }) => {
               <Text style={styles.benefitIcon}>✨</Text>
               <Text style={styles.benefitText}>Personal membership card</Text>
             </View>
-            <View style={styles.benefitItem}>
+            {/* <View style={styles.benefitItem}>
               <Text style={styles.benefitIcon}>✨</Text>
               <Text style={styles.benefitText}></Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>

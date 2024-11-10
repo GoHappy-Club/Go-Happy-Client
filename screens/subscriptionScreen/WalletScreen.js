@@ -9,6 +9,7 @@ const WalletScreen = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
 
   useEffect(() => {
     const getTransactions = async () => {
@@ -28,7 +29,7 @@ const WalletScreen = () => {
       }
     };
     getTransactions();
-  }, []);
+  }, [membership]);
   return (
     <>
       {loading && (

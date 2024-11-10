@@ -19,7 +19,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BlurView } from "@react-native-community/blur";
-import TypeWriterEffect from "react-native-typewriter-effect";
 import { FreeTrialContent } from "./BottomSheetContents";
 
 const { width, height } = Dimensions.get("window");

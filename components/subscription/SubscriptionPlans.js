@@ -44,7 +44,7 @@ const colorMapping = {
     textColor: "black",
   },
   Platinum: {
-    gradient: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
+    gradient: ["#304352", "#304352A1", "#304352A1"],
     borderColor: "#304352",
     textColor: "white",
   },
@@ -187,7 +187,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
           )}
         </View>
 
-        {membershipPlans.length > 1 && (
+        {/* {membershipPlans.length > 1 && ( */}
           <View style={styles.durationsContainer}>
             <Text style={styles.durationTitle}>Select Duration:</Text>
             <View style={styles.durationButtons}>
@@ -201,7 +201,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
               ))}
             </View>
           </View>
-        )}
+        {/* )} */}
       </AnimatedLinearGradient>
     </TouchableOpacity>
   );
@@ -431,15 +431,19 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
   };
 
   const pricingHelper = () => {
+    let subsFees = selectedPlan?.subscriptionFees;
     if (isDisabled()) return "--";
+    if(selectedPlan?.discount > 0){
+      subsFees = subsFees - (subsFees * selectedPlan?.discount) / 100
+    }
     if (membership.membershipType == "Free") {
-      return selectedPlan?.subscriptionFees;
+      return subsFees;
     } else {
       return getRemainingMembershipValue(
         membership.membershipStartDate,
         membership.membershipEndDate
-      ) < selectedPlan?.subscriptionFees
-        ? selectedPlan?.subscriptionFees -
+      ) < subsFees
+        ? subsFees -
             getRemainingMembershipValue(
               membership.membershipStartDate,
               membership.membershipEndDate
@@ -529,9 +533,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   }}
                 >
                   <Text style={styles.pricingTitleText}>
-                    {buttonTitle == "Upgrade now"
+                    {/* {buttonTitle == "Upgrade now"
                       ? `₹ ${pricingHelper()}`
-                      : `₹ ${selectedPlan?.subscriptionFees}`}
+                      : `₹ ${selectedPlan?.subscriptionFees}`} */}
+                      ₹ {pricingHelper()}
                   </Text>
                   {pricingHelper() < selectedPlan?.subscriptionFees && (
                     <Text style={styles.discountText}>
@@ -742,8 +747,8 @@ const styles = StyleSheet.create({
   },
   durationsContainer: {
     position: "absolute",
-    bottom:15,
-    left:15
+    bottom: 15,
+    left: 15,
   },
   durationTitle: {
     fontSize: 14,
@@ -756,22 +761,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     gap: 8,
   },
-  durationButton: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#007AFF",
-    backgroundColor: "white",
-  },
   selectedDurationButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.primary,
   },
   durationButtonText: {
     fontSize: 12,
     textAlign: "center",
-    color: "#007AFF",
     fontWeight: "500",
   },
   selectedDurationButtonText: {
@@ -854,15 +849,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    // borderBottomColor: "#e5e7eb",
   },
   durationButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: "#f3f4f6",
-    borderWidth: 1,
-    borderColor: "#e5e7eb",
   },
   durationButtonSelected: {
     backgroundColor: "#3b82f6",

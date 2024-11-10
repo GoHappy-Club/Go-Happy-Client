@@ -92,12 +92,12 @@ const SubscriptionCard = () => {
           blurType="light"
           style={{
             position: "fixed",
-            top: "-20%",
+            top: "-15%",
             left: "-20%",
             // bottom: 0,
             // right: 0,
             width:wp(150),
-            height: hp(23),
+            height: hp(25),
           }}
         />
         </LinearGradient>
