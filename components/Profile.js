@@ -215,7 +215,7 @@ const MyProfile = ({ navigation }) => {
             <Text style={styles.optionList}>Update Profile Picture</Text>
           </TouchableOpacity>
 
-          {(profile.age == null || profile.age > 50) && (
+          {(profile.age == null || profile.age >= 50) && (
             <>
               <TouchableOpacity
                 style={styles.menuItem}
