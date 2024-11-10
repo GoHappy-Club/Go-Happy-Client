@@ -15,7 +15,7 @@ import {
 import { BackgroundImage } from "react-native-elements/dist/config";
 // import { ScrollView } from "reac t-native-gesture-handler";
 import * as Progress from "react-native-progress";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 
 const screenWidth = Dimensions.get("window").width;
 export default class ReferralsList extends React.Component {
@@ -37,8 +37,8 @@ export default class ReferralsList extends React.Component {
     const currentCount = this.props.numberReferrals - openedChestCount * 7;
     var chestType =
       currentCount < this.state.referralComplete
-        ? require("../images/chest-closed.png")
-        : require("../images/chest-opened.png");
+        ? require("../../images/chest-closed.png")
+        : require("../../images/chest-opened.png");
     var chest = (
       <Image
         // resizeMode="cover"
@@ -50,7 +50,7 @@ export default class ReferralsList extends React.Component {
       <Image
         // resizeMode="cover"
         style={styles.chest}
-        source={require("../images/chest-opened.png")}
+        source={require("../../images/chest-opened.png")}
       />
     );
 
@@ -83,8 +83,6 @@ export default class ReferralsList extends React.Component {
             source={{
               uri: item.toProfileImage,
             }}
-            // source={item.profileImage.startsWith("https")?}
-            // source={require("../images/profile_image-transparent.png")}
           />
           <View style={styles.referralsText}>
             <Text style={styles.referralsContents}>
@@ -99,9 +97,8 @@ export default class ReferralsList extends React.Component {
                 width: 30,
                 alignSelf: "center",
                 marginLeft: "auto",
-                // padding: -10,
               }}
-              source={require("../images/tick-icon.png")}
+              source={require("../../images/tick-icon.png")}
             ></Image>
           )}
           {!item.hasAttendedSession && (
@@ -112,7 +109,7 @@ export default class ReferralsList extends React.Component {
                 alignSelf: "center",
                 marginLeft: "auto",
               }}
-              source={require("../images/hourglass.png")}
+              source={require("../../images/hourglass.png")}
             ></Image>
           )}
         </View>
@@ -155,7 +152,7 @@ export default class ReferralsList extends React.Component {
             <Text style={styles.label1}>{currentCount}/7</Text>
           </View>
         </View>
-        <View style={{ paddingTop: 10, height: "100%",paddingBottom:30 }}>
+        <View style={{ paddingTop: 10,paddingBottom:30,flex:1 }}>
           <FlatList
             data={this.props.referrals}
             renderItem={({ item }) => <ReferredProfileItem item={item} />}
