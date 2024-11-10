@@ -18,21 +18,22 @@ import BottomSheet, {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { connect, useSelector } from "react-redux";
-import { setProfile } from "../redux/actions/counts";
+import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import firebase from "@react-native-firebase/app";
-import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS.js";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-clipboard/clipboard";
 import RenderHtml from "react-native-render-html";
-import toUnicodeVariant from "./toUnicodeVariant.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 // import { refreshProfile } from "../services/profile/ProfileService";
-import ReferralsList from "./ReferralsList";
+import ReferralsList from "./ReferralsList.js";
 import { FlatList } from "react-native-gesture-handler";
-import { Colors } from "../assets/colors/color.js";
+import { Colors } from "../../assets/colors/color.js";
 import { X } from "lucide-react-native";
-import { wp } from "../helpers/common.js";
+import { wp } from "../../helpers/common.js";
+import ReferBottomSheet from "./ReferBottomSheet.js";
 const screenWidth = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
@@ -58,10 +59,10 @@ class Refer extends Component {
         '<p style="text-align:center"><span style="font-size:16px"><strong>Follow these simple steps:</strong></span></p><ol><li>&nbsp;Share the referral link with&nbsp;your friends who are above&nbsp;50 years of age.</li><li>Ask them to click on the link, install the GoHappy Club app and register themselves in the app.</li><li>Once registered, ask them to book and attend any session they want.</li><li>Receive <strong>Thank You Gift</strong> from GoHappy Club delivered to your home once you have seven successful referrals.</li></ol>',
       profileImage:
         "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
+      type: "",
     };
     this._retrieveData();
-    this.conditionsBottomSheetRef = React.createRef();
-    this.referralsBottomSheetRef = React.createRef();
+    this.bottomSheetRef = React.createRef();
   }
 
   shareMessage = () => {
@@ -146,7 +147,6 @@ class Refer extends Component {
   };
 
   requestReferrals() {
-    ////console.log("requestReferrals");
     var output = this.props.requestReferrals((responseData) => {
       // for testing
       // responseData = this.state.responseData;
@@ -165,23 +165,26 @@ class Refer extends Component {
         numberReferrals: countReferrals,
         referrals: referralsWithTitles,
       });
-      // if (_callback) {
-      //   _callback();
-      // }
     });
   }
   closeShowReferralsStatus() {
-    this.referralsBottomSheetRef.current.close();
+    this.bottomSheetRef.current.close();
     this.setState({ showReferralsStatus: false });
   }
 
   onPressReferralsButton() {
     this.requestReferrals();
-    this.referralsBottomSheetRef.current.expand();
-    this.setState({
-      showReferralsStatus: true,
-    });
+    this.setState(
+      {
+        showReferralsStatus: true,
+        type: "referralsList",
+      },
+      () => {
+        this.bottomSheetRef.current.present();
+      }
+    );
   }
+
   componentDidMount() {
     let { profile } = this.props;
     if (profile.referralLink == null || profile.referralLink.length == 0) {
@@ -192,12 +195,15 @@ class Refer extends Component {
   }
 
   showConditions() {
-    this.setState({ conditionDialog: !this.state.conditionDialog });
-    if (this.state.conditionDialog) {
-      this.conditionsBottomSheetRef.current.close();
-    } else {
-      this.conditionsBottomSheetRef.current.expand();
-    }
+    this.setState({ type: "conditionsDialog" }, () => {
+      this.bottomSheetRef.current.present();
+    });
+  }
+
+  hideConditions() {
+    this.setState({ type: "" }, () => {
+      this.bottomSheetRef.current.dismiss();
+    });
   }
   render() {
     const { referralLink } = this.state;
@@ -214,11 +220,8 @@ class Refer extends Component {
             style={{
               width: "100%",
               height: 150,
-              // alignSelf: "center",
-              // paddingLeft: 200,
-              // paddingRight: 100,
             }}
-            source={require("../images/1_2_3-Refer.png")}
+            source={require("../../images/1_2_3-Refer.png")}
           />
 
           <View style={styles.clip}>
@@ -255,40 +258,25 @@ class Refer extends Component {
                 style={{
                   width: "15%",
                   height: 40,
-                  // alignSelf: "center",
                 }}
-                source={require("../images/whatsapp.png")}
+                source={require("../../images/whatsapp.png")}
               />
               <Image
                 resizeMode="contain"
                 style={{
-                  // width: "100%",
                   width: "15%",
                   height: 40,
-                  // alignSelf: "center",
                 }}
-                source={require("../images/facebook.png")}
+                source={require("../../images/facebook.png")}
               />
               <Image
                 resizeMode="contain"
                 style={{
-                  // width: "100%",
                   width: "15%",
                   height: 40,
-                  // alignSelf: "center",
                 }}
-                source={require("../images/instagram.png")}
+                source={require("../../images/instagram.png")}
               />
-              {/* <Image
-                resizeMode="contain"
-                style={{
-                  // width: "100%",
-                  width: "12%",
-                  height: 40,
-                  // alignSelf: "center",
-                }}
-                source={require("../images/sms.png")}
-              /> */}
             </View>
           </View>
           <TouchableOpacity
@@ -357,132 +345,18 @@ class Refer extends Component {
               // marginLeft: "10%",
               // marginRight: "10%",
             }}
-            source={require("../images/refer.png")}
+            source={require("../../images/refer.png")}
           />
 
-          <>
-            <BottomSheet
-              ref={this.conditionsBottomSheetRef}
-              // index={-1}
-              enablePanDownToClose={true}
-              snapPoints={["50%"]}
-              enableDismissOnClose={true}
-              enableGestureInteraction={true}
-              handleStyle={{ display: "none" }}
-              backgroundStyle={{
-                borderRadius: 40,
-                backgroundColor: Colors.white,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 2,
-                  height: 2,
-                },
-                shadowOpacity: 0.5,
-                shadowRadius: 3.84,
-                elevation: 20,
-              }}
-              onChange={(index) => {
-                if (index === -1) {
-                  this.setState({
-                    conditionDialog: false,
-                  });
-                }
-              }}
-            >
-              <BottomSheetView
-                style={{ flex: 1, justifyContent: "space-between" }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.conditionsBottomSheetRef.current.close();
-                  }}
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    padding: 6,
-                    backgroundColor: Colors.grey.f0,
-                    borderRadius: 40,
-                  }}
-                >
-                  <X color="#000" size={24} />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flex: 1,
-                    maxWidth: screenWidth * 0.9,
-                    marginTop: screenWidth * 0.1,
-                  }}
-                >
-                  <RenderHtml
-                    contentWidth={screenWidth * 0.9}
-                    source={{ html: this.state.conditionText }}
-                  />
-                </View>
-              </BottomSheetView>
-            </BottomSheet>
-          </>
-          <>
-            <BottomSheet
-              ref={this.referralsBottomSheetRef}
-              // index={-1}
-              snapPoints={["50%", "75%"]}
-              enablePanDownToClose={true}
-              enableDismissOnClose={true}
-              handleStyle={{ display: "none" }}
-              backgroundStyle={{
-                borderRadius: 40,
-                backgroundColor: Colors.white,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 2,
-                  height: 2,
-                },
-                shadowOpacity: 0.5,
-                shadowRadius: 3.84,
-                elevation: 20,
-              }}
-              onChange={(index) => {
-                if (index === -1) {
-                  this.setState({
-                    showReferralsStatus: false,
-                  });
-                }
-              }}
-            >
-              <BottomSheetScrollView
-                contentContainerStyle={{
-                  paddingHorizontal: 20,
-                  paddingVertical: 20,
-                }}
-                style={{
-                  flex: 1,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => this.closeShowReferralsStatus()}
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    padding: 6,
-                    backgroundColor: Colors.grey.f0,
-                    borderRadius: 40,
-                  }}
-                >
-                  <X color="#000" size={24} />
-                </TouchableOpacity>
-                <View style={{ flex: 1, marginTop: screenWidth * 0.1 }}>
-                  <ReferralsList
-                    numberReferrals={this.state.numberReferrals}
-                    referrals={this.state.referrals}
-                    trivialTitle1={this.state.trivialTitle1}
-                    trivialTitle2={this.state.trivialTitle2}
-                  />
-                </View>
-              </BottomSheetScrollView>
-            </BottomSheet>
-          </>
+          <ReferBottomSheet
+            closeModal={() => this.bottomSheetRef.current.close()}
+            modalRef={this.bottomSheetRef}
+            type={this.state.type}
+            numberReferrals={this.state.numberReferrals}
+            referrals={this.state.referrals}
+            trivialTitle1={this.state.trivialTitle1}
+            trivialTitle2={this.state.trivialTitle2}
+          />
         </ScrollView>
       </View>
     );
