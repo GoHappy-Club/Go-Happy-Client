@@ -225,6 +225,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={styles.paymentInput}
                 value={coins}
                 onChangeText={(text) => {
+                  setAmount(text);
                   setCoins(text);
                 }}
                 placeholder="0"

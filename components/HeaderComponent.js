@@ -76,10 +76,10 @@ const Header = () => {
   }, [membership]);
 
   // TODO : free trial modal
-  useEffect(() => {
-    if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
-      openGeneralModal(modalRef);
-  }, [modalType]);
+  // useEffect(() => {
+  //   if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
+  //     openGeneralModal(modalRef);
+  // }, [modalType]);
 
   // TODO : rating modal
   // useEffect(() => {
@@ -87,11 +87,11 @@ const Header = () => {
   // }, []);
 
   // TODO : open the rating modal
-  useEffect(() => {
-    if (showRating == true) {
-      ratingModalRef.current?.present();
-    }
-  }, [showRating, currentSession, ratingModalRef.current]);
+  // useEffect(() => {
+  //   if (showRating == true) {
+  //     ratingModalRef.current?.present();
+  //   }
+  // }, [showRating, currentSession, ratingModalRef.current]);
 
   const openGeneralModal = () => {
     modalRef.current?.present();
