@@ -59,7 +59,7 @@ class SessionDetails extends Component {
       payButtonLoading: false,
       shareButtonLoading: false,
       nonMemberPopUp: false,
-      lowCoinsPopUp:false,
+      lowCoinsPopUp: false,
     };
     this.retrieveData();
   }
@@ -106,7 +106,8 @@ class SessionDetails extends Component {
     var title = this.getTitle();
     if (
       title == "Seats Full" ||
-      (title == "Cancel Your Booking" && this.props.event.costType == "paid" &&
+      (title == "Cancel Your Booking" &&
+        this.props.event.costType == "paid" &&
         this.props.event.startTime - new Date().getTime() < 60 * 60 * 1000)
     ) {
       return true;
@@ -176,7 +177,7 @@ class SessionDetails extends Component {
     }
     return false;
   }
-  async sessionAction () {
+  async sessionAction() {
     crashlytics().log(
       JSON.stringify(this.getTitle()) +
         JSON.stringify(this.props.alreadyBookedSameDayEvent)
@@ -227,6 +228,7 @@ class SessionDetails extends Component {
   }
 
   isBookingAllowed() {
+    if (this.props.membership.freeTrialActive == "true") return true;
     if (
       this.props.membership &&
       this.props.membership?.membershipType == "Free"
@@ -241,7 +243,7 @@ class SessionDetails extends Component {
       return false;
     }
 
-    return true
+    return true;
   }
 
   loadDate(item) {
@@ -667,7 +669,10 @@ class SessionDetails extends Component {
               this.setState({ title: title });
               if (this.getTitle() === "Cancel Your Booking") {
                 this.setState({ showBookAlert: true });
-              } else if (item.costType == "paid" && this.getTitle().startsWith("Book")) {
+              } else if (
+                item.costType == "paid" &&
+                this.getTitle().startsWith("Book")
+              ) {
                 if (!this.isBookingAllowed()) return;
                 this.sessionAction();
                 return;
@@ -1049,4 +1054,4 @@ const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps,mapDispatchToProps)(SessionDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SessionDetails);

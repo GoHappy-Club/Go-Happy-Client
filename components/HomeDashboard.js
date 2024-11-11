@@ -71,6 +71,7 @@ class HomeDashboard extends Component {
   }
 
   isBookingAllowed(item) {
+    if (this.props.membership.freeTrialActive == "true") return true;
     if (
       this.props.membership &&
       this.props.membership?.membershipType == "Free"
@@ -451,12 +452,14 @@ class HomeDashboard extends Component {
           </Text>
           {this.props.childLoader == true && (
             // <MaterialIndicator color={Colors.primary} />
-            <View style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: Colors.grey.f0
-            }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: Colors.grey.f0,
+              }}
+            >
               <GOHLoader />
             </View>
           )}
