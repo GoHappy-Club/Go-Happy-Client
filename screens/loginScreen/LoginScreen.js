@@ -111,6 +111,7 @@ class LoginScreen extends Component {
     coins,
     vouchers,
     freeTrialUsed,
+    freeTrialActive
   }) {
     let { membership, actions } = this.props;
 
@@ -122,6 +123,7 @@ class LoginScreen extends Component {
       coins: coins,
       vouchers: vouchers,
       freeTrialUsed: freeTrialUsed,
+      freeTrialActive:freeTrialActive
     };
     actions.setMembership({...membership});
   }
@@ -396,6 +398,7 @@ class LoginScreen extends Component {
         const coins = await AsyncStorage.getItem("coins");
         const vouchers = await AsyncStorage.getItem("vouchers");
         const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
+        const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
         this.setProfile(
           name,
           email,
@@ -417,7 +420,8 @@ class LoginScreen extends Component {
           membershipEndDate: membershipEndDate,
           coins: coins,
           vouchers: vouchers,
-          freeTrialUsed: freeTrialUsed
+          freeTrialUsed: freeTrialUsed,
+          freeTrialActive: freeTrialActive
         });
 
         axios
@@ -454,6 +458,10 @@ class LoginScreen extends Component {
               "freeTrialUsed",
               String(response.data?.freeTrialUsed)
             );
+            AsyncStorage.setItem(
+              "freeTrialActive",
+              String(response.data?.freeTrialActive)
+            );
 
             this.setMembership({
               membershipType: response.data.membershipType,
@@ -462,7 +470,8 @@ class LoginScreen extends Component {
               membershipEndDate: response.data?.membershipEndDate,
               coins: response.data.coins,
               vouchers: response.data?.vouchers,
-              freeTrialUsed: response.data?.freeTrialUsed
+              freeTrialUsed: response.data?.freeTrialUsed,
+              freeTrialActive:response.data?.freeTrialActive
             });
           })
           .catch((error) => {
@@ -527,6 +536,7 @@ class LoginScreen extends Component {
             coins: response.data.coins,
             vouchers: response.data?.vouchers,
             freeTrialUsed: response.data?.freeTrialUsed,
+            freeTrialActive:response.data?.freeTrialActive
           });
           if (response.data.phone != null) {
             AsyncStorage.setItem("phoneNumber", response.data.phone);
@@ -590,7 +600,11 @@ class LoginScreen extends Component {
           );
           AsyncStorage.setItem(
             "freeTrialUsed",
-            String(response.data.freeTrialUsed)
+            String(response.data?.freeTrialUsed)
+          );
+          AsyncStorage.setItem(
+            "freeTrialActive",
+            String(response.data?.freeTrialActive)
           );
 
           this.setState({
