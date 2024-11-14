@@ -11,6 +11,7 @@ import { Linking } from "react-native";
 //import axios from "axios";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
@@ -47,18 +48,14 @@ export default function Sections(props) {
       type: "external",
       text: "Need assistance? Click here to get help and find the support you need.",
     },
+    {
+      title: "Rewards",
+      imgUrl:
+        "https://static.vecteezy.com/system/resources/thumbnails/008/486/043/small_2x/open-gift-box-surprise-earn-point-and-get-rewards-special-offer-concept-3d-rendering-illustration-png.png",
+      link: "Rewards",
+      text: "See your earned rewards here.",
+    },
   ];
-
-  // useEffect(() => {
-  //   if (!walktroughStarted.current) {
-  //     const timer = setTimeout(() => {
-  //       start();
-  //       walktroughStarted.current = true;
-  //     }, 3000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [start]);
 
   useEffect(() => {
     async function handleHelp() {
@@ -87,36 +84,38 @@ export default function Sections(props) {
         <View style={styles.line} />
       </View>
 
-      <View style={styles.sectionsContainer}>
-        {data1.map((item, index) => (
-          <CopilotStep
-            key={index}
-            text={item.text}
-            order={index + 1}
-            name={`step_${index + 1}`}
-          >
-            <Walkthroughable>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.type && item.type === "external") {
-                    Linking.openURL(whatsappLink);
-                  } else {
-                    props.navigation.navigate(item.link);
-                  }
-                }}
-              >
-                <View style={styles.container}>
-                  <Image
-                    source={{ uri: item.imgUrl }}
-                    style={styles.image}
-                    resizeMode="cover"
-                  />
-                  <Text style={styles.text}>{item.title}</Text>
-                </View>
-              </TouchableOpacity>
-            </Walkthroughable>
-          </CopilotStep>
-        ))}
+      <View style={styles.outerSectionsContainer}>
+        <View style={styles.sectionsContainer}>
+          {data1.map((item, index) => (
+            <CopilotStep
+              key={index}
+              text={item.text}
+              order={index + 1}
+              name={`step_${index + 1}`}
+            >
+              <Walkthroughable>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (item.type && item.type === "external") {
+                      Linking.openURL(whatsappLink);
+                    } else {
+                      props.navigation.navigate(item.link);
+                    }
+                  }}
+                >
+                  <View style={styles.container}>
+                    <Image
+                      source={{ uri: item.imgUrl }}
+                      style={styles.image}
+                      resizeMode="cover"
+                    />
+                    <Text style={styles.text}>{item.title}</Text>
+                  </View>
+                </TouchableOpacity>
+              </Walkthroughable>
+            </CopilotStep>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -128,6 +127,8 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 0,
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollContainer: {},
   headingContainer: {
@@ -146,18 +147,27 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   container: {
-    margin: 0,
-    flex: 1,
-    height: "100%",
+    width: wp(20),
+    aspectRatio: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    margin: 5,
+  },
+  outerSectionsContainer:{
+    width:wp(100),
+    alignItems:"center",
+    justifyContent:"center",
   },
   sectionsContainer: {
+    width:wp(95),
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: "4%",
-    marginRight: "4%",
+    flexWrap: "wrap",
+    gap: 5,
+    paddingVertical: wp(1),
   },
   image: {
-    borderRadius: 80,
+    // borderRadius: 80,
     alignSelf: "center",
     width: 60,
     height: 60,
