@@ -25,6 +25,7 @@ class TripDetailsScreen extends Component {
       details: null,
       error: true,
       index: 0,
+      vouchers:[]
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
@@ -32,7 +33,7 @@ class TripDetailsScreen extends Component {
 
   async getTripDetails() {
     var url =
-      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim();
+      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim() + "?phone="+this.props.profile.phoneNumber;
     //console.log(url);
     try {
       const response = await axios.get(url);
@@ -40,6 +41,7 @@ class TripDetailsScreen extends Component {
         this.setState({
           details: response.data.details,
           error: false,
+          vouchers: response.data.vouchers,
         });
       }
     } catch (error) {
@@ -54,7 +56,7 @@ class TripDetailsScreen extends Component {
 
   render() {
     if (this.state.error == false) {
-      return <Trip details={this.state.details} />;
+      return <Trip details={this.state.details} vouchers={this.state.vouchers} />;
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (

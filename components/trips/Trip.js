@@ -30,7 +30,6 @@ class Trip extends Component {
       index: 0,
     };
     crashlytics().log(JSON.stringify(props.propProfile));
-    // alert(JSON.stringify(props));
   }
 
   CarouselComponent = ({ images }) => {
@@ -79,7 +78,7 @@ class Trip extends Component {
 
         <this.CarouselComponent images={this.props.details.coverImages} />
 
-        <Itinerary details={this.props.details} />
+        <Itinerary details={this.props.details} vouchers={this.props.vouchers} />
         {/* </ScrollView> */}
       </View>
     );

@@ -26,6 +26,7 @@ import {
   deactivateFreeTrial,
   submitRating,
 } from "../services/Startup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("window").width;
 
@@ -39,6 +40,7 @@ const Header = () => {
   const [showRating, setShowRating] = useState(false);
   const [currentSession, setCurrentSession] = useState(null);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [reason, setReason] = useState("");
 
   const modalRef = useRef();
   const ratingModalRef = useRef();
@@ -82,16 +84,16 @@ const Header = () => {
   // }, [modalType]);
 
   // TODO : rating modal
-  // useEffect(() => {
-  //   checkPendingFeedback(setShowRating, setCurrentSession);
-  // }, []);
+  useEffect(() => {
+    checkPendingFeedback(setShowRating, setCurrentSession);
+  }, []);
 
   // TODO : open the rating modal
-  // useEffect(() => {
-  //   if (showRating == true) {
-  //     ratingModalRef.current?.present();
-  //   }
-  // }, [showRating, currentSession, ratingModalRef.current]);
+  useEffect(() => {
+    if (showRating == true) {
+      ratingModalRef.current?.present();
+    }
+  }, [showRating, currentSession, ratingModalRef.current]);
 
   const openGeneralModal = () => {
     modalRef.current?.present();
@@ -152,6 +154,8 @@ const Header = () => {
       <SessionRatingSheet
         selectedRating={selectedRating}
         setSelectedRating={setSelectedRating}
+        reason={reason}
+        setReason={setReason}
         modalRef={ratingModalRef}
         closeModal={() => {
           submitRating(
@@ -171,8 +175,7 @@ const Header = () => {
             setShowRating,
             selectedRating,
             true,
-            profile.phoneNumber,
-
+            profile.phoneNumber
           );
           ratingModalRef.current?.dismiss();
         }}
