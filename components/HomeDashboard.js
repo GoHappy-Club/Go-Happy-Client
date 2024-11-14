@@ -180,7 +180,7 @@ class HomeDashboard extends Component {
       return;
     }
     if (this.getTitle(item) == "Join") {
-      await storeCompletedSession(item.id, item.eventName, item.coverImage);
+      await storeCompletedSession(item.id, item.eventName, item.coverImage,item.subCategory,this.props.profile.phoneNumber);
       setSessionAttended(this.props.profile.phoneNumber);
       await Linking.openURL(item.meetingLink);
       await this.giveRewards(item);

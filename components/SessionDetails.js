@@ -31,10 +31,11 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { connect } from "react-redux";
 import { Colors } from "../assets/colors/color.js";
-import { wp } from "../helpers/common.js";
+import { hp, wp } from "../helpers/common.js";
 import { storeCompletedSession } from "../services/Startup.js";
 import { bindActionCreators } from "redux";
 import { setMembership, setProfile } from "../redux/actions/counts.js";
+import VoucherBottomSheet from "./VoucherBottomSheet.js";
 
 class SessionDetails extends Component {
   constructor(props) {
@@ -60,8 +61,12 @@ class SessionDetails extends Component {
       shareButtonLoading: false,
       nonMemberPopUp: false,
       lowCoinsPopUp: false,
+      showVouchers: false,
+      vouchers: [],
+      voucherLoading: false,
     };
     this.retrieveData();
+    this.modalRef = React.createRef();
   }
 
   retrieveData = async () => {
@@ -76,6 +81,9 @@ class SessionDetails extends Component {
     this.setState({ title: title });
   }
 
+  // componentDidUpdate(){
+  //   console.log(this.modalRef.current)
+  // }
   createDynamicReferralLink = async () => {
     let selfInviteCode = this.props.selfInviteCode;
     // alert('hi');
@@ -201,7 +209,9 @@ class SessionDetails extends Component {
       await storeCompletedSession(
         this.props.event.id,
         this.props.event.eventName,
-        this.props.event.coverImage
+        this.props.event.coverImage,
+        this.props.event.subCategory,
+        this.props.phoneNumber
       );
       setSessionAttended(this.props.phoneNumber);
       await Linking.openURL(this.props.event.meetingLink);
@@ -391,6 +401,22 @@ class SessionDetails extends Component {
     tambolaHtml = tambolaHtml + "</tbody></table>";
     //console.log("tam", tambolaHtml);
     return tambolaHtml;
+  };
+
+  loadVouchers = async () => {
+    try {
+      this.setState({ voucherLoading: true });
+      const response = await axios.post(
+        `${SERVER_URL}/membership/getVouchers`,
+        {
+          phone: this.props.profile.phoneNumber,
+        }
+      );
+      this.setState({ vouchers: response.data, voucherLoading: false });
+    } catch (error) {
+      this.setState({ voucherLoading: false });
+      console.log("Error in getting rewards ==>", error);
+    }
   };
 
   render() {
@@ -630,59 +656,118 @@ class SessionDetails extends Component {
             </View>
           </View>
         </ScrollView>
-
-        <View
-          style={{
-            margin: WIDTH * 0.02,
-            flexDirection:
-              this.state.title == "Cancel Your Booking" ? "row" : "column",
-            justifyContent:
-              this.state.title == "Cancel Your Booking"
-                ? "space-evenly"
-                : "center",
-            alignItems:
-              this.state.title == "Cancel Your Booking" ? "center" : "",
-            gap: WIDTH * 0.02,
+        <VoucherBottomSheet
+          closeModal={() => {
+            this.setState({ showVouchers: false });
+            this.modalRef.current.snapToPosition("13%");
           }}
-        >
-          {this.state.title == "Cancel Your Booking" && (
-            <CountdownTimer
-              targetTime={item.startTime}
-              width={WIDTH * 0.1}
-              height={HEIGHT * 0.05}
-              separatorSize={WIDTH * 0.07}
-              showText={true}
-            />
-          )}
-          <Button
-            disabled={this.isDisabled()}
-            outline
-            buttonStyle={{
-              backgroundColor: Colors.primary,
-              minWidth: WIDTH * 0.55,
-              minHeight: HEIGHT * 0.05,
-            }}
-            title={this.getTitle()}
-            loading={this.state.loadingButton}
-            onPress={() => {
-              const title = this.getTitle();
-              this.setState({ title: title });
-              if (this.getTitle() === "Cancel Your Booking") {
-                this.setState({ showBookAlert: true });
-              } else if (
-                item.costType == "paid" &&
-                this.getTitle().startsWith("Book")
-              ) {
-                if (!this.isBookingAllowed()) return;
-                this.sessionAction();
-                return;
-              } else {
-                this.sessionAction();
-                return;
-              }
-            }}
-          ></Button>
-        </View>
+          modalRef={this.modalRef}
+          showVouchers={this.state.showVouchers}
+          vouchers={this.state.vouchers}
+          voucherLoading={this.state.voucherLoading}
+          children={
+            <View
+              style={{
+                backgroundColor: Colors.beige,
+                paddingVertical: hp(1),
+                paddingHorizontal: wp(2),
+                borderTopRightRadius: wp(8),
+                borderTopLeftRadius: wp(8),
+                shadowColor: Colors.black,
+                shadowOffset: { width: 0, height: 5 },
+                elevation: 100,
+                width: wp(100),
+                height: hp(13),
+                gap: hp(1),
+                justifyContent: "flex-end",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text>Have a voucher?</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({ showVouchers: true }, () => {
+                      this.loadVouchers();
+                    });
+                    this.modalRef.current.snapToPosition("50%");
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: Colors.primary,
+                      textDecorationLine: "underline",
+                      fontFamily: "Poppins-Regular",
+                    }}
+                  >
+                    Apply Coupon
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  // width:wp(100),
+                  // margin: WIDTH * 0.02,
+                  flexDirection:
+                    this.state.title == "Cancel Your Booking"
+                      ? "row"
+                      : "column",
+                  justifyContent:
+                    this.state.title == "Cancel Your Booking"
+                      ? "space-evenly"
+                      : "center",
+                  alignItems:
+                    this.state.title == "Cancel Your Booking" ? "center" : "",
+                  gap: WIDTH * 0.02,
+                }}
+              >
+                {this.state.title == "Cancel Your Booking" && (
+                  <CountdownTimer
+                    targetTime={item.startTime}
+                    width={WIDTH * 0.1}
+                    height={HEIGHT * 0.05}
+                    separatorSize={WIDTH * 0.07}
+                    showText={true}
+                  />
+                )}
+                <Button
+                  disabled={this.isDisabled()}
+                  outline
+                  buttonStyle={{
+                    backgroundColor: Colors.primary,
+                    minWidth: WIDTH * 0.55,
+                    width: "100%",
+                    minHeight: HEIGHT * 0.05,
+                  }}
+                  title={this.getTitle()}
+                  loading={this.state.loadingButton}
+                  onPress={() => {
+                    const title = this.getTitle();
+                    this.setState({ title: title });
+                    if (this.getTitle() === "Cancel Your Booking") {
+                      this.setState({ showBookAlert: true });
+                    } else if (
+                      item.costType == "paid" &&
+                      this.getTitle().startsWith("Book")
+                    ) {
+                      if (!this.isBookingAllowed()) return;
+                      this.sessionAction();
+                      return;
+                    } else {
+                      this.sessionAction();
+                      return;
+                    }
+                  }}
+                ></Button>
+              </View>
+            </View>
+          }
+        />
         {item.recordingLink != null && (
           <Modal
             style={{}}

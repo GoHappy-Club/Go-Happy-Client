@@ -35,6 +35,8 @@ const SessionRatingSheet = ({
   submitRating,
   selectedRating,
   setSelectedRating,
+  reason,
+  setReason
 }) => {
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
@@ -177,6 +179,8 @@ const SessionRatingSheet = ({
                 placeholderTextColor="#999999"
                 multiline={true}
                 numberOfLines={4}
+                value={reason}
+                onChangeText={setReason}
               />
             )}
           <TouchableOpacity

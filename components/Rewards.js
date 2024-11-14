@@ -1,124 +1,4 @@
-// import React from "react";
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   StyleSheet,
-//   ScrollView,
-// } from "react-native";
-// import { hp, wp } from "../helpers/common";
-// import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-// import { faGift, faTrophy } from "@fortawesome/free-solid-svg-icons";
-
-// const RewardsCard = ({ icon, amount, title, color }) => (
-//   <TouchableOpacity style={[styles.card, { backgroundColor: color }]}>
-//     {/* <Text style={styles.cardIcon}>{icon}</Text> */}
-
-//     <FontAwesomeIcon
-//       size={34}
-//       icon={icon}
-//       color={"gold"}
-//       style={styles.icon}
-//     />
-//     {amount && <Text style={styles.amount}>₹{amount}</Text>}
-//     {title && <Text style={styles.cardTitle}>{title}</Text>}
-//   </TouchableOpacity>
-// );
-
-// const Rewards = ({rewards}) => {
-//   return (
-//     <ScrollView contentContainerStyle={styles.container}>
-//       <View style={styles.totalRewards}>
-//         <Text style={styles.rewardsAmount}>₹811</Text>
-//         <Text style={styles.rewardsLabel}>Earned in Rewards</Text>
-//       </View>
-
-//       <View style={styles.grid}>
-//         <RewardsCard icon={faTrophy} amount="125" color="#4285F4" />
-//         <RewardsCard icon={faGift} color="#EA4335" amount={123} />
-//         <RewardsCard icon={faGift} color="#FBBC04" amount={123}  />
-//         <RewardsCard icon={faGift} color="#4285F4" amount={123}  />
-//         <RewardsCard icon={faGift} color="#4285F4" amount={123}  />
-//         <RewardsCard icon={faGift} color="#9C27B0" amount={123}  />
-//       </View>
-//     </ScrollView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: "#FFFFFF",
-//   },
-//   header: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     padding: 16,
-//     height: hp(30),
-//   },
-//   headerTitle: {
-//     fontSize: 20,
-//     fontWeight: "600",
-//   },
-//   headerMenu: {
-//     fontSize: 24,
-//   },
-//   totalRewards: {
-//     padding: 24,
-//     backgroundColor: "#FFC107",
-//     borderBottomLeftRadius: 24,
-//     borderBottomRightRadius: 24,
-//     height: hp(30),
-//     marginBottom: 16,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   rewardsAmount: {
-//     fontSize: wp(15),
-//     fontWeight: "bold",
-//     marginBottom: 4,
-//     color: "black",
-//   },
-//   rewardsLabel: {
-//     fontSize: wp(5),
-//     opacity: 0.8,
-//     color: "black",
-//   },
-//   grid: {
-//     flexDirection: "row",
-//     flexWrap: "wrap",
-//     padding: 8,
-//     justifyContent:"center",
-//   },
-//   card: {
-//     width: "42%",
-//     aspectRatio: 1,
-//     margin: "2%",
-//     borderRadius: 8,
-//     padding: 16,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     gap:10
-//   },
-//   cardIcon: {
-//     fontSize: 24,
-//     marginBottom: 8,
-//   },
-//   amount: {
-//     fontSize: wp(7),
-//     fontWeight: "bold",
-//     color: "#FFFFFF",
-//   },
-//   cardTitle: {
-//     fontSize: 14,
-//     color: "#FFFFFF",
-//     opacity: 0.9,
-//   },
-// });
-
-// export default Rewards;
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -153,21 +33,27 @@ const getRandomColor = () => {
   return COLORS[colorKeys[randomIndex]];
 };
 
-const RewardsCard = ({ icon, amount, title, color }) => (
-  <TouchableOpacity style={[styles.card, { backgroundColor: color }]}>
-    <FontAwesomeIcon size={34} icon={icon} color={"gold"} style={styles.icon} />
-    {amount && <Text style={styles.amount}>₹{amount}</Text>}
-    {title && <Text style={styles.cardTitle}>{title}</Text>}
-  </TouchableOpacity>
-);
+const RewardsCard = ({ icon, amount, title, color }) => {
+  return (
+    <TouchableOpacity style={[styles.card, { backgroundColor: color }]}>
+      <FontAwesomeIcon
+        size={34}
+        icon={icon}
+        color={"gold"}
+        style={styles.icon}
+      />
+      {amount && <Text style={styles.amount}>₹{amount}</Text>}
+      {title && <Text style={styles.cardTitle}>{title}</Text>}
+    </TouchableOpacity>
+  );
+};
 
 export const VouchersCard = ({ image, title, id, onPress }) => (
   <TouchableOpacity
     style={[styles.voucherCard, { backgroundColor: "white" }]}
     onPress={onPress}
   >
-    <Animated.Image
-      sharedTransitionTag={id}
+    <Image
       source={{
         uri: image,
       }}
@@ -192,38 +78,45 @@ export const VouchersCard = ({ image, title, id, onPress }) => (
         borderTopWidth: 0.5,
       }}
     >
-      {title && (
-        <Animated.Text sharedTransitionTag="text" style={styles.voucherTitle}>
-          {title}
-        </Animated.Text>
-      )}
+      {title && <Text style={styles.voucherTitle}>{title}</Text>}
     </View>
   </TouchableOpacity>
 );
 
-const CoinbackRewards = ({ rewards }) => (
-  <View
-    style={{
-      width: "100%",
-      height: "100%",
-      alignItems: rewards.length == 1 ? "flex-start" : "center",
-    }}
-  >
-    <ScrollView
-      contentContainerStyle={styles.grid}
-      showsVerticalScrollIndicator={false}
+const CoinbackRewards = ({ rewards }) => {
+  const [fixedRewards, setFixedRewards] = useState([]);
+
+  useEffect(() => {
+    const rewardsWithColor = rewards.map((item) => ({
+      ...item,
+      color: item.color || getRandomColor(),
+    }));
+    setFixedRewards(rewardsWithColor);
+  }, [rewards]);
+  return (
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        alignItems: rewards.length == 1 ? "flex-start" : "center",
+      }}
     >
-      {rewards.map((item, index) => (
-        <RewardsCard
-          key={index}
-          icon={item.source == "coinback" ? faGift : faTrophy}
-          amount={item.amount}
-          color={getRandomColor()}
-        />
-      ))}
-    </ScrollView>
-  </View>
-);
+      <ScrollView
+        contentContainerStyle={styles.grid}
+        showsVerticalScrollIndicator={false}
+      >
+        {fixedRewards.map((item, index) => (
+          <RewardsCard
+            key={index}
+            icon={item.source == "coinback" ? faGift : faTrophy}
+            amount={item.amount}
+            color={item.color}
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
 
 const Vouchers = ({ vouchers, navigation }) => (
   <View
