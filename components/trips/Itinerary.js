@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RenderHTML from "react-native-render-html";
 import { Colors } from "../../assets/colors/color";
 
-export const Itinerary = ({ details }) => {
+export const Itinerary = ({ details, vouchers }) => {
   const [activeSections, setActiveSections] = useState([]);
   const [item, setItem] = useState(undefined);
   const [sections, setSections] = useState([]);
@@ -64,6 +64,11 @@ export const Itinerary = ({ details }) => {
       },
     ]);
   }, [details]);
+
+  const getMaxVouchersValue = () => {
+    let maxValue = Math.max(...vouchers.map((voucher) => voucher.value));
+    return maxValue;
+  };
 
   const QuickView = () => {
     const timeDifference = Math.abs(details.endTime - details.startTime);
@@ -123,7 +128,11 @@ export const Itinerary = ({ details }) => {
           </Text>
         </View>
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faCloudSun} size={20} color={Colors.blue.blue} />
+          <FontAwesomeIcon
+            icon={faCloudSun}
+            size={20}
+            color={Colors.blue.blue}
+          />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
             {"  "}
             {data.duration}
@@ -143,10 +152,29 @@ export const Itinerary = ({ details }) => {
         </View>
         <View style={styles.quickViewItem}>
           <FontAwesomeIcon icon={faMoneyBill} size={20} color={Colors.green} />
+          <Text
+            style={{
+              fontSize: 18,
+              textAlignVertical: "center",
+              textDecorationLine: "line-through",
+            }}
+          >
+            {"  "}₹ {data.cost}
+          </Text>
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
-            {"  "}₹ {data.cost}/- per person
+            {" "}
+            ₹ {data.cost-getMaxVouchersValue()}/- per person
           </Text>
         </View>
+        <Text
+          style={{
+            fontStyle: "italic",
+            color: Colors.green,
+            fontSize: 14,
+          }}
+        >
+          Yayy! You have a coupon, ask our team to get this discount.
+        </Text>
         <RenderHTML
           source={{
             html: "<hr/>",

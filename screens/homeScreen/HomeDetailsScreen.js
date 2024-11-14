@@ -47,9 +47,11 @@ class HomeDetailsScreen extends Component {
   getEventDetails(id) {
     // this.setState({event:null})
     this.state.loader = true;
-    getEvent(id)
+    getEvent(id,this.state.phoneNumber)
       .then((response) => {
         this.setState({ event: response.data.event, loader: false });
+        console.log(response.data);
+        
       })
       .catch((error) => {
         console.log(error);
