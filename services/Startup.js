@@ -61,7 +61,9 @@ export const checkPendingFeedback = async (
 export const storeCompletedSession = async (
   sessionId,
   sessionName,
-  sessionImage
+  sessionImage,
+  sessionSubCategory,
+  phone
 ) => {
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
@@ -73,6 +75,8 @@ export const storeCompletedSession = async (
       sessionId,
       sessionName,
       sessionImage,
+      sessionSubCategory,
+      phone,
       timestamp: new Date().getTime(),
       hasGivenFeedback: false,
     });
@@ -90,8 +94,10 @@ export const submitRating = async (
   currentSession,
   setCurrentSession,
   setShowRating,
-  rating=0,
-  interested = true
+  rating = 0,
+  interested = true,
+  phone,
+  reason
 ) => {
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
@@ -120,13 +126,35 @@ export const submitRating = async (
       "completedSessions",
       JSON.stringify(parsedSessions)
     );
-    sendRatingToBackend(currentSession.sessionId, rating);
+    sendRatingToBackend(
+      currentSession.sessionId,
+      rating,
+      phone,
+      currentSession.sessionSubCategory,
+      reason
+    );
     setShowRating(false);
   } catch (error) {
     console.error("Error submitting rating:", error);
   }
 };
 
-const sendRatingToBackend = () => {
-  console.log("Rating saved in BE");
+const sendRatingToBackend = async (
+  id,
+  rating,
+  phone,
+  sessionSubCategory,
+  reason
+) => {
+  try {
+    const response = await axios.post(`${SERVER_URL}/event/submitRating`, {
+      id,
+      rating,
+      phone,
+      subCategory: sessionSubCategory,
+      reason,
+    });
+  } catch (error) {
+    console.log("Error in submitRating", error);
+  }
 };
