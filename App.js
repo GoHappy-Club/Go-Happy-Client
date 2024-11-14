@@ -60,6 +60,8 @@ import TopUpScreen from "./screens/subscriptionScreen/TopUpScreen.js";
 import PaymentFailed from "./components/PaymentFailed.js";
 import PaymentSuccessful from "./components/PaymentSuccessful.js";
 import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
+import RewardsScreen from "./screens/subscriptionScreen/RewardsScreen.js";
+import VoucherDetails from "./components/VoucherDetails.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -755,7 +757,7 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                       presentation: "modal",
-                      animation: "slide_from_bottom",
+                      animation: "fade_from_bottom",
                     })}
                   />
                   <Stack.Screen
@@ -854,6 +856,60 @@ export default function App() {
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Rewards"
+                    children={(props) => <RewardsScreen />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerTransparent:true,
+                      headerLeft: () => (
+                        // <TouchableOpacity
+                        //   style={styles.newBackButton}
+                        //   onPress={() => navigation.goBack()}
+                        // >
+                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
+                        //   <Text style={styles.newBackText}>Back</Text>
+                        // </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="VoucherDetails"
+                    children={(props) => <VoucherDetails />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerTransparent:true,
+                      headerLeft: () => (
+                        // <TouchableOpacity
+                        //   style={styles.newBackButton}
+                        //   onPress={() => navigation.goBack()}
+                        // >
+                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
+                        //   <Text style={styles.newBackText}>Back</Text>
+                        // </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      presentation: "modal",
+                      animation: "fade_from_bottom",
                     })}
                   />
                 </>
