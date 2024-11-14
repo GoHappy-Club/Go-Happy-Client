@@ -26,7 +26,6 @@ import {
   deactivateFreeTrial,
   submitRating,
 } from "../services/Startup";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("window").width;
 
@@ -39,6 +38,7 @@ const Header = () => {
   const [modalType, setModalType] = useState("");
   const [showRating, setShowRating] = useState(false);
   const [currentSession, setCurrentSession] = useState(null);
+  const [selectedRating, setSelectedRating] = useState(0);
 
   const modalRef = useRef();
   const ratingModalRef = useRef();
@@ -47,7 +47,7 @@ const Header = () => {
   useEffect(() => {
     checkPendingFeedback(setShowRating, setCurrentSession);
 
-    const subscription = AppState.addEventListener("change", nextAppState => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (appState.match(/inactive|background/) && nextAppState === "active") {
         checkPendingFeedback(setShowRating, setCurrentSession);
       }
@@ -150,6 +150,8 @@ const Header = () => {
         cta={() => activateFreeTrial(profile)}
       />
       <SessionRatingSheet
+        selectedRating={selectedRating}
+        setSelectedRating={setSelectedRating}
         modalRef={ratingModalRef}
         closeModal={() => {
           submitRating(
@@ -167,8 +169,10 @@ const Header = () => {
             currentSession,
             setCurrentSession,
             setShowRating,
-            0,
-            true
+            selectedRating,
+            true,
+            profile.phoneNumber,
+
           );
           ratingModalRef.current?.dismiss();
         }}

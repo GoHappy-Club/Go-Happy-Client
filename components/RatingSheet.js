@@ -1,4 +1,13 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { X } from "lucide-react-native";
@@ -11,16 +20,22 @@ import { BlurView } from "@react-native-community/blur";
 import { hp, wp } from "../helpers/common";
 import { Colors } from "../assets/colors/color";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faFrown, faGrinHearts, faMeh, faSmile, faSmileBeam } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFrown,
+  faGrinHearts,
+  faMeh,
+  faSmile,
+  faSmileBeam,
+} from "@fortawesome/free-solid-svg-icons";
 
 const SessionRatingSheet = ({
   modalRef,
   closeModal,
   currentSession,
   submitRating,
+  selectedRating,
+  setSelectedRating,
 }) => {
-  const [selectedRating, setSelectedRating] = useState(0);
-
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
       const containerAnimatedStyle = useAnimatedStyle(() => {
@@ -65,7 +80,7 @@ const SessionRatingSheet = ({
       <FontAwesomeIcon
         size={28}
         icon={icon}
-        color={selectedRating === rating ? "yellow" : "#666"}
+        color={selectedRating === rating ? "#fff" : "#666"}
         style={styles.icon}
       />
     </TouchableOpacity>
@@ -75,7 +90,7 @@ const SessionRatingSheet = ({
     <BottomSheetModal
       ref={modalRef}
       index={0}
-      snapPoints={["50%"]}
+      snapPoints={["60%"]}
       enablePanDownToClose={true}
       enableDismissOnClose={true}
       enableGestureInteraction={true}
@@ -138,7 +153,6 @@ const SessionRatingSheet = ({
               Please rate our session so we can improve.
             </Text>
           </View>
-
           <View style={styles.emojiRow}>
             {renderEmoji(faFrown, 1)}
             {renderEmoji(faMeh, 2)}
@@ -146,7 +160,25 @@ const SessionRatingSheet = ({
             {renderEmoji(faSmileBeam, 4)}
             {renderEmoji(faGrinHearts, 5)}
           </View>
-
+            {selectedRating <= 2 && (
+              <TextInput
+                style={{
+                  width: "100%",
+                  height: hp(8),
+                  borderWidth: 1,
+                  borderColor: "#E0E0E0",
+                  borderRadius: 12,
+                  padding: 12,
+                  textAlignVertical: "top",
+                  color: Colors.black,
+                  backgroundColor: "#FFFFFF",
+                }}
+                placeholder="Please tell us why are you rating us so low so we can improve"
+                placeholderTextColor="#999999"
+                multiline={true}
+                numberOfLines={4}
+              />
+            )}
           <TouchableOpacity
             style={[
               styles.submitButton,
