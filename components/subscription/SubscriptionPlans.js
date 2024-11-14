@@ -188,19 +188,28 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
         </View>
 
         {/* {membershipPlans.length > 1 && ( */}
-          <View style={styles.durationsContainer}>
-            <Text style={styles.durationTitle}>Select Duration:</Text>
-            <View style={styles.durationButtons}>
-              {membershipPlans.map((plan) => (
-                <DurationButton
-                  key={plan.duration}
-                  duration={plan.duration}
-                  isSelected={selectedDuration === plan.duration}
-                  onSelect={() => handleDurationSelect(plan.duration)}
-                />
-              ))}
-            </View>
+        <View style={styles.durationsContainer}>
+          <Text
+            style={[
+              styles.durationTitle,
+              {
+                color: colorMapping[selectedPlan?.membershipType]["textColor"],
+              },
+            ]}
+          >
+            Select Duration:
+          </Text>
+          <View style={styles.durationButtons}>
+            {membershipPlans.map((plan) => (
+              <DurationButton
+                key={plan.duration}
+                duration={plan.duration}
+                isSelected={selectedDuration === plan.duration}
+                onSelect={() => handleDurationSelect(plan.duration)}
+              />
+            ))}
           </View>
+        </View>
         {/* )} */}
       </AnimatedLinearGradient>
     </TouchableOpacity>
@@ -213,7 +222,7 @@ const FeatureItem = ({ title, value, highlight, textColor }) => {
       entering={FadeInUp.delay(300).damping(10).springify()}
       style={styles.featureRow}
     >
-      <Star color={highlight ? "#FFD700" : "#666"} size={16} />
+      <Star color={highlight ? "#FFD700" : textColor} size={16} />
       <Text style={[styles.featureTitle, { color: textColor }]}>
         {title} :{" "}
       </Text>
@@ -433,8 +442,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
   const pricingHelper = () => {
     let subsFees = selectedPlan?.subscriptionFees;
     if (isDisabled()) return "--";
-    if(selectedPlan?.discount > 0){
-      subsFees = subsFees - (subsFees * selectedPlan?.discount) / 100
+    if (selectedPlan?.discount > 0) {
+      subsFees = subsFees - (subsFees * selectedPlan?.discount) / 100;
     }
     if (membership.membershipType == "Free") {
       return subsFees;
@@ -536,7 +545,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                     {/* {buttonTitle == "Upgrade now"
                       ? `₹ ${pricingHelper()}`
                       : `₹ ${selectedPlan?.subscriptionFees}`} */}
-                      ₹ {pricingHelper()}
+                    ₹ {pricingHelper()}
                   </Text>
                   {pricingHelper() < selectedPlan?.subscriptionFees && (
                     <Text style={styles.discountText}>
