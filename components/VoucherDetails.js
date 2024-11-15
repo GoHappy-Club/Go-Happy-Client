@@ -21,11 +21,7 @@ const VoucherDetails = () => {
           borderRadius: 10,
         }}
       />
-      <Animated.Text
-        sharedTransitionTag="text"
-        style={styles.title}
-        onPress={() => navigation.goBack()}
-      >
+      <Animated.Text sharedTransitionTag={`sharedText${id}`} style={styles.title} onPress={() => navigation.goBack()}>
         {title}
       </Animated.Text>
       {/* Add more details about the voucher here */}
