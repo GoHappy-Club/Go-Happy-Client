@@ -13,18 +13,18 @@ import { hp, wp } from "../helpers/common";
 import { Tab, TabView } from "@rneui/themed";
 import { Colors } from "../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
-import Animated, { SharedTransition } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 const COLORS = {
-  blue: "#4285F4",
-  red: "#EA4335",
-  yellow: "#FBBC04",
-  purple: "#9C27B0",
-  green: "#34A853",
-  orange: "#FF5722",
-  indigo: "#3F51B5",
-  teal: "#009688",
-  pink: "#E91E63",
+  blue: "#B8D8FF",
+  red: "#FFB3B3",
+  yellow: "#FFF4B8",
+  purple: "#E5C8FF",
+  green: "#B8FFCC",
+  orange: "#FFD4C2",
+  indigo: "#C8CFFF",
+  teal: "#B8FFF0",
+  pink: "#FFC2E5",
 };
 
 const getRandomColor = () => {
@@ -39,7 +39,7 @@ const RewardsCard = ({ icon, amount, title, color }) => {
       <FontAwesomeIcon
         size={34}
         icon={icon}
-        color={"gold"}
+        color="black"
         style={styles.icon}
       />
       {amount && <Text style={styles.amount}>₹{amount}</Text>}
@@ -48,40 +48,60 @@ const RewardsCard = ({ icon, amount, title, color }) => {
   );
 };
 
-export const VouchersCard = ({ image, title, id, onPress }) => (
-  <TouchableOpacity
-    style={[styles.voucherCard, { backgroundColor: "white" }]}
-    onPress={onPress}
-  >
-    <Image
-      source={{
-        uri: image,
-      }}
-      style={{
-        width: "100%",
-        height: "70%",
-        // borderRadius: 10,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-      }}
-    />
-    <View
-      style={{
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-        height: "30%",
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        paddingHorizontal: wp(2),
-        borderTopColor: "black",
-        borderTopWidth: 0.5,
+export const VouchersCard = ({ image, title, id, onPress }) => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      style={[styles.voucherCard, { backgroundColor: "white" }]}
+      onPress={() => {
+        navigation.navigate("VoucherDetails", {
+          id: id,
+          image: image,
+          title: title,
+        });
       }}
     >
-      {title && <Text style={styles.voucherTitle}>{title}</Text>}
-    </View>
-  </TouchableOpacity>
-);
+      <Animated.View
+        style={{
+          width: "100%",
+          height: "70%",
+          flexDirection: "row",
+          alignItems: "center",
+          backgroundColor: "#f9a9f9",
+        }}
+      >
+        <Animated.Image
+          sharedTransitionTag={id}
+          source={{
+            uri: image,
+          }}
+          style={{
+            width: "100%",
+            height: "100%",
+            // borderRadius: 10,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
+          }}
+        />
+      </Animated.View>
+      <Animated.View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          height: "30%",
+          borderBottomLeftRadius: 10,
+          borderBottomRightRadius: 10,
+          paddingHorizontal: wp(2),
+          borderTopColor: "black",
+          borderTopWidth: 0.5,
+        }}
+      >
+        {title && <Animated.Text sharedTransitionTag={`sharedText${id}`} style={styles.voucherTitle}>{title}</Animated.Text>}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
 
 const CoinbackRewards = ({ rewards }) => {
   const [fixedRewards, setFixedRewards] = useState([]);
@@ -257,11 +277,11 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: wp(7),
     fontWeight: "bold",
-    color: "#FFFFFF",
+    color: "#000",
   },
   cardTitle: {
     fontSize: 14,
-    color: "#FFFFFF",
+    color: "#000",
     opacity: 0.9,
   },
   voucherTitle: {
