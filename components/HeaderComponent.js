@@ -26,7 +26,6 @@ import {
   deactivateFreeTrial,
   submitRating,
 } from "../services/Startup";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("window").width;
 
@@ -41,6 +40,7 @@ const Header = () => {
   const [currentSession, setCurrentSession] = useState(null);
   const [selectedRating, setSelectedRating] = useState(0);
   const [reason, setReason] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const modalRef = useRef();
   const ratingModalRef = useRef();
@@ -157,6 +157,7 @@ const Header = () => {
         reason={reason}
         setReason={setReason}
         modalRef={ratingModalRef}
+        submitted={submitted}
         closeModal={() => {
           submitRating(
             currentSession,
@@ -175,9 +176,11 @@ const Header = () => {
             setShowRating,
             selectedRating,
             true,
-            profile.phoneNumber
+            profile.phoneNumber,
+            reason,
+            setSubmitted
           );
-          ratingModalRef.current?.dismiss();
+          // ratingModalRef.current?.dismiss();
         }}
       />
       <View style={styles.header}>

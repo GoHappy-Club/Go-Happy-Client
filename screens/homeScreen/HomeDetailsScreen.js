@@ -9,6 +9,7 @@ import { setMembership, setProfile } from "../../redux/actions/counts";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import { getDiscountValue } from "../../helpers/transactions";
 
 class HomeDetailsScreen extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class HomeDetailsScreen extends Component {
       email: "",
       event: null,
       loader: true,
+      resulatantCost: 0,
     };
     this._retrieveData();
     if (this.props.route.params.deepId) {
@@ -47,11 +49,13 @@ class HomeDetailsScreen extends Component {
   getEventDetails(id) {
     // this.setState({event:null})
     this.state.loader = true;
-    getEvent(id,this.state.phoneNumber)
+    getEvent(id, this.state.phoneNumber)
       .then((response) => {
-        this.setState({ event: response.data.event, loader: false });
-        console.log(response.data);
-        
+        this.setState({
+          event: response.data.event,
+          loader: false,
+          resulatantCost: response.data.event.cost,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -59,7 +63,7 @@ class HomeDetailsScreen extends Component {
       });
   }
 
-  sessionAction(par, _callback) {
+  sessionAction(par, voucher = null) {
     var type = this.props.route.params.type;
     var phoneNumber = this.state.phoneNumber;
     if (type == null) {
@@ -108,8 +112,8 @@ class HomeDetailsScreen extends Component {
             //refund coins to user's membership
             let { membership, actions } = this.props;
             membership.coins = membership.coins + this.state.event.cost;
-            actions.setMembership({...membership});
-            
+            actions.setMembership({ ...membership });
+
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
               return;
@@ -133,14 +137,24 @@ class HomeDetailsScreen extends Component {
       var url = SERVER_URL + "/event/bookEvent";
       var id = this.state.event.id;
       axios
-        .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
+        .post(url, {
+          id: id,
+          phoneNumber: phoneNumber,
+          tambolaTicket: ticket,
+          voucherId: voucher?.voucherId,
+        })
         .then((response) => {
           if (response.data) {
             if (response.data == "SUCCESS") {
+              console.log(voucher);
+              
               // deduct coins from user's membership data in redux
-              let {membership,actions} = this.props;
-              membership.coins = membership.coins - this.state.event.cost;
-              actions.setMembership({...membership});
+              let { membership, actions } = this.props;
+              membership.coins =
+                membership.coins -
+                (this.state.event.cost -
+                  getDiscountValue(voucher, this.state.event));
+              actions.setMembership({ ...membership });
 
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
@@ -167,9 +181,7 @@ class HomeDetailsScreen extends Component {
 
   render() {
     if (this.state.loader == true) {
-      return (
-        <GOHLoader/>
-      );
+      return <GOHLoader />;
     }
     const navigation = this.props.navigation;
     return (
@@ -184,6 +196,7 @@ class HomeDetailsScreen extends Component {
           alreadyBookedSameDayEvent={
             this.props.route.params.alreadyBookedSameDayEvent
           }
+          setResultantCost={(cost) => this.setState({ resulatantCost: cost })}
         />
       )
     );

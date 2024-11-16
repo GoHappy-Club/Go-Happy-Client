@@ -97,7 +97,8 @@ export const submitRating = async (
   rating = 0,
   interested = true,
   phone,
-  reason
+  reason,
+  setSubmitted
 ) => {
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
@@ -131,7 +132,8 @@ export const submitRating = async (
       rating,
       phone,
       currentSession.sessionSubCategory,
-      reason
+      reason,
+      setSubmitted
     );
     setShowRating(false);
   } catch (error) {
@@ -144,7 +146,8 @@ const sendRatingToBackend = async (
   rating,
   phone,
   sessionSubCategory,
-  reason
+  reason,
+  setSubmitted
 ) => {
   try {
     const response = await axios.post(`${SERVER_URL}/event/submitRating`, {
@@ -154,7 +157,9 @@ const sendRatingToBackend = async (
       subCategory: sessionSubCategory,
       reason,
     });
+    setSubmitted(true);
   } catch (error) {
+    setSubmitted(true);
     console.log("Error in submitRating", error);
   }
 };

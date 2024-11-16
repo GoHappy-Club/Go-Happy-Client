@@ -21,6 +21,7 @@ class HomeScreen extends Component {
       events: [],
       error: true,
       whatsappLink: "",
+      ratings:[]
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     this._retrieveData();
@@ -68,6 +69,7 @@ class HomeScreen extends Component {
         <>
           <HomeDashboard
             events={this.state.events}
+            ratings={this.state.ratings}
             childLoader={this.state.childLoader}
             bookEvent={this.bookEvent.bind(this)}
             loadEvents={this.loadEvents.bind(this)}
@@ -106,7 +108,7 @@ class HomeScreen extends Component {
           for (var i = 0; i < response.data.events.length; i++) {
             response.data.events[i].loadingButton = false;
           }
-          this.setState({ events: response.data.events });
+          this.setState({ events: response.data.events,ratings:response.data.ratings });
           this.setState({ error: false });
           this.setState({ childLoader: false });
         }

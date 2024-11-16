@@ -16,6 +16,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RenderHTML from "react-native-render-html";
 import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
 
 export const Itinerary = ({ details, vouchers }) => {
   const [activeSections, setActiveSections] = useState([]);
@@ -156,25 +157,30 @@ export const Itinerary = ({ details, vouchers }) => {
             style={{
               fontSize: 18,
               textAlignVertical: "center",
-              textDecorationLine: "line-through",
+              textDecorationLine: vouchers.length > 1 ? "line-through" : "none",
+              marginLeft: wp(2),
             }}
           >
-            {"  "}₹ {data.cost}
+            ₹ {data.cost}
           </Text>
-          <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
-            {" "}
-            ₹ {data.cost-getMaxVouchersValue()}/- per person
-          </Text>
+          {vouchers.length > 1 && (
+            <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
+              {" "}
+              ₹ {data.cost - getMaxVouchersValue()}/- per person
+            </Text>
+          )}
         </View>
-        <Text
-          style={{
-            fontStyle: "italic",
-            color: Colors.green,
-            fontSize: 14,
-          }}
-        >
-          Yayy! You have a coupon, ask our team to get this discount.
-        </Text>
+        {vouchers.length > 1 && (
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: Colors.green,
+              fontSize: 14,
+            }}
+          >
+            Yayy! You have a coupon, ask our team to get this discount.
+          </Text>
+        )}
         <RenderHTML
           source={{
             html: "<hr/>",

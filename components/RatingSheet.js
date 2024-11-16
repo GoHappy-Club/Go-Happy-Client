@@ -7,8 +7,10 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { X } from "lucide-react-native";
 import Animated, {
@@ -36,8 +38,26 @@ const SessionRatingSheet = ({
   selectedRating,
   setSelectedRating,
   reason,
-  setReason
+  setReason,
+  submitted,
 }) => {
+  const [timeLeft, setTimeLeft] = useState(3);
+
+  useEffect(() => {
+    if (submitted) {
+      if (timeLeft === 0) return;
+
+      const intervalId = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [timeLeft, submitted]);
+
+  useEffect(() => {
+    if (timeLeft == 0) modalRef?.current?.dismiss();
+  }, [submitted, timeLeft]);
+
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
       const containerAnimatedStyle = useAnimatedStyle(() => {
@@ -92,7 +112,7 @@ const SessionRatingSheet = ({
     <BottomSheetModal
       ref={modalRef}
       index={0}
-      snapPoints={["60%"]}
+      snapPoints={["70%"]}
       enablePanDownToClose={true}
       enableDismissOnClose={true}
       enableGestureInteraction={true}
@@ -106,106 +126,84 @@ const SessionRatingSheet = ({
         }
       }}
     >
-      <BottomSheetView style={styles.container}>
-        <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-          <X size={24} color="#000" />
-        </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.keyboardAvoidingView}
+        >
+          <BottomSheetView style={styles.container}>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <X size={24} color="#000" />
+            </TouchableOpacity>
+            {submitted ? (
+              <View style={styles.thanksContainer}>
+                <Text style={styles.ratingTitle}>Thank you for your feedback!</Text>
+              </View>
+            ) : (
+              <View style={styles.contentContainer}>
+                <View>
+                  <Text style={styles.ratingTitle}>Drop your review</Text>
+                  <View style={styles.sessionContainer}>
+                    <View style={styles.sessionTextContainer}>
+                      <Text style={styles.attendedText}>
+                        You recently attended
+                      </Text>
+                      <Text style={styles.sessionName}>
+                        {currentSession?.sessionName}
+                      </Text>
+                      <Text style={styles.improveText}>
+                        Please rate our session so we can improve.
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.emojiRow}>
+                    {renderEmoji(faFrown, 1)}
+                    {renderEmoji(faMeh, 2)}
+                    {renderEmoji(faSmile, 3)}
+                    {renderEmoji(faSmileBeam, 4)}
+                    {renderEmoji(faGrinHearts, 5)}
+                  </View>
+                </View>
 
-        <View style={styles.contentContainer}>
-          <Text style={styles.ratingTitle}>Drop your review</Text>
-          <View style={styles.sessionContainer}>
-            {/* <Image
-              source={{
-                uri: currentSession?.sessionImage,
-              }}
-              style={styles.sessionImage}
-            /> */}
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: wp(4),
-                  fontWeight: "400",
-                  color: Colors.black,
-                  textAlign: "center",
-                }}
-              >
-                You recently attended
-              </Text>
-              <Text style={styles.sessionName}>
-                {currentSession?.sessionName}
-              </Text>
-            </View>
-            {/* <Text style={styles.sessionName} numberOfLines={2}>
-              {currentSession?.sessionName}
-            </Text> */}
-            <Text
-              style={{
-                fontSize: wp(4),
-                fontWeight: "400",
-                color: Colors.black,
-                textAlign: "center",
-              }}
-            >
-              Please rate our session so we can improve.
-            </Text>
-          </View>
-          <View style={styles.emojiRow}>
-            {renderEmoji(faFrown, 1)}
-            {renderEmoji(faMeh, 2)}
-            {renderEmoji(faSmile, 3)}
-            {renderEmoji(faSmileBeam, 4)}
-            {renderEmoji(faGrinHearts, 5)}
-          </View>
-            {selectedRating <= 2 && (
-              <TextInput
-                style={{
-                  width: "100%",
-                  height: hp(8),
-                  borderWidth: 1,
-                  borderColor: "#E0E0E0",
-                  borderRadius: 12,
-                  padding: 12,
-                  textAlignVertical: "top",
-                  color: Colors.black,
-                  backgroundColor: "#FFFFFF",
-                }}
-                placeholder="Please tell us why are you rating us so low so we can improve"
-                placeholderTextColor="#999999"
-                multiline={true}
-                numberOfLines={4}
-                value={reason}
-                onChangeText={setReason}
-              />
+                <View style={styles.bottomContainer}>
+                  {selectedRating <= 2 && (
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Please tell us why are you rating us so low so we can improve"
+                      placeholderTextColor="#999999"
+                      multiline={true}
+                      numberOfLines={4}
+                      value={reason}
+                      onChangeText={setReason}
+                    />
+                  )}
+                  <TouchableOpacity
+                    style={[
+                      styles.submitButton,
+                      selectedRating > 0
+                        ? styles.submitButtonActive
+                        : styles.submitButtonDisabled,
+                    ]}
+                    onPress={() => selectedRating > 0 && submitRating(selectedRating)}
+                    disabled={selectedRating === 0}
+                  >
+                    <Text
+                      style={[
+                        styles.submitButtonText,
+                        selectedRating > 0
+                          ? styles.submitButtonTextActive
+                          : styles.submitButtonTextDisabled,
+                      ]}
+                    >
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             )}
-          <TouchableOpacity
-            style={[
-              styles.submitButton,
-              selectedRating > 0
-                ? styles.submitButtonActive
-                : styles.submitButtonDisabled,
-            ]}
-            onPress={() => selectedRating > 0 && submitRating(selectedRating)}
-            disabled={selectedRating === 0}
-          >
-            <Text
-              style={[
-                styles.submitButtonText,
-                selectedRating > 0
-                  ? styles.submitButtonTextActive
-                  : styles.submitButtonTextDisabled,
-              ]}
-            >
-              Submit
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </BottomSheetView>
+          </BottomSheetView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </BottomSheetModal>
   );
 };
@@ -213,6 +211,9 @@ const SessionRatingSheet = ({
 export default SessionRatingSheet;
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
@@ -236,11 +237,22 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 32,
   },
-  sessionImage: {
-    width: wp(40),
-    height: wp(27),
-    borderRadius: 8,
-    marginRight: 12,
+  sessionTextContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  attendedText: {
+    fontSize: wp(4),
+    fontWeight: "400",
+    color: Colors.black,
+    textAlign: "center",
+  },
+  improveText: {
+    fontSize: wp(4),
+    fontWeight: "400",
+    color: Colors.black,
+    textAlign: "center",
   },
   sessionName: {
     fontSize: wp(7),
@@ -264,15 +276,26 @@ const styles = StyleSheet.create({
   emojiContainer: {
     padding: 16,
     borderRadius: 12,
-    // borderWidth: 1.5,
-    // borderColor: "#E0E0E0",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
   },
   selectedEmoji: {
     borderColor: Colors.white,
-    // backgroundColor: "#F0F8FF",
     backgroundColor: Colors.primary,
+  },
+  bottomContainer: {
+    gap: 16,
+  },
+  textInput: {
+    width: "100%",
+    height: hp(8),
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 12,
+    padding: 12,
+    textAlignVertical: "top",
+    color: Colors.black,
+    backgroundColor: "#FFFFFF",
   },
   submitButton: {
     padding: 16,
@@ -294,5 +317,11 @@ const styles = StyleSheet.create({
   },
   submitButtonTextDisabled: {
     color: "#999999",
+  },
+  thanksContainer: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
 });
