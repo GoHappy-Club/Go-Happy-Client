@@ -64,6 +64,7 @@ class SessionDetails extends Component {
       showVouchers: false,
       vouchers: [],
       voucherLoading: false,
+      selectedVoucher: null,
     };
     this.retrieveData();
     this.modalRef = React.createRef();
@@ -73,17 +74,12 @@ class SessionDetails extends Component {
     const name = await AsyncStorage.getItem("name");
     this.setState({ name: name });
   };
-
   componentDidMount() {
     this.createDynamicReferralLink();
     this.setState({ loadingButton: false });
     const title = this.getTitle();
     this.setState({ title: title });
   }
-
-  // componentDidUpdate(){
-  //   console.log(this.modalRef.current)
-  // }
   createDynamicReferralLink = async () => {
     let selfInviteCode = this.props.selfInviteCode;
     // alert('hi');
@@ -153,11 +149,27 @@ class SessionDetails extends Component {
       return "Seats Full";
     }
     if (this.props.event.costType == "paid")
-      return `Book with ${this.props.event.cost} ${
+      return `Book with ${this.props.event.cost - this.getDiscountValue()} ${
         this.props.event.cost == 1 ? "coin" : "coins"
       }`;
     return "Book";
   }
+
+  getDiscountValue() {
+    const { selectedVoucher } = this.state;
+    const { event } = this.props;
+    if (!selectedVoucher) return 0;
+    const { value, percent, limit } = selectedVoucher;
+    if (value) {
+      return value;
+    }
+    if (percent) {
+      let discount = (event.cost * percent) / 100;
+      return limit ? Math.min(discount, limit) : discount;
+    }
+    return 0;
+  }
+
   handleBelowAge(item, url) {
     let link, shareMessage;
     link = url;
@@ -219,7 +231,10 @@ class SessionDetails extends Component {
       return;
     }
 
-    var output = this.props.sessionAction("book");
+    var output = this.props.sessionAction(
+      "book",
+      this.state.selectedVoucher
+    );
     this.setState({ loadingButton: true });
   }
   async giveRewards(item) {
@@ -236,7 +251,6 @@ class SessionDetails extends Component {
       console.log("Error in giveRewards ==>", error);
     }
   }
-
   isBookingAllowed() {
     if (this.props.membership.freeTrialActive == "true") return true;
     if (
@@ -255,7 +269,6 @@ class SessionDetails extends Component {
 
     return true;
   }
-
   loadDate(item) {
     const dt = fromUnixTime(item / 1000);
     const finalTime = format(dt, "hh:mm a");
@@ -308,7 +321,6 @@ class SessionDetails extends Component {
       .then((result) => {})
       .catch((errorMsg) => {});
   };
-
   tambolaParsing = (item) => {
     var tic = new Array(10);
     for (var i = 0; i < tic.length; i++) {
@@ -402,7 +414,6 @@ class SessionDetails extends Component {
     //console.log("tam", tambolaHtml);
     return tambolaHtml;
   };
-
   loadVouchers = async () => {
     try {
       this.setState({ voucherLoading: true });
@@ -412,7 +423,11 @@ class SessionDetails extends Component {
           phone: this.props.profile.phoneNumber,
         }
       );
-      this.setState({ vouchers: response.data, voucherLoading: false });
+      const eventsVouchers = response.data.filter(
+        (voucher) =>
+          voucher.category == `${this.props.event.type.toLowerCase()}s`
+      );
+      this.setState({ vouchers: eventsVouchers, voucherLoading: false });
     } catch (error) {
       this.setState({ voucherLoading: false });
       console.log("Error in getting rewards ==>", error);
@@ -659,56 +674,101 @@ class SessionDetails extends Component {
         <VoucherBottomSheet
           closeModal={() => {
             this.setState({ showVouchers: false });
-            this.modalRef.current.snapToPosition("13%");
+            this.modalRef.current.snapToPosition(
+              this.state.title.toLowerCase().startsWith("book") ? "13%" : "8%"
+            );
           }}
           modalRef={this.modalRef}
           showVouchers={this.state.showVouchers}
           vouchers={this.state.vouchers}
           voucherLoading={this.state.voucherLoading}
+          title={this.state.title}
+          selectedVoucher={this.state.selectedVoucher}
+          setSelectedVoucher={(newVoucher) =>
+            this.setState({ selectedVoucher: newVoucher })
+          }
           children={
             <View
               style={{
                 backgroundColor: Colors.beige,
                 paddingVertical: hp(1),
-                paddingHorizontal: wp(2),
+                paddingHorizontal: wp(3),
                 borderTopRightRadius: wp(8),
                 borderTopLeftRadius: wp(8),
                 shadowColor: Colors.black,
                 shadowOffset: { width: 0, height: 5 },
                 elevation: 100,
                 width: wp(100),
-                height: hp(13),
+                height: this.state.title.toLowerCase().startsWith("book")
+                  ? hp(13)
+                  : hp(8),
                 gap: hp(1),
-                justifyContent: "flex-end",
+                justifyContent: "center",
               }}
             >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text>Have a voucher?</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({ showVouchers: true }, () => {
-                      this.loadVouchers();
-                    });
-                    this.modalRef.current.snapToPosition("50%");
+              {this.state.title.toLowerCase().startsWith("book") && (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent:
+                      this.state.selectedVoucher == null
+                        ? "flex-end"
+                        : "space-between",
+                    alignItems: "center",
+                    gap: wp(1),
                   }}
                 >
-                  <Text
-                    style={{
-                      color: Colors.primary,
-                      textDecorationLine: "underline",
-                      fontFamily: "Poppins-Regular",
-                    }}
-                  >
-                    Apply Coupon
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  {this.state.selectedVoucher == null ? (
+                    <>
+                      <Text>Have a voucher?</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({ showVouchers: true }, () => {
+                            this.loadVouchers();
+                          });
+                          this.modalRef.current.snapToPosition("60%");
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: Colors.primary,
+                            textDecorationLine: "underline",
+                            // fontFamily: "Poppins-Regular",
+                          }}
+                        >
+                          Apply Coupon
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <Text
+                        style={{
+                          fontFamily: "Poppins-Regular",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Code : {this.state.selectedVoucher.code}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({ selectedVoucher: null });
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: Colors.primary,
+                            textDecorationLine: "underline",
+                            // fontFamily: "Poppins-Regular",
+                          }}
+                        >
+                          Remove
+                        </Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
+              )}
               <View
                 style={{
                   // width:wp(100),

@@ -14,6 +14,7 @@ import { Tab, TabView } from "@rneui/themed";
 import { Colors } from "../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
+import { format, fromUnixTime } from "date-fns";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -27,10 +28,16 @@ const COLORS = {
   pink: "#FFC2E5",
 };
 
-const getRandomColor = () => {
+export const getRandomColor = () => {
   const colorKeys = Object.keys(COLORS);
   const randomIndex = Math.floor(Math.random() * colorKeys.length);
   return COLORS[colorKeys[randomIndex]];
+};
+
+export const formatDate = (date) => {
+  const dt = fromUnixTime(date / 1000);
+  const finalTime = format(dt, "MMM d, yyyy");
+  return finalTime;
 };
 
 const RewardsCard = ({ icon, amount, title, color }) => {
@@ -48,57 +55,90 @@ const RewardsCard = ({ icon, amount, title, color }) => {
   );
 };
 
-export const VouchersCard = ({ image, title, id, onPress }) => {
-  const navigation = useNavigation();
+const VouchersCard = ({ voucher, id, onPress }) => {
   return (
-    <TouchableOpacity
-      style={[styles.voucherCard, { backgroundColor: "white" }]}
-      onPress={() => {
-        navigation.navigate("VoucherDetails", {
-          id: id,
-          image: image,
-          title: title,
-        });
-      }}
-    >
-      <Animated.View
-        style={{
-          width: "100%",
-          height: "70%",
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: "#f9a9f9",
-        }}
-      >
-        <Animated.Image
-          sharedTransitionTag={id}
-          source={{
-            uri: image,
-          }}
+    <TouchableOpacity style={[styles.voucherCard]} onPress={onPress}>
+      {voucher.status != "ACTIVE" && (
+        <View
           style={{
-            width: "100%",
+            position: "absolute",
+            top: 10,
+            right: 10,
+            zIndex: 1,
+            backgroundColor: "black",
+            paddingHorizontal: wp(1),
+            paddingVertical: wp(0.5),
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 12,
+              fontWeight: "bold",
+            }}
+          >
+            {voucher.status == "ACTIVE"
+              ? ""
+              : voucher.status == "REDEEMED"
+              ? "REDEEMED"
+              : "EXPIRED"}
+          </Text>
+        </View>
+      )}
+      <View
+        style={[
+          styles.borderedContainer,
+          {
+            backgroundColor:
+              voucher.status == "ACTIVE" ? "white" : Colors.grey.d,
+          },
+        ]}
+      >
+        <View style={styles.topSection}>
+          <Animated.Image
+            sharedTransitionTag={id}
+            source={{
+              uri: voucher.image,
+            }}
+            style={styles.logoImage}
+          />
+        </View>
+        <View
+          style={{
+            borderColor: "#666",
             height: "100%",
-            // borderRadius: 10,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
+            borderLeftWidth: 1,
+            borderStyle: "dashed",
+            marginLeft: wp(2),
+            marginRight: wp(4),
           }}
         />
-      </Animated.View>
-      <Animated.View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          height: "30%",
-          borderBottomLeftRadius: 10,
-          borderBottomRightRadius: 10,
-          paddingHorizontal: wp(2),
-          borderTopColor: "black",
-          borderTopWidth: 0.5,
-        }}
-      >
-        {title && <Animated.Text sharedTransitionTag={`sharedText${id}`} style={styles.voucherTitle}>{title}</Animated.Text>}
-      </Animated.View>
+        <Animated.View style={styles.titleSection}>
+          <Animated.Text
+            sharedTransitionTag={`sharedValue${id}`}
+            style={styles.amount}
+          >
+            {voucher.value != null
+              ? `₹${voucher.value}`
+              : `${voucher.percent}% OFF`}
+          </Animated.Text>
+          <Animated.Text
+            sharedTransitionTag={`sharedText${id}`}
+            style={styles.cardTitle}
+          >
+            {voucher.title}
+          </Animated.Text>
+          <Animated.Text
+            sharedTransitionTag={`sharedExpiryDate${id}`}
+            style={styles.validityText}
+          >
+            Valid until {formatDate(voucher.expiryDate)}
+          </Animated.Text>
+        </Animated.View>
+      </View>
+      <View style={styles.cutoutLeft} />
+      <View style={styles.cutoutRight} />
     </TouchableOpacity>
   );
 };
@@ -151,14 +191,19 @@ const Vouchers = ({ vouchers, navigation }) => (
         <VouchersCard
           id={item.id}
           key={index}
-          image={item.image}
-          title={item.title}
+          voucher={item}
           color={item.status == "ACTIVE" ? getRandomColor() : "#666"}
-          onPress={() =>
+          onPress={(colorL) =>
             navigation.navigate("VoucherDetails", {
               id: item.id,
               image: item.image,
               title: item.title,
+              color: colorL,
+              value: item.value,
+              percent: item.percent,
+              expiryDate: item.expiryDate,
+              status: item.status,
+              description: item.description,
             })
           }
         />
@@ -168,7 +213,7 @@ const Vouchers = ({ vouchers, navigation }) => (
 );
 
 const Rewards = ({ rewards, vouchers }) => {
-  const [index, setIndex] = useState(null);
+  const [index, setIndex] = useState(0);
   const amount = rewards.reduce((_acc, item) => _acc + item.amount, 0);
   const navigation = useNavigation();
 
@@ -193,11 +238,11 @@ const Rewards = ({ rewards, vouchers }) => {
           <Text style={styles.rewardsLabel}>Earned in Rewards</Text>
         </View>
         <Tab
-          value={index == null ? 0 : index}
+          value={index}
           onChange={(index) => {
             setIndex(index);
           }}
-          dense
+          dense={true}
         >
           <Tab.Item>Rewards</Tab.Item>
           <Tab.Item>Vouchers</Tab.Item>
@@ -265,30 +310,90 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   voucherCard: {
-    width: "45%",
-    height: hp(20),
-    margin: "2%",
-    borderRadius: 10,
-    justifyContent: "flex-start",
+    width: "90%",
+    height: hp(16),
+    marginVertical: "5%",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 10,
-    padding: 1,
+    position: "relative",
+    overflow: "hidden",
+    backdropFilter: "blur(12px)",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  borderedContainer: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    justifyContent: "start",
+    alignItems: "center",
+    flexDirection: "row",
+    padding: wp(1),
+  },
+  topSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "22%",
+    paddingVertical: hp(1),
+    marginLeft: 10,
+  },
+  logoImage: {
+    width: wp(18),
+    height: hp(8),
+    // resizeMode: "contain",
   },
   amount: {
-    fontSize: wp(7),
+    fontSize: wp(8),
     fontWeight: "bold",
     color: "#000",
+    fontFamily: "NunitoSans-SemiBold",
+  },
+  titleSection: {
+    alignItems: "start",
+    width: "100%",
+    paddingVertical: hp(1),
+    flex: 1,
   },
   cardTitle: {
-    fontSize: 14,
-    color: "#000",
-    opacity: 0.9,
-  },
-  voucherTitle: {
     fontSize: wp(4.5),
     color: "#000",
-    opacity: 0.9,
-    fontFamily: "Poppins-Regular",
+    fontFamily: "NunitoSans-SemiBold",
+    width: "80%",
+  },
+  validityText: {
+    fontSize: wp(3.5),
+    color: "#888",
+    fontFamily: "NunitoSans-Regular",
+  },
+  cutoutLeft: {
+    position: "absolute",
+    left: -15,
+    top: "50%",
+    width: 30,
+    height: 30,
+    backgroundColor: "#f7f7f7",
+    borderRadius: 15,
+    transform: [{ translateY: -15 }],
+  },
+  cutoutRight: {
+    position: "absolute",
+    right: -15,
+    top: "50%",
+    width: 30,
+    height: 30,
+    backgroundColor: "#f7f7f7",
+    borderRadius: 15,
+    transform: [{ translateY: -15 }],
   },
 });
 

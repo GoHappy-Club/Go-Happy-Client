@@ -180,7 +180,13 @@ class HomeDashboard extends Component {
       return;
     }
     if (this.getTitle(item) == "Join") {
-      await storeCompletedSession(item.id, item.eventName, item.coverImage,item.subCategory,this.props.profile.phoneNumber);
+      await storeCompletedSession(
+        item.id,
+        item.eventName,
+        item.coverImage,
+        item.subCategory,
+        this.props.profile.phoneNumber
+      );
       setSessionAttended(this.props.profile.phoneNumber);
       await Linking.openURL(item.meetingLink);
       await this.giveRewards(item);
@@ -371,9 +377,27 @@ class HomeDashboard extends Component {
                 )}
               </View>
             </View>
-            <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
-              {this.trimContent(item.eventName, 30)}
-            </Title>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 4,
+              }}
+            >
+              <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
+                {this.trimContent(item.eventName, 30)}
+              </Title>
+              <Text
+                style={{
+                  color: Colors.white,
+                  fontSize:14
+                }}
+              >
+                {this.props?.ratings[item.subCategory]?.toFixed(2)}/5
+              </Text>
+            </View>
 
             <View
               style={{
@@ -451,17 +475,7 @@ class HomeDashboard extends Component {
             {this.state.selectedDate}
           </Text>
           {this.props.childLoader == true && (
-            // <MaterialIndicator color={Colors.primary} />
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: Colors.grey.f0,
-              }}
-            >
-              <GOHLoader />
-            </View>
+            <MaterialIndicator color={Colors.primary} />
           )}
           {this.props.childLoader == false &&
             this.props.events.filter((item) => item.endTime > Date.now())
