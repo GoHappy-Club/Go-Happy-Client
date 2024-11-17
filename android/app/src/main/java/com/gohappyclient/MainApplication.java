@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-// import io.invertase.firebase.RNFirebaseLinksPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 
@@ -32,11 +31,6 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          //packages.add(new ReactNativeFirebaseAppPackage());
-//          packages.add(new AsyncStoragePackage());
-          // packages.add(new ReactNativeContacts());
-          // packages.add(new RNFirebaseLinksPackage());
             return packages;
         }
 

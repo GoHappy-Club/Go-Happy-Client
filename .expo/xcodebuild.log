@@ -1,0 +1,39 @@
+Command line invocation:
+    /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /Users/rakshitsharma/Codes/Go-Happy-Client/ios/GoHappyClient.xcodeproj -configuration Debug -scheme GoHappyClient -destination id=D557BA71-5709-4680-9B91-E84392AD545F
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Prepare packages
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'GoHappyClient' in project 'GoHappyClient' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/usr/bin/ibtool --version --output-format xml1
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.0.sdk -x objective-c++ -c /dev/null
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.0.sdk -x objective-c -c /dev/null
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/rakshitsharma/Codes/Go-Happy-Client/ios/GoHappyClient/Images.xcassets
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Users/rakshitsharma/Downloads/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: cb5de9ee70d7241992c01ce526182076
+Build description path: /Users/rakshitsharma/Library/Developer/Xcode/DerivedData/GoHappyClient-azoolozmqdburkapuxpdrulfjppb/Build/Intermediates.noindex/XCBuildData/cb5de9ee70d7241992c01ce526182076.xcbuilddata
+/Users/rakshitsharma/Codes/Go-Happy-Client/ios/GoHappyClient.xcodeproj:1:1: error: Unable to open base configuration reference file '/Users/rakshitsharma/Codes/Go-Happy-Client/ios/Pods/Target Support Files/Pods-GoHappyClient/Pods-GoHappyClient.debug.xcconfig'. (in target 'GoHappyClient' from project 'GoHappyClient')
+note: Run script build phase 'Bundle React Native code and images' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'GoHappyClient' from project 'GoHappyClient')
