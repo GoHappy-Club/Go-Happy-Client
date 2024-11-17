@@ -67,6 +67,7 @@ class LoginScreen extends Component {
       unformattedNumber: null,
     };
     this.getCurrentUserInfo();
+    console.log("here");
   }
   componentDidMount() {
     dynamicLinks().onLink((url) => {
@@ -111,7 +112,7 @@ class LoginScreen extends Component {
     coins,
     vouchers,
     freeTrialUsed,
-    freeTrialActive
+    freeTrialActive,
   }) {
     let { membership, actions } = this.props;
 
@@ -123,9 +124,9 @@ class LoginScreen extends Component {
       coins: coins,
       vouchers: vouchers,
       freeTrialUsed: freeTrialUsed,
-      freeTrialActive:freeTrialActive
+      freeTrialActive: freeTrialActive,
     };
-    actions.setMembership({...membership});
+    actions.setMembership({ ...membership });
   }
 
   setProfile(
@@ -368,125 +369,136 @@ class LoginScreen extends Component {
   };
   getCurrentUserInfo = async () => {
     try {
+      console.log("token i s1", token1);
+
       const token1 = await AsyncStorage.getItem("token");
-      const fcmToken = await firebase.messaging().getToken();
+      console.log("token i s2", token1);
+      const fcmToken = 123; //await firebase.messaging().getToken();
+
+      console.log("token i s3", token1);
       AsyncStorage.setItem("fcmToken", fcmToken);
       this.setState({ fcmToken: fcmToken });
-      if (token1 != null) {
-        const name = await AsyncStorage.getItem("name");
-        const email = await AsyncStorage.getItem("email");
-        const profileImage = await AsyncStorage.getItem("profileImage");
-        const token = await AsyncStorage.getItem("token");
-        const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-        const sessionsAttended = await AsyncStorage.getItem("sessionsAttended");
-        // const dob = await AsyncStorage.getItem("dob");
-        const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
-        const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
-        const city = await AsyncStorage.getItem("city");
-        const emergencyContact = await AsyncStorage.getItem("emergencyContact");
-        const age = await AsyncStorage.getItem("age");
+      console.log("token i s4", token1);
+      try {
+        if (token1 != null) {
+          const name = await AsyncStorage.getItem("name");
+          const email = await AsyncStorage.getItem("email");
+          const profileImage = await AsyncStorage.getItem("profileImage");
+          const token = await AsyncStorage.getItem("token");
+          const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+          const sessionsAttended = await AsyncStorage.getItem(
+            "sessionsAttended"
+          );
+          // const dob = await AsyncStorage.getItem("dob");
+          const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
+          const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+          const city = await AsyncStorage.getItem("city");
+          const emergencyContact = await AsyncStorage.getItem(
+            "emergencyContact"
+          );
+          const age = await AsyncStorage.getItem("age");
 
-        //retreive membership object to save separately in redux
-        const membershipType = await AsyncStorage.getItem("membershipType");
-        const id = await AsyncStorage.getItem("membershipId");
-        const membershipStartDate = await AsyncStorage.getItem(
-          "membershipStartDate"
-        );
-        const membershipEndDate = await AsyncStorage.getItem(
-          "membershipEndDate"
-        );
-        const coins = await AsyncStorage.getItem("coins");
-        const vouchers = await AsyncStorage.getItem("vouchers");
-        const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
-        const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
-        this.setProfile(
-          name,
-          email,
-          phoneNumber,
-          profileImage,
-          token,
-          sessionsAttended,
-          dateOfJoining,
-          selfInviteCode,
-          city,
-          emergencyContact,
-          fcmToken,
-          age
-        );
-        this.setMembership({
-          membershipType: membershipType,
-          id: id,
-          membershipStartDate: membershipStartDate,
-          membershipEndDate: membershipEndDate,
-          coins: coins,
-          vouchers: vouchers,
-          freeTrialUsed: freeTrialUsed,
-          freeTrialActive: freeTrialActive
-        });
-
-        axios
-          .post(SERVER_URL + "/user/update", {
-            fcmToken: fcmToken,
-            phone: phoneNumber,
-          })
-          .then((response) => {
-            AsyncStorage.setItem(
-              "freeTrialActive",
-              String(response.data.freeTrialActive)
-            );
-            AsyncStorage.setItem(
-              "membershipType",
-              response.data.membershipType
-            );
-            AsyncStorage.setItem(
-              "membershipStartDate",
-              String(response.data?.membershipStartDate)
-            );
-            AsyncStorage.setItem(
-              "membershipEndDate",
-              String(response.data?.membershipEndDate)
-            );
-            AsyncStorage.setItem(
-              "coins",
-              String(response.data?.coins)
-            );
-            AsyncStorage.setItem(
-              "vouchers",
-              JSON.stringify(response.data?.vouchers)
-            );
-            AsyncStorage.setItem(
-              "freeTrialUsed",
-              String(response.data?.freeTrialUsed)
-            );
-            AsyncStorage.setItem(
-              "freeTrialActive",
-              String(response.data?.freeTrialActive)
-            );
-
-            this.setMembership({
-              membershipType: response.data.membershipType,
-              id: response.data.id,
-              membershipStartDate: response.data?.membershipStartDate,
-              membershipEndDate: response.data?.membershipEndDate,
-              coins: response.data.coins,
-              vouchers: response.data?.vouchers,
-              freeTrialUsed: response.data?.freeTrialUsed,
-              freeTrialActive:response.data?.freeTrialActive
-            });
-          })
-          .catch((error) => {
-            console.log(error);
+          //retreive membership object to save separately in redux
+          const membershipType = await AsyncStorage.getItem("membershipType");
+          const id = await AsyncStorage.getItem("membershipId");
+          const membershipStartDate = await AsyncStorage.getItem(
+            "membershipStartDate"
+          );
+          const membershipEndDate = await AsyncStorage.getItem(
+            "membershipEndDate"
+          );
+          const coins = await AsyncStorage.getItem("coins");
+          const vouchers = await AsyncStorage.getItem("vouchers");
+          const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
+          const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
+          this.setProfile(
+            name,
+            email,
+            phoneNumber,
+            profileImage,
+            token,
+            sessionsAttended,
+            dateOfJoining,
+            selfInviteCode,
+            city,
+            emergencyContact,
+            fcmToken,
+            age
+          );
+          this.setMembership({
+            membershipType: membershipType,
+            id: id,
+            membershipStartDate: membershipStartDate,
+            membershipEndDate: membershipEndDate,
+            coins: coins,
+            vouchers: vouchers,
+            freeTrialUsed: freeTrialUsed,
+            freeTrialActive: freeTrialActive,
           });
-        this.props.navigation.replace("Additional Details", {
-          navigation: this.props.navigation,
-          email: email,
-          phoneNumber: phoneNumber,
-          name: name,
-          dateOfJoining: dateOfJoining,
-          city: city,
-          emergencyContact: emergencyContact,
-        });
-        return;
+
+          axios
+            .post(SERVER_URL + "/user/update", {
+              fcmToken: fcmToken,
+              phone: phoneNumber,
+            })
+            .then((response) => {
+              AsyncStorage.setItem(
+                "freeTrialActive",
+                String(response.data.freeTrialActive)
+              );
+              AsyncStorage.setItem(
+                "membershipType",
+                response.data.membershipType
+              );
+              AsyncStorage.setItem(
+                "membershipStartDate",
+                String(response.data?.membershipStartDate)
+              );
+              AsyncStorage.setItem(
+                "membershipEndDate",
+                String(response.data?.membershipEndDate)
+              );
+              AsyncStorage.setItem("coins", String(response.data?.coins));
+              AsyncStorage.setItem(
+                "vouchers",
+                JSON.stringify(response.data?.vouchers)
+              );
+              AsyncStorage.setItem(
+                "freeTrialUsed",
+                String(response.data?.freeTrialUsed)
+              );
+              AsyncStorage.setItem(
+                "freeTrialActive",
+                String(response.data?.freeTrialActive)
+              );
+
+              this.setMembership({
+                membershipType: response.data.membershipType,
+                id: response.data.id,
+                membershipStartDate: response.data?.membershipStartDate,
+                membershipEndDate: response.data?.membershipEndDate,
+                coins: response.data.coins,
+                vouchers: response.data?.vouchers,
+                freeTrialUsed: response.data?.freeTrialUsed,
+                freeTrialActive: response.data?.freeTrialActive,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          this.props.navigation.replace("Additional Details", {
+            navigation: this.props.navigation,
+            email: email,
+            phoneNumber: phoneNumber,
+            name: name,
+            dateOfJoining: dateOfJoining,
+            city: city,
+            emergencyContact: emergencyContact,
+          });
+          return;
+        }
+      } catch (error) {
+        console.log(error);
       }
       this.setState({ loader: false });
     } catch (error) {}
@@ -536,7 +548,7 @@ class LoginScreen extends Component {
             coins: response.data.coins,
             vouchers: response.data?.vouchers,
             freeTrialUsed: response.data?.freeTrialUsed,
-            freeTrialActive:response.data?.freeTrialActive
+            freeTrialActive: response.data?.freeTrialActive,
           });
           if (response.data.phone != null) {
             AsyncStorage.setItem("phoneNumber", response.data.phone);
@@ -557,31 +569,19 @@ class LoginScreen extends Component {
             AsyncStorage.setItem("city", response.data.city);
           }
           if (response.data.profileImage != null) {
-            AsyncStorage.setItem(
-              "profileImage",
-              response.data.profileImage
-            );
+            AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
           AsyncStorage.setItem("token", token);
           AsyncStorage.setItem(
             "sessionsAttended",
             response.data.sessionsAttended
           );
-          AsyncStorage.setItem(
-            "dateOfJoining",
-            response.data.dateOfJoining
-          );
-          AsyncStorage.setItem(
-            "selfInviteCode",
-            response.data.selfInviteCode
-          );
+          AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
+          AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           AsyncStorage.setItem("age", response.data.age);
 
           // store membership details in async storage
-          AsyncStorage.setItem(
-            "membershipType",
-            response.data.membershipType
-          );
+          AsyncStorage.setItem("membershipType", response.data.membershipType);
           AsyncStorage.setItem("membershipId", response.data.id);
           if (response.data.membershipStartDate != null)
             AsyncStorage.setItem(
@@ -679,9 +679,7 @@ class LoginScreen extends Component {
   }
   render() {
     if (this.state.loader == true) {
-      return (
-        <GOHLoader/>
-      );
+      return <GOHLoader />;
     }
     return (
       <View style={styles.container}>

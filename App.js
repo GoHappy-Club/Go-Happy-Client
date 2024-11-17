@@ -29,7 +29,7 @@ import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as configData from "./config/local/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
-import PushNotification from "react-native-push-notification";
+// import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
 import firebase from "@react-native-firebase/app";
 import { useSelector, useDispatch } from "react-redux";
@@ -72,18 +72,18 @@ Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
 
-PushNotification.createChannel(
-  {
-    channelId: "events", // (required)
-    channelName: "My channel", // (required)
-    channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-    playSound: true, // (optional) default: true
-    soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-    importance: 4, // (optional) default: 4. Int value of the Android notification importance
-    vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-  },
-  (created) => crashlytics().log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-);
+// PushNotification.createChannel(
+//   {
+//     channelId: "events", // (required)
+//     channelName: "My channel", // (required)
+//     channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+//     playSound: true, // (optional) default: true
+//     soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+//     importance: 4, // (optional) default: 4. Int value of the Android notification importance
+//     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+//   },
+//   (created) => crashlytics().log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+// );
 
 const requestNotificationPermission = async () => {
   if (Platform.OS === "android") {
@@ -133,7 +133,7 @@ const toastConfig = {
 };
 
 export default function App() {
-  requestNotificationPermission();
+  // requestNotificationPermission();
   const navigationRef = React.createRef();
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
@@ -151,7 +151,6 @@ export default function App() {
   // });
   const [isConnected, setIsConnected] = useState(true);
   const [token, setToken] = useState(false);
-
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
@@ -230,7 +229,7 @@ export default function App() {
 
   useEffect(() => {
     recheck();
-    checkVersion();
+    // checkVersion();
     const fetchData = async () => {
       try {
         // Retrieve data from AsyncStorage
@@ -292,77 +291,77 @@ export default function App() {
     };
     setToken(true);
     fetchData();
-    firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
-      if (remoteMessage == null) {
-        return;
-      }
-      try {
-        const incomingDeepLink = remoteMessage.data?.deepLink;
-        const type = remoteMessage.data?.type;
-        if (type && type == "highPriorityReminder") {
-          setNotify(remoteMessage);
-        } else {
-          if (incomingDeepLink) {
-            Linking.openURL(incomingDeepLink);
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-    firebase
-      .messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        console.log("Initial Message: ", remoteMessage);
-        if (remoteMessage == null) {
-          return;
-        }
-        try {
-          const incomingDeepLink = remoteMessage.data?.deepLink;
-          const type = remoteMessage.data?.type;
-          if (type && type == "highPriorityReminder") {
-            setNotify(remoteMessage);
-          } else {
-            if (incomingDeepLink) {
-              Linking.openURL(incomingDeepLink);
-            }
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    const unsubscribe = firebase
-      .messaging()
-      .onMessage(async (remoteMessage) => {
-        const incomingDeepLink = remoteMessage.data?.deepLink;
-        const type = remoteMessage.data?.type;
-        if (type && type == "subscriptionUpdate") {
-          const userMembership = JSON.parse(remoteMessage.data.userMembership);
-          updateUser({
-            membershipType: userMembership.membershipType,
-            id: userMembership.id,
-            membershipStartDate: userMembership.membershipStartDate,
-            membershipEndDate: userMembership.membershipEndDate,
-            coins: userMembership.coins,
-          });
-          return;
-        }
-        if (type && type == "highPriorityReminder") setNotify(remoteMessage);
-        else {
-          Toast.show({
-            config: { toastConfig },
-            text1: remoteMessage.notification.title,
-            text2: remoteMessage.notification.body,
-            autoHide: true,
-            visibilityTime: 10000,
-            onPress: () => {
-              Linking.openURL(incomingDeepLink);
-            },
-          });
-        }
-      });
-    return unsubscribe;
+    // firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
+    //   if (remoteMessage == null) {
+    //     return;
+    //   }
+    //   try {
+    //     const incomingDeepLink = remoteMessage.data?.deepLink;
+    //     const type = remoteMessage.data?.type;
+    //     if (type && type == "highPriorityReminder") {
+    //       setNotify(remoteMessage);
+    //     } else {
+    //       if (incomingDeepLink) {
+    //         Linking.openURL(incomingDeepLink);
+    //       }
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // });
+    // firebase
+    //   .messaging()
+    //   .getInitialNotification()
+    //   .then((remoteMessage) => {
+    //     console.log("Initial Message: ", remoteMessage);
+    //     if (remoteMessage == null) {
+    //       return;
+    //     }
+    //     try {
+    //       const incomingDeepLink = remoteMessage.data?.deepLink;
+    //       const type = remoteMessage.data?.type;
+    //       if (type && type == "highPriorityReminder") {
+    //         setNotify(remoteMessage);
+    //       } else {
+    //         if (incomingDeepLink) {
+    //           Linking.openURL(incomingDeepLink);
+    //         }
+    //       }
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   });
+    // const unsubscribe = firebase
+    //   .messaging()
+    //   .onMessage(async (remoteMessage) => {
+    //     const incomingDeepLink = remoteMessage.data?.deepLink;
+    //     const type = remoteMessage.data?.type;
+    //     if (type && type == "subscriptionUpdate") {
+    //       const userMembership = JSON.parse(remoteMessage.data.userMembership);
+    //       updateUser({
+    //         membershipType: userMembership.membershipType,
+    //         id: userMembership.id,
+    //         membershipStartDate: userMembership.membershipStartDate,
+    //         membershipEndDate: userMembership.membershipEndDate,
+    //         coins: userMembership.coins,
+    //       });
+    //       return;
+    //     }
+    //     if (type && type == "highPriorityReminder") setNotify(remoteMessage);
+    //     else {
+    //       Toast.show({
+    //         config: { toastConfig },
+    //         text1: remoteMessage.notification.title,
+    //         text2: remoteMessage.notification.body,
+    //         autoHide: true,
+    //         visibilityTime: 10000,
+    //         onPress: () => {
+    //           Linking.openURL(incomingDeepLink);
+    //         },
+    //       });
+    //     }
+    //   });
+    // return unsubscribe;
   }, []);
 
   const updateUser = ({
@@ -908,8 +907,8 @@ export default function App() {
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
-                      presentation: "modal",
-                      animation: "fade_from_bottom",
+                      // presentation: "modal",
+                      // animation: "fade_from_bottom",
                     })}
                   />
                 </>

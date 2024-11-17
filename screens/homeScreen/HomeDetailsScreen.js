@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PushNotification from "react-native-push-notification";
+// import PushNotification from "react-native-push-notification";
 import Video from "react-native-video";
 import { Linking, StyleSheet } from "react-native";
 import SessionDetails from "../../components/SessionDetails";
@@ -147,7 +147,7 @@ class HomeDetailsScreen extends Component {
           if (response.data) {
             if (response.data == "SUCCESS") {
               console.log(voucher);
-              
+
               // deduct coins from user's membership data in redux
               let { membership, actions } = this.props;
               membership.coins =
