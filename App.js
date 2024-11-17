@@ -194,7 +194,7 @@ export default function App() {
       membershipEndDate: membershipEndDate,
       coins: coins,
     };
-    dispatch(setMembership({...newMembership}));
+    dispatch(setMembership({ ...newMembership }));
   };
 
   const setNewProfile = (
@@ -864,7 +864,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:true,
+                      headerTransparent: true,
                       headerLeft: () => (
                         // <TouchableOpacity
                         //   style={styles.newBackButton}
@@ -890,7 +890,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:true,
+                      headerTransparent: true,
                       headerLeft: () => (
                         // <TouchableOpacity
                         //   style={styles.newBackButton}
