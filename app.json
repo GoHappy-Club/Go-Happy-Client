@@ -1,7 +1,4 @@
 {
   "name": "GoHappyClient",
-  "displayName": "GoHappy Club",
-  "ios": {
-    "bundleIdentifier": "com.gohappyclient"
-  }
+  "displayName": "GoHappy Club"
 }
