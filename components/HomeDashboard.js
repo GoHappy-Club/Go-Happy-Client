@@ -365,7 +365,7 @@ class HomeDashboard extends Component {
                       right: 0,
                     }}
                   >
-                    {item.cost}{" "}
+                    {item?.cost}{" "}
                     <Image
                       source={require("../images/GoCoins.png")}
                       style={{
@@ -392,7 +392,7 @@ class HomeDashboard extends Component {
               <Text
                 style={{
                   color: Colors.white,
-                  fontSize:14
+                  fontSize: 14,
                 }}
               >
                 {this.props?.ratings[item.subCategory]?.toFixed(2)}/5
