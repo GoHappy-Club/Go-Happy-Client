@@ -22,6 +22,8 @@
     "@react-native-community/blur": "^4.4.1",
     "@react-native-firebase/analytics": "17.5.0",
     "@react-native-firebase/app": "17.5.0",
+    "@react-native-community/cli-platform-android": "6.1.0",
+    "@react-native-community/cli-platform-ios": "6.1.0",
     "@react-native-firebase/auth": "17.5.0",
     "@react-native-firebase/crashlytics": "^17.5.0",
     "@react-native-firebase/dynamic-links": "17.5.0",
