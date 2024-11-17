@@ -1,9 +1,0 @@
---- xcodebuild: WARNING: Using the first of multiple matching destinations:
-{ platform:iOS Simulator, id:D557BA71-5709-4680-9B91-E84392AD545F, OS:18.0, name:iPhone SE (3rd generation) }
-{ platform:iOS Simulator, id:D557BA71-5709-4680-9B91-E84392AD545F, OS:18.0, name:iPhone SE (3rd generation) }
-** BUILD FAILED **
-
-
-The following build commands failed:
-	Building project GoHappyClient with scheme GoHappyClient and configuration Debug
-(1 failure)
