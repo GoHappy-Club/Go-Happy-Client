@@ -105,8 +105,6 @@ const MyProfile = ({ navigation }) => {
         height: 400,
         cropping: true,
         includeBase64: true,
-        cropperCircleOverlay: true,
-        cropperChooseColor: true,
         freeStyleCropEnabled: true,
       };
       ImagePicker.openPicker(options)
