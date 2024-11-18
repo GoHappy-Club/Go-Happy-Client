@@ -19,6 +19,8 @@ import com.reactnativecommunity.clipboard.ClipboardPackage;
 import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-firebase/analytics
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+// @react-native-google-signin/google-signin
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // @react-native-firebase/app
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-firebase/auth
@@ -29,8 +31,6 @@ import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
 import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 // @react-native-firebase/messaging
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
-// @react-native-google-signin/google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // @react-native-masked-view/masked-view
 import org.reactnative.maskedview.RNCMaskedViewPackage;
 // lottie-react-native
@@ -44,7 +44,9 @@ import com.henninghall.date_picker.DatePickerPackage;
 // react-native-device-info
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 // react-native-gesture-handler
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.gesturehandler.RNGestureHandlerPackage;
+// react-native-image-crop-picker
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 // react-native-image-picker
 import com.imagepicker.ImagePickerPackage;
 // react-native-linear-gradient
@@ -122,12 +124,12 @@ public class PackageList {
       new ClipboardPackage(),
       new BlurViewPackage(),
       new ReactNativeFirebaseAnalyticsPackage(),
+      new RNGoogleSigninPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseCrashlyticsPackage(),
       new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseMessagingPackage(),
-      new RNGoogleSigninPackage(),
       new RNCMaskedViewPackage(),
       new LottiePackage(),
       new RNBranchPackage(),
@@ -135,6 +137,7 @@ public class PackageList {
       new DatePickerPackage(),
       new RNDeviceInfo(),
       new RNGestureHandlerPackage(),
+      new PickerPackage(),
       new ImagePickerPackage(),
       new LinearGradientPackage(),
       new SplashScreenReactPackage(),

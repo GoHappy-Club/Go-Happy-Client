@@ -13,6 +13,7 @@ import {
   Animated,
   Easing,
   AppState,
+  SafeAreaView,
 } from "react-native";
 import { Colors } from "../assets/colors/color";
 import { useDispatch, useSelector } from "react-redux";
@@ -144,7 +145,7 @@ const Header = () => {
   }
 
   return (
-    <>
+    <SafeAreaView>
       <BottomSheet
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
@@ -249,7 +250,7 @@ const Header = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
