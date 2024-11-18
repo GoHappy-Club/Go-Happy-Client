@@ -74,7 +74,7 @@ const Item = ({ item, onPress }) => {
 const SearchBar = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [events, setEvents] = useState(null);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
@@ -149,7 +149,7 @@ const SearchBar = () => {
 
   const handleSearch = async (text) => {
     if (!text.trim()) {
-      setEvents(null);
+      setEvents([]);
       return;
     }
 
@@ -293,11 +293,11 @@ const SearchBar = () => {
           <X color="#000" size={24} />
         </TouchableOpacity>
       </Animated.View>
-      {isSearchActive &&
-        !loading &&
-        searchText != "" &&
-        events &&
-        Object.keys(events).length >= 0 && (
+        {isSearchActive &&
+          !loading &&
+          searchText != "" &&
+          // events &&
+          Object.keys(events).length >= 0 && (
           <>
             <FlatList
               data={events}
@@ -312,7 +312,7 @@ const SearchBar = () => {
               keyboardDismissMode="on-drag"
             />
           </>
-        )}
+          )}
       {isSearchActive && !searchText && recentSearches.length > 0 && (
         <RecentSearches />
       )}
@@ -330,13 +330,9 @@ const SearchBar = () => {
       {isSearchActive && loading && (
         <View
           style={{
-            flex: 1,
             justifyContent: "center",
             alignItems: "center",
             marginTop: height * 0.4,
-            position: "absolute",
-            top: "100%",
-            left: "45%",
           }}
         >
           <MaterialIndicator color={Colors.primary} />
