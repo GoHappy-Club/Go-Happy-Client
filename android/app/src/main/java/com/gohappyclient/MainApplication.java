@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 // import io.invertase.firebase.RNFirebaseLinksPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
