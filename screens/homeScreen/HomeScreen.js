@@ -2,7 +2,7 @@ import React, { Component } from "react";
 //import axios from "axios";
 import HomeDashboard from "../../components/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
+
 import tambola from "tambola";
 import Video from "react-native-video";
 import { connect } from "react-redux";
