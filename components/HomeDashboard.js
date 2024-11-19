@@ -450,13 +450,13 @@ class HomeDashboard extends Component {
     );
     return (
       <>
-        <View>
+        <View style={{ backgroundColor: "white" }}>
           <SearchBar
             loadCaller={this.loadCaller}
             checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
           />
         </View>
-        <View style={{ flex: 1, backgroundColor: Colors.grey.f0 }}>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
           <CalendarDays
             numberOfDays={15}
             daysInView={3}

@@ -373,7 +373,7 @@ class LoginScreen extends Component {
 
       const token1 = await AsyncStorage.getItem("token");
       console.log("token i s2", token1);
-      const fcmToken = 123; //await firebase.messaging().getToken();
+      const fcmToken = await firebase.messaging().getToken();
 
       console.log("token i s3", token1);
       AsyncStorage.setItem("fcmToken", fcmToken);

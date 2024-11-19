@@ -291,77 +291,77 @@ export default function App() {
     };
     setToken(true);
     fetchData();
-    // firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
-    //   if (remoteMessage == null) {
-    //     return;
-    //   }
-    //   try {
-    //     const incomingDeepLink = remoteMessage.data?.deepLink;
-    //     const type = remoteMessage.data?.type;
-    //     if (type && type == "highPriorityReminder") {
-    //       setNotify(remoteMessage);
-    //     } else {
-    //       if (incomingDeepLink) {
-    //         Linking.openURL(incomingDeepLink);
-    //       }
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // });
-    // firebase
-    //   .messaging()
-    //   .getInitialNotification()
-    //   .then((remoteMessage) => {
-    //     console.log("Initial Message: ", remoteMessage);
-    //     if (remoteMessage == null) {
-    //       return;
-    //     }
-    //     try {
-    //       const incomingDeepLink = remoteMessage.data?.deepLink;
-    //       const type = remoteMessage.data?.type;
-    //       if (type && type == "highPriorityReminder") {
-    //         setNotify(remoteMessage);
-    //       } else {
-    //         if (incomingDeepLink) {
-    //           Linking.openURL(incomingDeepLink);
-    //         }
-    //       }
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //   });
-    // const unsubscribe = firebase
-    //   .messaging()
-    //   .onMessage(async (remoteMessage) => {
-    //     const incomingDeepLink = remoteMessage.data?.deepLink;
-    //     const type = remoteMessage.data?.type;
-    //     if (type && type == "subscriptionUpdate") {
-    //       const userMembership = JSON.parse(remoteMessage.data.userMembership);
-    //       updateUser({
-    //         membershipType: userMembership.membershipType,
-    //         id: userMembership.id,
-    //         membershipStartDate: userMembership.membershipStartDate,
-    //         membershipEndDate: userMembership.membershipEndDate,
-    //         coins: userMembership.coins,
-    //       });
-    //       return;
-    //     }
-    //     if (type && type == "highPriorityReminder") setNotify(remoteMessage);
-    //     else {
-    //       Toast.show({
-    //         config: { toastConfig },
-    //         text1: remoteMessage.notification.title,
-    //         text2: remoteMessage.notification.body,
-    //         autoHide: true,
-    //         visibilityTime: 10000,
-    //         onPress: () => {
-    //           Linking.openURL(incomingDeepLink);
-    //         },
-    //       });
-    //     }
-    //   });
-    // return unsubscribe;
+    firebase.messaging().onNotificationOpenedApp((remoteMessage) => {
+      if (remoteMessage == null) {
+        return;
+      }
+      try {
+        const incomingDeepLink = remoteMessage.data?.deepLink;
+        const type = remoteMessage.data?.type;
+        if (type && type == "highPriorityReminder") {
+          setNotify(remoteMessage);
+        } else {
+          if (incomingDeepLink) {
+            Linking.openURL(incomingDeepLink);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    firebase
+      .messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        console.log("Initial Message: ", remoteMessage);
+        if (remoteMessage == null) {
+          return;
+        }
+        try {
+          const incomingDeepLink = remoteMessage.data?.deepLink;
+          const type = remoteMessage.data?.type;
+          if (type && type == "highPriorityReminder") {
+            setNotify(remoteMessage);
+          } else {
+            if (incomingDeepLink) {
+              Linking.openURL(incomingDeepLink);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    const unsubscribe = firebase
+      .messaging()
+      .onMessage(async (remoteMessage) => {
+        const incomingDeepLink = remoteMessage.data?.deepLink;
+        const type = remoteMessage.data?.type;
+        if (type && type == "subscriptionUpdate") {
+          const userMembership = JSON.parse(remoteMessage.data.userMembership);
+          updateUser({
+            membershipType: userMembership.membershipType,
+            id: userMembership.id,
+            membershipStartDate: userMembership.membershipStartDate,
+            membershipEndDate: userMembership.membershipEndDate,
+            coins: userMembership.coins,
+          });
+          return;
+        }
+        if (type && type == "highPriorityReminder") setNotify(remoteMessage);
+        else {
+          Toast.show({
+            config: { toastConfig },
+            text1: remoteMessage.notification.title,
+            text2: remoteMessage.notification.body,
+            autoHide: true,
+            visibilityTime: 10000,
+            onPress: () => {
+              Linking.openURL(incomingDeepLink);
+            },
+          });
+        }
+      });
+    return unsubscribe;
   }, []);
 
   const updateUser = ({
