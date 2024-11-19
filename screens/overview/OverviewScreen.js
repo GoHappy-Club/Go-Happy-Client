@@ -132,8 +132,14 @@ class OverviewScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <View pointerEvents={this.state.isBlocking ? "none" : "auto"}>
-          <ScrollView ref={this.scrollViewRef} showsVerticalScrollIndicator={false}>
+        <View
+          pointerEvents={this.state.isBlocking ? "none" : "auto"}
+          style={{ backgroundColor: "white" }}
+        >
+          <ScrollView
+            ref={this.scrollViewRef}
+            showsVerticalScrollIndicator={false}
+          >
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}
@@ -168,7 +174,7 @@ class OverviewScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader/>
+        <GOHLoader />
         // </ScrollView>
       );
     }

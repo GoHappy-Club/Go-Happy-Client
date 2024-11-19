@@ -36,10 +36,10 @@ class Payments extends Component {
     amount,
     error_handler,
     paymentType,
-    orderId=null,
-    tambolaTicket=null,
+    orderId = null,
+    tambolaTicket = null,
     membershipId,
-    coinsToGive=null
+    coinsToGive = null
   ) {
     payload = await getPayload(
       phone,
@@ -87,16 +87,31 @@ class Payments extends Component {
       error_handler();
     }
   }
-  phonePe(phone, amount, callback, error_handler, paymentType,orderId=null,tambolaTicket=null,membershipId,coinsToGive=null) {
+  phonePe(
+    phone,
+    amount,
+    callback,
+    error_handler,
+    paymentType,
+    orderId = null,
+    tambolaTicket = null,
+    membershipId,
+    coinsToGive = null
+  ) {
     //console.log('phonepe')
+    const _this = this;
     PhonePePaymentSDK.init(
-      this.state.environmentDropDownValue,
-      this.state.merchantId,
-      this.state.appId,
+      _this.state.environmentDropDownValue,
+      _this.state.merchantId,
+      _this.state.appId,
       true
     )
-      .then((result) => {
-        this.startTransaction(
+      .then(async (result) => {
+        _this.setState({
+          message: "Message: SDK Initialisation ->",
+        });
+        console.log(_this.state.message);
+        await this.startTransaction(
           phone,
           amount,
           callback,
@@ -114,15 +129,34 @@ class Payments extends Component {
       });
     //console.log(error)
   }
-  async startTransaction(phone, amount, callback, error_handler, paymentType,membershipId,coinsToGive) {
-    payload = await getPayload(phone, amount * 100, paymentType,null,null,membershipId,coinsToGive);
+  async startTransaction(
+    phone,
+    amount,
+    callback,
+    error_handler,
+    paymentType,
+    membershipId,
+    coinsToGive
+  ) {
+    payload = await getPayload(
+      phone,
+      amount * 100,
+      paymentType,
+      null,
+      null,
+      membershipId,
+      coinsToGive
+    );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
+    console.log(checksum);
     PhonePePaymentSDK.startTransaction(
       requestBody,
       checksum,
-      this.state.packageName,
-      this.state.callbackURL
+      // this.state.packageName,
+      // this.state.callbackURL
+      null,
+      "gohappyclub"
     )
       .then((a) => {
         console.log(a);

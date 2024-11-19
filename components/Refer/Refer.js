@@ -100,7 +100,9 @@ class Refer extends Component {
   }
   copyToClipboard = () => {
     Clipboard.setString(this.state.referralLink);
-    ToastAndroid.show("Referral link copied", ToastAndroid.LONG);
+    if (Platform.OS == "android") {
+      ToastAndroid.show("Referral link copied", ToastAndroid.LONG);
+    }
   };
   trimContent(text, cut) {
     if (text.length < cut) {

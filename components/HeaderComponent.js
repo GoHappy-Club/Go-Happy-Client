@@ -146,6 +146,7 @@ const Header = () => {
 
   return (
     <SafeAreaView>
+      <StatusBar barStyle="dark-content" backgroundColor="#25D366" />
       <BottomSheet
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 0.25 * StatusBar.currentHeight,
-    backgroundColor: Colors.grey.header,
+    backgroundColor: Colors.white,
     elevation: 30,
   },
   userInfo: {

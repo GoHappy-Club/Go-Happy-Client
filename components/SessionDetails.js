@@ -4,6 +4,7 @@ import {
   Image,
   Linking,
   Modal,
+  SafeAreaView,
   ScrollView,
   Share,
   StyleSheet,
@@ -231,10 +232,7 @@ class SessionDetails extends Component {
       return;
     }
 
-    var output = this.props.sessionAction(
-      "book",
-      this.state.selectedVoucher
-    );
+    var output = this.props.sessionAction("book", this.state.selectedVoucher);
     this.setState({ loadingButton: true });
   }
   async giveRewards(item) {
@@ -688,7 +686,7 @@ class SessionDetails extends Component {
             this.setState({ selectedVoucher: newVoucher })
           }
           children={
-            <View
+            <SafeAreaView
               style={{
                 backgroundColor: Colors.beige,
                 paddingVertical: hp(1),
@@ -769,9 +767,9 @@ class SessionDetails extends Component {
                   )}
                 </View>
               )}
-              <View
+              <SafeAreaView
                 style={{
-                  // width:wp(100),
+                  width: wp(100),
                   // margin: WIDTH * 0.02,
                   flexDirection:
                     this.state.title == "Cancel Your Booking"
@@ -782,7 +780,9 @@ class SessionDetails extends Component {
                       ? "space-evenly"
                       : "center",
                   alignItems:
-                    this.state.title == "Cancel Your Booking" ? "center" : "",
+                    this.state.title == "Cancel Your Booking"
+                      ? "center"
+                      : "center",
                   gap: WIDTH * 0.02,
                 }}
               >
@@ -803,6 +803,8 @@ class SessionDetails extends Component {
                     minWidth: WIDTH * 0.55,
                     width: "100%",
                     minHeight: HEIGHT * 0.05,
+                    alignSelf: "center",
+                    alignContent: "center",
                   }}
                   title={this.getTitle()}
                   loading={this.state.loadingButton}
@@ -824,8 +826,8 @@ class SessionDetails extends Component {
                     }
                   }}
                 ></Button>
-              </View>
-            </View>
+              </SafeAreaView>
+            </SafeAreaView>
           }
         />
         {item.recordingLink != null && (

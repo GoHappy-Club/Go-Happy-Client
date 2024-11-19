@@ -21,7 +21,7 @@ class HomeScreen extends Component {
       events: [],
       error: true,
       whatsappLink: "",
-      ratings:[]
+      ratings: [],
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     this._retrieveData();
@@ -88,7 +88,7 @@ class HomeScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader/>
+        <GOHLoader />
         // </ScrollView>
       );
     }
@@ -108,7 +108,10 @@ class HomeScreen extends Component {
           for (var i = 0; i < response.data.events.length; i++) {
             response.data.events[i].loadingButton = false;
           }
-          this.setState({ events: response.data.events,ratings:response.data.ratings });
+          this.setState({
+            events: response.data.events,
+            ratings: response.data.ratings,
+          });
           this.setState({ error: false });
           this.setState({ childLoader: false });
         }
@@ -129,8 +132,7 @@ class HomeScreen extends Component {
     //console.log('phone is', phoneNumber)
     var id = item.id;
     var url = SERVER_URL + "/event/bookEvent";
-    let {membership,actions} = this.props;
-    
+    let { membership, actions } = this.props;
 
     axios
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
@@ -150,7 +152,7 @@ class HomeScreen extends Component {
 
             // deduct coins from user's membership data in redux
             membership.coins = membership.coins - item.cost;
-            actions.setMembership({...membership});
+            actions.setMembership({ ...membership });
 
             this.loadEvents(selectedDate);
             // _callback();
@@ -174,9 +176,9 @@ class HomeScreen extends Component {
 const mapStateToProps = (state) => ({
   count: state.count.count,
   profile: state.profile.profile,
-  membership : state.membership.membership,
+  membership: state.membership.membership,
 });
-const ActionCreators = Object.assign({}, { setProfile,setMembership });
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
