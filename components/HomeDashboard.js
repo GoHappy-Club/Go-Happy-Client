@@ -212,8 +212,8 @@ class HomeDashboard extends Component {
         phone: this.props.profile.phoneNumber,
         eventId: item.id,
       });
-      membership.coins = response.data.coins;
-      actions.setMembership({ ...membership });
+      // membership.coins = response.data.coins;
+      // actions.setMembership({ ...membership });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
     }
@@ -450,12 +450,16 @@ class HomeDashboard extends Component {
     );
     return (
       <>
-        <View style={{ backgroundColor: "white" }}>
+        {/* <View
+          style={{
+            backgroundColor: "white",
+          }}
+        > */}
           <SearchBar
             loadCaller={this.loadCaller}
             checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
           />
-        </View>
+        {/* </View> */}
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <CalendarDays
             numberOfDays={15}

@@ -4,6 +4,7 @@ import {
   Image,
   Linking,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   Share,
@@ -243,8 +244,8 @@ class SessionDetails extends Component {
         phone: this.props.profile.phoneNumber,
         eventId: this.props.event.id,
       });
-      membership.coins = response.data.coins;
-      actions.setMembership({ ...membership });
+      // membership.coins = response.data.coins;
+      // actions.setMembership({ ...membership });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
     }
@@ -767,9 +768,9 @@ class SessionDetails extends Component {
                   )}
                 </View>
               )}
-              <SafeAreaView
+              <View
                 style={{
-                  width: wp(100),
+                  width: Platform.OS == "ios" ? wp(100) : "",
                   // margin: WIDTH * 0.02,
                   flexDirection:
                     this.state.title == "Cancel Your Booking"
@@ -782,7 +783,9 @@ class SessionDetails extends Component {
                   alignItems:
                     this.state.title == "Cancel Your Booking"
                       ? "center"
-                      : "center",
+                      : Platform.OS == "ios"
+                      ? "center"
+                      : "",
                   gap: WIDTH * 0.02,
                 }}
               >
@@ -803,8 +806,8 @@ class SessionDetails extends Component {
                     minWidth: WIDTH * 0.55,
                     width: "100%",
                     minHeight: HEIGHT * 0.05,
-                    alignSelf: "center",
-                    alignContent: "center",
+                    // alignSelf: "center",
+                    // alignContent: "center",
                   }}
                   title={this.getTitle()}
                   loading={this.state.loadingButton}
@@ -826,7 +829,7 @@ class SessionDetails extends Component {
                     }
                   }}
                 ></Button>
-              </SafeAreaView>
+              </View>
             </SafeAreaView>
           }
         />

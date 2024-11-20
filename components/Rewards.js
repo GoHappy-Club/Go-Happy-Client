@@ -15,6 +15,8 @@ import { Colors } from "../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { format, fromUnixTime } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { setMembership } from "../redux/actions/counts";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -40,18 +42,66 @@ export const formatDate = (date) => {
   return finalTime;
 };
 
-const RewardsCard = ({ icon, amount, title, color }) => {
+const RewardsCard = ({
+  id,
+  icon,
+  amount,
+  title,
+  color,
+  scratched,
+  navigation,
+  setScratchedTrue,
+}) => {
   return (
-    <TouchableOpacity style={[styles.card, { backgroundColor: color }]}>
-      <FontAwesomeIcon
-        size={34}
-        icon={icon}
-        color="black"
-        style={styles.icon}
-      />
-      {amount && <Text style={styles.amount}>₹{amount}</Text>}
-      {title && <Text style={styles.cardTitle}>{title}</Text>}
-    </TouchableOpacity>
+    <>
+      {!scratched && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.card, { backgroundColor: color }]}
+          onPress={() => {
+            navigation.navigate("VoucherScratch", {
+              id: id,
+              amount: amount,
+              title: title,
+              color: color,
+              icon: icon,
+              setScratchTrue: (id,amount) => {
+                setScratchedTrue(id,amount);
+              },
+            });
+          }}
+        >
+          <Image
+            source={require("../images/scratch_foreground.png")}
+            width={100}
+            height={100}
+            style={styles.card}
+          />
+        </TouchableOpacity>
+      )}
+      {scratched && (
+        <View style={[styles.card, { backgroundColor: color }]}>
+          <View
+            style={{
+              position: "absolute",
+              width: "100%",
+              backgroundColor: "transparent",
+              alignItems: "center",
+              borderRadius: 16,
+            }}
+          >
+            <FontAwesomeIcon
+              size={34}
+              icon={icon}
+              color="black"
+              style={styles.icon}
+            />
+            {amount && <Text style={styles.amount}>₹{amount}</Text>}
+            {title && <Text style={styles.cardTitle}>{title}</Text>}
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -143,7 +193,13 @@ const VouchersCard = ({ voucher, id, onPress }) => {
   );
 };
 
-const CoinbackRewards = ({ rewards }) => {
+const CoinbackRewards = ({
+  rewards,
+  navigation,
+  profile,
+  dispatch,
+  membership,
+}) => {
   const [fixedRewards, setFixedRewards] = useState([]);
 
   useEffect(() => {
@@ -153,6 +209,40 @@ const CoinbackRewards = ({ rewards }) => {
     }));
     setFixedRewards(rewardsWithColor);
   }, [rewards]);
+
+  const setScratchedTrue = async (id, amount) => {
+    const updatedRewards = fixedRewards.map((reward) => {
+      if (reward.id === id) {
+        return { ...reward, scratched: true };
+      }
+      return reward;
+    });
+    setFixedRewards(updatedRewards);
+    await saveScratchInBackend(id, amount);
+  };
+
+  const saveScratchInBackend = async (id, amount) => {
+    try {
+      console.log("here in save");
+
+      const res = await axios.post(
+        `${SERVER_URL}/membership/scratchCardReward`,
+        {
+          phone: profile.phoneNumber,
+          coinTransactionId: id,
+        }
+      );
+      dispatch(
+        setMembership({
+          ...membership,
+          coins: Number.parseInt(membership.coins) + amount,
+        })
+      );
+    } catch (error) {
+      console.log("error in saving==>", error);
+    }
+  };
+
   return (
     <View
       style={{
@@ -167,10 +257,14 @@ const CoinbackRewards = ({ rewards }) => {
       >
         {fixedRewards.map((item, index) => (
           <RewardsCard
+            id={item.id}
             key={index}
             icon={item.source == "coinback" ? faGift : faTrophy}
             amount={item.amount}
             color={item.color}
+            scratched={item.scratched}
+            navigation={navigation}
+            setScratchedTrue={setScratchedTrue}
           />
         ))}
       </ScrollView>
@@ -198,6 +292,7 @@ const Vouchers = ({ vouchers, navigation }) => (
               id: item.id,
               image: item.image,
               title: item.title,
+              code:item.code,
               color: colorL,
               value: item.value,
               percent: item.percent,
@@ -214,8 +309,14 @@ const Vouchers = ({ vouchers, navigation }) => (
 
 const Rewards = ({ rewards, vouchers }) => {
   const [index, setIndex] = useState(0);
-  const amount = rewards.reduce((_acc, item) => _acc + item.amount, 0);
+  const amount = rewards
+    .filter((item) => item.scratched == true)
+    .reduce((_acc, item) => _acc + item.amount, 0);
   const navigation = useNavigation();
+
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -256,7 +357,13 @@ const Rewards = ({ rewards, vouchers }) => {
           animationType="spring"
         >
           <TabView.Item style={{ width: "100%", height: "100%" }}>
-            <CoinbackRewards rewards={rewards} navigation={navigation} />
+            <CoinbackRewards
+              rewards={rewards}
+              navigation={navigation}
+              profile={profile}
+              dispatch={dispatch}
+              membership={membership}
+            />
           </TabView.Item>
           <TabView.Item style={{ width: "100%", height: "100%" }}>
             <Vouchers vouchers={vouchers} navigation={navigation} />
@@ -300,14 +407,17 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   card: {
-    width: "45%",
+    width: wp(42),
+    height: wp(42),
+    // height:"45%",
     aspectRatio: 1,
     margin: "2%",
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 20,
+    // padding: 16,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    // flex:1
   },
   voucherCard: {
     width: "90%",
@@ -394,6 +504,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#f7f7f7",
     borderRadius: 15,
     transform: [{ translateY: -15 }],
+  },
+  scratch_card: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 20,
+    overflow: "hidden",
+    // backgroundColor:"green"
   },
 });
 

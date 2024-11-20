@@ -40,6 +40,7 @@ const SessionRatingSheet = ({
   reason,
   setReason,
   submitted,
+  setSubmitted,
 }) => {
   const [timeLeft, setTimeLeft] = useState(3);
 
@@ -55,7 +56,10 @@ const SessionRatingSheet = ({
   }, [timeLeft, submitted]);
 
   useEffect(() => {
-    if (timeLeft == 0) modalRef?.current?.dismiss();
+    if (submitted && timeLeft == 0) {
+      modalRef?.current?.dismiss();
+      setSubmitted(false);
+    }
   }, [submitted, timeLeft]);
 
   const renderBackdrop = useCallback(
@@ -127,7 +131,7 @@ const SessionRatingSheet = ({
       }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView 
+        <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.keyboardAvoidingView}
         >
@@ -137,7 +141,9 @@ const SessionRatingSheet = ({
             </TouchableOpacity>
             {submitted ? (
               <View style={styles.thanksContainer}>
-                <Text style={styles.ratingTitle}>Thank you for your feedback!</Text>
+                <Text style={styles.ratingTitle}>
+                  Thank you for your feedback!
+                </Text>
               </View>
             ) : (
               <View style={styles.contentContainer}>
@@ -184,7 +190,9 @@ const SessionRatingSheet = ({
                         ? styles.submitButtonActive
                         : styles.submitButtonDisabled,
                     ]}
-                    onPress={() => selectedRating > 0 && submitRating(selectedRating)}
+                    onPress={() =>
+                      selectedRating > 0 && submitRating(selectedRating)
+                    }
                     disabled={selectedRating === 0}
                   >
                     <Text

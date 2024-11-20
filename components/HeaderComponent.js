@@ -25,6 +25,7 @@ import {
   activateFreeTrial,
   checkPendingFeedback,
   deactivateFreeTrial,
+  getTodaysFestival,
   submitRating,
 } from "../services/Startup";
 
@@ -46,6 +47,14 @@ const Header = () => {
   const modalRef = useRef();
   const ratingModalRef = useRef();
   const [appState, setAppState] = useState(AppState.currentState);
+
+  //code to retrieve today's festival
+  useEffect(() => {
+    const getFestival = async () => {
+      const festival = await getTodaysFestival();
+      
+    };
+  }, []);
 
   useEffect(() => {
     checkPendingFeedback(setShowRating, setCurrentSession);
@@ -146,7 +155,7 @@ const Header = () => {
 
   return (
     <SafeAreaView>
-      <StatusBar barStyle="dark-content" backgroundColor="#25D366" />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <BottomSheet
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
@@ -160,6 +169,7 @@ const Header = () => {
         setReason={setReason}
         modalRef={ratingModalRef}
         submitted={submitted}
+        setSubmitted={setSubmitted}
         closeModal={() => {
           submitRating(
             currentSession,

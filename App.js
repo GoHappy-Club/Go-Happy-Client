@@ -62,6 +62,7 @@ import PaymentSuccessful from "./components/PaymentSuccessful.js";
 import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
 import RewardsScreen from "./screens/subscriptionScreen/RewardsScreen.js";
 import VoucherDetails from "./components/VoucherDetails.js";
+import VoucherScratch from "./components/VoucherScratch.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -681,7 +682,6 @@ export default function App() {
                   />
                   <Stack.Screen
                     name="TripDetails"
-                    // component={HomeDetailsScreen}
                     children={(props) => (
                       <TripDetailsScreen {...props} propProfile={profile} />
                     )}
@@ -767,13 +767,6 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() => navigation.navigate("GoHappy Club")}
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.navigate("GoHappy Club")}
@@ -795,13 +788,6 @@ export default function App() {
                         backgroundColor: Colors.grey.f0,
                       },
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() => navigation.goBack()}
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.goBack()}
@@ -839,13 +825,6 @@ export default function App() {
                         backgroundColor: "#FFF5D7",
                       },
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() => navigation.goBack()}
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.goBack()}
@@ -865,13 +844,6 @@ export default function App() {
                       headerBackTitle: "back",
                       headerTransparent: true,
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() => navigation.goBack()}
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.goBack()}
@@ -891,13 +863,6 @@ export default function App() {
                       headerBackTitle: "back",
                       headerTransparent: true,
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() => navigation.goBack()}
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.goBack()}
@@ -907,8 +872,27 @@ export default function App() {
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
-                      // presentation: "modal",
-                      // animation: "fade_from_bottom",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="VoucherScratch"
+                    children={(props) => <VoucherScratch />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerTransparent: true,
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      presentation: "transparentModal",
+                      animation: "fade",
                     })}
                   />
                 </>
@@ -944,12 +928,10 @@ export default function App() {
             backgroundColor: Colors.primary,
             color: Colors.white,
             borderRadius: 5,
-            // padding: 15,
           }}
           contentStyle={{
             padding: 0,
             margin: 0,
-            // backgroundColor: "blue",
             borderWidth: 0,
           }}
           titleStyle={{
@@ -963,7 +945,6 @@ export default function App() {
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                // backgroundColor: "blue",
                 margin: 0,
                 padding: 0,
                 shadowColor: Colors.grey.c,
@@ -973,25 +954,12 @@ export default function App() {
                 borderWidth: 0,
               }}
             >
-              {/* {notify?.notification?.android?.imageUrl && (
-                <Image
-                  style={{
-                    width: 300,
-                    // height: 150,
-                    borderRadius: 5,
-                    aspectRatio: 1,
-                    // marginBottom: 10,
-                  }}
-                  source={{ uri: notify?.notification?.android?.imageUrl }}
-                />
-              )} */}
               <Text
                 style={{
                   fontFamily: "sans-serif",
                   fontSize: 16,
                   color: Colors.black,
                   lineHeight: 24,
-                  // textAlign: "left",
                 }}
               >
                 {notify.notification.body}

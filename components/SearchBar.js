@@ -254,7 +254,7 @@ const SearchBar = () => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.f0,
             borderRadius: 40,
             paddingHorizontal: 15,
             marginBottom: height * 0.025,
@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     flexDirection: "row",
     justifyContent: "center",
+    backgroundColor:"white"
   },
   searchIcon: {
     top: 15,

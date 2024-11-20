@@ -141,6 +141,15 @@ export const submitRating = async (
   }
 };
 
+export const getTodaysFestival = async () => {
+  try {
+    const res = await axios.get(`${SERVER_URL}/festivals/today`);
+    return res.data;
+  } catch (error) {
+    console.log("Error in getTodaysFestival", error);
+  }
+};
+
 const sendRatingToBackend = async (
   id,
   rating,
