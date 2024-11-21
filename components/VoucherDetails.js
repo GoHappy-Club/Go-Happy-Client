@@ -12,6 +12,7 @@ import Animated, {
   FadeInDown,
   FadeInLeft,
   FadeOut,
+  FadeOutLeft,
   FadeOutRight,
 } from "react-native-reanimated";
 import { formatDate } from "./Rewards";
@@ -38,14 +39,22 @@ const VoucherDetails = () => {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const listener = navigation.addListener("beforeRemove", (e) => {
-      setShow(false);
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      if (!show) return; // Prevent multiple triggers
+
       e.preventDefault();
-      // navigation.goBack()
-      navigation.dispatch(e.data.action);
+      setShow(false);
+
+      // Use a safe timeout duration
+      const timer = setTimeout(() => {
+        navigation.dispatch(e.data.action);
+      }, 300);
+
+      return () => clearTimeout(timer);
     });
-    return () => navigation.removeListener(listener);
-  }, []);
+
+    return unsubscribe; // Proper cleanup by returning the unsubscribe function directly
+  }, [navigation, show]);
 
   const conditions_and_redemptions = [
     ...description.redemption,
@@ -113,7 +122,12 @@ const VoucherDetails = () => {
             </View>
           </View>
           {show && (
-            <View style={styles.textContainer}>
+            <Animated.ScrollView
+              style={styles.scrollContainer}
+              entering={FadeInDown.duration(300)}
+              exiting={FadeOutLeft.duration(100)}
+              contentContainerStyle={styles.scrollContent}
+            >
               <Animated.Text
                 entering={FadeInLeft.delay(400).springify()}
                 exiting={FadeOutRight}
@@ -135,7 +149,7 @@ const VoucherDetails = () => {
                   </Animated.Text>
                 ))}
               </Animated.View>
-            </View>
+            </Animated.ScrollView>
           )}
           {show && (
             <Pressable onPress={copyToClipboard}>
@@ -182,7 +196,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
-    // alignItems:"center"
+    overflow: "hidden",
+  },
+  scrollContainer: {
+    flex: 1,
+    marginTop: hp(2),
+  },
+  scrollContent: {
+    paddingHorizontal: wp(2),
   },
   logoContainer: {
     alignItems: "center",
@@ -231,21 +252,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: "500",
   },
-  barcodeContainer: {
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  barcode: {
-    width: "80%",
-    height: 50,
-    backgroundColor: "#ccc",
-    borderRadius: 5,
-  },
-  barcodeNumber: {
-    marginTop: 10,
-    fontSize: 12,
-    color: "#333",
-  },
   footer: {
     borderTopWidth: 1,
     borderTopColor: "#ddd",
@@ -283,7 +289,7 @@ const styles = StyleSheet.create({
   clip: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: hp(15),
+    marginBottom: hp(4),
   },
   link: {
     fontSize: wp(5),
