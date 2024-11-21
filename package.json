@@ -98,6 +98,7 @@
     "redux-persist": "6.0.0",
     "redux-thunk": "3.1.0",
     "remote-redux-devtools": "0.5.16",
+    "sp-react-native-in-app-updates": "^1.4.0",
     "tambola": "3.0.3",
     "tambola-generator": "1.0.0"
   },
