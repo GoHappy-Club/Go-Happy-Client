@@ -55,17 +55,18 @@ const Header = () => {
       const alreadyCheckedFestival = await AsyncStorage.getItem(
         "alreadyCheckedFestival"
       );
-      if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
-        const festival = await getTodaysFestival();
-        if (festival) {
-          navigation.navigate("FestiveWish", {
-            asset: festival.asset,
-            title: festival.name,
-            message:festival.message
-          });
-        }
-        AsyncStorage.setItem("alreadyCheckedFestival", "true");
+      // if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
+      const festival = await getTodaysFestival();
+      const showTour = await AsyncStorage.getItem("showTour");
+      if (showTour == null || (showTour == "false" && festival)) {
+        navigation.navigate("FestiveWish", {
+          asset: festival.asset,
+          title: festival.name,
+          message: festival.message,
+        });
       }
+      // AsyncStorage.setItem("alreadyCheckedFestival", "true");
+      // }
     };
     getFestival();
   }, []);
@@ -85,14 +86,18 @@ const Header = () => {
     };
   }, [appState]);
 
-  useEffect(async () => {
-    const showTour = await AsyncStorage.getItem("showTour");
+  useEffect(() => {
+    const enableModal = async () => {
+      const showTour = await AsyncStorage.getItem("showTour");
+      if (showTour == null || showTour == "false") {
+        setModalType("FreeTrial");
+      }
+    };
     if (
-      (showTour == null || showTour == "false") &&
       membership.membershipType == "Free" &&
       membership?.freeTrialUsed == false
     ) {
-      setModalType("FreeTrial");
+      enableModal();
     } else if (
       membership.membershipType == "Silver" &&
       membership?.freeTrialUsed == true &&

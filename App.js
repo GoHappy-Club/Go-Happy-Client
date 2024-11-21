@@ -710,7 +710,7 @@ export default function App() {
                       <NewProfile {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerShown:false
+                      headerShown: false,
                     })}
                   />
                   <Stack.Screen
@@ -719,7 +719,7 @@ export default function App() {
                       <EditProfile {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerShown:false
+                      headerShown: false,
                     })}
                   />
                   <Stack.Screen
@@ -900,7 +900,6 @@ export default function App() {
                     children={(props) => <FestiveWish />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerBackTitle: "back",
                       headerTransparent: true,
                       headerRight: () => (
                         <TouchableOpacity
@@ -914,6 +913,7 @@ export default function App() {
                       headerShadowVisible: false,
                       presentation: "transparentModal",
                       animation: "fade",
+                      headerLeft:()=><View/>
                     })}
                   />
                 </>

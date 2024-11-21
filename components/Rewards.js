@@ -277,7 +277,7 @@ const Vouchers = ({ vouchers, navigation }) => (
       alignItems: vouchers.length == 1 ? "flex-start" : "center",
     }}
   >
-    <ScrollView contentContainerStyle={styles.grid}>
+    <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
       {vouchers.map((item, index) => (
         <VouchersCard
           id={item.id}

@@ -402,7 +402,6 @@ class LoginScreen extends Component {
             "membershipEndDate"
           );
           const coins = await AsyncStorage.getItem("coins");
-          const vouchers = await AsyncStorage.getItem("vouchers");
           const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
           const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
           this.setProfile(
@@ -425,7 +424,6 @@ class LoginScreen extends Component {
             membershipStartDate: membershipStartDate,
             membershipEndDate: membershipEndDate,
             coins: coins,
-            vouchers: vouchers,
             freeTrialUsed: freeTrialUsed,
             freeTrialActive: freeTrialActive,
           });
@@ -468,7 +466,6 @@ class LoginScreen extends Component {
                 membershipStartDate: response.data?.membershipStartDate,
                 membershipEndDate: response.data?.membershipEndDate,
                 coins: response.data.coins,
-                vouchers: response.data?.vouchers,
                 freeTrialUsed: response.data?.freeTrialUsed,
                 freeTrialActive: response.data?.freeTrialActive,
               });

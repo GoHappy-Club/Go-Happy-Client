@@ -220,7 +220,7 @@ const NewProfile = () => {
           >
             <Text>back</Text>
           </TouchableOpacity>
-          {(profile.age == null || profile.age > 50) && (
+          {(profile.age == null || profile.age >= 50) && (
             <Pressable
               style={{
                 position: "absolute",

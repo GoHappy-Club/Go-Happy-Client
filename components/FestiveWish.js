@@ -8,11 +8,13 @@ import { Colors } from "../assets/colors/color";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import Share from "react-native-share";
 import RNFS from "react-native-fs";
+import { Button } from "react-native-elements";
 
 const FestiveWish = () => {
   const route = useRoute();
   const { title, asset, message } = route.params;
   const [isVideo, setIsVideo] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const ref = useRef();
 
@@ -22,6 +24,7 @@ const FestiveWish = () => {
 
   const shareMedia = async () => {
     try {
+      setLoading(true);
       const base64Data = await captureRef(ref, {
         format: "png",
         quality: 0.9,
@@ -36,13 +39,22 @@ const FestiveWish = () => {
         message: message,
         title: title,
       });
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.error("Error in sharing:", e);
     }
   };
   return (
     <>
-      <BlurView style={styles.blurView} blurAmount={1} blurType="dark" />
+      {/* <BlurView style={styles.blurView} blurAmount={1} blurType="dark" /> */}
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          zIndex: 0,
+        }}
+      />
       <View style={styles.container}>
         {isVideo ? (
           <Video
@@ -62,9 +74,18 @@ const FestiveWish = () => {
             />
           </ViewShot>
         )}
-        <Pressable style={styles.shareButton} onPress={shareMedia}>
+        <Button
+          outline
+          title={"Share"}
+          loading={loading}
+          buttonStyle={styles.shareButton}
+          onPress={shareMedia}
+          disabled={loading}
+          loadingProps={{ color: "black" }}
+        />
+        {/* <Pressable style={styles.shareButton} onPress={shareMedia}>
           <Text style={styles.shareButtonText}>Share</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
     </>
   );

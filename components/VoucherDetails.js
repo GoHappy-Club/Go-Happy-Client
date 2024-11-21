@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -34,6 +34,18 @@ const VoucherDetails = () => {
     description,
     code,
   } = route.params;
+
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const listener = navigation.addListener("beforeRemove", (e) => {
+      setShow(false);
+      e.preventDefault();
+      // navigation.goBack()
+      navigation.dispatch(e.data.action);
+    });
+    return () => navigation.removeListener(listener);
+  }, []);
 
   const conditions_and_redemptions = [
     ...description.redemption,
@@ -100,37 +112,42 @@ const VoucherDetails = () => {
               </Animated.Text>
             </View>
           </View>
-          <View style={styles.textContainer}>
-            <Animated.Text
-              entering={FadeInLeft.delay(400).springify()}
-              exiting={FadeOutRight}
-              style={styles.description}
-            >
-              {description.description}
-            </Animated.Text>
-            <Animated.View
-              entering={FadeInLeft.delay(600).springify()}
-              exiting={FadeOutRight}
-              style={styles.conditions}
-            >
-              {conditions_and_redemptions.map((item, i) => (
-                <Animated.Text
-                  entering={FadeInLeft.delay(600 + i * 50)}
-                  style={styles.conditionItem}
-                >
-                  • {item}
-                </Animated.Text>
-              ))}
-            </Animated.View>
-          </View>
-          <Animated.View
-            entering={FadeInDown.delay(500)}
-            exiting={FadeOut}
-            onPress={copyToClipboard}
-            style={styles.clip}
-          >
-            <Text style={styles.link}>{code}</Text>
-          </Animated.View>
+          {show && (
+            <View style={styles.textContainer}>
+              <Animated.Text
+                entering={FadeInLeft.delay(400).springify()}
+                exiting={FadeOutRight}
+                style={styles.description}
+              >
+                {description.description}
+              </Animated.Text>
+              <Animated.View
+                entering={FadeInLeft.delay(600).springify()}
+                exiting={FadeOutRight}
+                style={styles.conditions}
+              >
+                {conditions_and_redemptions.map((item, i) => (
+                  <Animated.Text
+                    entering={FadeInLeft.delay(600 + i * 50)}
+                    style={styles.conditionItem}
+                  >
+                    • {item}
+                  </Animated.Text>
+                ))}
+              </Animated.View>
+            </View>
+          )}
+          {show && (
+            <Pressable onPress={copyToClipboard}>
+              <Animated.View
+                entering={FadeInDown.delay(500)}
+                exiting={FadeOut}
+                style={styles.clip}
+              >
+                <Text style={styles.link}>{code}</Text>
+              </Animated.View>
+            </Pressable>
+          )}
           <View style={styles.footer}>
             <Animated.Text
               sharedTransitionTag={`sharedExpiryDate${id}`}
