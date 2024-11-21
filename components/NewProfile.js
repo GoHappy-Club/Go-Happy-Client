@@ -270,7 +270,8 @@ const NewProfile = () => {
                   // borderWidth: 1,
                   borderRadius: 5,
                   padding: 6,
-                  backgroundColor: "#4CAF50",
+                  // backgroundColor: "#4CAF50",
+                  backgroundColor:Colors.primary,
                   // backgroundColor: "#6A9C89",
                   alignSelf: "flex-start",
                 }}

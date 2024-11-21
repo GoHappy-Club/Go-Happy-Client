@@ -308,7 +308,7 @@ const SubscriptionPlans = ({ plans }) => {
 
   useEffect(() => {
     // openRenewModal();
-    checkForRenew();
+    // checkForRenew();
     setButtonTitle(getTitle());
   }, []);
 
@@ -445,7 +445,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     if (selectedPlan?.discount > 0) {
       subsFees = subsFees - (subsFees * selectedPlan?.discount) / 100;
     }
-    if (membership.membershipType == "Free") {
+    if (membership.membershipType == "Free" || membership.freeTrialActive == true) {
       return subsFees;
     } else {
       return getRemainingMembershipValue(

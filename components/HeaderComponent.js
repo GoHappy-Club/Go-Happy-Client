@@ -58,7 +58,6 @@ const Header = () => {
       if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
         const festival = await getTodaysFestival();
         if (festival) {
-          console.log("Festival shown", festival);
           navigation.navigate("FestiveWish", {
             asset: festival.asset,
             title: festival.name,
