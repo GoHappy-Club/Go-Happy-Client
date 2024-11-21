@@ -55,10 +55,7 @@ const Header = () => {
       const alreadyCheckedFestival = await AsyncStorage.getItem(
         "alreadyCheckedFestival"
       );
-      console.log("Checking for fetival shown", alreadyCheckedFestival);
-
       if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
-        console.log("getting tody's festival");
         const festival = await getTodaysFestival();
         if (festival) {
           console.log("Festival shown", festival);
@@ -68,7 +65,7 @@ const Header = () => {
             message:festival.message
           });
         }
-        // AsyncStorage.setItem("alreadyCheckedFestival", "true");
+        AsyncStorage.setItem("alreadyCheckedFestival", "true");
       }
     };
     getFestival();
@@ -106,10 +103,10 @@ const Header = () => {
   }, [membership]);
 
   // TODO : free trial modal
-  // useEffect(() => {
-  //   if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
-  //     openGeneralModal(modalRef);
-  // }, [modalType]);
+  useEffect(() => {
+    if (modalType == "FreeTrial" || modalType == "FreeTrialExpired")
+      openGeneralModal(modalRef);
+  }, [modalType]);
 
   // TODO : rating modal
   useEffect(() => {
