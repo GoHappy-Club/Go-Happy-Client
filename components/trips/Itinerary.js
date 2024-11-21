@@ -67,10 +67,21 @@ export const Itinerary = ({ details, vouchers }) => {
   }, [details]);
 
   const getMaxVouchersValue = () => {
-    let maxValue = Math.max(...vouchers.map((voucher) => voucher.value));
-    return maxValue;
-  };
-
+  let maxDiscount = 0;
+  vouchers.forEach(voucher => {
+    if (voucher.value) {
+      maxDiscount = Math.max(maxDiscount, voucher.value);
+    }
+    if (voucher.percent) {
+      let percentDiscount = (details.cost * voucher.percent) / 100;
+      if (voucher.limit) {
+        percentDiscount = Math.min(percentDiscount, voucher.limit);
+      }
+      maxDiscount = Math.max(maxDiscount, percentDiscount);
+    }
+  });
+  return maxDiscount;
+};
   const QuickView = () => {
     const timeDifference = Math.abs(details.endTime - details.startTime);
 

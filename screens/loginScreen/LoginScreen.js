@@ -585,10 +585,6 @@ class LoginScreen extends Component {
             );
           AsyncStorage.setItem("coins", String(response.data.coins));
           AsyncStorage.setItem(
-            "vouchers",
-            JSON.stringify(response.data?.vouchers)
-          );
-          AsyncStorage.setItem(
             "freeTrialUsed",
             String(response.data?.freeTrialUsed)
           );

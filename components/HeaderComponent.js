@@ -85,8 +85,10 @@ const Header = () => {
     };
   }, [appState]);
 
-  useEffect(() => {
+  useEffect(async () => {
+    const showTour = await AsyncStorage.getItem("showTour");
     if (
+      (showTour == null || showTour == "false") &&
       membership.membershipType == "Free" &&
       membership?.freeTrialUsed == false
     ) {
