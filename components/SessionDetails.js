@@ -683,6 +683,7 @@ class SessionDetails extends Component {
           voucherLoading={this.state.voucherLoading}
           title={this.state.title}
           selectedVoucher={this.state.selectedVoucher}
+          costType={this.props.event.costType}
           setSelectedVoucher={(newVoucher) =>
             this.setState({ selectedVoucher: newVoucher })
           }
@@ -698,9 +699,11 @@ class SessionDetails extends Component {
                 shadowOffset: { width: 0, height: 5 },
                 elevation: 100,
                 width: wp(100),
-                height: this.state.title.toLowerCase().startsWith("book")
-                  ? hp(13)
-                  : hp(8),
+                height:
+                  this.state.title.toLowerCase().startsWith("book") &&
+                  this.props.event.costType == "paid"
+                    ? hp(13)
+                    : hp(8),
                 gap: hp(1),
                 justifyContent: "center",
               }}
@@ -717,7 +720,8 @@ class SessionDetails extends Component {
                     gap: wp(1),
                   }}
                 >
-                  {this.state.selectedVoucher == null ? (
+                  {this.state.selectedVoucher == null &&
+                  this.props.event.costType == "paid" ? (
                     <>
                       <Text>Have a voucher?</Text>
                       <TouchableOpacity
@@ -732,7 +736,6 @@ class SessionDetails extends Component {
                           style={{
                             color: Colors.primary,
                             textDecorationLine: "underline",
-                            // fontFamily: "Poppins-Regular",
                           }}
                         >
                           Apply Coupon
@@ -740,38 +743,38 @@ class SessionDetails extends Component {
                       </TouchableOpacity>
                     </>
                   ) : (
-                    <>
-                      <Text
-                        style={{
-                          fontFamily: "Poppins-Regular",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Code : {this.state.selectedVoucher.code}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ selectedVoucher: null });
-                        }}
-                      >
+                    this.props.event.costType == "paid" && (
+                      <>
                         <Text
                           style={{
-                            color: Colors.primary,
-                            textDecorationLine: "underline",
-                            // fontFamily: "Poppins-Regular",
+                            fontFamily: "Poppins-Regular",
+                            fontWeight: "bold",
                           }}
                         >
-                          Remove
+                          Code : {this.state?.selectedVoucher?.code}
                         </Text>
-                      </TouchableOpacity>
-                    </>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.setState({ selectedVoucher: null });
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: Colors.primary,
+                              textDecorationLine: "underline",
+                            }}
+                          >
+                            Remove
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                    )
                   )}
                 </View>
               )}
               <View
                 style={{
                   width: Platform.OS == "ios" ? wp(100) : "",
-                  // margin: WIDTH * 0.02,
                   flexDirection:
                     this.state.title == "Cancel Your Booking"
                       ? "row"
@@ -806,8 +809,6 @@ class SessionDetails extends Component {
                     minWidth: WIDTH * 0.55,
                     width: "100%",
                     minHeight: HEIGHT * 0.05,
-                    // alignSelf: "center",
-                    // alignContent: "center",
                   }}
                   title={this.getTitle()}
                   loading={this.state.loadingButton}

@@ -28,6 +28,7 @@ import {
   getTodaysFestival,
   submitRating,
 } from "../services/Startup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("window").width;
 
@@ -48,12 +49,29 @@ const Header = () => {
   const ratingModalRef = useRef();
   const [appState, setAppState] = useState(AppState.currentState);
 
-  //code to retrieve today's festival
   useEffect(() => {
     const getFestival = async () => {
-      const festival = await getTodaysFestival();
-      
+      // get today's festival if any
+      const alreadyCheckedFestival = await AsyncStorage.getItem(
+        "alreadyCheckedFestival"
+      );
+      console.log("Checking for fetival shown", alreadyCheckedFestival);
+
+      if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
+        console.log("getting tody's festival");
+        const festival = await getTodaysFestival();
+        if (festival) {
+          console.log("Festival shown", festival);
+          navigation.navigate("FestiveWish", {
+            asset: festival.asset,
+            title: festival.name,
+            message:festival.message
+          });
+        }
+        // AsyncStorage.setItem("alreadyCheckedFestival", "true");
+      }
     };
+    getFestival();
   }, []);
 
   useEffect(() => {

@@ -369,16 +369,10 @@ class LoginScreen extends Component {
   };
   getCurrentUserInfo = async () => {
     try {
-      console.log("token i s1", token1);
-
       const token1 = await AsyncStorage.getItem("token");
-      console.log("token i s2", token1);
       const fcmToken = await firebase.messaging().getToken();
-
-      console.log("token i s3", token1);
       AsyncStorage.setItem("fcmToken", fcmToken);
       this.setState({ fcmToken: fcmToken });
-      console.log("token i s4", token1);
       try {
         if (token1 != null) {
           const name = await AsyncStorage.getItem("name");

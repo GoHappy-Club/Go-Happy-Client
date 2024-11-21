@@ -17,6 +17,7 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // import io.invertase.firebase.RNFirebaseLinksPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+import com.rnfs.RNFSPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

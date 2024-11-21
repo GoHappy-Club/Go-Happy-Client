@@ -65,8 +65,8 @@ const RewardsCard = ({
               title: title,
               color: color,
               icon: icon,
-              setScratchTrue: (id,amount) => {
-                setScratchedTrue(id,amount);
+              setScratchTrue: (id, amount) => {
+                setScratchedTrue(id, amount);
               },
             });
           }}
@@ -128,15 +128,12 @@ const VouchersCard = ({ voucher, id, onPress }) => {
               fontWeight: "bold",
             }}
           >
-            {voucher.status == "ACTIVE"
-              ? ""
-              : voucher.status == "REDEEMED"
-              ? "REDEEMED"
-              : "EXPIRED"}
+            {voucher.status == "ACTIVE" ? "" : voucher.status}
           </Text>
         </View>
       )}
-      <View
+      <Animated.View
+        sharedTransitionTag={`sharedBg${id}`}
         style={[
           styles.borderedContainer,
           {
@@ -186,7 +183,7 @@ const VouchersCard = ({ voucher, id, onPress }) => {
             Valid until {formatDate(voucher.expiryDate)}
           </Animated.Text>
         </Animated.View>
-      </View>
+      </Animated.View>
       <View style={styles.cutoutLeft} />
       <View style={styles.cutoutRight} />
     </TouchableOpacity>
@@ -292,7 +289,7 @@ const Vouchers = ({ vouchers, navigation }) => (
               id: item.id,
               image: item.image,
               title: item.title,
-              code:item.code,
+              code: item.code,
               color: colorL,
               value: item.value,
               percent: item.percent,

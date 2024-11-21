@@ -32,6 +32,7 @@ const VoucherBottomSheet = ({
   title,
   selectedVoucher,
   setSelectedVoucher,
+  costType,
 }) => {
   const [selectedVoucherL, setSelectedVoucherL] = useState(null);
 
@@ -69,7 +70,12 @@ const VoucherBottomSheet = ({
   );
 
   const snapPoints = React.useMemo(
-    () => [title.toLowerCase().startsWith("book") ? "13%" : "8%", "60%"],
+    () => [
+      title.toLowerCase().startsWith("book") && costType == "paid"
+        ? "13%"
+        : "8%",
+      "60%",
+    ],
     [title]
   );
 

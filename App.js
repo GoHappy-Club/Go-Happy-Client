@@ -51,7 +51,7 @@ import { Colors } from "./assets/colors/color.js";
 import Header from "./components/HeaderComponent.js";
 import MyProfile from "./components/Profile.js";
 import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
-import { ChevronLeft } from "lucide-react-native";
+import { ChevronLeft, X } from "lucide-react-native";
 import { hp, wp } from "./helpers/common.js";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -63,6 +63,9 @@ import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
 import RewardsScreen from "./screens/subscriptionScreen/RewardsScreen.js";
 import VoucherDetails from "./components/VoucherDetails.js";
 import VoucherScratch from "./components/VoucherScratch.js";
+import FestiveWish from "./components/FestiveWish.js";
+import NewProfile from "./components/NewProfile.js";
+import EditProfile from "./components/EditProfile.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -704,22 +707,19 @@ export default function App() {
                   <Stack.Screen
                     name="MyProfile"
                     children={(props) => (
-                      <MyProfile {...props} propProfile={profile} />
+                      <NewProfile {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
-                      title: null,
-                      headerBackTitle: "back",
-                      headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("GoHappy Club")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
-                      ),
-                      headerShadowVisible: false,
+                      headerShown:false
+                    })}
+                  />
+                  <Stack.Screen
+                    name="EditProfile"
+                    children={(props) => (
+                      <EditProfile {...props} propProfile={profile} />
+                    )}
+                    options={({ navigation }) => ({
+                      headerShown:false
                     })}
                   />
                   <Stack.Screen
@@ -888,6 +888,27 @@ export default function App() {
                           underlayColor={Colors.white}
                         >
                           <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      presentation: "transparentModal",
+                      animation: "fade",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="FestiveWish"
+                    children={(props) => <FestiveWish />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerTransparent: true,
+                      headerRight: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <X color="#000" size={24} />
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
