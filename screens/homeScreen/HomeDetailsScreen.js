@@ -111,9 +111,16 @@ class HomeDetailsScreen extends Component {
           if (response.data) {
             //refund coins to user's membership
             let { membership, actions } = this.props;
-            membership.coins = membership.coins + this.state.event.cost;
-            actions.setMembership({ ...membership });
-
+            console.log("Memerssi in acncel==>",membership);
+            console.log("Memerssi in acncel==>",membership.freeTrialActive);
+            
+            if (
+              membership?.freeTrialActive &&
+              membership.freeTrialActive != true
+            ) {
+              membership.coins = membership.coins + this.state.event.cost;
+              actions.setMembership({ ...membership });
+            }
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
               return;
@@ -150,12 +157,20 @@ class HomeDetailsScreen extends Component {
 
               // deduct coins from user's membership data in redux
               let { membership, actions } = this.props;
-              membership.coins =
-                membership.coins -
-                (this.state.event.cost -
-                  getDiscountValue(voucher, this.state.event));
-              actions.setMembership({ ...membership });
+              
+            console.log("Memerssi in booking==>",membership);
+            console.log("Memerssi in booking==>",membership.freeTrialActive);
 
+              if (
+                membership?.freeTrialActive &&
+                membership?.freeTrialActive != true
+              ) {
+                membership.coins =
+                  membership.coins -
+                  (this.state.event.cost -
+                    getDiscountValue(voucher, this.state.event));
+                actions.setMembership({ ...membership });
+              }
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
                 return;

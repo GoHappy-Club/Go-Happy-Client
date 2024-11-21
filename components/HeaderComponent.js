@@ -93,7 +93,7 @@ const Header = () => {
     ) {
       setModalType("FreeTrial");
     } else if (
-      membership.membershipType == "Free" &&
+      membership.membershipType == "Silver" &&
       membership?.freeTrialUsed == true &&
       checkFreeTrialExpired(membership)
     ) {

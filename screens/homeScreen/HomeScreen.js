@@ -151,9 +151,10 @@ class HomeScreen extends Component {
             }
 
             // deduct coins from user's membership data in redux
-            membership.coins = membership.coins - item.cost;
-            actions.setMembership({ ...membership });
-
+            if (membership.freeTrialActive != "true") {
+              membership.coins = membership.coins - item.cost;
+              actions.setMembership({ ...membership });
+            }
             this.loadEvents(selectedDate);
             // _callback();
             // item.seatsLeft = item.seatsLeft - 1;
