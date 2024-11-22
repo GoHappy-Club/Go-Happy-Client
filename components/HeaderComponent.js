@@ -29,6 +29,7 @@ import {
   submitRating,
 } from "../services/Startup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setMembership } from "../redux/actions/counts";
 
 const width = Dimensions.get("window").width;
 
@@ -37,6 +38,7 @@ const rotateAnim = new Animated.Value(0);
 const Header = () => {
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state?.membership?.membership);
+  const dispatch = useDispatch();
 
   const [modalType, setModalType] = useState("");
   const [showRating, setShowRating] = useState(false);
@@ -55,18 +57,22 @@ const Header = () => {
       const alreadyCheckedFestival = await AsyncStorage.getItem(
         "alreadyCheckedFestival"
       );
-      // if (alreadyCheckedFestival == null || !alreadyCheckedFestival) {
-      const festival = await getTodaysFestival();
-      const showTour = await AsyncStorage.getItem("showTour");
-      if (showTour == null || (showTour == "false" && festival)) {
-        navigation.navigate("FestiveWish", {
-          asset: festival.asset,
-          title: festival.name,
-          message: festival.message,
-        });
+      const currDate = new Date().toISOString().split("T")[0].split("-")[2];
+      if (
+        alreadyCheckedFestival == null ||
+        Number(alreadyCheckedFestival) != currDate
+      ) {
+        const festival = await getTodaysFestival();
+        const showTour = await AsyncStorage.getItem("showTour");
+        if (showTour == null || (showTour == "false" && festival)) {
+          navigation.navigate("FestiveWish", {
+            asset: festival.asset,
+            title: festival.name,
+            message: festival.message,
+          });
+        }
+        AsyncStorage.setItem("alreadyCheckedFestival", String(currDate));
       }
-      // AsyncStorage.setItem("alreadyCheckedFestival", "true");
-      // }
     };
     getFestival();
   }, []);
@@ -174,6 +180,51 @@ const Header = () => {
     }
   }
 
+  const setNewMembership = ({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+    freeTrialActive,
+  }) => {
+    const newMembership = {
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+      freeTrialActive: freeTrialActive,
+    };
+    dispatch(setMembership({ ...newMembership }));
+  };
+
+  const updateUser = ({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+    freeTrialActive,
+  }) => {
+    //store membership in AsyncStorage
+    AsyncStorage.setItem("membershipType", membershipType);
+    AsyncStorage.setItem("membershipId", id);
+    AsyncStorage.setItem("membershipStartDate", membershipStartDate);
+    AsyncStorage.setItem("membershipEndDate", membershipEndDate);
+    AsyncStorage.setItem("coins", coins.toString());
+    AsyncStorage.setItem("freeTrialActive", freeTrialActive.toString());
+    //set membership in redux
+    setNewMembership({
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+      freeTrialActive: freeTrialActive,
+    });
+  };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />
@@ -181,7 +232,11 @@ const Header = () => {
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
         type={modalType}
-        cta={() => activateFreeTrial(profile)}
+        cta={async () => {
+          const membership = await activateFreeTrial(profile);
+          updateUser({ ...membership, freeTrialActive: true });
+          closeGeneralModal();
+        }}
       />
       <SessionRatingSheet
         selectedRating={selectedRating}

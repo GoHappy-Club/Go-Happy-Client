@@ -6,6 +6,15 @@ export const activateFreeTrial = async (profile) => {
     const response = await axios.post(url, {
       phone: profile.phoneNumber,
     });
+    console.log(response.data);
+    
+    return {
+      membershipType: response.data.membershipType,
+      coins: response.data.coins,
+      membershipStartDate: response.data.membershipStartDate,
+      membershipEndDate: response.data.membershipEndDate,
+      id: response.data.id,
+    };
   } catch (error) {
     console.log("Error in activate", error);
   }
