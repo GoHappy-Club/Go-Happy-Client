@@ -66,22 +66,22 @@ export const Itinerary = ({ details, vouchers }) => {
     ]);
   }, [details]);
 
-  const getMaxVouchersValue = () => {
-  let maxDiscount = 0;
-  vouchers.forEach(voucher => {
-    if (voucher.value) {
-      maxDiscount = Math.max(maxDiscount, voucher.value);
-    }
-    if (voucher.percent) {
-      let percentDiscount = (details.cost * voucher.percent) / 100;
-      if (voucher.limit) {
-        percentDiscount = Math.min(percentDiscount, voucher.limit);
+    const getMaxVouchersValue = () => {
+    let maxDiscount = 0;
+    vouchers.forEach(voucher => {
+      if (voucher.value) {
+        maxDiscount = Math.max(maxDiscount, voucher.value);
       }
-      maxDiscount = Math.max(maxDiscount, percentDiscount);
-    }
-  });
-  return maxDiscount;
-};
+      if (voucher.percent) {
+        let percentDiscount = (details.cost * voucher.percent) / 100;
+        if (voucher.limit) {
+          percentDiscount = Math.min(percentDiscount, voucher.limit);
+        }
+        maxDiscount = Math.max(maxDiscount, percentDiscount);
+      }
+    });
+    return maxDiscount;
+  };
   const QuickView = () => {
     const timeDifference = Math.abs(details.endTime - details.startTime);
 
@@ -168,20 +168,20 @@ export const Itinerary = ({ details, vouchers }) => {
             style={{
               fontSize: 18,
               textAlignVertical: "center",
-              textDecorationLine: vouchers.length > 1 ? "line-through" : "none",
+              textDecorationLine: vouchers.length >= 1 ? "line-through" : "none",
               marginLeft: wp(2),
             }}
           >
             ₹ {data.cost}
           </Text>
-          {vouchers.length > 1 && (
+          {vouchers?.length >= 1 && (
             <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
               {" "}
               ₹ {data.cost - getMaxVouchersValue()}/- per person
             </Text>
           )}
         </View>
-        {vouchers.length > 1 && (
+        {vouchers?.length >= 1 && (
           <Text
             style={{
               fontStyle: "italic",
