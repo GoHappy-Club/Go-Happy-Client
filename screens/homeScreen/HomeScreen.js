@@ -129,6 +129,7 @@ class HomeScreen extends Component {
         this.getProperties();
       })
       .catch((error) => {
+        crashlytics().recordError(JSON.stringify(error));
         // alert("blablabla" + url + error);
         this.error = true;
         this.getProperties();
@@ -148,28 +149,29 @@ class HomeScreen extends Component {
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
       .then((response) => {
         if (response.data) {
-          if (response.data == "SUCCESS") {
-            var tempEvents = this.state.events;
-            for (var i = 0; i < tempEvents.length; i++) {
-              if (tempEvents[i].id == item.id) {
-                tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
-                tempEvents[i].loadingButton = false;
-                tempEvents[i].status = "Booked";
-                this.setState({ events: tempEvents });
-                break;
-              }
-            }
-            this.loadEvents(selectedDate);
-            // _callback();
-            // item.seatsLeft = item.seatsLeft - 1;
-
-            return item;
-          }
+          // if (response.data == "SUCCESS") {
+          //   // var tempEvents = this.state.events;
+          //   // for (var i = 0; i < tempEvents.length; i++) {
+          //   //   if (tempEvents[i].id == item.id) {
+          //   //     tempEvents[i].seatsLeft = tempEvents[i].seatsLeft - 1;
+          //   //     tempEvents[i].loadingButton = false;
+          //   //     tempEvents[i].status = "Booked";
+          //   //     this.setState({ events: tempEvents });
+          //   //     break;
+          //   //   }
+          //   // }
+          //   // _callback();
+          //   // item.seatsLeft = item.seatsLeft - 1;
+            
+          //   return item;
+          // }
+          this.loadEvents(selectedDate);
         }
       })
       .catch((error) => {
         this.error = true;
         //console.log('error is ',error, id, phoneNumber )
+        crashlytics().recordError(JSON.stringify(error));
         return false;
       });
   }
