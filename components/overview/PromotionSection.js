@@ -33,7 +33,10 @@ class PromotionSection extends Component {
         title: "Refer Banner",
         image:
           "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
-        to: this.props.profile.age ==null || this.props.profile.age >= 50 ? "Refer" : "OverviewScreen",
+        to:
+          this.props.profile.age == null || this.props.profile.age >= 50
+            ? "Refer"
+            : "OverviewScreen",
         text: "Invite friends to join and benefit! Click here to refer and earn rewards.",
       },
       {
@@ -69,7 +72,7 @@ class PromotionSection extends Component {
                   }}
                 >
                   {/* <View style={styles.card}> */}
-                  <Image
+                  <FastImage
                     source={{ uri: item.image }}
                     resizeMode="contain"
                     style={styles.image}

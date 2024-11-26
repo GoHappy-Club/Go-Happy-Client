@@ -469,7 +469,7 @@ class SessionDetails extends Component {
               justifyContent: "center",
             }}
           >
-            <Image
+            <FastImage
               style={styles.cover}
               source={
                 // cover

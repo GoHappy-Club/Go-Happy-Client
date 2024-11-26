@@ -98,11 +98,11 @@ class Membership extends Component {
       this.setState({
         clickPopup: false,
         payButtonLoading: false,
-        success: true
+        success: true,
       });
-      _this.props.navigation.navigate("PaymentSuccessful",{
-        type:"normal",
-        navigateTo:"MembershipScreen"
+      _this.props.navigation.navigate("PaymentSuccessful", {
+        type: "normal",
+        navigateTo: "MembershipScreen",
       });
     };
     const _errorHandler = () => {
@@ -115,9 +115,9 @@ class Membership extends Component {
         payButtonLoading: false,
       });
       // this.setState({ showPaymentAlert: true });
-      _this.props.navigation.navigate("PaymentFailed",{
-        type:"normal",
-        navigateTo:""
+      _this.props.navigation.navigate("PaymentFailed", {
+        type: "normal",
+        navigateTo: "",
       });
     };
     //console.log('propro',this.props.profile)
@@ -277,7 +277,7 @@ The Link will Expire in 20 Minutes.`;
             Contribute & Support Us
           </Text>
           <View style={{ flex: 1, flexDirection: "row", marginTop: "5%" }}>
-            <Image
+            <FastImage
               style={{ height: 40, width: 40 }}
               source={require("../images/secured.png")}
             />
@@ -416,53 +416,53 @@ The Link will Expire in 20 Minutes.`;
               </View>
             </TouchableOpacity>
             {this.state.clickPopup && (
-            <AwesomeAlert
-              show={this.state.clickPopup}
-              showProgress={false}
-              closeOnTouchOutside={
-                this.state.payButtonLoading || this.state.shareButtonLoading
-                  ? false
-                  : true
-              }
-              closeOnHardwareBackPress= {
-                this.state.payButtonLoading || this.state.shareButtonLoading
-                  ? false
-                  : true
-              }
-              customView={
-                <View style={styles.AAcontainer}>
-                  <Text style={styles.AAtitle}>Payment Confirmation</Text>
-                  <Text style={styles.AAmessage}>
-                    Would you like to pay this yourself or share the payment
-                    link with a family member?
-                  </Text>
-                  <View style={styles.AAbuttonContainer}>
-                    <Button
-                      outline
-                      title={"Pay Now"}
-                      loading={this.state.payButtonLoading}
-                      buttonStyle={[styles.AApayButton, styles.AAbutton]}
-                      onPress={() => {
-                        this.phonePeWrapper("self", this.state.itemToBuy);
-                      }}
-                      disabled={this.state.payButtonLoading}
-                    />
-                    <Button
-                      outline
-                      title={"Share"}
-                      loading={this.state.shareButtonLoading}
-                      buttonStyle={[styles.AAshareButton, styles.AAbutton]}
-                      onPress={() => {
-                        this.phonePeWrapper("share", this.state.itemToBuy);
-                      }}
-                      disabled={this.state.shareButtonLoading}
-                    />
+              <AwesomeAlert
+                show={this.state.clickPopup}
+                showProgress={false}
+                closeOnTouchOutside={
+                  this.state.payButtonLoading || this.state.shareButtonLoading
+                    ? false
+                    : true
+                }
+                closeOnHardwareBackPress={
+                  this.state.payButtonLoading || this.state.shareButtonLoading
+                    ? false
+                    : true
+                }
+                customView={
+                  <View style={styles.AAcontainer}>
+                    <Text style={styles.AAtitle}>Payment Confirmation</Text>
+                    <Text style={styles.AAmessage}>
+                      Would you like to pay this yourself or share the payment
+                      link with a family member?
+                    </Text>
+                    <View style={styles.AAbuttonContainer}>
+                      <Button
+                        outline
+                        title={"Pay Now"}
+                        loading={this.state.payButtonLoading}
+                        buttonStyle={[styles.AApayButton, styles.AAbutton]}
+                        onPress={() => {
+                          this.phonePeWrapper("self", this.state.itemToBuy);
+                        }}
+                        disabled={this.state.payButtonLoading}
+                      />
+                      <Button
+                        outline
+                        title={"Share"}
+                        loading={this.state.shareButtonLoading}
+                        buttonStyle={[styles.AAshareButton, styles.AAbutton]}
+                        onPress={() => {
+                          this.phonePeWrapper("share", this.state.itemToBuy);
+                        }}
+                        disabled={this.state.shareButtonLoading}
+                      />
+                    </View>
                   </View>
-                </View>
-              }
-              onDismiss={() => this.setState({ clickPopup: false })}
-            />
-          )}
+                }
+                onDismiss={() => this.setState({ clickPopup: false })}
+              />
+            )}
           </View>
 
           {this.state.success && (

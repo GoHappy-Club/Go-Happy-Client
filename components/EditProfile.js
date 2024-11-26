@@ -128,7 +128,7 @@ const EditProfile = () => {
         ) : null}
         <View style={styles.basicDetailsContainer}>
           <View style={styles.coverContainer}>
-            <Image
+            <FastImage
               style={styles.cover}
               resizeMode="cover"
               source={{

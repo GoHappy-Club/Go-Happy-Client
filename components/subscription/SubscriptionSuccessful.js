@@ -16,7 +16,10 @@ const SubscriptionSuccessful = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../../images/hurray.png")} style={styles.image} />
+      <FastImage
+        source={require("../../images/hurray.png")}
+        style={styles.image}
+      />
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
           Congratulations! Your payment was successful, and you're now a member
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: wp(80),
-    resizeMode:"contain",
+    resizeMode: "contain",
   },
   textWrapper: {
     marginBottom: wp(5),

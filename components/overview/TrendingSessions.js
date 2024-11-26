@@ -94,7 +94,10 @@ class TrendingSessions extends Component {
       }
     >
       <View style={styles.container}>
-        <Image source={{ uri: item.value.coverImage }} style={styles.image} />
+        <FastImage
+          source={{ uri: item.value.coverImage }}
+          style={styles.image}
+        />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
             {this.trimContent(item.value.eventName, 13)}

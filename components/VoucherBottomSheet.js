@@ -212,7 +212,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
         ]}
       >
         <View style={styles.topSection}>
-          <Image
+          <FastImage
             source={{
               uri: voucher.image,
             }}
