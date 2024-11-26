@@ -1,10 +1,13 @@
 export const Colors = {
   white: "#FFFFFF",
   black: "#000000",
+  beige:"#F2EBE2",
   lowOpacityBlack: "rgba(0,0,0,0.6)",
   green: "green",
   brown: "brown",
   red: "red",
+  coinsRed:"#FF5C5C",
+  coinsGreen:"#00a67e",
   deepskyblue: "deepskyblue",
   primary: "#29BFC2",
   referPrimary: "#2bbdc3",
@@ -28,9 +31,11 @@ export const Colors = {
     d: "#d6d7da",
     4: "#404040",
     optionList: "#424242",
-    countdown:"#8a8888"
+    countdown:"#8a8888",
+    header:"#F2F2F2"
   },
   linearGradient: ["#4c669f", "#3b5998", "#192f6a"],
+  headerLinearGradient:["#FCF6BA", "#E3D088", "#B38728"],
   phoneInputBorder: "#555",
   errorButton: "#DD6B55",
   transparent: "transparent",
@@ -39,6 +44,8 @@ export const Colors = {
     tambola: "#ffa1d2",
     intro: "#EBC1C1",
     sessionDetails: "#eda29b",
+    aboutText:"#ff8b81"
   },
-  copilotArrow:"#9FA8DA"
+  copilotArrow:"#9FA8DA",
+  upgradeBorder:"#FBC65F"
 };

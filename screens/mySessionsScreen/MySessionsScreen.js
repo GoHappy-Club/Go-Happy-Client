@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
 import { Colors } from "../../assets/colors/color";
+import Video from "react-native-video";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 export default class MySessionsScreen extends Component {
   constructor(props) {
@@ -11,7 +13,7 @@ export default class MySessionsScreen extends Component {
       phoneNumber: "",
       password: "",
       showAlert: false,
-      loader: false,
+      loading: false,
       ongoingEvents: [],
       expiredEvents: [],
       upcomingEvents: [],
@@ -37,32 +39,28 @@ export default class MySessionsScreen extends Component {
   loadMySessions(phoneNumber, _callback) {
     phoneNumber = this.state.phoneNumber;
     var url = SERVER_URL + "/event/mySessions";
+    this.setState({loading:true});
     axios
       .post(url, { phoneNumber: phoneNumber })
       .then((response) => {
         if (response.data) {
-          //
           this.setState({ expiredEvents: response.data.expiredEvents });
-          this.setState({ upcomingEvents: response.data.upcomingEvents });
-          this.setState({ ongoingEvents: response.data.ongoingEvents });
           this.setState({ error: false });
-          this.setState({ childLoader: false });
-
+          
           _callback();
         }
+        this.setState({ loading: false });
       })
       .catch((error) => {
+        console.log("Error in sessions =>",error);
+        this.setState({ loading: false });
         this.error = true;
       });
   }
   render() {
-    if (this.state.loader == true) {
-      // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
+    if (this.state.loading == true) {
       return (
-        <MaterialIndicator
-          color={Colors.white}
-          style={{ backgroundColor: Colors.materialIndicatorColor }}
-        />
+        <GOHLoader/>
       );
     }
     const navigation = this.props.navigation;

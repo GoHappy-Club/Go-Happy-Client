@@ -38,7 +38,7 @@ const Item = ({ item, onPress }) => {
   };
   return (
     <Pressable onPress={() => onPress(item)} style={styles.item}>
-      <Image
+      <FastImage
         source={{ uri: item.coverImage }}
         style={styles.coverImage}
         resizeMode="cover"
@@ -254,7 +254,7 @@ const SearchBar = () => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.f0,
             borderRadius: 40,
             paddingHorizontal: 15,
             marginBottom: height * 0.025,
@@ -293,11 +293,11 @@ const SearchBar = () => {
           <X color="#000" size={24} />
         </TouchableOpacity>
       </Animated.View>
-        {isSearchActive &&
-          !loading &&
-          searchText != "" &&
-          // events &&
-          Object.keys(events).length >= 0 && (
+      {isSearchActive &&
+        !loading &&
+        searchText != "" &&
+        // events &&
+        Object.keys(events).length >= 0 && (
           <>
             <FlatList
               data={events}
@@ -312,7 +312,7 @@ const SearchBar = () => {
               keyboardDismissMode="on-drag"
             />
           </>
-          )}
+        )}
       {isSearchActive && !searchText && recentSearches.length > 0 && (
         <RecentSearches />
       )}
@@ -352,7 +352,7 @@ const SearchBar = () => {
               position: "absolute",
             }}
           >
-            <Image
+            <FastImage
               source={require("../images/noSearchResult.png")}
               resizeMode="cover"
               style={{
@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     flexDirection: "row",
     justifyContent: "center",
+    backgroundColor: "white",
   },
   searchIcon: {
     top: 15,

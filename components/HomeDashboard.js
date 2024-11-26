@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Share,
+  Image,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -17,15 +18,17 @@ import CalendarDays from "react-native-calendar-slider-carousel";
 import { MaterialIndicator } from "react-native-indicators";
 
 import { connect } from "react-redux";
-import { setProfile } from "../redux/actions/counts.js";
+import { setMembership, setProfile } from "../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
-import phonepe_payments from "./PhonePe/Payments.js";
 import toUnicodeVariant from "./toUnicodeVariant.js";
+import GOHLoader from "../commonComponents/GOHLoader.js";
 import tambola from "tambola";
 import { Colors } from "../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
+import { wp } from "../helpers/common.js";
+import { storeCompletedSession } from "../services/Startup.js";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -53,91 +56,38 @@ class HomeDashboard extends Component {
       itemClicked: null,
       payButtonLoading: false,
       shareButtonLoading: false,
+      nonMemberPopUp: false,
+      lowCoinsPopUp: false,
     };
-    //
-
     this._retrieveData();
   }
 
-  async phonePeWrapper(type, item) {
-    var _this = this;
-    const _callback = (id) => {
-      this.setState({ success: true });
-
-      var _this = this;
-      if (id === "") {
-        _this.props.navigation.navigate("GoHappy Club");
-      } else {
-        this.updateEventBook(item);
-        this.setState({
-          showPaymentAlert: true,
-          clickPopup: false,
-          payButtonLoading: false,
-        });
-      }
-    };
-    const _errorHandler = () => {
-      this.setState({
-        paymentAlertMessage: phonepe_payments.PaymentError(),
-        paymentAlertTitle: "Oops!",
-        clickPopup: false,
-        payButtonLoading: false,
-      });
-      this.setState({ showPaymentAlert: true });
-    };
-    if (type == "share") {
-      this.setState({
-        shareButtonLoading: true,
-      });
-      const tambolaTicket = tambola.generateTicket();
-      phonepe_payments
-        .phonePeShare(
-          this.props.profile.phoneNumber,
-          item.cost,
-          _errorHandler,
-          "workshop",
-          item.id,
-          tambolaTicket
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(item.cost),"bold")} for ${toUnicodeVariant(item.eventName,"bold")}.
-Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
-`;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              this.setState({
-                shareButtonLoading: false,
-                clickPopup: false,
-              });
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-            });
-        });
-    } else {
-      this.setState({
-        payButtonLoading: true,
-      });
-      phonepe_payments.phonePe(
-        this.props.profile.phoneNumber,
-        item.cost,
-        _callback,
-        _errorHandler,
-        "workshop"
-      );
-    }
+  handleClickBook(item) {
+    if (!this.isBookingAllowed(item)) return;
+    // this.setState({ itemToBuy: item }, () => {
+    //   this.setState({ clickPopup: true });
+    // });
+    this.updateEventBook(item);
   }
 
-  handleClickBook(item) {
-    this.setState({ itemToBuy: item }, () => {
-      this.setState({ clickPopup: true });
-    });
+  isBookingAllowed(item) {
+    if (this.props.membership.freeTrialActive == "true") return true;
+    if (
+      this.props.membership &&
+      this.props.membership?.membershipType == "Free"
+    ) {
+      // this.setState({ nonMemberPopUp: true });
+      this.props.navigation.navigate("SubscriptionPlans");
+      return false;
+    } else if (
+      this.props.membership &&
+      this.props.membership?.coins < item.cost
+    ) {
+      this.setState({ lowCoinsPopUp: true });
+      return false;
+    }
+
+    return true;
   }
 
   _retrieveData = async () => {
@@ -222,7 +172,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       .catch((errorMsg) => {});
   }
 
-  updateEventBook(item) {
+  async updateEventBook(item) {
     //console.log("item clicked is", item)
     this.setState({ bookingLoader: true, itemClicked: item });
     if (this.getTitle(item) == "Share") {
@@ -230,8 +180,16 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       return;
     }
     if (this.getTitle(item) == "Join") {
+      await storeCompletedSession(
+        item.id,
+        item.eventName,
+        item.coverImage,
+        item.subCategory,
+        this.props.profile.phoneNumber
+      );
       setSessionAttended(this.props.profile.phoneNumber);
-      Linking.openURL(item.meetingLink);
+      await Linking.openURL(item.meetingLink);
+      await this.giveRewards(item);
       return;
     }
     if (this.checkIsParticipantInSameEvent(item)) {
@@ -244,6 +202,21 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       this.props.profile.phoneNumber,
       this.state.selectedDateRaw
     );
+  }
+
+  async giveRewards(item) {
+    let { membership, actions } = this.props;
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
+        phone: this.props.profile.phoneNumber,
+        eventId: item.id,
+      });
+      // membership.coins = response.data.coins;
+      // actions.setMembership({ ...membership });
+    } catch (error) {
+      console.log("Error in giveRewards ==>", error);
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -392,15 +365,39 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                       right: 0,
                     }}
                   >
-                    {"\u20B9"}
-                    {item.cost}
+                    {item?.cost}{" "}
+                    <FastImage
+                      source={require("../images/GoCoins.png")}
+                      style={{
+                        height: 15,
+                        width: 15,
+                      }}
+                    />
                   </Text>
                 )}
               </View>
             </View>
-            <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
-              {this.trimContent(item.eventName, 30)}
-            </Title>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 4,
+              }}
+            >
+              <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
+                {this.trimContent(item.eventName, 30)}
+              </Title>
+              <Text
+                style={{
+                  color: Colors.white,
+                  fontSize: 14,
+                }}
+              >
+                {this.props?.ratings[item.subCategory]?.toFixed(2)}/5
+              </Text>
+            </View>
 
             <View
               style={{
@@ -453,13 +450,17 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     );
     return (
       <>
-        <View>
-          <SearchBar
-            loadCaller={this.loadCaller}
-            checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
-          />
-        </View>
-        <View style={{ flex: 1, backgroundColor: Colors.grey.f0 }}>
+        {/* <View
+          style={{
+            backgroundColor: "white",
+          }}
+        > */}
+        <SearchBar
+          loadCaller={this.loadCaller}
+          checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
+        />
+        {/* </View> */}
+        <View style={{ flex: 1, backgroundColor: "white" }}>
           <CalendarDays
             numberOfDays={15}
             daysInView={3}
@@ -516,54 +517,6 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               onDismiss={() => this.setState({ showAlert: false })}
             />
           )}
-          {this.state.clickPopup && (
-            <AwesomeAlert
-              show={this.state.clickPopup}
-              showProgress={false}
-              closeOnTouchOutside={
-                this.state.payButtonLoading || this.state.shareButtonLoading
-                  ? false
-                  : true
-              }
-              closeOnHardwareBackPress={
-                this.state.payButtonLoading || this.state.shareButtonLoading
-                  ? false
-                  : true
-              }
-              customView={
-                <View style={styles.AAcontainer}>
-                  <Text style={styles.AAtitle}>Payment Confirmation</Text>
-                  <Text style={styles.AAmessage}>
-                    Would you like to pay this yourself or share the payment
-                    link with a family member?
-                  </Text>
-                  <View style={styles.AAbuttonContainer}>
-                    <Button
-                      outline
-                      title={"Pay Now"}
-                      loading={this.state.payButtonLoading}
-                      buttonStyle={[styles.AApayButton, styles.AAbutton]}
-                      onPress={() => {
-                        this.phonePeWrapper("self", this.state.itemToBuy);
-                      }}
-                      disabled={this.state.payButtonLoading}
-                    />
-                    <Button
-                      outline
-                      title={"Share"}
-                      loading={this.state.shareButtonLoading}
-                      buttonStyle={[styles.AAshareButton, styles.AAbutton]}
-                      onPress={() => {
-                        this.phonePeWrapper("share", this.state.itemToBuy);
-                      }}
-                      disabled={this.state.shareButtonLoading}
-                    />
-                  </View>
-                </View>
-              }
-              onDismiss={() => this.setState({ clickPopup: false })}
-            />
-          )}
           {this.state.showPaymentAlert && (
             <AwesomeAlert
               show={this.state.showPaymentAlert}
@@ -607,6 +560,65 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 this.setState({ belowAgePopUp: false });
               }}
               onDismiss={() => this.setState({ belowAgePopUp: false })}
+            />
+          )}
+          {this.state.nonMemberPopUp && (
+            <AwesomeAlert
+              show={this.state.nonMemberPopUp}
+              showProgress={false}
+              title={"Booking Failed"}
+              message={
+                "You are not a member of GoHappy Club, Join us by clicking below button."
+              }
+              messageStyle={{
+                textAlign: "center",
+                fontFamily: "Poppins-Regular",
+              }}
+              titleStyle={{
+                fontSize: wp(5),
+                fontFamily: "NunitoSans-SemiBold",
+                color: Colors.red,
+              }}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              showCancelButton={false}
+              confirmText="Join Now"
+              confirmButtonColor={Colors.primary}
+              onConfirmPressed={() => {
+                this.props.navigation.navigate("SubscriptionPlans");
+              }}
+              onDismiss={() => this.setState({ nonMemberPopUp: false })}
+            />
+          )}
+          {this.state.lowCoinsPopUp && (
+            <AwesomeAlert
+              show={this.state.lowCoinsPopUp}
+              showProgress={false}
+              title={"Booking Failed"}
+              message={
+                "You don't have enough coins, Please top-up coins to book this session."
+              }
+              messageStyle={{
+                textAlign: "center",
+                fontFamily: "Poppins-Regular",
+                color: Colors.black,
+              }}
+              titleStyle={{
+                fontSize: wp(5),
+                fontFamily: "NunitoSans-SemiBold",
+                color: Colors.red,
+              }}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={true}
+              showConfirmButton={true}
+              showCancelButton={false}
+              confirmText="Top up Now"
+              confirmButtonColor={Colors.primary}
+              onConfirmPressed={() => {
+                this.props.navigation.navigate("TopUpScreen");
+              }}
+              onDismiss={() => this.setState({ lowCoinsPopUp: false })}
             />
           )}
         </View>
@@ -703,9 +715,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
+  membership: state.membership.membership,
 });
 
-const ActionCreators = Object.assign({}, { setProfile });
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });

@@ -13,6 +13,7 @@ import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
 import { Colors } from "./assets/colors/color";
+import firebase from "@react-native-firebase/app";
 // const my_store = store();
 
 const RNRedux = () => {
@@ -33,6 +34,23 @@ const RNRedux = () => {
     </CopilotProvider>
   );
 };
+
+firebase.messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
+function HeadlessCheck({ isHeadless }) {
+  if (isHeadless) {
+    // App has been launched in the background by iOS, ignore
+    console.log("App has been launched in the background by iOS, ignore");
+    
+    return null;
+  }
+
+  return <RNRedux />;
+}
+
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
-AppRegistry.registerComponent(appName, () => RNRedux);
+AppRegistry.registerComponent(appName, () => HeadlessCheck);
+// AppRegistry.registerComponent('app', () => HeadlessCheck);

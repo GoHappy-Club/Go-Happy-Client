@@ -1,53 +1,62 @@
 {
-  "images": [
+  "images" : [
     {
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "20x20"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (5).jpeg",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "20x20"
     },
     {
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "20x20"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (6).jpeg",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "20x20"
     },
     {
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "29x29"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (7).jpeg",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "29x29"
     },
     {
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "29x29"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (8).jpeg",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "29x29"
     },
     {
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "40x40"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (3).jpeg",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "40x40"
     },
     {
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "40x40"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (2) (1) 1.jpeg",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "40x40"
     },
     {
-      "idiom": "iphone",
-      "scale": "2x",
-      "size": "60x60"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (2) (1).jpeg",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "60x60"
     },
     {
-      "idiom": "iphone",
-      "scale": "3x",
-      "size": "60x60"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (4).jpeg",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "60x60"
     },
     {
-      "idiom": "ios-marketing",
-      "scale": "1x",
-      "size": "1024x1024"
+      "filename" : "WhatsApp Image 2024-10-05 at 06.39.52 (2).jpeg",
+      "idiom" : "ios-marketing",
+      "scale" : "1x",
+      "size" : "1024x1024"
     }
   ],
-  "info": {
-    "author": "xcode",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }
