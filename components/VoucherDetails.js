@@ -6,6 +6,7 @@ import {
   ToastAndroid,
   Platform,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Animated, {
@@ -34,18 +35,20 @@ const VoucherDetails = () => {
     expiryDate,
     description,
     code,
+    status,
+    redemptionTime,
+    parentExpiryDate,
   } = route.params;
 
   const [show, setShow] = useState(true);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      if (!show) return; // Prevent multiple triggers
+      if (!show) return;
 
       e.preventDefault();
       setShow(false);
 
-      // Use a safe timeout duration
       const timer = setTimeout(() => {
         navigation.dispatch(e.data.action);
       }, 300);
@@ -53,7 +56,7 @@ const VoucherDetails = () => {
       return () => clearTimeout(timer);
     });
 
-    return unsubscribe; // Proper cleanup by returning the unsubscribe function directly
+    return unsubscribe;
   }, [navigation, show]);
 
   const conditions_and_redemptions = [
@@ -81,7 +84,12 @@ const VoucherDetails = () => {
       <View style={styles.container}>
         <Animated.View
           sharedTransitionTag={`sharedBg${id}`}
-          style={styles.card}
+          style={[
+            styles.card,
+            {
+              backgroundColor: status == "ACTIVE" ? "white" : Colors.grey.d,
+            },
+          ]}
         >
           <View
             style={{
@@ -122,10 +130,10 @@ const VoucherDetails = () => {
             </View>
           </View>
           {show && (
-            <Animated.ScrollView
+            <ScrollView
               style={styles.scrollContainer}
-              entering={FadeInDown.duration(300)}
-              exiting={FadeOutLeft.duration(100)}
+              // entering={FadeInDown.duration(300)}
+              // exiting={FadeOutLeft.duration(100)}
               contentContainerStyle={styles.scrollContent}
             >
               <Animated.Text
@@ -149,7 +157,7 @@ const VoucherDetails = () => {
                   </Animated.Text>
                 ))}
               </Animated.View>
-            </Animated.ScrollView>
+            </ScrollView>
           )}
           {show && (
             <Pressable onPress={copyToClipboard}>
@@ -167,7 +175,14 @@ const VoucherDetails = () => {
               sharedTransitionTag={`sharedExpiryDate${id}`}
               style={styles.footerText}
             >
-              Valid until {formatDate(expiryDate)}
+              {status == "ACTIVE"
+                ? "Valid until"
+                : `${
+                    status?.charAt(0) + status.slice(1).toLowerCase()
+                  } on`}{" "}
+              {status == "REDEEMED"
+                ? formatDate(redemptionTime)
+                : formatDate(Math.min(expiryDate, parentExpiryDate))}
             </Animated.Text>
           </View>
           <View style={styles.cutoutLeft} />

@@ -7,7 +7,7 @@ export const activateFreeTrial = async (profile) => {
       phone: profile.phoneNumber,
     });
     console.log(response.data);
-    
+
     return {
       membershipType: response.data.membershipType,
       coins: response.data.coins,
@@ -153,7 +153,7 @@ export const submitRating = async (
 export const getTodaysFestival = async () => {
   try {
     const res = await axios.get(`${SERVER_URL}/festivals/today`);
-    return res.data;
+    return res.data.festival;
   } catch (error) {
     console.log("Error in getTodaysFestival", error);
   }

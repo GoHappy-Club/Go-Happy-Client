@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Rewards from "../../components/Rewards";
@@ -11,6 +11,18 @@ const RewardsScreen = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const updateVouchers = async (voucherIds) => {
+      try {
+        const res = await axios.post(
+          `${SERVER_URL}/membership/updateVoucher?toExpire=true`,
+          {
+            voucherIds,
+          }
+        );
+      } catch (error) {
+        console.log("Error in updating vouchers ==>", error);
+      }
+    };
     const getRewards = async () => {
       setLoading(true);
       try {
@@ -27,8 +39,28 @@ const RewardsScreen = () => {
           }
         );
         setRewards(response1.data);
+        const currTime = new Date().getTime();
+        const newVouchers = response2?.data?.filter((voucher) => {
+          if (
+            (voucher.expiryDate < currTime ||
+              voucher.parentExpiryDate < currTime) &&
+            voucher.status == "ACTIVE"
+          ) {
+            voucher.status = "EXPIRED";
+            return voucher;
+          } else if (voucher.parentStatus != "ACTIVE") {
+            voucher.status = "EXPIRED";
+            return voucher;
+          }
+        });
+        const expiredVouchersIds = newVouchers
+          .filter((i) => i.status == "EXPIRED")
+          .map((i) => i.id);
+        console.log(expiredVouchersIds);
+        // setVouchers(newVouchers);
         setVouchers(response2.data);
         setLoading(false);
+        await updateVouchers(expiredVouchersIds);
       } catch (error) {
         setLoading(false);
         console.log("Error in getting rewards ==>", error);

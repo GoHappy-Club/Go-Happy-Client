@@ -180,7 +180,17 @@ const VouchersCard = ({ voucher, id, onPress }) => {
             sharedTransitionTag={`sharedExpiryDate${id}`}
             style={styles.validityText}
           >
-            Valid until {formatDate(voucher.expiryDate)}
+            {voucher.status == "ACTIVE"
+              ? "Valid until"
+              : `${
+                  voucher?.status?.charAt(0) +
+                  voucher.status.slice(1).toLowerCase()
+                } on`}{" "}
+            {voucher.status == "REDEEMED"
+              ? formatDate(voucher?.redemptionTime)
+              : formatDate(
+                  Math.min(voucher.expiryDate, voucher.parentExpiryDate)
+                )}
           </Animated.Text>
         </Animated.View>
       </Animated.View>
@@ -277,7 +287,10 @@ const Vouchers = ({ vouchers, navigation }) => (
       alignItems: vouchers.length == 1 ? "flex-start" : "center",
     }}
   >
-    <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      contentContainerStyle={styles.grid}
+      showsVerticalScrollIndicator={false}
+    >
       {vouchers.map((item, index) => (
         <VouchersCard
           id={item.id}
@@ -296,6 +309,9 @@ const Vouchers = ({ vouchers, navigation }) => (
               expiryDate: item.expiryDate,
               status: item.status,
               description: item.description,
+              status: item.status,
+              redemptionTime: item.redemptionTime,
+              parentExpiryDate: item.parentExpiryDate,
             })
           }
         />
