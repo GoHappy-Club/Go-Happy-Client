@@ -64,7 +64,11 @@ const Header = () => {
       ) {
         const festival = await getTodaysFestival();
         const showTour = await AsyncStorage.getItem("showTour");
-        if (showTour == null || (showTour == "false" && festival)) {
+        if (
+          ((showTour == null || showTour == "false") &&
+            festival != undefined) ||
+          festival != null
+        ) {
           navigation.navigate("FestiveWish", {
             asset: festival.asset,
             title: festival.name,
