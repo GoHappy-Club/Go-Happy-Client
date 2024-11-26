@@ -140,51 +140,15 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
         <View style={styles.divider} />
 
         <View style={styles.featuresContainer}>
-          <FeatureItem
-            title="Coins per Month"
-            value={`${selectedPlan.coinsPerMonth} coins`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          <FeatureItem
-            title="Reward Multiplier"
-            value={`${selectedPlan.rewardMultiplier}x`}
-            textColor={colorMapping[selectedPlan?.membershipType]["textColor"]}
-          />
-          {selectedPlan.discount > 0 && (
+          {selectedPlan?.perks?.map((perk) => (
             <FeatureItem
-              title="Discount"
-              value={`${selectedPlan.discount}% OFF`}
+              title={perk}
+              highlight={true}
               textColor={
                 colorMapping[selectedPlan?.membershipType]["textColor"]
               }
-              highlight
             />
-          )}
+          ))}
         </View>
 
         {/* {membershipPlans.length > 1 && ( */}
@@ -216,7 +180,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
   );
 };
 
-const FeatureItem = ({ title, value, highlight, textColor }) => {
+const FeatureItem = ({ title, highlight, textColor }) => {
   return (
     <Animated.View
       entering={FadeInUp.delay(300).damping(10).springify()}
@@ -224,9 +188,9 @@ const FeatureItem = ({ title, value, highlight, textColor }) => {
     >
       <Star color={highlight ? "#FFD700" : textColor} size={16} />
       <Text style={[styles.featureTitle, { color: textColor }]}>
-        {title} :{" "}
+        {title}
       </Text>
-      <Text
+      {/* <Text
         style={[
           styles.featureValue,
           highlight && styles.highlightedValue,
@@ -234,7 +198,7 @@ const FeatureItem = ({ title, value, highlight, textColor }) => {
         ]}
       >
         {value}
-      </Text>
+      </Text> */}
     </Animated.View>
   );
 };
@@ -445,7 +409,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     if (selectedPlan?.discount > 0) {
       subsFees = subsFees - (subsFees * selectedPlan?.discount) / 100;
     }
-    if (membership.membershipType == "Free" || membership.freeTrialActive == true) {
+    if (
+      membership.membershipType == "Free" ||
+      membership.freeTrialActive == true
+    ) {
       return subsFees;
     } else {
       return getRemainingMembershipValue(
@@ -757,7 +724,7 @@ const styles = StyleSheet.create({
   durationsContainer: {
     position: "absolute",
     bottom: 15,
-    left: 15,
+    left: 20,
   },
   durationTitle: {
     fontSize: 14,
@@ -852,23 +819,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: wp(1),
   },
-  durationContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    // borderBottomColor: "#e5e7eb",
-  },
   durationButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: "#f3f4f6",
-  },
-  durationButtonSelected: {
-    backgroundColor: "#3b82f6",
-    borderColor: "#3b82f6",
   },
   durationButtonText: {
     fontSize: 14,
