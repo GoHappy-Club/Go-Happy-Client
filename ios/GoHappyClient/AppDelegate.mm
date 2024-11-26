@@ -1,6 +1,5 @@
 #import <Firebase.h>
 #import "AppDelegate.h"
-
 #import <React/RCTBundleURLProvider.h>
 
 @implementation AppDelegate
@@ -14,6 +13,12 @@
   self.initialProps = @{};
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
+
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self getBundleURL];
+}
+
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
   NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
@@ -23,10 +28,6 @@
   return YES;
 }
 
-- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
-{
-  return [self getBundleURL];
-}
 
 - (NSURL *)getBundleURL
 {

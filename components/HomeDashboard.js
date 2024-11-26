@@ -547,13 +547,6 @@ class HomeDashboard extends Component {
           checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
         />
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
-          {/* <View
-            style={{
-              backgroundColor: "red",
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-            }}
-          > */}
             <CalendarDays
               numberOfDays={15}
               daysInView={3}
@@ -561,7 +554,6 @@ class HomeDashboard extends Component {
               onDateSelect={(date) => this.changeSelectedDate(date)}
               width={wp(95)}
             />
-          {/* </View> */}
           <Text
             h4
             style={{

@@ -19,8 +19,6 @@ import com.reactnativecommunity.clipboard.ClipboardPackage;
 import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-firebase/analytics
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
-// @react-native-google-signin/google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 // @react-native-firebase/app
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-firebase/auth
@@ -33,16 +31,12 @@ import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 // @react-native-masked-view/masked-view
 import org.reactnative.maskedview.RNCMaskedViewPackage;
-// lottie-react-native
-import com.airbnb.android.react.lottie.LottiePackage;
-// react-native-branch
-import io.branch.rnbranch.RNBranchPackage;
-// react-native-contacts
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-// react-native-date-picker
-import com.henninghall.date_picker.DatePickerPackage;
 // react-native-device-info
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+// react-native-fast-image
+import com.dylanvann.fastimage.FastImageViewPackage;
+// react-native-fs
+import com.rnfs.RNFSPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
 // react-native-image-crop-picker
@@ -51,8 +45,6 @@ import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.imagepicker.ImagePickerPackage;
 // react-native-linear-gradient
 import com.BV.LinearGradient.LinearGradientPackage;
-// react-native-lottie-splash-screen
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // react-native-otp-verify
 import com.faizal.OtpVerify.OtpVerifyPackage;
 // react-native-phonepe-pg
@@ -73,8 +65,14 @@ import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 // react-native-video
 import com.brentvatne.react.ReactVideoPackage;
+// react-native-view-shot
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 // react-native-webview
 import com.reactnativecommunity.webview.RNCWebViewPackage;
+// rn-fetch-blob
+import com.RNFetchBlob.RNFetchBlobPackage;
+// rn-scratch-card
+import com.rnscratchcard.RnScratchCardPackage;
 
 public class PackageList {
   private Application application;
@@ -124,23 +122,19 @@ public class PackageList {
       new ClipboardPackage(),
       new BlurViewPackage(),
       new ReactNativeFirebaseAnalyticsPackage(),
-      new RNGoogleSigninPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseCrashlyticsPackage(),
       new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseMessagingPackage(),
       new RNCMaskedViewPackage(),
-      new LottiePackage(),
-      new RNBranchPackage(),
-      new ReactNativeContacts(),
-      new DatePickerPackage(),
       new RNDeviceInfo(),
+      new FastImageViewPackage(),
+      new RNFSPackage(),
       new RNGestureHandlerPackage(),
       new PickerPackage(),
       new ImagePickerPackage(),
       new LinearGradientPackage(),
-      new SplashScreenReactPackage(),
       new OtpVerifyPackage(),
       new PhonePePaymentSDKPackage(),
       new ReactNativePushNotificationPackage(),
@@ -151,7 +145,10 @@ public class PackageList {
       new SvgPackage(),
       new VectorIconsPackage(),
       new ReactVideoPackage(),
-      new RNCWebViewPackage()
+      new RNViewShotPackage(),
+      new RNCWebViewPackage(),
+      new RNFetchBlobPackage(),
+      new RnScratchCardPackage()
     ));
   }
 }

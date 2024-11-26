@@ -71,7 +71,7 @@ const RewardsCard = ({
             });
           }}
         >
-          <Image
+          <FastImage
             source={require("../images/scratch_foreground.png")}
             width={100}
             height={100}
@@ -340,7 +340,7 @@ const Rewards = ({ rewards, vouchers }) => {
       >
         <View style={styles.totalRewards}>
           <Text style={styles.rewardsAmount}>
-            <Image
+            <FastImage
               source={require("../images/GoCoins.png")}
               style={{
                 height: 70,

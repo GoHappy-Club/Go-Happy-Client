@@ -217,7 +217,7 @@ class Refer extends Component {
             Members who will introduce atleast seven people (50+ of age) to join
             our GoHappy Club will get exciting gifts delivered at their homes!!
           </Text>
-          <Image
+          <FastImage
             resizeMode="cover"
             style={{
               width: "100%",
@@ -255,7 +255,7 @@ class Refer extends Component {
             <View
               style={{ display: "flex", flexDirection: "row", margin: "3%" }}
             >
-              <Image
+              <FastImage
                 resizeMode="contain"
                 style={{
                   width: "15%",
@@ -263,7 +263,7 @@ class Refer extends Component {
                 }}
                 source={require("../../images/whatsapp.png")}
               />
-              <Image
+              <FastImage
                 resizeMode="contain"
                 style={{
                   width: "15%",
@@ -271,7 +271,7 @@ class Refer extends Component {
                 }}
                 source={require("../../images/facebook.png")}
               />
-              <Image
+              <FastImage
                 resizeMode="contain"
                 style={{
                   width: "15%",
@@ -338,7 +338,7 @@ class Refer extends Component {
               </Text>
             </View>
           </TouchableOpacity>
-          <Image
+          <FastImage
             resizeMode="cover"
             style={{
               width: "100%",
