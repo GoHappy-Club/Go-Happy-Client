@@ -38,7 +38,7 @@ const SubscriptionCard = () => {
   const membership = useSelector((state) => state.membership.membership);
 
   const loadDate = (time) => {
-    return format(fromUnixTime(time / 1000), "MM/yy");
+    return format(fromUnixTime(time/1000), "MM/yy");
   };
 
   if (membership?.membershipType == "Free") {
@@ -59,7 +59,7 @@ const SubscriptionCard = () => {
                 gap: 10,
               }}
             >
-              <FastImage
+              <Image
                 style={styles.cover}
                 resizeMode="cover"
                 source={{
@@ -80,7 +80,7 @@ const SubscriptionCard = () => {
               top: 10,
             }}
           >
-            <FastImage
+            <Image
               source={require("../../images/logo.png")}
               style={{ width: 40, height: 40 }}
             />
@@ -88,18 +88,18 @@ const SubscriptionCard = () => {
           </View>
           <Text style={styles.membershipType}>{membership.membershipType}</Text>
           <BlurView
-            blurAmount={8}
-            blurType="light"
-            style={{
-              position: "fixed",
-              top: "-15%",
-              left: "-20%",
-              // bottom: 0,
-              // right: 0,
-              width: wp(150),
-              height: hp(25),
-            }}
-          />
+          blurAmount={8}
+          blurType="light"
+          style={{
+            position: "fixed",
+            top: "-15%",
+            left: "-20%",
+            // bottom: 0,
+            // right: 0,
+            width:wp(150),
+            height: hp(25),
+          }}
+        />
         </LinearGradient>
       </>
     );
@@ -111,8 +111,7 @@ const SubscriptionCard = () => {
       style={[
         styles.card,
         {
-          borderColor:
-            COLORS_MAPPING[membership?.membershipType]["borderColor"],
+          borderColor: COLORS_MAPPING[membership?.membershipType]["borderColor"],
         },
       ]}
       start={{ x: 0, y: 0 }}
@@ -151,7 +150,7 @@ const SubscriptionCard = () => {
           </Text>
         </View>
       </View>
-      <FastImage
+      <Image
         source={COLORS_MAPPING[membership?.membershipType]["logo"]}
         style={{
           width: wp(20),
@@ -186,7 +185,7 @@ const SubscriptionCard = () => {
       >
         Membership
       </Text>
-      <FastImage
+      <Image
         style={styles.cover}
         resizeMode="cover"
         source={{

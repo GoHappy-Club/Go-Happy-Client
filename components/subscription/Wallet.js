@@ -33,76 +33,74 @@ const Wallet = ({ transactions }) => {
         contentContainerStyle={{
           paddingTop: hp(8),
           alignItems: "center",
-          minHeight: "100%",
+          minHeight:"100%"
           // flex:1
         }}
       >
-        <View
-          style={{
-            paddingHorizontal: wp(7),
-            width: "100%",
-          }}
-        >
-          <SubscriptionCard />
-        </View>
-        <View style={styles.coinsContainer}>
-          {/* Inner Container with Text and Image */}
-          <View style={styles.innerContainer}>
-            <View style={{ justifyContent: "center" }}>
-              <Text style={styles.titleText}>Happy Coins</Text>
-              <Text
-                style={[
-                  styles.coinsText,
-                  {
-                    color:
-                      membership.membershipType !== "Free"
-                        ? Colors.black
-                        : Colors.grey.countdown,
-                  },
-                ]}
-              >
-                {membership.coins}
-              </Text>
-            </View>
-
-            <FastImage
-              source={require("../../images/GoCoins.png")}
-              style={styles.coinImage}
-            />
-          </View>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-            onPress={() => {
-              if (membership.membershipType === "Free") {
-                navigation.navigate("SubscriptionPlans");
-                return;
-              }
-              navigation.navigate("TopUpScreen");
+          <View
+            style={{
+              paddingHorizontal: wp(7),
+              width: "100%",
             }}
           >
-            <View style={styles.buttonContent}>
-              <FastImage
+            <SubscriptionCard />
+          </View>
+          <View style={styles.coinsContainer}>
+            {/* Inner Container with Text and Image */}
+            <View style={styles.innerContainer}>
+              <View style={{ justifyContent: "center" }}>
+                <Text style={styles.titleText}>Happy Coins</Text>
+                <Text
+                  style={[
+                    styles.coinsText,
+                    {
+                      color:
+                        membership.membershipType !== "Free"
+                          ? Colors.black
+                          : Colors.grey.countdown,
+                    },
+                  ]}
+                >
+                  {membership.coins}
+                </Text>
+              </View>
+
+              <Image
                 source={require("../../images/GoCoins.png")}
-                style={styles.buttonImage}
+                style={styles.coinImage}
               />
-              <Text style={styles.buttonText}>Add More Happy Coins</Text>
             </View>
-          </Pressable>
-        </View>
-        <View
-          style={{
-            width: wp(95),
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TransactionHistory transactions={transactions} seeAll={true} />
-        </View>
-        {/* <TransactionHistory transactions={transactions}/> */}
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+              onPress={() => {
+                if (membership.membershipType === "Free") {
+                  navigation.navigate("SubscriptionPlans");
+                  return;
+                }
+                navigation.navigate("TopUpScreen");
+              }}
+            >
+              <View style={styles.buttonContent}>
+                <Image
+                  source={require("../../images/GoCoins.png")}
+                  style={styles.buttonImage}
+                />
+                <Text style={styles.buttonText}>Add More Happy Coins</Text>
+              </View>
+            </Pressable>
+          </View>
+          <View style={{
+            width:wp(95),
+            justifyContent:"center",
+            alignItems:"center",
+          }}>
+          <TransactionHistory transactions={transactions} seeAll={true}/>
+          </View>
+          {/* <TransactionHistory transactions={transactions}/> */}
       </ScrollView>
       {nonMemberPopUp && (
         <AwesomeAlert

@@ -27,9 +27,8 @@ const SubscriptionScreen = () => {
     try {
       setLoading(true);
       const response = await axios.get(url);
-      const plansToShow = response.data.filter(
-        (plan) => plan.membershipType != "Free"
-      );
+      const plansToShow = response.data
+        .filter((plan) => plan.membershipType != "Free")
       setPlans(plansToShow);
       setLoading(false);
     } catch (error) {
@@ -55,7 +54,7 @@ const SubscriptionScreen = () => {
           }}
         >
           <View style={styles.goHappyClubLogoWrapper}>
-            <FastImage
+            <Image
               source={require("../../images/logo.png")}
               style={styles.logo}
             />
@@ -67,13 +66,15 @@ const SubscriptionScreen = () => {
 
   return (
     <>
-      {loading && <GOHLoader />}
+      {loading && (
+        <GOHLoader/>
+      )}
       {!loading && (
         <SafeAreaView
           style={{
             flex: 1,
             backgroundColor: Colors.grey.f0,
-            paddingTop: hp(2),
+            paddingTop:hp(2)
           }}
         >
           {/* <RenderHeader /> */}

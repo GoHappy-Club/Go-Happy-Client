@@ -24,7 +24,7 @@ const GoldCard = ({ identifier }) => {
             gap: 10,
           }}
         >
-          <FastImage
+          <Image
             style={styles.cover}
             resizeMode="cover"
             source={{
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
     fontWeight: "bold",
-    fontStyle: "italic",
+    fontStyle:"italic",
     position: "absolute",
     right: 20,
     bottom: 10,

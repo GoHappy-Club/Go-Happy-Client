@@ -24,7 +24,7 @@ const FreeCard = ({ memberShiptype }) => {
             gap: 10,
           }}
         >
-          <FastImage
+          <Image
             style={styles.cover}
             resizeMode="cover"
             source={{
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 10,
     textTransform: "uppercase",
-    fontStyle: "italic",
+    fontStyle:"italic",
   },
 });
 

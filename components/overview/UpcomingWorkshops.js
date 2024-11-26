@@ -94,7 +94,7 @@ class UpcomingWorkshops extends Component {
       }
     >
       <View style={styles.container}>
-        <FastImage source={{ uri: item.coverImage }} style={styles.image} />
+        <Image source={{ uri: item.coverImage }} style={styles.image} />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
             {this.trimContent(item.eventName, 20)}

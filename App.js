@@ -11,7 +11,6 @@ import {
   useWindowDimensions,
   Image,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import Video from "react-native-video";
 import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
@@ -28,7 +27,7 @@ import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 // import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/local_android/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -73,7 +72,6 @@ global.AsyncStorage = AsyncStorage;
 global.SERVER_URL = configData.BACKEND.SERVER_URL;
 global.crashlytics = crashlytics;
 global.Icon = Icon;
-global.FastImage = FastImage;
 Icon.loadFont();
 
 const Stack = createNativeStackNavigator();

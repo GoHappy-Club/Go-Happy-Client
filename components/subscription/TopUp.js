@@ -153,9 +153,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     });
     setPlan(selected);
     setCoins(String(plan.coins));
-    setAmount(
-      String(plan.coins - plan.coins * (plan.discountPercentage / 100))
-    );
+    setAmount(String(plan.coins - plan.coins * (plan.discountPercentage / 100)))
   };
 
   return (
@@ -215,7 +213,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 ...styles.paymentContainer,
               }}
             >
-              <FastImage
+              <Image
                 source={require("../../images/GoCoins.png")}
                 style={{
                   height: 40,
@@ -254,7 +252,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   setAmount("501");
                 }}
               >
-                <FastImage
+                <Image
                   source={require("../../images/GoCoins.png")}
                   style={{
                     height: 20,
@@ -270,7 +268,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   setAmount("1100");
                 }}
               >
-                <FastImage
+                <Image
                   source={require("../../images/GoCoins.png")}
                   style={{
                     height: 20,
@@ -286,7 +284,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   setAmount("2100");
                 }}
               >
-                <FastImage
+                <Image
                   source={require("../../images/GoCoins.png")}
                   style={{
                     height: 20,
@@ -302,7 +300,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   setAmount("5100");
                 }}
               >
-                <FastImage
+                <Image
                   source={require("../../images/GoCoins.png")}
                   style={{
                     height: 20,

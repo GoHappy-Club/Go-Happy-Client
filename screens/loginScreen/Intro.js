@@ -13,7 +13,7 @@ export default class Intro extends Component {
     return (
       <View style={styles.container1}>
         <View style={styles.container2}>
-          <FastImage
+          <Image
             source={{
               uri: "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
             }}
@@ -28,7 +28,7 @@ export default class Intro extends Component {
           Join free sessions by clicking the "Free Sessions" icon on the next
           Screen.
         </Text>
-        {/* <FastImage
+        {/* <Image
           style={styles.image}
           source={require("../../images/intro_image1.png")}
         /> */}

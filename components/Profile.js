@@ -170,7 +170,7 @@ const MyProfile = ({ navigation }) => {
         {/* Profile header */}
         <View style={styles.profileHeader}>
           <View style={styles.coverContainer}>
-            <FastImage
+            <Image
               style={styles.cover}
               resizeMode="cover"
               source={{

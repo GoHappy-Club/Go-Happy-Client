@@ -40,10 +40,7 @@ const PaymentSuccessful = () => {
   if (type && type == "normal")
     return (
       <View style={styles.container}>
-        <FastImage
-          source={require("../images/hurray.png")}
-          style={styles.image}
-        />
+        <Image source={require("../images/hurray.png")} style={styles.image} />
         <View style={styles.textWrapper}>
           <Text style={styles.plainText}>
             Congratulations! Your payment was successful.
@@ -86,10 +83,7 @@ const PaymentSuccessful = () => {
 
   return (
     <View style={styles.container}>
-      <FastImage
-        source={require("../images/hurray.png")}
-        style={styles.image}
-      />
+      <Image source={require("../images/hurray.png")} style={styles.image} />
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
           Congratulations! Your payment was successful, and you're now a member

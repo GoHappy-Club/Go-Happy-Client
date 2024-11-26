@@ -71,7 +71,7 @@ const RewardsCard = ({
             });
           }}
         >
-          <FastImage
+          <Image
             source={require("../images/scratch_foreground.png")}
             width={100}
             height={100}
@@ -277,10 +277,7 @@ const Vouchers = ({ vouchers, navigation }) => (
       alignItems: vouchers.length == 1 ? "flex-start" : "center",
     }}
   >
-    <ScrollView
-      contentContainerStyle={styles.grid}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
       {vouchers.map((item, index) => (
         <VouchersCard
           id={item.id}
@@ -327,7 +324,7 @@ const Rewards = ({ rewards, vouchers }) => {
       >
         <View style={styles.totalRewards}>
           <Text style={styles.rewardsAmount}>
-            <FastImage
+            <Image
               source={require("../images/GoCoins.png")}
               style={{
                 height: 70,

@@ -1,11 +1,4 @@
-import {
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
@@ -16,7 +9,7 @@ const SubscriptionFailed = () => {
 
   return (
     <View style={styles.container}>
-      <FastImage
+      <Image
         source={require("../../images/paymentError.png")}
         style={styles.image}
       />
@@ -73,14 +66,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.red,
     fontFamily: "monospace",
-    marginVertical: hp(2),
+    marginVertical:hp(2)
   },
   plainText: {
     fontSize: wp(4),
     color: Colors.black,
     textAlign: "center",
-    fontFamily: "Poppins-Regular",
-    width: wp(95),
+    fontFamily:"Poppins-Regular",
+    width:wp(95)
   },
   retryButton: {
     backgroundColor: Colors.pink.sessionDetails,
@@ -88,12 +81,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: "center",
     alignItems: "center",
-    width: wp(60),
+    width:wp(60)
   },
   retryText: {
     fontSize: wp(6),
     fontWeight: "bold",
     color: Colors.white,
-    fontFamily: Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
+    fontFamily:Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
   },
 });

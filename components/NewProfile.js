@@ -244,7 +244,7 @@ const NewProfile = () => {
             </Pressable>
           )}
           <View style={styles.basicDetailsContainer}>
-            <FastImage
+            <Image
               style={styles.cover}
               resizeMode="cover"
               source={{
@@ -271,7 +271,7 @@ const NewProfile = () => {
                   borderRadius: 5,
                   padding: 6,
                   // backgroundColor: "#4CAF50",
-                  backgroundColor: Colors.primary,
+                  backgroundColor:Colors.primary,
                   // backgroundColor: "#6A9C89",
                   alignSelf: "flex-start",
                 }}
@@ -354,7 +354,7 @@ const NewProfile = () => {
                 }}
               >
                 <View>
-                  <FastImage
+                  <Image
                     style={{
                       width: wp(25),
                       height: wp(12),

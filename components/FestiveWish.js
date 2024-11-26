@@ -66,7 +66,7 @@ const FestiveWish = () => {
           />
         ) : (
           <ViewShot ref={ref}>
-            <FastImage
+            <Image
               source={{ uri: asset }}
               style={styles.media}
               resizeMode="cover"

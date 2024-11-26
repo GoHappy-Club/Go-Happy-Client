@@ -104,7 +104,7 @@ export default function Sections(props) {
                   }}
                 >
                   <View style={styles.container}>
-                    <FastImage
+                    <Image
                       source={{ uri: item.imgUrl }}
                       style={styles.image}
                       resizeMode="cover"
@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
   },
-  outerSectionsContainer: {
-    width: wp(100),
-    alignItems: "center",
-    justifyContent: "center",
+  outerSectionsContainer:{
+    width:wp(100),
+    alignItems:"center",
+    justifyContent:"center",
   },
   sectionsContainer: {
-    width: wp(95),
+    width:wp(95),
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,

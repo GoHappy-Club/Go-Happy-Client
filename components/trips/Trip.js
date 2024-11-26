@@ -58,7 +58,7 @@ class Trip extends Component {
     return (
       <TouchableOpacity key={index}>
         {/* <View style={styles.container}> */}
-        <FastImage
+        <Image
           source={{ uri: item }}
           style={styles.image}
           // style={{ width: "100%", height: "100%" }}
@@ -78,10 +78,7 @@ class Trip extends Component {
 
         <this.CarouselComponent images={this.props.details.coverImages} />
 
-        <Itinerary
-          details={this.props.details}
-          vouchers={this.props.vouchers}
-        />
+        <Itinerary details={this.props.details} vouchers={this.props.vouchers} />
         {/* </ScrollView> */}
       </View>
     );

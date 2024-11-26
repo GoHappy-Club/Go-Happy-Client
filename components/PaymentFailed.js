@@ -16,12 +16,12 @@ const PaymentFailed = () => {
   const route = useRoute();
 
   // type -> normal, empty for subscription
-  const { type, navigateTo } = route?.params;
+  const { type , navigateTo } = route?.params;
 
   if (type == "normal")
     return (
       <View style={styles.container}>
-        <FastImage
+        <Image
           source={require("../images/paymentError.png")}
           style={styles.image}
         />
@@ -57,7 +57,7 @@ const PaymentFailed = () => {
 
   return (
     <View style={styles.container}>
-      <FastImage
+      <Image
         source={require("../images/paymentError.png")}
         style={styles.image}
       />
