@@ -366,7 +366,7 @@ class HomeDashboard extends Component {
                     }}
                   >
                     {item?.cost}{" "}
-                    <Image
+                    <FastImage
                       source={require("../images/GoCoins.png")}
                       style={{
                         height: 15,
@@ -455,10 +455,10 @@ class HomeDashboard extends Component {
             backgroundColor: "white",
           }}
         > */}
-          <SearchBar
-            loadCaller={this.loadCaller}
-            checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
-          />
+        <SearchBar
+          loadCaller={this.loadCaller}
+          checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
+        />
         {/* </View> */}
         <View style={{ flex: 1, backgroundColor: "white" }}>
           <CalendarDays

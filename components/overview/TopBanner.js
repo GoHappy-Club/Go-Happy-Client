@@ -33,7 +33,7 @@ export default class TopBanner extends Component {
         }}
       >
         {/* <View style={styles.container}> */}
-        <Image
+        <FastImage
           source={{ uri: item.imageUrl }}
           style={styles.image}
           // style={{ width: "100%", height: "100%" }}

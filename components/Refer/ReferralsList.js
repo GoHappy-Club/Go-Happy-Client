@@ -40,14 +40,14 @@ export default class ReferralsList extends React.Component {
         ? require("../../images/chest-closed.png")
         : require("../../images/chest-opened.png");
     var chest = (
-      <Image
+      <FastImage
         // resizeMode="cover"
         style={styles.chest}
         source={chestType}
       />
     );
     var chestOpened = (
-      <Image
+      <FastImage
         // resizeMode="cover"
         style={styles.chest}
         source={require("../../images/chest-opened.png")}
@@ -78,7 +78,7 @@ export default class ReferralsList extends React.Component {
       <>
         <View style={styles.divider}></View>
         <View style={styles.referralsItem}>
-          <Image
+          <FastImage
             style={styles.profilePic}
             source={{
               uri: item.toProfileImage,
@@ -91,7 +91,7 @@ export default class ReferralsList extends React.Component {
             <Text style={styles.referralsTime}>{item.time}</Text>
           </View>
           {item.hasAttendedSession && (
-            <Image
+            <FastImage
               style={{
                 height: 30,
                 width: 30,
@@ -99,10 +99,10 @@ export default class ReferralsList extends React.Component {
                 marginLeft: "auto",
               }}
               source={require("../../images/tick-icon.png")}
-            ></Image>
+            ></FastImage>
           )}
           {!item.hasAttendedSession && (
-            <Image
+            <FastImage
               style={{
                 height: 30,
                 width: 30,
@@ -110,7 +110,7 @@ export default class ReferralsList extends React.Component {
                 marginLeft: "auto",
               }}
               source={require("../../images/hourglass.png")}
-            ></Image>
+            ></FastImage>
           )}
         </View>
       </>
@@ -152,7 +152,7 @@ export default class ReferralsList extends React.Component {
             <Text style={styles.label1}>{currentCount}/7</Text>
           </View>
         </View>
-        <View style={{ paddingTop: 10,paddingBottom:30,flex:1 }}>
+        <View style={{ paddingTop: 10, paddingBottom: 30, flex: 1 }}>
           <FlatList
             data={this.props.referrals}
             renderItem={({ item }) => <ReferredProfileItem item={item} />}

@@ -12,8 +12,7 @@ import { wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 
-const TransactionHistory = ({ transactions,seeAll = false }) => {
-
+const TransactionHistory = ({ transactions, seeAll = false }) => {
   const navigation = useNavigation();
 
   const loadDate = (timestamp) => {
@@ -38,11 +37,11 @@ const TransactionHistory = ({ transactions,seeAll = false }) => {
           ]}
         >
           {isCredit ? "+" : "-"} {item.amount}{" "}
-          <Image
+          <FastImage
             source={require("../../images/GoCoins.png")}
             style={{
               height: 18,
-              width: 18
+              width: 18,
             }}
           />
         </Text>
@@ -67,9 +66,14 @@ const TransactionHistory = ({ transactions,seeAll = false }) => {
         showsVerticalScrollIndicator={false}
       />
 
-      {seeAll && <TouchableOpacity style={styles.seeAllButton} onPress={()=>navigation.navigate("AllTransactions")}>
-        <Text style={styles.seeAllText}>See All</Text>
-      </TouchableOpacity>}
+      {seeAll && (
+        <TouchableOpacity
+          style={styles.seeAllButton}
+          onPress={() => navigation.navigate("AllTransactions")}
+        >
+          <Text style={styles.seeAllText}>See All</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

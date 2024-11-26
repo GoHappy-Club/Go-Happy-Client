@@ -469,14 +469,7 @@ class SessionDetails extends Component {
               justifyContent: "center",
             }}
           >
-            <Image
-              style={styles.cover}
-              source={
-                // cover
-                { uri: item.coverImage }
-                // require({cover})
-              }
-            />
+            <FastImage style={styles.cover} source={{ uri: item.coverImage }} />
             <View
               style={{
                 position: "absolute",

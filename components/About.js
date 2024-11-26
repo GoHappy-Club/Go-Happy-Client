@@ -50,7 +50,7 @@ export default class About extends Component {
             >
               About Us
             </Text>
-            <Image
+            <FastImage
               source={require("../images/about.jpeg")}
               width={300}
               height={300}

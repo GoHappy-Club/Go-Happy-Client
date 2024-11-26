@@ -10,19 +10,21 @@ const SilverCard = ({ identifier }) => {
 
   return (
     <LinearGradient
-      colors={['#C0C0C0', '#E8E8E8', '#B8B8B8']}
+      colors={["#C0C0C0", "#E8E8E8", "#B8B8B8"]}
       style={styles.card}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
       <View style={styles.nameContainer}>
-        <View style={{
+        <View
+          style={{
             flexDirection: "row",
             justifyContent: "flex-start",
             alignItems: "center",
             gap: 10,
-        }}>
-          <Image
+          }}
+        >
+          <FastImage
             style={styles.cover}
             resizeMode="cover"
             source={{
@@ -30,7 +32,7 @@ const SilverCard = ({ identifier }) => {
             }}
           />
           <Text style={styles.name}>{profile.name}</Text>
-          <Crown size={24} color={"#A9A9A9"} fill={"#A9A9A9"}/>
+          <Crown size={24} color={"#A9A9A9"} fill={"#A9A9A9"} />
         </View>
         <Text style={styles.phoneNumber}>
           XXXXX{profile?.phoneNumber?.substring(7, 12)}
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     bottom: 10,
-    textTransform:"uppercase",    
+    textTransform: "uppercase",
   },
 });
 

@@ -17,8 +17,7 @@ const WhatsAppFAB = () => {
 
   useEffect(() => {
     handlePress();
-  }, [])
-  
+  }, []);
 
   const handlePress = async () => {
     var url = SERVER_URL + "/properties/list";
@@ -51,11 +50,11 @@ const WhatsAppFAB = () => {
         text="Click here to join our WhatsApp Group."
       >
         <Walkthroughable>
-          <TouchableOpacity onPress={()=>Linking.openURL(link)}>
+          <TouchableOpacity onPress={() => Linking.openURL(link)}>
             <FAB
               style={styles.fab}
               icon={() => (
-                <Image
+                <FastImage
                   source={require("../images/whatsapp.png")}
                   style={styles.logo}
                 />

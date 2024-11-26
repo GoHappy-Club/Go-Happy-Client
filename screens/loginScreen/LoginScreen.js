@@ -683,7 +683,7 @@ class LoginScreen extends Component {
           behavior="position"
           keyboardVerticalOffset={height / 10}
         >
-          <Image
+          <FastImage
             resizeMode="contain"
             style={styles.logo}
             source={require("../../images/logo.png")}

@@ -273,7 +273,7 @@ const Header = () => {
       />
       <View style={styles.header}>
         <Pressable style={styles.userInfo} onPress={handleNavigate}>
-          <Image
+          <FastImage
             source={{
               uri: profile.profileImage,
               height: 40,
