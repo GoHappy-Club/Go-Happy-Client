@@ -23,12 +23,11 @@ import { bindActionCreators } from "redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import toUnicodeVariant from "./toUnicodeVariant.js";
-import GOHLoader from "../commonComponents/GOHLoader.js";
-import tambola from "tambola";
 import { Colors } from "../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
-import { wp } from "../helpers/common.js";
+import { hp, wp } from "../helpers/common.js";
 import { storeCompletedSession } from "../services/Startup.js";
+import { Share2, Star } from "lucide-react-native";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -300,173 +299,269 @@ class HomeDashboard extends Component {
     }
   }
 
+  async createShareMessage(item, url) {
+    const sessionsTemplate =
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" session. Aap bhi join kr skte ho mere sath, super entertaining and informative session of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, Vo bhi bilkul " +
+      toUnicodeVariant("FREE", "bold") +
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    const workshopTemplate =
+      'Namaste !! I am attending "😃 ' +
+      toUnicodeVariant(item.eventName, "bold italic") +
+      ' 😃" workshop. Aap bhi join kr skte ho mere sath, super entertaining and informative workshop of ' +
+      toUnicodeVariant("GoHappy Club", "bold") +
+      ", apni life ke dusre padav ko aur productive and exciting bnane ke liye, " +
+      `vo bhi sirf ${toUnicodeVariant(`\u20B9${item.cost}`, "bold")} mein` +
+      ". \n \nClick on the link below: \n" +
+      url;
+
+    return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
+  }
+  shareMessage = async (item) => {
+    if (this.props.profile.age != null && this.props.profile.age < 50) {
+      this.handleBelowAge(
+        item,
+        "https://www.gohappyclub.in/session_details/" + item.id
+      );
+      return;
+    }
+    const sessionShareMessage =
+      item.shareMessage != null
+        ? item.shareMessage
+        : await this.createShareMessage(
+            item,
+            "https://www.gohappyclub.in/session_details/" + item.id
+          );
+    Share.share({
+      message: sessionShareMessage,
+    })
+      .then((result) => {})
+      .catch((errorMsg) => {});
+  };
+
   render() {
     const { profile } = this.props;
     const renderItem = ({ item }) => (
-      <Cd
+      <TouchableOpacity
+        activeOpacity={0.6}
+        delayPressIn={150}
         style={{
-          ...styles.card,
-          marginLeft: 30,
-          marginRight: 30,
-          marginBottom: 15,
-          backgroundColor: Colors.primary,
+          flex: 1,
+          flexDirection: "column",
+          margin: 1,
+          width: wp(88),
+          backgroundColor: Colors.white,
+          justifyContent: "center",
+          alignItems: "center",
+          marginVertical: 10,
+          borderRadius: wp(3),
+          // elevation: 1,
         }}
+        onPress={() =>
+          this.props.navigation.navigate("Session Details", {
+            phoneNumber: profile.phoneNumber,
+            profile: profile,
+            deepId: item.id,
+            onGoBack: () => this.loadCaller(),
+            alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(item),
+          })
+        }
       >
-        <TouchableOpacity
+        <View
           style={{
-            ...styles.card,
-            marginTop: 10,
-            backgroundColor: Colors.primary,
+            position: "relative",
+            width: "100%",
           }}
-          underlayColor={Colors.primary}
-          onPress={() =>
-            this.props.navigation.navigate("Session Details", {
-              phoneNumber: profile.phoneNumber,
-              profile: profile,
-              deepId: item.id,
-              onGoBack: () => this.loadCaller(),
-              alreadyBookedSameDayEvent:
-                this.checkIsParticipantInSameEvent(item),
-            })
-          }
         >
-          <Cd.Content>
-            <View
+          <Image
+            source={{ uri: item.coverImage }}
+            width={300}
+            height={200}
+            style={{
+              width: "100%",
+              height: wp(55),
+              borderRadius: wp(3),
+              resizeMode: "cover",
+              // elevation:5
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 10,
+              backgroundColor: Colors.grey.f0,
+              padding: 5,
+              borderRadius: wp(10),
+              borderColor: "white",
+              borderWidth: 1,
+              paddingHorizontal: wp(3),
+              backdropFilter: "blur(12px)",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+            }}
+          >
+            <Text
               style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 4,
+                fontFamily: "Montserrat-SemiBold",
+                textAlign: "center",
               }}
             >
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <Badge
-                  value={item.costType == "paid" ? "Workshop" : item.category}
-                  badgeStyle={styles.badge}
-                  textStyle={{ color: Colors.greyishText }}
-                />
-                <Text
-                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
-                >
-                  {this.loadDate(item)} |
-                </Text>
-                <Text
-                  style={{ color: Colors.white, fontSize: 14, paddingLeft: 4 }}
-                >
-                  {item.seatsLeft} seats left
-                </Text>
-                {item.costType == "paid" && (
-                  <Text
-                    style={{
-                      color: Colors.white,
-                      fontSize: 14,
-                      paddingLeft: 4,
-                      position: "absolute",
-                      right: 0,
-                    }}
-                  >
-                    {item?.cost}{" "}
-                    <Image
-                      source={require("../images/GoCoins.png")}
-                      style={{
-                        height: 15,
-                        width: 15,
-                      }}
-                    />
-                  </Text>
-                )}
-              </View>
-            </View>
+              {item.category}
+            </Text>
+          </View>
+          <Share2
+            color={"white"}
+            size={28}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: 10,
+            }}
+            fill={"white"}
+            onPress={() => this.shareMessage(item)}
+          />
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 5,
+            gap: 2,
+            paddingBottom: 4,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 10,
+              width: "100%",
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Montserrat-SemiBold",
+                fontSize: wp(5.5),
+              }}
+            >
+              {this.trimContent(item.eventName, 30)}
+            </Text>
             <View
               style={{
-                flex: 1,
                 flexDirection: "row",
-                justifyContent: "space-between",
                 alignItems: "center",
-                padding: 4,
+                gap: 5,
               }}
             >
-              <Title style={{ color: Colors.white, fontSize: 20, padding: 4 }}>
-                {this.trimContent(item.eventName, 30)}
-              </Title>
+              <Star size={16} color={"gold"} fill={"gold"} />
               <Text
                 style={{
-                  color: Colors.white,
-                  fontSize: 14,
+                  fontFamily: "Montserrat-SemiBold",
+                  fontSize: wp(4),
                 }}
               >
-                {this.props?.ratings[item.subCategory]?.toFixed(2)}/5
+                {this.props?.ratings[item.subCategory]?.toFixed(1)}/5
               </Text>
             </View>
-
-            <View
+          </View>
+          <Text
+            style={{
+              fontFamily: "Montserrat-Regular",
+              color: Colors.grey.grey,
+              fontSize: wp(3.5),
+            }}
+          >
+            {this.loadDate(item)}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Montserrat-Regular",
+              color: Colors.grey.grey,
+              fontSize: wp(3.5),
+            }}
+          >
+            Seats Left : {item.seatsLeft}
+          </Text>
+          {item.costType == "paid" && (
+            <Text
               style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 4,
+                fontFamily: "Montserrat-Regular",
+                color: Colors.grey.grey,
+                fontSize: wp(3.5),
               }}
             >
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <Avatar.Image
-                  source={
-                    item.expertImage
-                      ? {
-                          uri: item.expertImage,
-                        }
-                      : require("../images/profile_image.jpeg")
-                  }
-                  size={30}
-                />
-                <Title
-                  style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}
-                >
-                  {this.trimContent(item.expertName, 17)}
-                </Title>
-              </View>
-              {/* item.participantList!=null && item.participantList.includes(this.state.email) */}
-              {/* <Text>
-                {item.startTime <= new Date().getTime()
-                  ? "rererer"
-                  : "fewrewfsdfsd"}
-              </Text> */}
-              <Button
-                disabled={this.isDisabled(item)}
-                title={this.getTitle(item)}
-                onPress={
-                  item.costType == "paid" && this.getTitle(item) == "Book"
-                    ? this.handleClickBook.bind(this, item)
-                    : this.updateEventBook.bind(this, item)
-                }
-                loading={item.loadingButton}
-                loadingProps={{ size: "small", color: Colors.black }}
-                buttonStyle={{ backgroundColor: Colors.white }}
-                titleStyle={{ color: Colors.greyishText }}
+              {item.cost}
+              <Image
+                source={require("../images/GoCoins.png")}
+                style={{
+                  height: 15,
+                  width: 15,
+                }}
               />
-            </View>
-          </Cd.Content>
-        </TouchableOpacity>
-      </Cd>
+            </Text>
+          )}
+        </View>
+        <Button
+          disabled={this.isDisabled(item)}
+          title={this.getTitle(item)}
+          onPress={
+            item.costType == "paid" && this.getTitle(item) == "Book"
+              ? this.handleClickBook.bind(this, item)
+              : this.updateEventBook.bind(this, item)
+          }
+          loading={item.loadingButton}
+          loadingProps={{ size: "small", color: Colors.black }}
+          buttonStyle={{
+            backgroundColor: Colors.primary,
+            fontSize: wp(4),
+          }}
+          containerStyle={{
+            position: "absolute",
+            right: 10,
+            bottom: 10,
+          }}
+          titleStyle={{
+            color: Colors.white,
+            fontSize: wp(3.5),
+            fontWeight: "bold",
+            letterSpacing: 1,
+          }}
+        />
+      </TouchableOpacity>
     );
     return (
       <>
-        {/* <View
-          style={{
-            backgroundColor: "white",
-          }}
-        > */}
-          <SearchBar
-            loadCaller={this.loadCaller}
-            checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
-          />
-        {/* </View> */}
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-          <CalendarDays
-            numberOfDays={15}
-            daysInView={3}
-            paginate={true}
-            onDateSelect={(date) => this.changeSelectedDate(date)}
-          />
+        <SearchBar
+          loadCaller={this.loadCaller}
+          checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
+        />
+        <View style={{ flex: 1, backgroundColor: Colors.white }}>
+          {/* <View
+            style={{
+              backgroundColor: "red",
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+            }}
+          > */}
+            <CalendarDays
+              numberOfDays={15}
+              daysInView={3}
+              paginate={true}
+              onDateSelect={(date) => this.changeSelectedDate(date)}
+              width={wp(95)}
+            />
+          {/* </View> */}
           <Text
             h4
             style={{
@@ -484,7 +579,7 @@ class HomeDashboard extends Component {
           {this.props.childLoader == false &&
             this.props.events.filter((item) => item.endTime > Date.now())
               .length > 0 && (
-              <SafeAreaView style={{ flex: 1 }}>
+              <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
                 <FlatList
                   contentContainerStyle={{ flexGrow: 1 }}
                   data={this.props.events.filter(
@@ -492,6 +587,14 @@ class HomeDashboard extends Component {
                   )}
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id}
+                  showsVerticalScrollIndicator={false}
+                  ItemSeparatorComponent={
+                    <View
+                      style={{
+                        marginBottom: 10,
+                      }}
+                    />
+                  }
                 />
               </SafeAreaView>
             )}
