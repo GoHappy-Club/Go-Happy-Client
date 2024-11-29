@@ -71,7 +71,7 @@ const VoucherBottomSheet = ({
 
   const snapPoints = React.useMemo(
     () => [
-      title.toLowerCase().startsWith("book") && costType == "paid"
+      title?.toLowerCase()?.startsWith("book") && costType == "paid"
         ? "13%"
         : "8%",
       "60%",
@@ -129,7 +129,7 @@ const VoucherBottomSheet = ({
               )}
               {!voucherLoading && (
                 <>
-                  {vouchers.map((voucher) => (
+                  {vouchers?.map((voucher) => (
                     <VouchersCard
                       key={voucher.id}
                       id={voucher.id}
@@ -138,7 +138,7 @@ const VoucherBottomSheet = ({
                       isSelected={selectedVoucherL?.id === voucher.id}
                     />
                   ))}
-                  {vouchers.length < 1 && (
+                  {vouchers?.length < 1 && (
                     <View style={styles.loadingContainer}>
                       <Text>Sorry, You don't have any vouchers.</Text>
                     </View>

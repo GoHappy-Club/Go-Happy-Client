@@ -1,8 +1,7 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
-  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -26,72 +25,106 @@ import firebase from "@react-native-firebase/app";
 import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import tambola from "tambola";
 import CountdownTimer from "../commonComponents/countdown.js";
+import { useZoom } from "../helpers/zoomUtils.js";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../assets/colors/color.js";
 import { hp, wp } from "../helpers/common.js";
 import { storeCompletedSession } from "../services/Startup.js";
-import { bindActionCreators } from "redux";
-import { setMembership, setProfile } from "../redux/actions/counts.js";
 import VoucherBottomSheet from "./VoucherBottomSheet.js";
 
-class SessionDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalVisible: false,
-      showAlert: false,
-      showBookAlert: false,
-      showPaymentAlert: false,
-      paymentAlertMessage: "Your Payment is Successful!",
-      paymentAlertTitle: "Success",
-      profileImage:
-        "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
-      name: "",
-      loadingButton: false,
-      videoVisible: false,
-      defaultCoverImage:
-        "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
-      showCountdown: false,
-      title: "",
-      belowAgePopUp: false,
-      payButtonLoading: false,
-      shareButtonLoading: false,
-      nonMemberPopUp: false,
-      lowCoinsPopUp: false,
-      showVouchers: false,
-      vouchers: [],
-      voucherLoading: false,
-      selectedVoucher: null,
-    };
-    this.retrieveData();
-    this.modalRef = React.createRef();
-  }
+const SessionDetails = ({
+  route,
+  navigation,
+  sessionAction,
+  event,
+  phoneNumber,
+  alreadyBookedSameDayEvent,
+  type,
+  selfInviteCode,
+  setResultantCost,
+}) => {
+  const [state, setState] = useState({
+    modalVisible: false,
+    showAlert: false,
+    showBookAlert: false,
+    showPaymentAlert: false,
+    paymentAlertMessage: "Your Payment is Successful!",
+    paymentAlertTitle: "Success",
+    profileImage:
+      "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+    name: "",
+    loadingButton: false,
+    videoVisible: false,
+    defaultCoverImage:
+      "https://cdn.dnaindia.com/sites/default/files/styles/full/public/2019/09/05/865428-697045-senior-citizens-03.jpg",
+    showCountdown: false,
+    title: "",
+    belowAgePopUp: false,
+    referralLink: "",
+    payButtonLoading: false,
+    shareButtonLoading: false,
+    nonMemberPopUp: false,
+    lowCoinsPopUp: false,
+    showVouchers: false,
+    vouchers: [],
+    voucherLoading: false,
+    selectedVoucher: null,
+  });
 
-  retrieveData = async () => {
+  const modalRef = useRef();
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
+  const zoom = useZoom();
+
+  useEffect(() => {
+    retrieveData();
+    createDynamicReferralLink();
+    setState((prevState) => ({
+      ...prevState,
+      loadingButton: false,
+      title: getTitle(),
+    }));
+  }, []);
+
+  const retrieveData = async () => {
     const name = await AsyncStorage.getItem("name");
-    this.setState({ name: name });
+    setState((prevState) => ({ ...prevState, name }));
   };
-  componentDidMount() {
-    this.createDynamicReferralLink();
-    this.setState({ loadingButton: false });
-    const title = this.getTitle();
-    this.setState({ title: title });
-  }
-  createDynamicReferralLink = async () => {
-    let selfInviteCode = this.props.selfInviteCode;
-    // alert('hi');
-    crashlytics().log(JSON.stringify(this.props));
-    if (selfInviteCode == null) {
-      selfInviteCode = "test";
+
+  const extractMeetingNumber = (url) => {
+    const regex = /j\/(\d+)/;
+    const match = url.match(regex);
+
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null;
     }
+  };
+
+  const joinMeeting = async () => {
+    try {
+      await zoom.joinMeeting({
+        userName: profile.name,
+        meetingNumber: extractMeetingNumber(event.meetingLink),
+        password: "12345",
+      });
+    } catch (e) {
+      console.log(e);
+      Alert.alert("" + e);
+    }
+  };
+
+  const createDynamicReferralLink = async () => {
+    let inviteCode = selfInviteCode || "test";
     const link1 = await firebase.dynamicLinks().buildShortLink(
       {
-        link: FirebaseDynamicLinksProps().link + selfInviteCode,
+        link: FirebaseDynamicLinksProps().link + inviteCode,
         domainUriPrefix: FirebaseDynamicLinksProps().domainUriPrefix,
         android: {
           packageName: FirebaseDynamicLinksProps().androidPackageName,
@@ -106,60 +139,58 @@ class SessionDetails extends Component {
       firebase.dynamicLinks.ShortLinkType.SHORT
     );
 
-    this.setState({ referralLink: link1 });
+    setState((prevState) => ({ ...prevState, referralLink: link1 }));
   };
-  isDisabled() {
-    var title = this.getTitle();
+
+  const isDisabled = () => {
+    const title = getTitle();
     if (
       title == "Seats Full" ||
       (title == "Cancel Your Booking" &&
-        this.props.event.costType == "paid" &&
-        this.props.event.startTime - new Date().getTime() < 60 * 60 * 1000)
+        event.costType == "paid" &&
+        event.startTime - new Date().getTime() < 60 * 60 * 1000)
     ) {
       return true;
     } else {
       return false;
     }
-  }
-  getTitle() {
-    if (this.props.profile.age != null && this.props.profile.age < 50) {
+  };
+  const getTitle = () => {
+    if (profile.age != null && profile.age < 50) {
       return "Share";
     }
-    var currTime = Date.now();
-    if (this.props.type == null) {
-    }
-    if (this.props.type == "expired") {
+    const currTime = Date.now();
+    if (type == "expired") {
       return "View Recording";
     }
-    if (this.props.type == "ongoing") {
+    if (type == "ongoing") {
       return "Join";
     }
     if (
-      this.props.event.participantList != null &&
-      this.props.phoneNumber != null &&
-      this.props.event.participantList.includes(this.props.phoneNumber)
+      event.participantList != null &&
+      phoneNumber != null &&
+      event.participantList.includes(phoneNumber)
     ) {
-      if (currTime > this.props.event.endTime) {
+      if (currTime > event.endTime) {
         return "View Recording";
-      } else if (currTime + 600000 < this.props.event.startTime) {
+      } else if (currTime + 600000 < event.startTime) {
         return "Cancel Your Booking";
       } else {
         return "Join";
       }
     }
-    if (this.props.event.seatsLeft == 0) {
+    if (event.seatsLeft == 0) {
       return "Seats Full";
     }
-    if (this.props.event.costType == "paid")
-      return `Book with ${this.props.event.cost - this.getDiscountValue()} ${
-        this.props.event.cost == 1 ? "coin" : "coins"
+    if (event.costType == "paid")
+      return `Book with ${event.cost - getDiscountValue()} ${
+        event.cost == 1 ? "coin" : "coins"
       }`;
     return "Book";
-  }
+  };
 
-  getDiscountValue() {
-    const { selectedVoucher } = this.state;
-    const { event } = this.props;
+  const getDiscountValue = () => {
+    const { selectedVoucher } = state;
     if (!selectedVoucher) return 0;
     const { value, percent, limit } = selectedVoucher;
     if (value) {
@@ -170,9 +201,9 @@ class SessionDetails extends Component {
       return limit ? Math.min(discount, limit) : discount;
     }
     return 0;
-  }
+  };
 
-  handleBelowAge(item, url) {
+  const handleBelowAge = (item, url) => {
     let link, shareMessage;
     link = url;
     shareMessage =
@@ -192,91 +223,83 @@ class SessionDetails extends Component {
       .catch((errorMsg) => {
         console.log("error in sharing", errorMsg);
       });
-  }
-  checkTambola() {
-    if (this.props.event.eventName.contains("Tambola")) {
+  };
+  const checkTambola = () => {
+    if (event.eventName.toLowerCase().contains("tambola")) {
       return true;
     }
     return false;
-  }
-  async sessionAction() {
+  };
+  const sessionActionL = async () => {
     crashlytics().log(
-      JSON.stringify(this.getTitle()) +
-        JSON.stringify(this.props.alreadyBookedSameDayEvent)
+      JSON.stringify(getTitle()) + JSON.stringify(alreadyBookedSameDayEvent)
     );
-    if (this.getTitle() === "Share") {
-      this.setState({ belowAgePopUp: true });
+    if (getTitle() === "Share") {
+      setState((prev) => ({ ...prev, belowAgePopUp: true }));
       return;
     }
     if (
-      this.getTitle() === "Book" &&
-      this.props.alreadyBookedSameDayEvent == true
+      getTitle().toLowerCase().startsWith("book") &&
+      alreadyBookedSameDayEvent == true
     ) {
-      this.setState({ showAlert: true });
+      setState((prev) => ({ ...prev, showAlert: true }));
       return;
     }
-    if (this.getTitle() === "View Recording") {
-      this.videoPlayer();
+    if (getTitle() === "View Recording") {
+      videoPlayer();
       return;
     }
-    if (this.getTitle() === "Join") {
+    if (getTitle() === "Join") {
       await storeCompletedSession(
-        this.props.event.id,
-        this.props.event.eventName,
-        this.props.event.coverImage,
-        this.props.event.subCategory,
-        this.props.phoneNumber
+        event.id,
+        event.eventName,
+        event.coverImage,
+        event.subCategory,
+        phoneNumber
       );
-      setSessionAttended(this.props.phoneNumber);
-      await Linking.openURL(this.props.event.meetingLink);
-      await this.giveRewards();
+      setSessionAttended(phoneNumber);
+      // await Linking.openURL(event.meetingLink);
+      joinMeeting();
+      await giveRewards();
       return;
     }
 
-    var output = this.props.sessionAction("book", this.state.selectedVoucher);
-    this.setState({ loadingButton: true });
-  }
-  async giveRewards(item) {
-    let { membership, actions } = this.props;
+    var output = sessionAction("book", state.selectedVoucher);
+    setState((prev) => ({ ...prev, loadingButton: true }));
+  };
 
+  const giveRewards = async () => {
     try {
       const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
-        phone: this.props.profile.phoneNumber,
-        eventId: this.props.event.id,
+        phone: profile.phoneNumber,
+        eventId: event.id,
       });
-      // membership.coins = response.data.coins;
-      // actions.setMembership({ ...membership });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
     }
-  }
-  isBookingAllowed() {
-    if (this.props.membership.freeTrialActive == "true") return true;
-    if (
-      this.props.membership &&
-      this.props.membership?.membershipType == "Free"
-    ) {
-      this.props.navigation.navigate("SubscriptionPlans");
+  };
+
+  const isBookingAllowed = () => {
+    if (membership.freeTrialActive == true) return true;
+    if (membership && membership?.membershipType == "Free") {
+      navigation.navigate("SubscriptionPlans");
       return false;
-    } else if (
-      this.props.membership &&
-      this.props.membership?.coins < this.props.event.cost
-    ) {
-      this.setState({ lowCoinsPopUp: true });
+    } else if (membership && membership?.coins < event.cost) {
+      setState((prev) => ({ ...prev, lowCoinsPopUp: true }));
       return false;
     }
 
     return true;
-  }
-  loadDate(item) {
+  };
+  const loadDate = (item) => {
     const dt = fromUnixTime(item / 1000);
     const finalTime = format(dt, "hh:mm a");
     return finalTime;
-  }
-  videoPlayer() {
-    this.setState({ videoVisible: true });
-  }
-  async createShareMessage(item, url) {
+  };
+  const videoPlayer = () => {
+    setState((prev) => ({ ...prev, videoVisible: true }));
+  };
+  const createShareMessage = async (item, url) => {
     const sessionsTemplate =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
@@ -298,10 +321,11 @@ class SessionDetails extends Component {
       url;
 
     return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
-  }
-  shareMessage = async (item) => {
-    if (this.props.profile.age != null && this.props.profile.age < 50) {
-      this.handleBelowAge(
+  };
+
+  const shareMessage = async (item) => {
+    if (profile.age != null && profile.age < 50) {
+      handleBelowAge(
         item,
         "https://www.gohappyclub.in/session_details/" + item.id
       );
@@ -310,7 +334,7 @@ class SessionDetails extends Component {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(
+        : await createShareMessage(
             item,
             "https://www.gohappyclub.in/session_details/" + item.id
           );
@@ -320,23 +344,19 @@ class SessionDetails extends Component {
       .then((result) => {})
       .catch((errorMsg) => {});
   };
-  tambolaParsing = (item) => {
+  const tambolaParsing = (item) => {
     var tic = new Array(10);
     for (var i = 0; i < tic.length; i++) {
       tic[i] = new Array(3);
     }
     if (
       item != null &&
-      this.props.event.participantList != null &&
-      this.props.event.participantList.length != 0
+      event.participantList != null &&
+      event.participantList.length != 0
     ) {
-      if (
-        this.props.event.participantList.indexOf(this.props.phoneNumber) != -1
-      ) {
+      if (event.participantList.indexOf(phoneNumber) != -1) {
         var jsonString =
-          this.props.event.tambolaTickets[
-            this.props.event.participantList.indexOf(this.props.phoneNumber)
-          ];
+          event.tambolaTickets[event.participantList.indexOf(phoneNumber)];
 
         if (jsonString != null) {
           var temp = jsonString.match(/\d+/g);
@@ -413,323 +433,339 @@ class SessionDetails extends Component {
     //console.log("tam", tambolaHtml);
     return tambolaHtml;
   };
-  loadVouchers = async () => {
+
+  const loadVouchers = async () => {
     try {
-      this.setState({ voucherLoading: true });
+      setState((prev) => ({ ...prev, voucherLoading: true }));
       const response = await axios.post(
         `${SERVER_URL}/membership/getVouchers`,
         {
-          phone: this.props.profile.phoneNumber,
+          phone: profile.phoneNumber,
         }
       );
       const eventsVouchers = response.data.filter(
-        (voucher) =>
-          voucher.category == `${this.props.event.type.toLowerCase()}s`
+        (voucher) => voucher.category == `${event.type.toLowerCase()}s`
       );
-      this.setState({ vouchers: eventsVouchers, voucherLoading: false });
+      setState((prev) => ({
+        ...prev,
+        vouchers: eventsVouchers,
+        voucherLoading: false,
+      }));
     } catch (error) {
-      this.setState({ voucherLoading: false });
+      setState((prev) => ({ ...prev, voucherLoading: false }));
       console.log("Error in getting rewards ==>", error);
     }
   };
 
-  render() {
-    if (this.state.loader == true) {
-      return (
-        <MaterialIndicator
-          color={Colors.white}
-          style={{ backgroundColor: Colors.materialIndicatorColor }}
-        />
-      );
-    }
-    const item = this.props.event;
-    const tambolaHtml = this.tambolaParsing(item);
-    return (
-      <View
+  const item = event;
+  const tambolaHtml = tambolaParsing(item);
+  return (
+    <View
+      style={{
+        backgroundColor: Colors.white,
+        flex: 1,
+      }}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
         style={{
           backgroundColor: Colors.white,
-          flex: 1,
         }}
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+        <View
           style={{
             backgroundColor: Colors.white,
+            borderRadius: 50,
+            shadowColor: Colors.black,
+            shadowOffset: { height: 2 },
+            shadowOpacity: 0.3,
+            width: "100%",
+            height: 300,
+            justifyContent: "center",
           }}
         >
+          <FastImage
+            style={styles.cover}
+            source={
+              // cover
+              { uri: item.coverImage }
+              // require({cover})
+            }
+          />
           <View
             style={{
-              backgroundColor: Colors.white,
-              borderRadius: 50,
-              shadowColor: Colors.black,
-              shadowOffset: { height: 2 },
-              shadowOpacity: 0.3,
-              width: "100%",
-              height: 300,
+              position: "absolute",
+              top: 0,
+              paddingLeft: 20,
+              height: "180%",
+              alignItems: "flex-start",
               justifyContent: "center",
             }}
           >
-            <FastImage
-              style={styles.cover}
-              source={
-                // cover
-                { uri: item.coverImage }
-                // require({cover})
-              }
-            />
-            <View
+            <Text
               style={{
-                position: "absolute",
-                top: 0,
-                paddingLeft: 20,
-                height: "180%",
-                alignItems: "flex-start",
-                justifyContent: "center",
+                overflow: "hidden",
+                backgroundColor: Colors.white,
+                padding: 4,
+                color: Colors.black,
+                borderRadius: 4,
               }}
             >
-              <Text
-                style={{
-                  overflow: "hidden",
-                  backgroundColor: Colors.white,
-                  padding: 4,
-                  color: Colors.black,
-                  borderRadius: 4,
-                }}
-              >
-                {item.seatsLeft} seats left
-              </Text>
+              {item.seatsLeft} seats left
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ margin: 20 }}>
+          <View style={{ display: "flex", flexDirection: "row" }}>
+            <Text h3 style={{ fontWeight: "bold", marginRight: "10%" }}>
+              {item.eventName}
+            </Text>
+            <View
+              style={{
+                marginLeft: "auto",
+                marginTop: "3%",
+              }}
+            >
+              <TouchableOpacity onPress={() => shareMessage(item)}>
+                <FontAwesomeIcon
+                  icon={faShareAlt}
+                  color={Colors.black}
+                  size={25}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
-          <View style={{ margin: 20 }}>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Text h3 style={{ fontWeight: "bold", marginRight: "10%" }}>
-                {item.eventName}
-              </Text>
-              <View
-                style={{
-                  marginLeft: "auto",
-                  marginTop: "3%",
-                }}
-              >
-                <TouchableOpacity onPress={this.shareMessage.bind(this, item)}>
-                  <FontAwesomeIcon
-                    icon={faShareAlt}
-                    color={Colors.black}
-                    size={25}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* <Text h5 style={{ color: Colors.grey.grey, marginTop: 5 }}>
+          {/* <Text h5 style={{ color: Colors.grey.grey, marginTop: 5 }}>
               {item.expertName}
             </Text> */}
-            {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
-            <View style={{ flexDirection: "row" }}>
-              <FontAwesomeIcon
-                icon={faClock}
-                color={Colors.grey.grey}
-                size={15}
-                style={{ marginTop: "6%" }}
-              />
-              <Text
-                style={{
-                  color: Colors.grey.grey,
-                  marginTop: "5%",
-                  fontSize: 15,
-                  marginLeft: 5,
-                }}
-              >
-                {this.loadDate(item.startTime)} -{}{" "}
-                {this.loadDate(item.endTime)}
-              </Text>
-            </View>
-            <View
-              style={{
-                marginTop: 2,
-                borderBottomColor: Colors.grey.grey,
-                borderBottomWidth: 1,
-              }}
+          {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
+          <View style={{ flexDirection: "row" }}>
+            <FontAwesomeIcon
+              icon={faClock}
+              color={Colors.grey.grey}
+              size={15}
+              style={{ marginTop: "6%" }}
             />
-            {this.props.event.eventName.indexOf("Tambola") >= 0 &&
-              this.props.phoneNumber != null &&
-              this.props.event.participantList != null &&
-              this.props.event.participantList.indexOf(
-                this.props.phoneNumber
-              ) != -1 && (
-                <>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      color: Colors.grey.grey,
-                      marginTop: "5%",
-                      fontWeight: "bold",
-                      marginBottom: "3%",
-                    }}
-                  >
-                    Tambola Ticket:{" "}
-                    {this.props.event.participantList.indexOf(
-                      this.props.phoneNumber
-                    )}
-                  </Text>
+            <Text
+              style={{
+                color: Colors.grey.grey,
+                marginTop: "5%",
+                fontSize: 15,
+                marginLeft: 5,
+              }}
+            >
+              {loadDate(item.startTime)} -{} {loadDate(item.endTime)}
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 2,
+              borderBottomColor: Colors.grey.grey,
+              borderBottomWidth: 1,
+            }}
+          />
+          {event.eventName.indexOf("Tambola") >= 0 &&
+            phoneNumber != null &&
+            event.participantList != null &&
+            event.participantList.indexOf(phoneNumber) != -1 && (
+              <>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    color: Colors.grey.grey,
+                    marginTop: "5%",
+                    fontWeight: "bold",
+                    marginBottom: "3%",
+                  }}
+                >
+                  Tambola Ticket: {event.participantList.indexOf(phoneNumber)}
+                </Text>
 
-                  {tambolaHtml && (
-                    <>
-                      <RenderHtml
-                        // contentWidth={width}
-                        tagsStyles={contentHtmlStyles}
-                        source={{
-                          html: tambolaHtml,
-                          // html: item.description,
-                        }}
-                      />
-                      <View>
-                        <Text>Note : Please draw the ticket on a Paper.</Text>
-                      </View>
-                    </>
-                  )}
-                  <View
-                    style={{
-                      marginTop: "5%",
-                      borderBottomColor: Colors.grey.grey,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                </>
-              )}
-            {/* <TambolaTicket
-              event={this.props.event}
-              phoneNumber={this.props.phoneNumber}
+                {tambolaHtml && (
+                  <>
+                    <RenderHtml
+                      // contentWidth={width}
+                      tagsStyles={contentHtmlStyles}
+                      source={{
+                        html: tambolaHtml,
+                        // html: item.description,
+                      }}
+                    />
+                    <View>
+                      <Text>Note : Please draw the ticket on a Paper.</Text>
+                    </View>
+                  </>
+                )}
+                <View
+                  style={{
+                    marginTop: "5%",
+                    borderBottomColor: Colors.grey.grey,
+                    borderBottomWidth: 1,
+                  }}
+                />
+              </>
+            )}
+          {/* <TambolaTicket
+              event={event}
+              phoneNumber={phoneNumber}
             /> */}
+          <Text
+            style={{
+              fontSize: 17,
+              color: Colors.grey.grey,
+              marginTop: 20,
+              fontWeight: "bold",
+            }}
+          >
+            About
+          </Text>
+          {item.description && item.description.length > 0 && (
             <Text
               style={{
                 fontSize: 17,
                 color: Colors.grey.grey,
-                marginTop: 20,
-                fontWeight: "bold",
+                marginTop: "5%",
               }}
             >
-              About
+              {item.description}
             </Text>
-            {item.description && item.description.length > 0 && (
-              <Text
-                style={{
-                  fontSize: 17,
-                  color: Colors.grey.grey,
-                  marginTop: "5%",
-                }}
-              >
-                {item.description}
-              </Text>
-            )}
-            {item.beautifulDescription && (
-              <RenderHtml
-                // contentWidth={width}
-                source={{
-                  html: item.beautifulDescription,
-                  // html: item.description,
-                }}
-              />
-            )}
-            <View
-              style={{
-                marginTop: "5%",
-                borderBottomColor: Colors.grey.grey,
-                borderBottomWidth: 1,
+          )}
+          {item.beautifulDescription && (
+            <RenderHtml
+              // contentWidth={width}
+              source={{
+                html: item.beautifulDescription,
+                // html: item.description,
               }}
             />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 10,
-              }}
-            >
-              <View style={{ flex: 1, flexDirection: "row" }}>
-                <Avatar.Image
-                  source={
-                    item.expertImage
-                      ? {
-                          uri: item.expertImage,
-                        }
-                      : require("../images/profile_image.jpeg")
-                  }
-                  size={30}
-                />
-                <Title
-                  style={{
-                    color: Colors.grey["4"],
-                    fontSize: 13,
-                    paddingLeft: 10,
-                  }}
-                >
-                  {item.expertName}
-                </Title>
-              </View>
+          )}
+          <View
+            style={{
+              marginTop: "5%",
+              borderBottomColor: Colors.grey.grey,
+              borderBottomWidth: 1,
+            }}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
+          >
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <Avatar.Image
+                source={
+                  item.expertImage
+                    ? {
+                        uri: item.expertImage,
+                      }
+                    : require("../images/profile_image.jpeg")
+                }
+                size={30}
+              />
+              <Title
+                style={{
+                  color: Colors.grey["4"],
+                  fontSize: 13,
+                  paddingLeft: 10,
+                }}
+              >
+                {item.expertName}
+              </Title>
             </View>
           </View>
-        </ScrollView>
-        <VoucherBottomSheet
-          closeModal={() => {
-            this.setState({ showVouchers: false });
-            this.modalRef.current.snapToPosition(
-              this.state.title.toLowerCase().startsWith("book") ? "13%" : "8%"
-            );
-          }}
-          modalRef={this.modalRef}
-          showVouchers={this.state.showVouchers}
-          vouchers={this.state.vouchers}
-          voucherLoading={this.state.voucherLoading}
-          title={this.state.title}
-          selectedVoucher={this.state.selectedVoucher}
-          costType={this.props.event.costType}
-          setSelectedVoucher={(newVoucher) =>
-            this.setState({ selectedVoucher: newVoucher })
-          }
-          children={
-            <SafeAreaView
-              style={{
-                backgroundColor: Colors.beige,
-                paddingVertical: hp(1),
-                paddingHorizontal: wp(3),
-                borderTopRightRadius: wp(8),
-                borderTopLeftRadius: wp(8),
-                shadowColor: Colors.black,
-                shadowOffset: { width: 0, height: 5 },
-                elevation: 100,
-                width: wp(100),
-                height:
-                  this.state.title.toLowerCase().startsWith("book") &&
-                  this.props.event.costType == "paid"
-                    ? hp(13)
-                    : hp(8),
-                gap: hp(1),
-                justifyContent: "center",
-              }}
-            >
-              {this.state.title.toLowerCase().startsWith("book") && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent:
-                      this.state.selectedVoucher == null
-                        ? "flex-end"
-                        : "space-between",
-                    alignItems: "center",
-                    gap: wp(1),
-                  }}
-                >
-                  {this.state.selectedVoucher == null &&
-                  this.props.event.costType == "paid" ? (
+        </View>
+      </ScrollView>
+      <VoucherBottomSheet
+        closeModal={() => {
+          setState((prev) => ({ ...prev, showVouchers: false }));
+          modalRef.current.snapToPosition(
+            state?.title?.toLowerCase()?.startsWith("book") ? "13%" : "8%"
+          );
+        }}
+        modalRef={modalRef}
+        showVouchers={state.showVouchers}
+        vouchers={state.vouchers}
+        voucherLoading={state.voucherLoading}
+        title={state.title}
+        selectedVoucher={state.selectedVoucher}
+        costType={event.costType}
+        setSelectedVoucher={(newVoucher) =>
+          setState((prev) => ({ ...prev, selectedVoucher: newVoucher }))
+        }
+        children={
+          <SafeAreaView
+            style={{
+              backgroundColor: Colors.beige,
+              paddingVertical: hp(1),
+              paddingHorizontal: wp(3),
+              borderTopRightRadius: wp(8),
+              borderTopLeftRadius: wp(8),
+              shadowColor: Colors.black,
+              shadowOffset: { width: 0, height: 5 },
+              elevation: 100,
+              width: wp(100),
+              height:
+                state?.title?.toLowerCase().startsWith("book") &&
+                event.costType == "paid"
+                  ? hp(13)
+                  : hp(8),
+              gap: hp(1),
+              justifyContent: "center",
+            }}
+          >
+            {state?.title?.toLowerCase().startsWith("book") && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent:
+                    state.selectedVoucher == null
+                      ? "flex-end"
+                      : "space-between",
+                  alignItems: "center",
+                  gap: wp(1),
+                }}
+              >
+                {state.selectedVoucher == null && event.costType == "paid" ? (
+                  <>
+                    <Text>Have a voucher?</Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setState((prev) => ({ ...prev, showVouchers: true }));
+                        loadVouchers();
+                        modalRef.current.snapToPosition("60%");
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: Colors.primary,
+                          textDecorationLine: "underline",
+                        }}
+                      >
+                        Apply Coupon
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  event.costType == "paid" && (
                     <>
-                      <Text>Have a voucher?</Text>
+                      <Text
+                        style={{
+                          fontFamily: "Poppins-Regular",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Code : {state?.selectedVoucher?.code}
+                      </Text>
                       <TouchableOpacity
                         onPress={() => {
-                          this.setState({ showVouchers: true }, () => {
-                            this.loadVouchers();
-                          });
-                          this.modalRef.current.snapToPosition("60%");
+                          setState((prev) => ({
+                            ...prev,
+                            selectedVoucher: null,
+                          }));
                         }}
                       >
                         <Text
@@ -738,316 +774,299 @@ class SessionDetails extends Component {
                             textDecorationLine: "underline",
                           }}
                         >
-                          Apply Coupon
+                          Remove
                         </Text>
                       </TouchableOpacity>
                     </>
-                  ) : (
-                    this.props.event.costType == "paid" && (
-                      <>
-                        <Text
-                          style={{
-                            fontFamily: "Poppins-Regular",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Code : {this.state?.selectedVoucher?.code}
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.setState({ selectedVoucher: null });
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: Colors.primary,
-                              textDecorationLine: "underline",
-                            }}
-                          >
-                            Remove
-                          </Text>
-                        </TouchableOpacity>
-                      </>
-                    )
-                  )}
-                </View>
-              )}
-              <View
-                style={{
-                  width: Platform.OS == "ios" ? wp(100) : "",
-                  flexDirection:
-                    this.state.title == "Cancel Your Booking"
-                      ? "row"
-                      : "column",
-                  justifyContent:
-                    this.state.title == "Cancel Your Booking"
-                      ? "space-evenly"
-                      : "center",
-                  alignItems:
-                    this.state.title == "Cancel Your Booking"
-                      ? "center"
-                      : Platform.OS == "ios"
-                      ? "center"
-                      : "",
-                  gap: WIDTH * 0.02,
-                }}
-              >
-                {this.state.title == "Cancel Your Booking" && (
-                  <CountdownTimer
-                    targetTime={item.startTime}
-                    width={WIDTH * 0.1}
-                    height={HEIGHT * 0.05}
-                    separatorSize={WIDTH * 0.07}
-                    showText={true}
-                  />
+                  )
                 )}
-                <Button
-                  disabled={this.isDisabled()}
-                  outline
-                  buttonStyle={{
-                    backgroundColor: Colors.primary,
-                    minWidth: WIDTH * 0.55,
-                    width: "100%",
-                    minHeight: HEIGHT * 0.05,
-                  }}
-                  title={this.getTitle()}
-                  loading={this.state.loadingButton}
-                  onPress={() => {
-                    const title = this.getTitle();
-                    this.setState({ title: title });
-                    if (this.getTitle() === "Cancel Your Booking") {
-                      this.setState({ showBookAlert: true });
-                    } else if (
-                      item.costType == "paid" &&
-                      this.getTitle().startsWith("Book")
-                    ) {
-                      if (!this.isBookingAllowed()) return;
-                      this.sessionAction();
-                      return;
-                    } else {
-                      this.sessionAction();
-                      return;
-                    }
-                  }}
-                ></Button>
               </View>
-            </SafeAreaView>
+            )}
+            <View
+              style={{
+                width: Platform.OS == "ios" ? wp(100) : "",
+                flexDirection:
+                  state.title == "Cancel Your Booking" ? "row" : "column",
+                justifyContent:
+                  state.title == "Cancel Your Booking"
+                    ? "space-evenly"
+                    : "center",
+                alignItems:
+                  state.title == "Cancel Your Booking"
+                    ? "center"
+                    : Platform.OS == "ios"
+                    ? "center"
+                    : "",
+                gap: WIDTH * 0.02,
+              }}
+            >
+              {state.title == "Cancel Your Booking" && (
+                <CountdownTimer
+                  targetTime={item.startTime}
+                  width={WIDTH * 0.1}
+                  height={HEIGHT * 0.05}
+                  separatorSize={WIDTH * 0.07}
+                  showText={true}
+                />
+              )}
+              <Button
+                disabled={isDisabled()}
+                outline
+                buttonStyle={{
+                  backgroundColor: Colors.primary,
+                  minWidth: WIDTH * 0.55,
+                  width: "100%",
+                  minHeight: HEIGHT * 0.05,
+                }}
+                title={getTitle()}
+                loading={state.loadingButton}
+                onPress={() => {
+                  const title = getTitle();
+                  setState((prev) => ({ ...prev, title: title }));
+                  if (getTitle() === "Cancel Your Booking") {
+                    setState((prev) => ({ ...prev, showBookAlert: true }));
+                  } else if (
+                    item.costType == "paid" &&
+                    getTitle().startsWith("Book")
+                  ) {
+                    if (!isBookingAllowed()) return;
+                    sessionActionL();
+                    return;
+                  } else {
+                    sessionActionL();
+                    return;
+                  }
+                }}
+              ></Button>
+            </View>
+          </SafeAreaView>
+        }
+      />
+      {item.recordingLink != null && (
+        <Modal
+          style={{}}
+          animationType="slide"
+          transparent={false}
+          visible={state.videoVisible}
+          onRequestClose={() => {
+            setState((prev) => ({ ...prev, videoVisible: false }));
+          }}
+        >
+          <WebView
+            javaScriptEnabled={true}
+            allowsFullscreenVideo
+            style={{ flex: 1, borderColor: Colors.red, borderWidth: 1 }}
+            source={{
+              uri: item.recordingLink,
+            }}
+          />
+        </Modal>
+      )}
+      {state.showAlert && (
+        <AwesomeAlert
+          show={state.showAlert}
+          showProgress={false}
+          title="Oops!"
+          message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Try Again"
+          confirmButtonColor={Colors.errorButton}
+          onConfirmPressed={() => {
+            setState((prev) => ({ ...prev, showAlert: false }));
+          }}
+          onDismiss={() => setState((prev) => ({ ...prev, showAlert: false }))}
+        />
+      )}
+      {state.showPaymentAlert && (
+        <AwesomeAlert
+          show={state.showPaymentAlert}
+          showProgress={false}
+          title={state.paymentAlertTitle}
+          message={state.paymentAlertMessage}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="OK"
+          confirmButtonColor={Colors.errorButton}
+          onConfirmPressed={() => {
+            setState((prev) => ({
+              ...prev,
+              showPaymentAlert: false,
+              paymentAlertMessage: "Your Payment is Successful!",
+              paymentAlertTitle: "Success",
+            }));
+          }}
+          onDismiss={() =>
+            setState((prev) => ({ ...prev, showPaymentAlert: false }))
           }
         />
-        {item.recordingLink != null && (
-          <Modal
-            style={{}}
-            animationType="slide"
-            transparent={false}
-            visible={this.state.videoVisible}
-            onRequestClose={() => {
-              this.setState({ videoVisible: false });
-            }}
-          >
-            <WebView
-              javaScriptEnabled={true}
-              allowsFullscreenVideo
-              style={{ flex: 1, borderColor: Colors.red, borderWidth: 1 }}
-              source={{
-                uri: item.recordingLink,
+      )}
+      {state.showBookAlert && (
+        <AwesomeAlert
+          show={state.showBookAlert}
+          showProgress={false}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          customView={
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            />
-          </Modal>
-        )}
-        {this.state.showAlert && (
-          <AwesomeAlert
-            show={this.state.showAlert}
-            showProgress={false}
-            title="Oops!"
-            message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Try Again"
-            confirmButtonColor={Colors.errorButton}
-            onConfirmPressed={() => {
-              this.setState({ showAlert: false });
-            }}
-            onDismiss={() => this.setState({ showAlert: false })}
-          />
-        )}
-        {this.state.showPaymentAlert && (
-          <AwesomeAlert
-            show={this.state.showPaymentAlert}
-            showProgress={false}
-            title={this.state.paymentAlertTitle}
-            message={this.state.paymentAlertMessage}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="OK"
-            confirmButtonColor={Colors.errorButton}
-            onConfirmPressed={() => {
-              this.setState({
-                showPaymentAlert: false,
-                paymentAlertMessage: "Your Payment is Successful!",
-                paymentAlertTitle: "Success",
-              });
-            }}
-            onDismiss={() => this.setState({ showPaymentAlert: false })}
-          />
-        )}
-        {this.state.showBookAlert && (
-          <AwesomeAlert
-            show={this.state.showBookAlert}
-            showProgress={false}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            customView={
-              <View
+            >
+              <Text
                 style={{
-                  justifyContent: "center",
-                  alignItems: "center",
+                  fontSize: WIDTH * 0.058,
+                  marginVertical: HEIGHT * 0.015,
+                  fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: WIDTH * 0.058,
-                    marginVertical: HEIGHT * 0.015,
-                    fontWeight: "bold",
-                    textAlign: "center",
+                Your session is starting in :
+              </Text>
+              <CountdownTimer targetTime={item.startTime} />
+              <Text
+                style={{
+                  fontSize: WIDTH * 0.04,
+                  textAlign: "center",
+                  marginVertical: HEIGHT * 0.015,
+                }}
+              >
+                Are you sure you want to cancel your booking?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: WIDTH * 0.5,
+                }}
+              >
+                <Button
+                  title="Yes"
+                  buttonStyle={{
+                    backgroundColor: Colors.errorButton,
+                    width: WIDTH * 0.2,
                   }}
-                >
-                  Your session is starting in :
-                </Text>
-                <CountdownTimer targetTime={item.startTime} />
-                <Text
-                  style={{
-                    fontSize: WIDTH * 0.04,
-                    textAlign: "center",
-                    marginVertical: HEIGHT * 0.015,
+                  onPress={() => {
+                    setState((prev) => ({ ...prev, showBookAlert: false }));
+                    sessionActionL();
                   }}
-                >
-                  Are you sure you want to cancel your booking?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: WIDTH * 0.5,
-                  }}
-                >
-                  <Button
-                    title="Yes"
-                    buttonStyle={{
-                      backgroundColor: Colors.errorButton,
-                      width: WIDTH * 0.2,
-                    }}
-                    onPress={() => {
-                      this.setState({ showBookAlert: false });
-                      this.sessionAction();
-                    }}
-                  />
+                />
 
-                  <Button
-                    title="No"
-                    buttonStyle={{
-                      backgroundColor: "#34983CAF",
-                      width: WIDTH * 0.2,
-                    }}
-                    onPress={() => {
-                      this.setState({ showBookAlert: false });
-                    }}
-                  />
-                </View>
+                <Button
+                  title="No"
+                  buttonStyle={{
+                    backgroundColor: "#34983CAF",
+                    width: WIDTH * 0.2,
+                  }}
+                  onPress={() => {
+                    setState((prev) => ({ ...prev, showBookAlert: false }));
+                  }}
+                />
               </View>
-            }
-            onDismiss={() => this.setState({ showBookAlert: false })}
-          />
-        )}
-        {this.state.belowAgePopUp && (
-          <AwesomeAlert
-            show={this.state.belowAgePopUp}
-            showProgress={false}
-            // title={""}
-            message={
-              "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
-            }
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Share"
-            confirmButtonColor={Colors.primary}
-            onConfirmPressed={() => {
-              this.handleBelowAge(
-                item,
-                "https://www.gohappyclub.in/session_details/" + item.id
-              );
-              this.setState({ belowAgePopUp: false });
-            }}
-            onDismiss={() => this.setState({ belowAgePopUp: false })}
-          />
-        )}
-        {this.state.nonMemberPopUp && (
-          <AwesomeAlert
-            show={this.state.nonMemberPopUp}
-            showProgress={false}
-            title={"Booking Failed"}
-            message={
-              "You are not a member of GoHappy Club, Join us by clicking below button."
-            }
-            messageStyle={{
-              textAlign: "center",
-              fontFamily: "Poppins-Regular",
-            }}
-            titleStyle={{
-              fontSize: wp(5),
-              fontFamily: "NunitoSans-SemiBold",
-              color: Colors.red,
-            }}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={true}
-            showConfirmButton={true}
-            showCancelButton={false}
-            confirmText="Join now"
-            confirmButtonColor={Colors.primary}
-            onConfirmPressed={() => {
-              this.setState({ nonMemberPopUp: false });
-              this.props.navigation.navigate("SubscriptionPlans");
-            }}
-            onDismiss={() => this.setState({ nonMemberPopUp: false })}
-          />
-        )}
-        {this.state.lowCoinsPopUp && (
-          <AwesomeAlert
-            show={this.state.lowCoinsPopUp}
-            showProgress={false}
-            title={"Booking Failed"}
-            message={
-              "You don't have enough coins, Please top-up coins to book this session."
-            }
-            messageStyle={{
-              textAlign: "center",
-              fontFamily: "Poppins-Regular",
-              color: Colors.black,
-            }}
-            titleStyle={{
-              fontSize: wp(5),
-              fontFamily: "NunitoSans-SemiBold",
-              color: Colors.red,
-            }}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={true}
-            showConfirmButton={true}
-            showCancelButton={false}
-            confirmText="Top up now"
-            confirmButtonColor={Colors.primary}
-            onConfirmPressed={() => {
-              this.setState({ lowCoinsPopUp: false });
-              this.props.navigation.navigate("TopUpScreen");
-            }}
-            onDismiss={() => this.setState({ lowCoinsPopUp: false })}
-          />
-        )}
-      </View>
-    );
-  }
-}
+            </View>
+          }
+          onDismiss={() =>
+            setState((prev) => ({ ...prev, showBookAlert: false }))
+          }
+        />
+      )}
+      {state.belowAgePopUp && (
+        <AwesomeAlert
+          show={state.belowAgePopUp}
+          showProgress={false}
+          // title={""}
+          message={
+            "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
+          }
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Share"
+          confirmButtonColor={Colors.primary}
+          onConfirmPressed={() => {
+            handleBelowAge(
+              item,
+              "https://www.gohappyclub.in/session_details/" + item.id
+            );
+            setState((prev) => ({ ...prev, belowAgePopUp: false }));
+          }}
+          onDismiss={() =>
+            setState((prev) => ({ ...prev, belowAgePopUp: false }))
+          }
+        />
+      )}
+      {state.nonMemberPopUp && (
+        <AwesomeAlert
+          show={state.nonMemberPopUp}
+          showProgress={false}
+          title={"Booking Failed"}
+          message={
+            "You are not a member of GoHappy Club, Join us by clicking below button."
+          }
+          messageStyle={{
+            textAlign: "center",
+            fontFamily: "Poppins-Regular",
+          }}
+          titleStyle={{
+            fontSize: wp(5),
+            fontFamily: "NunitoSans-SemiBold",
+            color: Colors.red,
+          }}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showConfirmButton={true}
+          showCancelButton={false}
+          confirmText="Join now"
+          confirmButtonColor={Colors.primary}
+          onConfirmPressed={() => {
+            setState((prev) => ({ ...prev, nonMemberPopUp: false }));
+            navigation.navigate("SubscriptionPlans");
+          }}
+          onDismiss={() =>
+            setState((prev) => ({ ...prev, nonMemberPopUp: false }))
+          }
+        />
+      )}
+      {state.lowCoinsPopUp && (
+        <AwesomeAlert
+          show={state.lowCoinsPopUp}
+          showProgress={false}
+          title={"Booking Failed"}
+          message={
+            "You don't have enough coins, Please top-up coins to book this session."
+          }
+          messageStyle={{
+            textAlign: "center",
+            fontFamily: "Poppins-Regular",
+            color: Colors.black,
+          }}
+          titleStyle={{
+            fontSize: wp(5),
+            fontFamily: "NunitoSans-SemiBold",
+            color: Colors.red,
+          }}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showConfirmButton={true}
+          showCancelButton={false}
+          confirmText="Top up now"
+          confirmButtonColor={Colors.primary}
+          onConfirmPressed={() => {
+            setState((prev) => ({ ...prev, lowCoinsPopUp: false }));
+            navigation.navigate("TopUpScreen");
+          }}
+          onDismiss={() =>
+            setState((prev) => ({ ...prev, lowCoinsPopUp: false }))
+          }
+        />
+      )}
+    </View>
+  );
+  // }
+};
 
 const contentHtmlStyles = StyleSheet.create({
   table: {
@@ -1197,12 +1216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  profile: state.profile.profile,
-  membership: state.membership.membership,
-});
-const ActionCreators = Object.assign({}, { setProfile, setMembership });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(SessionDetails);
+export default SessionDetails;
