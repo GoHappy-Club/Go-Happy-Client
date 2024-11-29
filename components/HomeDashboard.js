@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   FlatList,
   Linking,
@@ -10,15 +10,20 @@ import {
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { parseISO, format, getTime, fromUnixTime } from "date-fns";
+import {
+  parseISO,
+  format,
+  getTime,
+  fromUnixTime,
+  parse,
+  addHours,
+} from "date-fns";
 import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
 import CalendarDays from "react-native-calendar-slider-carousel";
 import { MaterialIndicator } from "react-native-indicators";
 
-import { connect } from "react-redux";
-import { setMembership, setProfile } from "../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSessionAttended } from "../services/events/EventService";
 
 import toUnicodeVariant from "./toUnicodeVariant.js";
@@ -29,243 +34,252 @@ import { storeCompletedSession } from "../services/Startup.js";
 import { Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
+import { useZoom } from "../helpers/zoomUtils.js";
 
-class HomeDashboard extends Component {
-  constructor(props) {
-    super(props);
-    var today = new Date().toDateString();
-    var todayRaw = new Date().setHours(0, 0, 0, 0);
-    this.state = {
-      loader: false,
-      selectedDate: today,
-      email: null,
-      bookingLoader: false,
-      selectedDateRaw: todayRaw,
-      showAlert: false,
-      paymentAlertMessage: "Your Payment is Successful!",
-      paymentAlertTitle: "Success",
-      showPaymentAlert: false,
-      shareLink: "",
-      clickPopup: false,
-      alreadyBookedSameDayEvent: false,
-      itemToBuy: null,
-      profileImage:
-        "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
-      belowAgePopUp: false,
-      itemClicked: null,
-      payButtonLoading: false,
-      shareButtonLoading: false,
-      nonMemberPopUp: false,
-      lowCoinsPopUp: false,
-    };
-    this._retrieveData();
-  }
+const HomeDashboard = ({
+  events,
+  ratings,
+  childLoader,
+  bookEvent,
+  loadEvents,
+  navigation,
+}) => {
+  const profile = useSelector((state) => state.profile.profile);
+  const membership = useSelector((state) => state.membership.membership);
 
-  handleClickBook(item) {
-    if (!this.isBookingAllowed(item)) return;
-    // this.setState({ itemToBuy: item }, () => {
-    //   this.setState({ clickPopup: true });
-    // });
-    this.updateEventBook(item);
-  }
+  const dispatch = useDispatch();
+  const zoom = useZoom();
 
-  isBookingAllowed(item) {
-    if (this.props.membership.freeTrialActive == "true") return true;
-    if (
-      this.props.membership &&
-      this.props.membership?.membershipType == "Free"
-    ) {
-      // this.setState({ nonMemberPopUp: true });
-      this.props.navigation.navigate("SubscriptionPlans");
-      return false;
-    } else if (
-      this.props.membership &&
-      this.props.membership?.coins < item.cost
-    ) {
-      this.setState({ lowCoinsPopUp: true });
-      return false;
-    }
+  const [state, setState] = useState({
+    loader: false,
+    selectedDate: new Date().toDateString(),
+    email: null,
+    bookingLoader: false,
+    selectedDateRaw: new Date().setHours(0, 0, 0, 0),
+    showAlert: false,
+    paymentAlertMessage: "Your Payment is Successful!",
+    paymentAlertTitle: "Success",
+    showPaymentAlert: false,
+    shareLink: "",
+    clickPopup: false,
+    alreadyBookedSameDayEvent: false,
+    itemToBuy: null,
+    profileImage:
+      "https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg",
+    belowAgePopUp: false,
+    itemClicked: null,
+    nonMemberPopUp: false,
+    lowCoinsPopUp: false,
+  });
 
-    return true;
-  }
+  useEffect(() => {
+    retrieveData();
+  }, []);
 
-  _retrieveData = async () => {
+  const retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("email");
       const phoneNumber = await AsyncStorage.getItem("phoneNumber");
       if (value !== null) {
-        // We have data!!
-        this.setState({ email: value });
-        //
+        setState((prevState) => ({ ...prevState, email: value }));
       }
       if (phoneNumber !== null) {
-        // We have data!!
-        this.setState({ phoneNumber: phoneNumber });
-        //
+        setState((prevState) => ({ ...prevState, phoneNumber }));
       }
     } catch (error) {
       // Error retrieving data
-      //
     }
   };
 
-  changeSelectedDate = (date) => {
-    const parsedSelect = parseISO(date);
-    const select = format(parsedSelect, "EEE MMM dd yyyy");
-    const tempDate = getTime(date);
+  const extractMeetingNumber = (url) => {
+    const regex = /j\/(\d+)/;
+    const match = url.match(regex);
 
-    this.setState({
-      selectedDate: select,
-    });
-    this.setState({ selectedDateRaw: tempDate });
-    this.setState({ events: [] });
-
-    this.props.loadEvents(tempDate);
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null;
+    }
   };
-  trimContent(text, cut) {
+
+  const joinMeeting = async (item) => {
+    try {
+      await zoom.joinMeeting({
+        userName: profile.name,
+        meetingNumber: extractMeetingNumber(item?.meetingLink),
+        password: "12345",
+      });
+    } catch (e) {
+      console.log("Error in join", e);
+      Alert.alert("Error in join", "" + e);
+    }
+  };
+
+  const handleClickBook = (item) => {
+    if (!isBookingAllowed(item)) return;
+    // setState({ itemToBuy: item }, () => {
+    //   setState({ clickPopup: true });
+    // });
+    updateEventBook(item);
+  };
+
+  const isBookingAllowed = (item) => {
+    if (membership.freeTrialActive == true) return true;
+    if (membership && membership?.membershipType == "Free") {
+      // setState({ nonMemberPopUp: true });
+      navigation.navigate("SubscriptionPlans");
+      return false;
+    } else if (membership && membership?.coins < item.cost) {
+      setState({ lowCoinsPopUp: true });
+      return false;
+    }
+
+    return true;
+  };
+
+  const changeSelectedDate = (date) => {
+    const parsedSelect = parseISO(date);
+
+    parsedSelect.setHours(0, 0, 0, 0);
+    // Add 5 hours and 30 minutes to adjust to IST (GMT+5:30)
+    // const istDate = addHours(parsedSelect, 5.5);
+    // console.log(istDate);
+
+    const select = format(parsedSelect, "EEE MMM dd yyyy");
+    const tempDate = getTime(parsedSelect);
+
+    setState((prevState) => ({
+      ...prevState,
+      selectedDate: select,
+      selectedDateRaw: tempDate,
+      events: [],
+    }));
+
+    loadEvents(tempDate);
+  };
+
+  const trimContent = (text, cut) => {
     if (text.length < cut) {
       return text;
     }
     return text.substring(0, cut) + "...";
-  }
-  isOngoingEvent(item) {
+  };
+
+  const isOngoingEvent = (item) => {
     crashlytics().log(
       JSON.stringify(item.startTime) + JSON.stringify(new Date().getTime())
     );
-    if (item.startTime - 600000 <= new Date().getTime()) {
-      return true;
-    }
-    return false;
-  }
-  checkIsParticipantInSameEvent(item) {
-    let isParticipantInSameEvent = false;
+    return item.startTime - 600000 <= new Date().getTime();
+  };
+
+  const checkIsParticipantInSameEvent = (item) => {
     if (item.sameDayEventId === null) {
       return false;
     }
-    this.props.events.map((event) => {
-      if (!isParticipantInSameEvent) {
-        isParticipantInSameEvent =
-          event.sameDayEventId == item.sameDayEventId &&
-          event.participantList.includes(this.props.profile.phoneNumber);
-      }
-    });
-    return isParticipantInSameEvent;
-  }
-  handleBelowAge(item, url) {
+    return events.some(
+      (event) =>
+        event.sameDayEventId === item.sameDayEventId &&
+        event.participantList.includes(profile.phoneNumber)
+    );
+  };
+
+  const handleBelowAge = (item, url) => {
     const link = url;
     const shareMessage =
-      "👋 Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. \n\n" +
-      "📚 The name of the session is *" +
-      toUnicodeVariant(item.eventName, "bold italic") +
-      "*.\n\n" +
-      "I think you will definitely like it! 😊 \n\n" +
-      "👉 Here is the link to the session: \n" +
-      link +
-      ".\n\n" +
-      "💬 Join in and let me know how you liked it! 👍";
+      `👋 Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. \n\n` +
+      `📚 The name of the session is *${toUnicodeVariant(
+        item.eventName,
+        "bold italic"
+      )}*.\n\n` +
+      `I think you will definitely like it! 😊 \n\n` +
+      `👉 Here is the link to the session: \n${link}.\n\n` +
+      `💬 Join in and let me know how you liked it! 👍`;
 
-    Share.share({
-      message: shareMessage,
-    })
+    Share.share({ message: shareMessage })
       .then((result) => {})
       .catch((errorMsg) => {});
-  }
+  };
 
-  async updateEventBook(item) {
-    //console.log("item clicked is", item)
-    this.setState({ bookingLoader: true, itemClicked: item });
-    if (this.getTitle(item) == "Share") {
-      this.setState({ belowAgePopUp: true });
+  const updateEventBook = async (item) => {
+    setState((prevState) => ({
+      ...prevState,
+      bookingLoader: true,
+      itemClicked: item,
+    }));
+    if (getTitle(item) == "Share") {
+      setState((prevState) => ({ ...prevState, belowAgePopUp: true }));
       return;
     }
-    if (this.getTitle(item) == "Join") {
+    if (getTitle(item) == "Join") {
       await storeCompletedSession(
         item.id,
         item.eventName,
         item.coverImage,
         item.subCategory,
-        this.props.profile.phoneNumber
+        profile.phoneNumber
       );
-      setSessionAttended(this.props.profile.phoneNumber);
-      await Linking.openURL(item.meetingLink);
-      await this.giveRewards(item);
+      setSessionAttended(profile.phoneNumber);
+      // await Linking.openURL(item.meetingLink);
+      joinMeeting(item);
+      await giveRewards(item);
       return;
     }
-    if (this.checkIsParticipantInSameEvent(item)) {
-      this.setState({ showAlert: true });
+    if (checkIsParticipantInSameEvent(item)) {
+      setState((prevState) => ({ ...prevState, showAlert: true }));
       return;
     }
     item.loadingButton = true;
-    this.props.bookEvent(
-      item,
-      this.props.profile.phoneNumber,
-      this.state.selectedDateRaw
-    );
-  }
+    bookEvent(item, profile.phoneNumber, state.selectedDateRaw);
+  };
 
-  async giveRewards(item) {
-    let { membership, actions } = this.props;
-
+  const giveRewards = async (item) => {
     try {
       const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
-        phone: this.props.profile.phoneNumber,
+        phone: profile.phoneNumber,
         eventId: item.id,
       });
-      // membership.coins = response.data.coins;
-      // actions.setMembership({ ...membership });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
     }
-  }
+  };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.events !== prevState.events) {
-      return { events: nextProps.events };
-    } else {
-      return null;
-    }
-  }
-  loadCaller() {
-    this.props.navigation.navigate("HomeScreen");
-    this.props.loadEvents(this.state.selectedDateRaw);
-  }
+  const loadCaller = () => {
+    navigation.navigate("HomeScreen");
+    loadEvents(state.selectedDateRaw);
+  };
 
-  sorry() {
-    return (
-      <Text
-        h4
-        style={{
-          height: "100%",
-          marginTop: "20%",
-          alignSelf: "center",
-          textAlign: "center",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          color: Colors.greyishText,
-        }}
-      >
-        {/* No Sessions Available 😟 */}
-        Check tomorrow's sessions 😁
-      </Text>
-    );
-  }
-  loadDate(item) {
+  const sorry = () => (
+    <Text
+      h4
+      style={{
+        height: "100%",
+        marginTop: "20%",
+        alignSelf: "center",
+        textAlign: "center",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        color: Colors.greyishText,
+      }}
+    >
+      Check tomorrow's sessions 😁
+    </Text>
+  );
+
+  const loadDate = (item) => {
     const dt = fromUnixTime(item.startTime / 1000);
-    const finalTime = format(dt, "MMM d, h:mm aa");
-    return finalTime;
-  }
-  getTitle(item) {
-    if (this.props.profile.age != null && this.props.profile.age < 50) {
+    return format(dt, "MMM d, h:mm aa");
+  };
+
+  const getTitle = (item) => {
+    if (profile.age != null && profile.age < 50) {
       return "Share";
     }
-    const isOngoing = this.isOngoingEvent(item);
+    const isOngoing = isOngoingEvent(item);
     if (item.participantList == null) {
       return "Book";
     }
-    const isParticipant = item.participantList.includes(
-      this.props.profile.phoneNumber
-    );
+    const isParticipant = item.participantList.includes(profile.phoneNumber);
 
     // crashlytics().log("this is item", isOngoing, isParticipant);
     if (isOngoing && isParticipant) {
@@ -277,16 +291,15 @@ class HomeDashboard extends Component {
     } else {
       return "Book";
     }
-  }
-  isDisabled(item) {
-    const isOngoing = this.isOngoingEvent(item);
+  };
+
+  const isDisabled = (item) => {
+    const isOngoing = isOngoingEvent(item);
     if (item.participantList == null) {
       return false;
     }
 
-    const isParticipant = item.participantList.includes(
-      this.props.profile.phoneNumber
-    );
+    const isParticipant = item.participantList.includes(profile.phoneNumber);
 
     if (isParticipant && !isOngoing) {
       return true;
@@ -297,9 +310,8 @@ class HomeDashboard extends Component {
     } else {
       return false;
     }
-  }
-
-  async createShareMessage(item, url) {
+  };
+  const createShareMessage = async (item, url) => {
     const sessionsTemplate =
       'Namaste !! I am attending "😃 ' +
       toUnicodeVariant(item.eventName, "bold italic") +
@@ -321,10 +333,10 @@ class HomeDashboard extends Component {
       url;
 
     return item.costType == "paid" ? workshopTemplate : sessionsTemplate;
-  }
-  shareMessage = async (item) => {
-    if (this.props.profile.age != null && this.props.profile.age < 50) {
-      this.handleBelowAge(
+  };
+  const shareMessage = async (item) => {
+    if (profile.age != null && profile.age < 50) {
+      handleBelowAge(
         item,
         "https://www.gohappyclub.in/session_details/" + item.id
       );
@@ -333,7 +345,7 @@ class HomeDashboard extends Component {
     const sessionShareMessage =
       item.shareMessage != null
         ? item.shareMessage
-        : await this.createShareMessage(
+        : await createShareMessage(
             item,
             "https://www.gohappyclub.in/session_details/" + item.id
           );
@@ -344,381 +356,374 @@ class HomeDashboard extends Component {
       .catch((errorMsg) => {});
   };
 
-  render() {
-    const { profile } = this.props;
-    const renderItem = ({ item }) => (
-      <TouchableOpacity
-        activeOpacity={0.6}
-        delayPressIn={150}
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      delayPressIn={150}
+      style={{
+        flex: 1,
+        flexDirection: "column",
+        margin: 1,
+        width: wp(88),
+        backgroundColor: Colors.white,
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 10,
+        borderRadius: wp(3),
+        // elevation: 1,
+      }}
+      onPress={() =>
+        navigation.navigate("Session Details", {
+          phoneNumber: profile.phoneNumber,
+          profile: profile,
+          deepId: item.id,
+          onGoBack: () => loadCaller(),
+          alreadyBookedSameDayEvent: checkIsParticipantInSameEvent(item),
+        })
+      }
+    >
+      <View
         style={{
-          flex: 1,
-          flexDirection: "column",
-          margin: 1,
-          width: wp(88),
-          backgroundColor: Colors.white,
-          justifyContent: "center",
-          alignItems: "center",
-          marginVertical: 10,
-          borderRadius: wp(3),
-          // elevation: 1,
+          position: "relative",
+          width: "100%",
         }}
-        onPress={() =>
-          this.props.navigation.navigate("Session Details", {
-            phoneNumber: profile.phoneNumber,
-            profile: profile,
-            deepId: item.id,
-            onGoBack: () => this.loadCaller(),
-            alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(item),
-          })
-        }
+      >
+        <FastImage
+          source={{ uri: item.coverImage }}
+          style={{
+            width: "100%",
+            height: wp(55),
+            borderRadius: wp(3),
+            resizeMode: "cover",
+            // elevation:5
+          }}
+          resizeMode="cover"
+        />
+        <View
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            backgroundColor: Colors.grey.f0,
+            padding: 5,
+            borderRadius: wp(10),
+            borderColor: "white",
+            borderWidth: 1,
+            paddingHorizontal: wp(3),
+            backdropFilter: "blur(12px)",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+            elevation: 8,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Montserrat-SemiBold",
+              textAlign: "center",
+            }}
+          >
+            {item.category}
+          </Text>
+        </View>
+        <Share2
+          color={"white"}
+          size={28}
+          style={{
+            position: "absolute",
+            right: 10,
+            top: 10,
+          }}
+          fill={"white"}
+          onPress={() => shareMessage(item)}
+        />
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 5,
+          gap: 2,
+          paddingBottom: 4,
+        }}
       >
         <View
           style={{
-            position: "relative",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: 10,
             width: "100%",
           }}
         >
-          <FastImage
-            source={{ uri: item.coverImage }}
+          <Text
             style={{
-              width: "100%",
-              height: wp(55),
-              borderRadius: wp(3),
-              // elevation:5
-            }}
-            resizeMode="cover"
-          />
-          <View
-            style={{
-              position: "absolute",
-              top: 10,
-              left: 10,
-              backgroundColor: Colors.grey.f0,
-              padding: 5,
-              borderRadius: wp(10),
-              borderColor: "white",
-              borderWidth: 1,
-              paddingHorizontal: wp(3),
-              backdropFilter: "blur(12px)",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 8,
+              fontFamily: "Montserrat-SemiBold",
+              fontSize: wp(5.5),
             }}
           >
-            <Text
-              style={{
-                fontFamily: "Montserrat-SemiBold",
-                textAlign: "center",
-              }}
-            >
-              {item.category}
-            </Text>
-          </View>
-          <Share2
-            color={"white"}
-            size={28}
-            style={{
-              position: "absolute",
-              right: 10,
-              top: 10,
-            }}
-            fill={"white"}
-            onPress={() => this.shareMessage(item)}
-          />
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 5,
-            gap: 2,
-            paddingBottom: 4,
-          }}
-        >
+            {trimContent(item.eventName, 30)}
+          </Text>
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
               alignItems: "center",
-              marginTop: 10,
-              width: "100%",
+              gap: 5,
             }}
           >
+            <Star size={16} color={"gold"} fill={"gold"} />
             <Text
               style={{
                 fontFamily: "Montserrat-SemiBold",
-                fontSize: wp(5.5),
+                fontSize: wp(4),
               }}
             >
-              {this.trimContent(item.eventName, 30)}
+              {ratings?.length > 0 && ratings[item.subCategory]?.toFixed(1)}/5
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
-              }}
-            >
-              <Star size={16} color={"gold"} fill={"gold"} />
-              <Text
-                style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  fontSize: wp(4),
-                }}
-              >
-                {this.props?.ratings[item.subCategory]?.toFixed(1)}/5
-              </Text>
-            </View>
           </View>
-          <Text
-            style={{
-              fontFamily: "Montserrat-Regular",
-              color: Colors.grey.grey,
-              fontSize: wp(3.5),
-            }}
-          >
-            {this.loadDate(item)}
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Montserrat-Regular",
-              color: Colors.grey.grey,
-              fontSize: wp(3.5),
-            }}
-          >
-            Seats Left : {item.seatsLeft}
-          </Text>
-          {item.costType == "paid" && (
-            <Text
-              style={{
-                fontFamily: "Montserrat-Regular",
-                color: Colors.grey.grey,
-                fontSize: wp(3.5),
-              }}
-            >
-              {item.cost}
-              <FastImage
-                source={require("../images/GoCoins.png")}
-                style={{
-                  height: 15,
-                  width: 15,
-                }}
-              />
-            </Text>
-          )}
         </View>
-        <Button
-          disabled={this.isDisabled(item)}
-          title={this.getTitle(item)}
-          onPress={
-            item.costType == "paid" && this.getTitle(item) == "Book"
-              ? this.handleClickBook.bind(this, item)
-              : this.updateEventBook.bind(this, item)
-          }
-          loading={item.loadingButton}
-          loadingProps={{ size: "small", color: Colors.black }}
-          buttonStyle={{
-            backgroundColor: Colors.primary,
-            fontSize: wp(4),
-          }}
-          containerStyle={{
-            position: "absolute",
-            right: 10,
-            bottom: 10,
-          }}
-          titleStyle={{
-            color: Colors.white,
+        <Text
+          style={{
+            fontFamily: "Montserrat-Regular",
+            color: Colors.grey.grey,
             fontSize: wp(3.5),
-            fontWeight: "bold",
-            letterSpacing: 1,
           }}
-        />
-      </TouchableOpacity>
-    );
-    return (
-      <>
-        <SearchBar
-          loadCaller={this.loadCaller}
-          checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
-        />
-        <View style={{ flex: 1, backgroundColor: Colors.white }}>
-          <CalendarDays
-            numberOfDays={15}
-            daysInView={3}
-            paginate={true}
-            onDateSelect={(date) => this.changeSelectedDate(date)}
-            width={wp(95)}
-          />
+        >
+          {loadDate(item)}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Montserrat-Regular",
+            color: Colors.grey.grey,
+            fontSize: wp(3.5),
+          }}
+        >
+          Seats Left : {item.seatsLeft}
+        </Text>
+        {item.costType == "paid" && (
           <Text
-            h4
             style={{
-              marginLeft: 30,
-              marginTop: 20,
-              marginBottom: 15,
-              color: Colors.greyishText,
+              fontFamily: "Montserrat-Regular",
+              color: Colors.grey.grey,
+              fontSize: wp(3.5),
             }}
           >
-            {this.state.selectedDate}
+            {item.cost}
+            <FastImage
+              source={require("../images/GoCoins.png")}
+              style={{
+                height: 15,
+                width: 15,
+              }}
+            />
           </Text>
-          {this.props.childLoader == true && (
-            <MaterialIndicator color={Colors.primary} />
+        )}
+      </View>
+      <Button
+        disabled={isDisabled(item)}
+        title={getTitle(item)}
+        onPress={
+          item.costType == "paid" && getTitle(item) == "Book"
+            ? handleClickBook.bind(this, item)
+            : updateEventBook.bind(this, item)
+        }
+        loading={item.loadingButton}
+        loadingProps={{ size: "small", color: Colors.black }}
+        buttonStyle={{
+          backgroundColor: Colors.primary,
+          fontSize: wp(4),
+        }}
+        containerStyle={{
+          position: "absolute",
+          right: 10,
+          bottom: 10,
+        }}
+        titleStyle={{
+          color: Colors.white,
+          fontSize: wp(3.5),
+          fontWeight: "bold",
+          letterSpacing: 1,
+        }}
+      />
+    </TouchableOpacity>
+  );
+
+  return (
+    <>
+      <SearchBar
+        loadCaller={loadCaller}
+        checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
+      />
+      <View style={{ flex: 1, backgroundColor: Colors.white }}>
+        <CalendarDays
+          numberOfDays={15}
+          daysInView={3}
+          paginate={true}
+          onDateSelect={(date) => changeSelectedDate(date)}
+          width={wp(95)}
+        />
+        <Text
+          h4
+          style={{
+            marginLeft: 30,
+            marginTop: 20,
+            marginBottom: 15,
+            color: Colors.greyishText,
+          }}
+        >
+          {state.selectedDate}
+        </Text>
+        {childLoader == true && <MaterialIndicator color={Colors.primary} />}
+        {childLoader == false &&
+          events.filter((item) => item.endTime > Date.now()).length > 0 && (
+            <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
+              <FlatList
+                contentContainerStyle={{ flexGrow: 1 }}
+                data={events.filter((item) => item.endTime > Date.now())}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                ItemSeparatorComponent={
+                  <View
+                    style={{
+                      marginBottom: 10,
+                    }}
+                  />
+                }
+              />
+            </SafeAreaView>
           )}
-          {this.props.childLoader == false &&
-            this.props.events.filter((item) => item.endTime > Date.now())
-              .length > 0 && (
-              <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-                <FlatList
-                  contentContainerStyle={{ flexGrow: 1 }}
-                  data={this.props.events.filter(
-                    (item) => item.endTime > Date.now()
-                  )}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item.id}
-                  showsVerticalScrollIndicator={false}
-                  ItemSeparatorComponent={
-                    <View
-                      style={{
-                        marginBottom: 10,
-                      }}
-                    />
-                  }
-                />
-              </SafeAreaView>
-            )}
-          {this.props.events.filter((item) => item.endTime > Date.now())
-            .length == 0 &&
-            this.props.childLoader == false &&
-            this.sorry()}
-          {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
-          {this.state.showAlert && (
-            <AwesomeAlert
-              show={this.state.showAlert}
-              showProgress={false}
-              title="Oops!"
-              message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showConfirmButton={true}
-              confirmText="Try Again"
-              confirmButtonColor={Colors.errorButton}
-              onConfirmPressed={() => {
-                this.setState({ showAlert: false });
-              }}
-              onDismiss={() => this.setState({ showAlert: false })}
-            />
-          )}
-          {this.state.showPaymentAlert && (
-            <AwesomeAlert
-              show={this.state.showPaymentAlert}
-              showProgress={false}
-              title={this.state.paymentAlertTitle}
-              message={this.state.paymentAlertMessage}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showConfirmButton={true}
-              confirmText="OK"
-              confirmButtonColor={Colors.errorButton}
-              onConfirmPressed={() => {
-                this.setState({
-                  showPaymentAlert: false,
-                  paymentAlertMessage: "Your Payment is Successful!",
-                  paymentAlertTitle: "Success",
-                });
-              }}
-              onDismiss={() => this.setState({ showPaymentAlert: false })}
-            />
-          )}
-          {this.state.belowAgePopUp && (
-            <AwesomeAlert
-              show={this.state.belowAgePopUp}
-              showProgress={false}
-              // title={""}
-              message={
-                "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
-              }
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showConfirmButton={true}
-              confirmText="Share"
-              confirmButtonColor={Colors.primary}
-              onConfirmPressed={() => {
-                this.handleBelowAge(
-                  this.state.itemClicked,
-                  "https://www.gohappyclub.in/session_details/" +
-                    this.state.itemClicked.id
-                );
-                this.setState({ belowAgePopUp: false });
-              }}
-              onDismiss={() => this.setState({ belowAgePopUp: false })}
-            />
-          )}
-          {this.state.nonMemberPopUp && (
-            <AwesomeAlert
-              show={this.state.nonMemberPopUp}
-              showProgress={false}
-              title={"Booking Failed"}
-              message={
-                "You are not a member of GoHappy Club, Join us by clicking below button."
-              }
-              messageStyle={{
-                textAlign: "center",
-                fontFamily: "Poppins-Regular",
-              }}
-              titleStyle={{
-                fontSize: wp(5),
-                fontFamily: "NunitoSans-SemiBold",
-                color: Colors.red,
-              }}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={true}
-              showConfirmButton={true}
-              showCancelButton={false}
-              confirmText="Join Now"
-              confirmButtonColor={Colors.primary}
-              onConfirmPressed={() => {
-                this.props.navigation.navigate("SubscriptionPlans");
-              }}
-              onDismiss={() => this.setState({ nonMemberPopUp: false })}
-            />
-          )}
-          {this.state.lowCoinsPopUp && (
-            <AwesomeAlert
-              show={this.state.lowCoinsPopUp}
-              showProgress={false}
-              title={"Booking Failed"}
-              message={
-                "You don't have enough coins, Please top-up coins to book this session."
-              }
-              messageStyle={{
-                textAlign: "center",
-                fontFamily: "Poppins-Regular",
-                color: Colors.black,
-              }}
-              titleStyle={{
-                fontSize: wp(5),
-                fontFamily: "NunitoSans-SemiBold",
-                color: Colors.red,
-              }}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={true}
-              showConfirmButton={true}
-              showCancelButton={false}
-              confirmText="Top up Now"
-              confirmButtonColor={Colors.primary}
-              onConfirmPressed={() => {
-                this.props.navigation.navigate("TopUpScreen");
-              }}
-              onDismiss={() => this.setState({ lowCoinsPopUp: false })}
-            />
-          )}
-        </View>
-      </>
-    );
-  }
-}
+        {events.filter((item) => item.endTime > Date.now()).length == 0 &&
+          childLoader == false &&
+          sorry()}
+        {/* {wentBack ? 'do something it went back!' : 'it didnt go back'} */}
+        {state.showAlert && (
+          <AwesomeAlert
+            show={state.showAlert}
+            showProgress={false}
+            title="Oops!"
+            message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Try Again"
+            confirmButtonColor={Colors.errorButton}
+            onConfirmPressed={() => {
+              setState({ showAlert: false });
+            }}
+            onDismiss={() => setState({ showAlert: false })}
+          />
+        )}
+        {state.showPaymentAlert && (
+          <AwesomeAlert
+            show={state.showPaymentAlert}
+            showProgress={false}
+            title={state.paymentAlertTitle}
+            message={state.paymentAlertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="OK"
+            confirmButtonColor={Colors.errorButton}
+            onConfirmPressed={() => {
+              setState({
+                showPaymentAlert: false,
+                paymentAlertMessage: "Your Payment is Successful!",
+                paymentAlertTitle: "Success",
+              });
+            }}
+            onDismiss={() => setState({ showPaymentAlert: false })}
+          />
+        )}
+        {state.belowAgePopUp && (
+          <AwesomeAlert
+            show={state.belowAgePopUp}
+            showProgress={false}
+            // title={""}
+            message={
+              "GoHappy Club is an initiative exclusively for aged 50 years and above. You can not join this session but share it with your family members."
+            }
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Share"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              handleBelowAge(
+                state.itemClicked,
+                "https://www.gohappyclub.in/session_details/" +
+                  state.itemClicked.id
+              );
+              setState({ belowAgePopUp: false });
+            }}
+            onDismiss={() => setState({ belowAgePopUp: false })}
+          />
+        )}
+        {state.nonMemberPopUp && (
+          <AwesomeAlert
+            show={state.nonMemberPopUp}
+            showProgress={false}
+            title={"Booking Failed"}
+            message={
+              "You are not a member of GoHappy Club, Join us by clicking below button."
+            }
+            messageStyle={{
+              textAlign: "center",
+              fontFamily: "Poppins-Regular",
+            }}
+            titleStyle={{
+              fontSize: wp(5),
+              fontFamily: "NunitoSans-SemiBold",
+              color: Colors.red,
+            }}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            showCancelButton={false}
+            confirmText="Join Now"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              navigation.navigate("SubscriptionPlans");
+            }}
+            onDismiss={() => setState({ nonMemberPopUp: false })}
+          />
+        )}
+        {state.lowCoinsPopUp && (
+          <AwesomeAlert
+            show={state.lowCoinsPopUp}
+            showProgress={false}
+            title={"Booking Failed"}
+            message={
+              "You don't have enough coins, Please top-up coins to book this session."
+            }
+            messageStyle={{
+              textAlign: "center",
+              fontFamily: "Poppins-Regular",
+              color: Colors.black,
+            }}
+            titleStyle={{
+              fontSize: wp(5),
+              fontFamily: "NunitoSans-SemiBold",
+              color: Colors.red,
+            }}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            showCancelButton={false}
+            confirmText="Top up Now"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              navigation.navigate("TopUpScreen");
+            }}
+            onDismiss={() => setState({ lowCoinsPopUp: false })}
+          />
+        )}
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
@@ -806,13 +811,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  profile: state.profile.profile,
-  membership: state.membership.membership,
-});
-
-const ActionCreators = Object.assign({}, { setProfile, setMembership });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(HomeDashboard);
+export default HomeDashboard;

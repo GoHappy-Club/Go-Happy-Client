@@ -116,6 +116,14 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+        
 
     // // applicationVariants are e.g. debug, release
     // applicationVariants.all { variant ->
@@ -140,6 +148,8 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
     implementation project(':react-native-fs')
+//    implementation group: 'com.google.android.flexbox', name: 'flexbox', version: '3.0.0'
+//    implementation project(':mobilertc')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
