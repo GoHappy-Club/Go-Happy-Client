@@ -61,7 +61,7 @@ class HomeScreen extends Component {
       this.error = true;
       // throw new Error("Error getting order ID");
     }
-  }
+    }
 
   render() {
     if (this.state.error == false) {
@@ -129,7 +129,6 @@ class HomeScreen extends Component {
     if (phoneNumber == "" || phoneNumber == undefined) {
       phoneNumber = this.state.phoneNumber;
     }
-    //console.log('phone is', phoneNumber)
     var id = item.id;
     var url = SERVER_URL + "/event/bookEvent";
     let { membership, actions } = this.props;
@@ -168,7 +167,6 @@ class HomeScreen extends Component {
       })
       .catch((error) => {
         this.error = true;
-        //console.log('error is ',error, id, phoneNumber )
         return false;
       });
   }

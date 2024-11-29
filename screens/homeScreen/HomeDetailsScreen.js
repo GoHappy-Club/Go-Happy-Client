@@ -157,10 +157,6 @@ class HomeDetailsScreen extends Component {
 
               // deduct coins from user's membership data in redux
               let { membership, actions } = this.props;
-              
-            console.log("Memerssi in booking==>",membership);
-            console.log("Memerssi in booking==>",membership.freeTrialActive);
-
               if (
                 membership?.freeTrialActive &&
                 membership?.freeTrialActive != true

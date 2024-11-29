@@ -87,3 +87,5 @@ android/.gradle/*
 /ios/Pods/*
 
 .env
+mobilertc.aar
+mobilertc
