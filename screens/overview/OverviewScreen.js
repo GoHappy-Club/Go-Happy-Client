@@ -1,27 +1,18 @@
 import React, { Component } from "react";
-// import axios from "../../config/CustomAxios.js";
-import HomeDashboard from "../../components/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
-import tambola from "tambola";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
+import { View } from "react-native";
 import { bindActionCreators } from "redux";
-import { Banner, Divider } from "react-native-paper";
-import { Image, TouchableWithoutFeedback, View } from "react-native";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
 import PromotionSection from "../../components/overview/PromotionSection.js";
 import { ScrollView } from "react-native-gesture-handler";
 import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
-import LottieView from "lottie-react-native";
 import Sections from "../../components/overview/Sections.js";
-import { Text } from "react-native";
-import { CopilotStep, walkthroughable } from "react-native-copilot";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const Walkthroughable = walkthroughable(View);
+import GOHLoader from "../../commonComponents/GOHLoader.js";
 
 class OverviewScreen extends Component {
   constructor(props) {
@@ -141,8 +132,14 @@ class OverviewScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <View pointerEvents={this.state.isBlocking ? "none" : "auto"}>
-          <ScrollView ref={this.scrollViewRef}>
+        <View
+          pointerEvents={this.state.isBlocking ? "none" : "auto"}
+          style={{ backgroundColor: "white" }}
+        >
+          <ScrollView
+            ref={this.scrollViewRef}
+            showsVerticalScrollIndicator={false}
+          >
             <TopBanner
               navigation={this.props.navigation}
               posters={this.state.posters}
@@ -177,24 +174,7 @@ class OverviewScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader />
         // </ScrollView>
       );
     }

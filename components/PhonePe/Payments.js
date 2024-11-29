@@ -8,10 +8,10 @@ class Payments extends Component {
     super(props);
     this.state = {
       apiEndPoint: "/pg/v1/pay",
-      merchantId: "GOHAPPYCLUBONLINE",
-      appId: "",
-      checksum:
-        "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
+      merchantId: "PGTESTPAYUAT144",
+      appId: null,
+      // checksum:
+      //   "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
       openEnvironment: false,
       environmentDropDownValue: "PRODUCTION",
       environments: [
@@ -36,73 +36,90 @@ class Payments extends Component {
     amount,
     error_handler,
     paymentType,
-    orderId,
-    tambolaTicket
+    orderId = null,
+    tambolaTicket = null,
+    membershipId,
+    coinsToGive = null
   ) {
     payload = await getPayload(
       phone,
       amount * 100,
       paymentType,
       orderId,
-      tambolaTicket
+      tambolaTicket,
+      membershipId,
+      coinsToGive
     );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
-    const options = {
-      method: "post",
-      url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "X-VERIFY": checksum,
-      },
-      data: {
-        request: requestBody,
-      },
-    };
-    try {
-      const response = await axios.request(options);
-      console.log(response);
-      let shareableLink =
-        response.data.data.instrumentResponse.redirectInfo.url;
-      const shortenLinkApi =
-        "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
-      const shortenLinkApiCall = await axios
-        .request({
-          method: "get",
-          url: shortenLinkApi,
-        })
-        .then((re) => {
-          console.log(re.data);
-          shareableLink = re.data;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-      return shareableLink;
-    } catch (error) {
-      error_handler();
-    }
+    // const options = {
+    //   method: "post",
+    //   url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     "X-VERIFY": checksum,
+    //   },
+    //   data: {
+    //     request: requestBody,
+    //   },
+    // };
+    // try {
+    //   const response = await axios.request(options);
+    //   let shareableLink =
+    //     response.data.data.instrumentResponse.redirectInfo.url;
+    //   const shortenLinkApi =
+    //     "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
+    //   const shortenLinkApiCall = await axios
+    //     .request({
+    //       method: "get",
+    //       url: shortenLinkApi,
+    //     })
+    //     .then((re) => {
+    //       console.log(re.data);
+    //       shareableLink = re.data;
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    //   return shareableLink;
+    // } catch (error) {
+    //   error_handler();
+    // }
   }
-  phonePe(phone, amount, callback, error_handler, paymentType) {
+  phonePe(
+    phone,
+    amount,
+    callback,
+    error_handler,
+    paymentType,
+    orderId = null,
+    tambolaTicket = null,
+    membershipId,
+    coinsToGive = null
+  ) {
     //console.log('phonepe')
+    const _this = this;
     PhonePePaymentSDK.init(
-      this.state.environmentDropDownValue,
-      this.state.merchantId,
-      this.state.appId,
+      "SANDBOX",
+      _this.state.merchantId,
+      _this.state.appId,
       true
     )
-      .then((result) => {
-        this.setState({
-          message: "Message: SDK Initialisation ->" + JSON.stringify(result),
+      .then(async (result) => {
+        console.log("init success", result);
+        _this.setState({
+          message: "Message: SDK Initialisation ->",
         });
-        //console.log(result)
-        this.startTransaction(
+        console.log(_this.state.message);
+        await this.startTransaction(
           phone,
           amount,
           callback,
           error_handler,
-          paymentType
+          paymentType,
+          membershipId,
+          coinsToGive
         );
       })
       .catch((error) => {
@@ -113,15 +130,35 @@ class Payments extends Component {
       });
     //console.log(error)
   }
-  async startTransaction(phone, amount, callback, error_handler, paymentType) {
-    payload = await getPayload(phone, amount * 100, paymentType);
+  async startTransaction(
+    phone,
+    amount,
+    callback,
+    error_handler,
+    paymentType,
+    membershipId,
+    coinsToGive
+  ) {
+    payload = await getPayload(
+      phone,
+      amount * 100,
+      paymentType,
+      null,
+      null,
+      membershipId,
+      coinsToGive
+    );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
+    console.log(checksum);
+    console.log(requestBody);
     PhonePePaymentSDK.startTransaction(
       requestBody,
       checksum,
-      this.state.packageName,
-      this.state.callbackURL
+      // this.state.packageName,
+      // this.state.callbackURL
+      null,
+      "gohappyclub"
     )
       .then((a) => {
         console.log(a);

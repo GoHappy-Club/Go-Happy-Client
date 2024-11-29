@@ -55,12 +55,11 @@ class AdditionalDetails extends Component {
     name,
     age,
     profileImage,
-    plan,
     sessionsAttended,
     selfInviteCode,
     city,
-    emergencyContact
-  ) {
+    emergencyContact,
+  ) {    
     let { profile, actions } = this.props;
 
     profile = {
@@ -73,7 +72,6 @@ class AdditionalDetails extends Component {
       phoneNumber: profile.phoneNumber,
       token: profile.token,
       profileImage: profileImage,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       city: city,
       emergencyContact: emergencyContact,
@@ -83,7 +81,6 @@ class AdditionalDetails extends Component {
   }
 
   updateDetails() {
-    //  || this.state.uiDate=='' || this.state.uiDate==null
     if (
       this.state.name == null ||
       this.state.name == "" ||
@@ -144,12 +141,10 @@ class AdditionalDetails extends Component {
             response.data.name,
             response.data.age,
             response.data.profileImage,
-            response.data.membership,
             response.data.sessionsAttended,
             response.data.selfInviteCode,
             response.data.city,
             response.data.emergencyContact,
-            response.data.age
           );
           this.setState({ loader: true });
 
@@ -158,10 +153,10 @@ class AdditionalDetails extends Component {
           this.props.navigation.navigate("GoHappy Club");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
-            phoneNumber: response.data.phoneNumber,
-            email: response.data.email,
-            age: response.data.age,
-            name: response.data.name,
+            phoneNumber: response.data.user.phoneNumber,
+            email: response.data.user.email,
+            age: response.data.user.age,
+            name: response.data.user.name,
           });
         } else if (response.data == "ERROR") {
           this.setState({ showAlert: true, loader: false });
@@ -172,7 +167,6 @@ class AdditionalDetails extends Component {
         this.setState({ loadingButton: false });
       });
   }
-  setDate() {}
 
   render() {
     var open = this.state.open;

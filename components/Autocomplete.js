@@ -11,7 +11,7 @@ const uuidv4 = () => {
   });
 };
 
-const AutocompleteCityInput = ({ input, setInput }) => {
+const AutocompleteCityInput = ({ input, setInput, color = "white" }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [correlationId] = useState(uuidv4());
 
@@ -71,7 +71,7 @@ const AutocompleteCityInput = ({ input, setInput }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: color }]}
         placeholder="Enter city name"
         value={input}
         onChangeText={handleInputChange}
@@ -80,7 +80,7 @@ const AutocompleteCityInput = ({ input, setInput }) => {
         data={suggestions}
         renderItem={({ item }) => (
           <Text
-            style={styles.suggestion}
+            style={[styles.suggestion, { backgroundColor: color }]}
             onPress={() => {
               setInput(item);
               setSuggestions([]);
@@ -98,14 +98,14 @@ const AutocompleteCityInput = ({ input, setInput }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fffaf1",
+    width:"100%"
+    // backgroundColor: "#fffaf1",
   },
   input: {
     fontSize: 18,
     color: "black",
     marginTop: "5%",
     alignSelf: "center",
-    backgroundColor: "white",
     paddingLeft: 15,
     borderColor: "black",
     borderWidth: 1,
@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "black",
     alignSelf: "center",
-    backgroundColor: "white",
     paddingLeft: 15,
     borderColor: "black",
     borderWidth: 1,
