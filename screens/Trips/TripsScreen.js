@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
+  SafeAreaView,
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
@@ -74,7 +75,7 @@ class TripsScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
           {/* <Text>My Trips</Text> */}
 
           <ImageBackground
@@ -121,13 +122,13 @@ class TripsScreen extends Component {
             </TabView.Item>
           </TabView>
           {/* </ScrollView> */}
-        </View>
+        </SafeAreaView>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader/>
+        <GOHLoader />
         // </ScrollView>
       );
     }
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   coverImage: {
-    marginTop: "-3%",
+    // marginTop: "-3%",
     width: "100%",
     flex: 0.5,
   },

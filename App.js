@@ -11,7 +11,6 @@ import {
   useWindowDimensions,
   Image,
 } from "react-native";
-import Video from "react-native-video";
 import FastImage from "react-native-fast-image";
 import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
@@ -67,6 +66,7 @@ import VoucherScratch from "./components/VoucherScratch.js";
 import FestiveWish from "./components/FestiveWish.js";
 import NewProfile from "./components/NewProfile.js";
 import EditProfile from "./components/EditProfile.js";
+import GOHLoader from "./commonComponents/GOHLoader.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -454,29 +454,6 @@ export default function App() {
       },
     },
   };
-
-  const NotificationContainer = ({
-    imageUrl,
-    maxHeight = 200,
-    maxWidth = 300,
-  }) => {
-    // Use aspect ratio to maintain image proportions
-    const aspectRatio = maxWidth / maxHeight;
-    const containerWidth = width * 0.6; // Adjust container width as needed
-    const imageHeight = containerWidth / aspectRatio;
-
-    return (
-      <View style={{ width: containerWidth, overflow: "hidden" }}>
-        <RenderHtml
-          contentWidth={containerWidth}
-          source={{
-            html: `<img src="${imageUrl}" height="${imageHeight}" width="${containerWidth}" />`,
-          }}
-        />
-      </View>
-    );
-  };
-
   return (
     <>
       {justUpdated && (
@@ -570,7 +547,8 @@ export default function App() {
                       />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -582,7 +560,7 @@ export default function App() {
                           <Text style={styles.backText}>back</Text>
                         </TouchableOpacity>
                       ),
-                      headerShadowVisible: false,
+                      headerShadowVisible: true,
                     })}
                   />
                   <Stack.Screen
@@ -592,7 +570,8 @@ export default function App() {
                       <MembershipScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -615,7 +594,8 @@ export default function App() {
                     )}
                     options={{
                       headerLeft: () => <View />,
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerShadowVisible: false,
                     }}
@@ -627,7 +607,8 @@ export default function App() {
                       <About {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -649,7 +630,8 @@ export default function App() {
                       <MySessionsScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -672,6 +654,8 @@ export default function App() {
                     )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
+                      // headerTransparent:
+                      //   Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -692,7 +676,8 @@ export default function App() {
                       <TripDetailsScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -729,7 +714,8 @@ export default function App() {
                     name="SubscriptionPlans"
                     children={(props) => <SubscriptionScreen />}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -758,7 +744,6 @@ export default function App() {
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
-                      presentation: "modal",
                       animation: "fade_from_bottom",
                     })}
                   />
@@ -766,7 +751,8 @@ export default function App() {
                     name="WalletScreen"
                     children={(props) => <WalletScreen />}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -845,7 +831,8 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -864,7 +851,8 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -883,7 +871,8 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -903,7 +892,8 @@ export default function App() {
                     children={(props) => <FestiveWish />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerTransparent: true,
+                      headerTransparent:
+                        Platform.OS === "android" ? true : false,
                       headerRight: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -925,24 +915,7 @@ export default function App() {
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
       ) : (
-        <Video
-          source={require("./images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader />
       )}
       {isConnected == false && <ErrorScreen recheck={recheck} />}
       <Toast />

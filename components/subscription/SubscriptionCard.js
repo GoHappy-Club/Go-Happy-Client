@@ -157,10 +157,10 @@ const SubscriptionCard = () => {
           width: wp(20),
           height: wp(8),
           position: "absolute",
-          resizeMode: "contain",
           top: 5,
           right: 5,
         }}
+        resizeMode="contain"
       />
       <Text
         style={[

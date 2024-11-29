@@ -12,7 +12,7 @@ const VoucherScratch = () => {
   const { id, color, icon, amount, title, setScratchTrue } = route.params;
 
   useEffect(() => {
-    if (scratchPercent > 55) setScratchTrue(id,amount);
+    if (scratchPercent > 55) setScratchTrue(id, amount);
   }, [scratchPercent]);
 
   return (
@@ -51,7 +51,13 @@ const VoucherScratch = () => {
           </View>
         )}
       </View>
-      <BlurView style={styles.blurView} blurAmount={10} blurType="regular" />
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          zIndex: -10000,
+        }}
+      />
     </>
   );
 };
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   scratch_card: {
+    backgroundColor: "transparent",
     width: wp(80),
     aspectRatio: 1,
     borderRadius: 20,

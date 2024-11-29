@@ -73,8 +73,6 @@ const RewardsCard = ({
         >
           <FastImage
             source={require("../images/scratch_foreground.png")}
-            width={100}
-            height={100}
             style={styles.card}
           />
         </TouchableOpacity>

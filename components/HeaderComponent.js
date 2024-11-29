@@ -231,7 +231,7 @@ const Header = () => {
 
   return (
     <SafeAreaView>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+      <StatusBar barStyle="default" backgroundColor="transparent" />
       <BottomSheet
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}

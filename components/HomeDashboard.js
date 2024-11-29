@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
   Share,
-  Image,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -28,6 +27,7 @@ import SearchBar from "./SearchBar.js";
 import { hp, wp } from "../helpers/common.js";
 import { storeCompletedSession } from "../services/Startup.js";
 import { Share2, Star } from "lucide-react-native";
+import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
 
 class HomeDashboard extends Component {
@@ -378,17 +378,15 @@ class HomeDashboard extends Component {
             width: "100%",
           }}
         >
-          <Image
+          <FastImage
             source={{ uri: item.coverImage }}
-            width={300}
-            height={200}
             style={{
               width: "100%",
               height: wp(55),
               borderRadius: wp(3),
-              resizeMode: "cover",
               // elevation:5
             }}
+            resizeMode="cover"
           />
           <View
             style={{
@@ -502,7 +500,7 @@ class HomeDashboard extends Component {
               }}
             >
               {item.cost}
-              <Image
+              <FastImage
                 source={require("../images/GoCoins.png")}
                 style={{
                   height: 15,
@@ -547,13 +545,13 @@ class HomeDashboard extends Component {
           checkIsParticipantInSameEvent={this.checkIsParticipantInSameEvent}
         />
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
-            <CalendarDays
-              numberOfDays={15}
-              daysInView={3}
-              paginate={true}
-              onDateSelect={(date) => this.changeSelectedDate(date)}
-              width={wp(95)}
-            />
+          <CalendarDays
+            numberOfDays={15}
+            daysInView={3}
+            paginate={true}
+            onDateSelect={(date) => this.changeSelectedDate(date)}
+            width={wp(95)}
+          />
           <Text
             h4
             style={{

@@ -18,12 +18,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../components/Autocomplete.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Autocomplete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/HeaderComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/HeaderComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/HomeDashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/HomeDashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/PhonePe/Payments.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/PhonePe/Payments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Rewards.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Rewards.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/VoucherScratch.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/VoucherScratch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/subscription/SubscriptionCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/subscription/SubscriptionCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../config/CustomAxios.js" beforeDir="false" afterPath="$PROJECT_DIR$/../config/CustomAxios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/Trips/TripsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/Trips/TripsScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +38,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/rakshitsharma/.android/avd/Prod.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/rakshitsharma/.android/avd/Pixel_7_Pro_API_33.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

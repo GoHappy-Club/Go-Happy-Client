@@ -8,10 +8,10 @@ class Payments extends Component {
     super(props);
     this.state = {
       apiEndPoint: "/pg/v1/pay",
-      merchantId: "GOHAPPYCLUBONLINE",
-      appId: "",
-      checksum:
-        "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
+      merchantId: "PGTESTPAYUAT144",
+      appId: null,
+      // checksum:
+      //   "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
       openEnvironment: false,
       environmentDropDownValue: "PRODUCTION",
       environments: [
@@ -52,40 +52,40 @@ class Payments extends Component {
     );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
-    const options = {
-      method: "post",
-      url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "X-VERIFY": checksum,
-      },
-      data: {
-        request: requestBody,
-      },
-    };
-    try {
-      const response = await axios.request(options);
-      let shareableLink =
-        response.data.data.instrumentResponse.redirectInfo.url;
-      const shortenLinkApi =
-        "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
-      const shortenLinkApiCall = await axios
-        .request({
-          method: "get",
-          url: shortenLinkApi,
-        })
-        .then((re) => {
-          console.log(re.data);
-          shareableLink = re.data;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-      return shareableLink;
-    } catch (error) {
-      error_handler();
-    }
+    // const options = {
+    //   method: "post",
+    //   url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+    //   headers: {
+    //     accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     "X-VERIFY": checksum,
+    //   },
+    //   data: {
+    //     request: requestBody,
+    //   },
+    // };
+    // try {
+    //   const response = await axios.request(options);
+    //   let shareableLink =
+    //     response.data.data.instrumentResponse.redirectInfo.url;
+    //   const shortenLinkApi =
+    //     "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
+    //   const shortenLinkApiCall = await axios
+    //     .request({
+    //       method: "get",
+    //       url: shortenLinkApi,
+    //     })
+    //     .then((re) => {
+    //       console.log(re.data);
+    //       shareableLink = re.data;
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    //   return shareableLink;
+    // } catch (error) {
+    //   error_handler();
+    // }
   }
   phonePe(
     phone,
@@ -101,12 +101,13 @@ class Payments extends Component {
     //console.log('phonepe')
     const _this = this;
     PhonePePaymentSDK.init(
-      _this.state.environmentDropDownValue,
+      "SANDBOX",
       _this.state.merchantId,
       _this.state.appId,
       true
     )
       .then(async (result) => {
+        console.log("init success", result);
         _this.setState({
           message: "Message: SDK Initialisation ->",
         });
@@ -150,6 +151,7 @@ class Payments extends Component {
     requestBody = payload.requestBody;
     checksum = payload.checksum;
     console.log(checksum);
+    console.log(requestBody);
     PhonePePaymentSDK.startTransaction(
       requestBody,
       checksum,

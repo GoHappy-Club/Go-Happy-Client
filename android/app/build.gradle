@@ -80,8 +80,8 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 147
-        versionName "2.3.1"
+        versionCode 149
+        versionName "2.3.2"
         vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
