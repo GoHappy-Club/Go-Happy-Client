@@ -46,7 +46,7 @@ const WhatsAppFAB = () => {
     <View style={styles.container}>
       <CopilotStep
         name="whatsapp"
-        order={7}
+        order={8}
         text="Click here to join our WhatsApp Group."
       >
         <Walkthroughable>

@@ -110,37 +110,6 @@ const NewProfile = () => {
     return unsubscribe;
   }, [navigation, retrieveData, openWhatsApp]);
 
-  const handleSelectImage = async () => {
-    try {
-      const options = {
-        width: 350,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-        freeStyleCropEnabled: true,
-      };
-      ImagePicker.openPicker(options)
-        .then((image) => {
-          const base64Image = `data:${image.mime};base64,${image.data}`;
-          var url = SERVER_URL + "/user/updateProfileImage";
-          axios
-            .post(url, {
-              phoneNumber: profile.phoneNumber,
-              profileImage: base64Image,
-            })
-            .then(() => {
-              dispatch(setProfile({ ...profile, profileImage: base64Image }));
-              setState((prevState) => ({ ...prevState, image: base64Image }));
-              AsyncStorage.setItem("profileImage", base64Image);
-            })
-            .catch((error) => {});
-        })
-        .catch((error) => {});
-    } catch (error) {
-      console.log("Error in handleSelectImage:", error);
-    }
-  };
-
   const signout = async () => {
     try {
       await firebase.auth().signOut();
@@ -201,48 +170,56 @@ const NewProfile = () => {
     <>
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.container}>
-          <TouchableOpacity
-            style={{
-              padding: 4,
-              backgroundColor: Colors.white,
-              borderRadius: 4,
-              borderWidth: 1,
-              borderColor: Colors.white,
-              shadowColor: Colors.black,
-              elevation: 10,
-              shadowOffset: { height: 2 },
-              shadowOpacity: 0.3,
-              position: "absolute",
-              top: 15,
-              left: 15,
-            }}
-            onPress={() => navigation.goBack()}
-          >
-            <Text>back</Text>
-          </TouchableOpacity>
-          {(profile.age == null || profile.age >= 50) && (
-            <Pressable
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            marginBottom:hp(2.5)
+          }}>
+            <TouchableOpacity
               style={{
-                position: "absolute",
-                top: 10,
-                right: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
+                padding: 4,
+                backgroundColor: Colors.white,
+                borderRadius: 4,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                shadowColor: Colors.black,
+                elevation: 10,
+                shadowOffset: { height: 2 },
+                shadowOpacity: 0.3,
+                position: "relative",
+                top: 15,
+                left: 15,
               }}
-              onPress={() => Linking.openURL(state.whatsappLink)}
+              onPress={() => navigation.goBack()}
             >
-              <CircleHelp size={22} color={"black"} />
-              <Text
+              <Text>back</Text>
+            </TouchableOpacity>
+            {(profile.age == null || profile.age >= 50) && (
+              <Pressable
                 style={{
-                  fontFamily: "NunitoSans-Regular",
-                  fontSize: wp(4),
+                  position: "relative",
+                  top: 10,
+                  right: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 5,
                 }}
+                onPress={() => Linking.openURL(state.whatsappLink)}
               >
-                Help
-              </Text>
-            </Pressable>
-          )}
+                <CircleHelp size={22} color={"black"} />
+                <Text
+                  style={{
+                    fontFamily: "NunitoSans-Regular",
+                    fontSize: wp(4),
+                  }}
+                >
+                  Help
+                </Text>
+              </Pressable>
+            )}
+          </View>
           <View style={styles.basicDetailsContainer}>
             <FastImage
               style={styles.cover}
@@ -266,13 +243,9 @@ const NewProfile = () => {
                   alignItems: "center",
                   gap: 5,
                   marginTop: 10,
-                  // borderColor: "black",
-                  // borderWidth: 1,
                   borderRadius: 5,
                   padding: 6,
-                  // backgroundColor: "#4CAF50",
                   backgroundColor: Colors.primary,
-                  // backgroundColor: "#6A9C89",
                   alignSelf: "flex-start",
                 }}
                 onPress={() => navigation.navigate("EditProfile")}
@@ -338,59 +311,60 @@ const NewProfile = () => {
               borderRadius: 40,
             }}
           >
-            {membership.membershipType == "Free" && (
-              <View
-                style={{
-                  backgroundColor: Colors.beige,
-                  width: "100%",
-                  paddingHorizontal: 10,
-                  paddingVertical: 20,
-                  borderRadius: 20,
-                  elevation: 4,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: wp(5),
-                }}
-              >
-                <View>
-                  <FastImage
-                    style={{
-                      width: wp(25),
-                      height: wp(12),
-                      resizeMode: "contain",
-                    }}
-                    source={require("../images/wordLogo.png")}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: "NunitoSans-SemiBold",
-                      fontSize: wp(3),
-                    }}
-                  >
-                    Join our exclusive membership
-                  </Text>
-                </View>
-                <Pressable
+            {membership.membershipType == "Free" &&
+              (profile.age == null || profile.age >= 50) && (
+                <View
                   style={{
-                    backgroundColor: Colors.primary,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginTop: 10,
+                    backgroundColor: Colors.beige,
+                    width: "100%",
+                    paddingHorizontal: 10,
+                    paddingVertical: 20,
+                    borderRadius: 20,
+                    elevation: 4,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: wp(5),
                   }}
-                  onPress={() => navigation.navigate("SubscriptionPlans")}
                 >
-                  <Text
+                  <View>
+                    <FastImage
+                      style={{
+                        width: wp(25),
+                        height: wp(12),
+                        resizeMode: "contain",
+                      }}
+                      source={require("../images/wordLogo.png")}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: "NunitoSans-SemiBold",
+                        fontSize: wp(3),
+                      }}
+                    >
+                      Join our exclusive membership
+                    </Text>
+                  </View>
+                  <Pressable
                     style={{
-                      color: Colors.white,
-                      fontFamily: "NunitoSans-SemiBold",
+                      backgroundColor: Colors.primary,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginTop: 10,
                     }}
+                    onPress={() => navigation.navigate("SubscriptionPlans")}
                   >
-                    Join now
-                  </Text>
-                </Pressable>
-              </View>
-            )}
+                    <Text
+                      style={{
+                        color: Colors.white,
+                        fontFamily: "NunitoSans-SemiBold",
+                      }}
+                    >
+                      Join now
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => {
@@ -404,7 +378,6 @@ const NewProfile = () => {
               </View>
             </TouchableOpacity>
 
-            {/* About GoHappy Club */}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => navigation.navigate("About GoHappy Club")}
@@ -415,18 +388,18 @@ const NewProfile = () => {
               </View>
             </TouchableOpacity>
 
-            {/* Join WhatsApp Support Group */}
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => Linking.openURL(state.whatsappLink)}
-            >
-              <FontAwesomeIcon icon={faUsers} size={24} color="#666" />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Join WhatsApp Support Group</Text>
-              </View>
-            </TouchableOpacity>
+            {(profile.age == null || profile.age >= 50) && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => Linking.openURL(state.whatsappLink)}
+              >
+                <FontAwesomeIcon icon={faUsers} size={24} color="#666" />
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>Join WhatsApp Support Group</Text>
+                </View>
+              </TouchableOpacity>
+            )}
 
-            {/* Logout */}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() =>
@@ -478,7 +451,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
     justifyContent: "start",
     alignItems: "center",
-    paddingTop: StatusBar.currentHeight,
   },
   scrollViewContent: {
     paddingBottom: hp(10),

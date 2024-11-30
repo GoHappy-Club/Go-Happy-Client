@@ -61,7 +61,7 @@ class HomeScreen extends Component {
       this.error = true;
       // throw new Error("Error getting order ID");
     }
-    }
+  }
 
   render() {
     if (this.state.error == false) {
@@ -151,7 +151,8 @@ class HomeScreen extends Component {
 
             // deduct coins from user's membership data in redux
             if (
-              membership?.freeTrialActive &&
+              (membership?.freeTrialActive != null ||
+                membership?.freeTrialActive != undefined) &&
               membership.freeTrialActive != true
             ) {
               membership.coins = membership.coins - item.cost;

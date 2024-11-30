@@ -19,7 +19,7 @@ const FestiveWish = () => {
   const ref = useRef();
 
   useEffect(() => {
-    setIsVideo(asset.includes("mp4"));
+    setIsVideo(asset.includes("mp4") || asset.includes("webm"));
   }, [asset]);
 
   const shareMedia = async () => {
@@ -56,24 +56,25 @@ const FestiveWish = () => {
         }}
       />
       <View style={styles.container}>
-        {isVideo ? (
-          <Video
-            source={{ uri: asset }}
-            style={styles.media}
-            resizeMode="cover"
-            controls
-            repeat
-          />
-        ) : (
-          <ViewShot ref={ref}>
+        <ViewShot ref={ref}>
+          {isVideo ? (
+            <Video
+              source={{ uri: asset }}
+              style={styles.media}
+              resizeMode="contain"
+              controls={false}
+              repeat
+              muted={true}
+            />
+          ) : (
             <FastImage
               source={{ uri: asset }}
               style={styles.media}
               resizeMode="cover"
               h
             />
-          </ViewShot>
-        )}
+          )}
+        </ViewShot>
         <Button
           outline
           title={"Share"}

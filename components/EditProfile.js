@@ -38,6 +38,7 @@ const EditProfile = () => {
     emergencyContact: profile.emergencyContact,
     whatsappLink: "",
   });
+  const [updated, setUpdated] = useState(false);
 
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
@@ -92,6 +93,7 @@ const EditProfile = () => {
       AsyncStorage.setItem("email", state.email);
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
       setState((prevState) => ({ ...prevState, loading: false }));
+      setUpdated(true);
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
@@ -177,6 +179,7 @@ const EditProfile = () => {
               setState({ ...state, emergencyContact: text })
             }
             keyboardType="phone-pad"
+            maxLength={10}
           />
           {/* <TouchableOpacity
             style={{
@@ -207,6 +210,11 @@ const EditProfile = () => {
             onPress={updateUser}
             disabled={state.loading}
           />
+          {updated && (
+            <Text style={{ color: "green", textAlign: "center" }}>
+              Updated Successfully
+            </Text>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -136,7 +136,6 @@ class LoginScreen extends Component {
     profileImage,
     token,
     sessionsAttended,
-    // dob,
     dateOfJoining,
     selfInviteCode,
     city,
@@ -460,6 +459,21 @@ class LoginScreen extends Component {
                 String(response.data?.freeTrialActive)
               );
 
+              this.setProfile(
+                response.data.name,
+                response.data.email,
+                response.data.phone,
+                response.data.profileImage,
+                response.data.token,
+                response.data.sessionsAttended,
+                response.data.dateOfJoining,
+                response.data.selfInviteCode,
+                response.data.city,
+                response.data.emergencyContact,
+                response.data.fcmToken,
+                response.data.age
+              );
+
               this.setMembership({
                 membershipType: response.data.membershipType,
                 id: response.data.id,
@@ -519,7 +533,6 @@ class LoginScreen extends Component {
             response.data.profileImage,
             token,
             response.data.sessionsAttended,
-            // response.data.dob,
             response.data.dateOfJoining,
             response.data.selfInviteCode,
             response.data.city,

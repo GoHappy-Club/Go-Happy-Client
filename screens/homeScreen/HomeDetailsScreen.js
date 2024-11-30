@@ -111,11 +111,9 @@ class HomeDetailsScreen extends Component {
           if (response.data) {
             //refund coins to user's membership
             let { membership, actions } = this.props;
-            console.log("Memerssi in acncel==>",membership);
-            console.log("Memerssi in acncel==>",membership.freeTrialActive);
-            
             if (
-              membership?.freeTrialActive &&
+              (membership?.freeTrialActive != null ||
+                membership?.freeTrialActive != undefined) &&
               membership.freeTrialActive != true
             ) {
               membership.coins = membership.coins + this.state.event.cost;
@@ -158,8 +156,9 @@ class HomeDetailsScreen extends Component {
               // deduct coins from user's membership data in redux
               let { membership, actions } = this.props;
               if (
-                membership?.freeTrialActive &&
-                membership?.freeTrialActive != true
+                (membership?.freeTrialActive != null ||
+                  membership?.freeTrialActive != undefined) &&
+                membership.freeTrialActive != true
               ) {
                 membership.coins =
                   membership.coins -
