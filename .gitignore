@@ -85,3 +85,5 @@ android/.gradle/*
 .env
 .vscode/settings.json
 /ios/Pods/*
+
+.env
