@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Wallet from "../../components/subscription/Wallet";
 import { useSelector } from "react-redux";
-import Video from "react-native-video";
 import GOHLoader from "../../commonComponents/GOHLoader";
 
 const WalletScreen = () => {
@@ -32,13 +31,11 @@ const WalletScreen = () => {
   }, [membership]);
   return (
     <>
-      {loading && (
-        <GOHLoader/>
-      )}
+      {loading && <GOHLoader />}
       {!loading && (
-        <View>
-          <Wallet transactions={transactions}/>
-        </View>
+        <SafeAreaView>
+          <Wallet transactions={transactions} />
+        </SafeAreaView>
       )}
     </>
   );

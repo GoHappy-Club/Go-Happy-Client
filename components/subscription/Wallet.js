@@ -24,19 +24,16 @@ const Wallet = ({ transactions }) => {
   const navigation = useNavigation();
 
   return (
-    <>
-      <ScrollView
-        style={{
-          backgroundColor: Colors.white,
-          height: hp(100),
-        }}
-        contentContainerStyle={{
-          paddingTop: hp(8),
-          alignItems: "center",
-          minHeight: "100%",
-          // flex:1
-        }}
-      >
+    <SafeAreaView
+      style={{
+        paddingTop: hp(6),
+        alignItems: "center",
+        minHeight: "100%",
+        flex: 1,
+        backgroundColor: Colors.white,
+      }}
+    >
+      <ScrollView>
         <View
           style={{
             paddingHorizontal: wp(7),
@@ -134,7 +131,7 @@ const Wallet = ({ transactions }) => {
           onDismiss={() => setNonMemberPopUp(false)}
         />
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

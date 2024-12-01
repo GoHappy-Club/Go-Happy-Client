@@ -187,9 +187,7 @@ const FeatureItem = ({ title, highlight, textColor }) => {
       style={styles.featureRow}
     >
       <Star color={highlight ? "#FFD700" : textColor} size={16} />
-      <Text style={[styles.featureTitle, { color: textColor }]}>
-        {title}
-      </Text>
+      <Text style={[styles.featureTitle, { color: textColor }]}>{title}</Text>
       {/* <Text
         style={[
           styles.featureValue,
@@ -632,7 +630,7 @@ const styles = StyleSheet.create({
     fontSize: wp(8),
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 20,
+    // marginTop: 20,
     color: "#1a1a1a",
     fontFamily: "NunitoSans-SemiBold",
   },
@@ -644,7 +642,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: wp(10),
-    paddingVertical: 10,
+    // paddingVertical: 10,
   },
   card: {
     width: wp(70),

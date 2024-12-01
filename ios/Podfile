@@ -34,13 +34,7 @@ end
 
 target 'GoHappyClient' do
   config = use_native_modules!
-  use_modular_headers!
-  # pod 'Firebase', :modular_headers => true
-  # pod 'FirebaseCoreInternal', :modular_headers => true
-  
-  # pod 'GoogleUtilities', :modular_headers => true
-  # pod 'FirebaseCore', :modular_headers => true
-  # pod 'FirebaseSessions', :modular_headers => true
+  # use_modular_headers!
   use_frameworks! :linkage => :static
   $RNFirebaseAsStaticFramework = true
   

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import FastImage from "react-native-fast-image";
 import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
 import debounce from "lodash.debounce";
 import { OLA_API_KEY } from "@env";
@@ -20,7 +21,7 @@ const AutocompleteCityInput = ({ input, setInput, color = "white" }) => {
       try {
         const requestId = uuidv4();
         const response = await fetch(
-          `https://api.olamaps.io/places/v1/autocomplete?input=${text}&api_key=${OLA_API_KEY}`,
+          `https://api.olamaps.io/places/v1/autocomplete?input=${text}&api_key=98HE0vBmKMbRFO9jhasJqFd1rEWZfiFIUjqe09mN`,
           {
             headers: {
               "X-Request-Id": requestId,
@@ -98,7 +99,7 @@ const AutocompleteCityInput = ({ input, setInput, color = "white" }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width:"100%"
+    width: "100%",
     // backgroundColor: "#fffaf1",
   },
   input: {

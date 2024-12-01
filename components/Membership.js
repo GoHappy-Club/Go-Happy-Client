@@ -230,39 +230,6 @@ The Link will Expire in 20 Minutes.`;
           flex: 1,
         }}
       >
-        {/*--------------------------------------OLD UI------------------------------------------------ */}
-
-        {/* <ScrollView style = {{
-					backgroundColor: 'white',height:'100%'
-				}}
-				contentContainerStyle={{justifyContent: 'center',
-				alignItems: 'center'}}
-				>
-
-					<Text h1 style={{fontWeight:'bold',marginTop:'25%'}}>Choose your plan</Text>
-					<View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
-						{
-						this.state.plans.planDetails.map((item, key) =>
-							(
-								this.renderPlans(item,key)
-							))
-					}</View>
-
-					<View style={{marginTop:20,width:Dimensions.get('window').width*0.9}}>
-						<TouchableOpacity  disabled={this.state.plans.selectedItem===''}
-						 style={this.state.plans.selectedItem==='' && styles.checkoutButtonDisabled || styles.checkoutButtonEnabled}
-						 onPress={this.phonePe.bind(this)}>
-							<View>
-								<Text style={styles.optionList}>Proceed to Checkout</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-
-
-
-				</ScrollView> */}
-
-        {/* ------------------------------------------------------------------------------------ */}
         <ScrollView
           style={{
             backgroundColor: Colors.white,

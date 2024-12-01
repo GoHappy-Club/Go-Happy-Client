@@ -8,7 +8,7 @@ class Payments extends Component {
     super(props);
     this.state = {
       apiEndPoint: "/pg/v1/pay",
-      merchantId: "PGTESTPAYUAT144",
+      merchantId: "GOHAPPYCLUBONLINE",
       appId: null,
       // checksum:
       //   "b9e20ef4d7e972fad89ff89bb93feab4c1f28d4f0db2149a25be8493a2a1a2d2###1",
@@ -101,7 +101,7 @@ class Payments extends Component {
     //console.log('phonepe')
     const _this = this;
     PhonePePaymentSDK.init(
-      "SANDBOX",
+      _this.state.environmentDropDownValue,
       _this.state.merchantId,
       _this.state.appId,
       true

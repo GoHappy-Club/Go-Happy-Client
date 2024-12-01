@@ -18,9 +18,7 @@ import {
   parse,
   addHours,
 } from "date-fns";
-import { Avatar, Card as Cd, Title } from "react-native-paper";
 import { Dimensions } from "react-native";
-import CalendarDays from "react-native-calendar-slider-carousel";
 import { MaterialIndicator } from "react-native-indicators";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -579,7 +577,7 @@ const HomeDashboard = ({
             borderRadius: 0,
             marginHorizontal: 2,
           }}
-          numDaysInWeek={5}
+          numDaysInWeek={7}
           dayComponent={({ date, selected, onDateSelected }) => (
             <TouchableOpacity
               onPress={() => onDateSelected && onDateSelected(date)}
@@ -606,10 +604,9 @@ const HomeDashboard = ({
         />
 
         <Text
-          h4
           style={{
+            fontSize: 18,
             marginLeft: 30,
-            marginTop: 20,
             marginBottom: 15,
             color: Colors.greyishText,
           }}

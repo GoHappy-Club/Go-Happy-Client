@@ -73,7 +73,6 @@ const SubscriptionScreen = () => {
           style={{
             flex: 1,
             backgroundColor: Colors.grey.f0,
-            paddingTop: hp(2),
           }}
         >
           {/* <RenderHeader /> */}

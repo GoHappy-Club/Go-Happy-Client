@@ -460,7 +460,7 @@ const SessionDetails = ({
   const item = event;
   const tambolaHtml = tambolaParsing(item);
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: Colors.white,
         flex: 1,
@@ -782,7 +782,7 @@ const SessionDetails = ({
                 )}
               </View>
             )}
-            <View
+            <SafeAreaView
               style={{
                 width: Platform.OS == "ios" ? wp(100) : "",
                 flexDirection:
@@ -797,7 +797,7 @@ const SessionDetails = ({
                     : Platform.OS == "ios"
                     ? "center"
                     : "",
-                gap: WIDTH * 0.02,
+                // gap: WIDTH * 0.02,
               }}
             >
               {state.title == "Cancel Your Booking" && (
@@ -814,8 +814,8 @@ const SessionDetails = ({
                 outline
                 buttonStyle={{
                   backgroundColor: Colors.primary,
-                  minWidth: WIDTH * 0.55,
-                  width: "100%",
+                  // minWidth: WIDTH * 0.55,
+                  // width: "100%",
                   minHeight: HEIGHT * 0.05,
                 }}
                 title={getTitle()}
@@ -838,7 +838,7 @@ const SessionDetails = ({
                   }
                 }}
               ></Button>
-            </View>
+            </SafeAreaView>
           </SafeAreaView>
         }
       />
@@ -1063,7 +1063,7 @@ const SessionDetails = ({
           }
         />
       )}
-    </View>
+    </SafeAreaView>
   );
   // }
 };

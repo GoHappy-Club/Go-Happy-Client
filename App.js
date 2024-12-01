@@ -25,7 +25,7 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_android/config.json";
+import * as configData from "./config/local_ios/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -391,6 +391,7 @@ export default function App() {
   const recheck = async () => {
     try {
       const response = await axios.get(SERVER_URL);
+      console.log(response);
       if (response.status == 200) {
         setIsConnected(true);
       } else {
@@ -541,8 +542,7 @@ export default function App() {
                       />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -554,7 +554,7 @@ export default function App() {
                           <Text style={styles.backText}>back</Text>
                         </TouchableOpacity>
                       ),
-                      headerShadowVisible: true,
+                      // headerShadowVisible: true,
                     })}
                   />
                   <Stack.Screen
