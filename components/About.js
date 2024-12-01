@@ -52,13 +52,11 @@ export default class About extends Component {
             </Text>
             <FastImage
               source={require("../images/about.jpeg")}
-              width={300}
-              height={300}
               style={{
                 width: wp(95),
                 height: 300,
-                resizeMode: "contain",
               }}
+              resizeMode="contain"
             />
           </View>
           <Text

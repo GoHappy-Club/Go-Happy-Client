@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ScrollView,
+  Pressable,
+  SafeAreaView,
+} from "react-native";
 
 // import axios from "../config/CustomAxios.js";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -12,6 +20,11 @@ import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AutocompleteCityInput from "./Autocomplete.js";
 import { Colors } from "../assets/colors/color.js";
+import FastImage from "react-native-fast-image";
+import { Calendar, Camera } from "lucide-react-native";
+import { hp, wp } from "../helpers/common.js";
+import DateTimePicker from "react-native-ui-datepicker";
+import dayjs from "dayjs";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -22,18 +35,22 @@ class AdditionalDetails extends Component {
       city: props.route.params.city,
       phoneNumber: props.route.params.phoneNumber,
       emergencyContact: props.route.params.emergencyContact,
+      profileImage: props.route.params.profileImage,
       loadingButton: false,
       date: new Date(),
       open: false,
       uiDate: "",
       showAlert: false,
       alertMessage: "",
-      // dob: props.route.params.dob,
+      dob: "1-12-1974",
       age: props.route.params.age,
     };
 
     if (this.pending() == false) {
-      this.props.route.params.navigation.replace("GoHappy Club");
+      this.props.route.params.navigation.reset({
+        index: 0,
+        routes: [{ name: "GoHappy Club" }],
+      });
     }
     // this.pending();
   }
@@ -58,8 +75,8 @@ class AdditionalDetails extends Component {
     sessionsAttended,
     selfInviteCode,
     city,
-    emergencyContact,
-  ) {    
+    emergencyContact
+  ) {
     let { profile, actions } = this.props;
 
     profile = {
@@ -144,7 +161,7 @@ class AdditionalDetails extends Component {
             response.data.sessionsAttended,
             response.data.selfInviteCode,
             response.data.city,
-            response.data.emergencyContact,
+            response.data.emergencyContact
           );
           this.setState({ loader: true });
 
@@ -168,97 +185,153 @@ class AdditionalDetails extends Component {
       });
   }
 
-  render() {
-    var open = this.state.open;
-    return (
-      <ScrollView style={styles.container1}>
-        <Text style={styles.title}>Add Information</Text>
+  parseDate = (date) => {
+    const splittedDate = date.split("-");
+    const month = splittedDate[0];
+    const day = splittedDate[1];
+    const year = splittedDate[2];
+    const d = new Date(year, month - 1, day);
+    const finalDate = dayjs(d);
+    return finalDate;
+  };
 
-        <View style={styles.inputs}>
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Name *"
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.name}
-            onChangeText={(text) => this.setState({ name: text })}
-          />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            keyboardType="numeric"
-            placeholder="Age *"
-            maxLength={2}
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.age}
-            onChangeText={(text) => this.setState({ age: text })}
-          />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Email"
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.email}
-            onChangeText={(text) => this.setState({ email: text })}
-          />
-          <AutocompleteCityInput input={this.state.city} setInput={(city)=>this.setState({city:city})} />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Emergency Contact Number"
-            placeholderTextColor="#000"
-            value={this.state.emergencyContact}
-            keyboardType="phone-pad"
-            onChangeText={(text) => this.setState({ emergencyContact: text })}
-          />
-          <Text
+  getFormattedDate = (dayjsObject) => {
+    const finalDate = `${dayjsObject.get("date")}-${
+      dayjsObject.get("month") + 1
+    }-${dayjsObject.get("year")}`;
+    return finalDate;
+  };
+
+  render() {
+    return (
+      <SafeAreaView style={styles.mainContainer}>
+        <Pressable
+          style={{
+            display: this.state.open ? "flex" : "none",
+            position: "absolute",
+            backgroundColor: "#000000a0",
+            height: hp(100),
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000000,
+            width: wp(100),
+          }}
+          onPress={() => setOpen(false)}
+        >
+          <View
             style={{
-              fontSize: 14,
-              color: Colors.black,
-              marginTop: "5%",
-              alignSelf: "center",
-              alignContent: "center",
-              textAlign: "center",
-              paddingLeft: 15,
+              backgroundColor: "white",
+              zIndex: 10000,
+              width: wp(90),
+              borderRadius: 10,
+              padding: 20,
             }}
           >
-            GoHappy Club: An Initiative exclusively for aged 50 years and above.
-          </Text>
-          {/* <Pressable onPress={() => this.setState({open:true})} >
-						<View pointerEvents="none">
-							<TextInput style = {styles.input}
-								underlineColorAndroid = {Colors.transparent}
-								placeholder = "Date Of Birth *"
-								editable={false}
-								placeholderTextColor = "#000"
-								autoCapitalize = "none"
-								value={this.state.date}
+            <DateTimePicker
+              timePicker={false}
+              date={this.parseDate(this.state.dob)}
+              onChange={(params) => {
+                const finalDate = `${params.date.get("date")}-${
+                  params.date.get("month") + 1
+                }-${params.date.get("year")}`;
 
-								// onPress={() => this.setState({open:true})}
-							/>
-						</View>
-					</Pressable> */}
-          {/* <DateTimePickerModal
-						isVisible={open}
-						mode="date"
-						onConfirm={(date) => {
-							this.setState({open:false})
-							//this.setState({date:date})
+                // setState((prev) => ({ ...prev, dob: finalDate }));
+                this.setState({ dob: finalDate });
+              }}
+              maxDate={dayjs().subtract(49, "year")}
+            />
+          </View>
+        </Pressable>
+        <Text style={styles.title}>Add Information</Text>
 
-							var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
-							this.setState({date:uiDate})
-							this.setState({uiDate:uiDate})}}
-						onCancel={() => this.setState({open:false})}
-					/> */}
+        <View style={styles.basicDetailsContainer}>
+          <View style={styles.coverContainer}>
+            <FastImage
+              style={styles.cover}
+              resizeMode="cover"
+              source={{
+                uri: this.state.profileImage,
+              }}
+            />
+            <Pressable style={styles.cameraContainer} onPress={() => {}}>
+              <View
+                style={{
+                  backgroundColor: "#00000080",
+                  padding: 8,
+                  borderRadius: 300,
+                }}
+              >
+                <Camera size={24} color={"#666"} fill={"white"} />
+              </View>
+            </Pressable>
+          </View>
         </View>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Name : </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={this.state.name}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email : </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={this.state.email}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Emergency Contact : </Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.emergencyContact}
+              placeholder="Emergency Contact"
+              keyboardType="phone-pad"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Date of Birth : </Text>
+            <Pressable
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+                borderBottomWidth: 2,
+                borderBottomColor: "#ccc",
+              }}
+              onPress={() => this.setState({ open: true })}
+            >
+              <Text style={[styles.input, { borderBottomWidth: 0 }]}>
+                {this.state.dob}
+              </Text>
+              <Calendar size={24} color={"black"} />
+            </Pressable>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>this.state : </Text>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>District : </Text>
+          </View>
+        </ScrollView>
         <Button
           outline
           title="Save"
           loading={this.state.loadingButton}
-          buttonStyle={{ width: "50%", alignSelf: "center", marginTop: "5%" }}
+          buttonStyle={styles.button}
           ViewComponent={LinearGradient}
           linearGradientProps={{
             colors: Colors.linearGradient,
@@ -268,11 +341,6 @@ class AdditionalDetails extends Component {
           }}
           onPress={this.updateDetails.bind(this)}
         />
-        {/* <Button  buttonStyle = {styles.dateInput}
-					// buttonStyle={{backgroundColor:'white'}}
-					titleStyle={{color:Colors.primary}}
-					title="Set Date of Birth"
-					onPress={() => this.setState({open:true})} /> */}
 
         <AwesomeAlert
           show={this.state.showAlert}
@@ -288,12 +356,90 @@ class AdditionalDetails extends Component {
             this.setState({ showAlert: false });
           }}
         />
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: Colors.beige,
+  },
+  container: {
+    justifyContent: "flex-start",
+    paddingHorizontal: wp(5),
+    paddingTop: hp(7),
+  },
+  cover: {
+    width: wp(50),
+    aspectRatio: 1,
+    borderRadius: wp(30),
+  },
+  coverContainer: {
+    aspectRatio: 1,
+    borderWidth: 4,
+    borderColor: "black",
+    borderRadius: wp(30),
+    padding: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  cameraContainer: {
+    position: "absolute",
+    bottom: -20,
+    alignSelf: "center",
+    backgroundColor: Colors.beige,
+    padding: 4,
+    borderRadius: wp(10),
+  },
+  basicDetailsContainer: {
+    width: "100%",
+    paddingHorizontal: wp(10),
+    flexDirection: "column",
+    alignItems: "center",
+    gap: wp(8),
+  },
+  profileName: {
+    fontSize: wp(7),
+    fontFamily: "Montserrat-SemiBold",
+  },
+  phoneNumber: {
+    fontSize: wp(4),
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.8,
+  },
+  profileInfo: {
+    alignItems: "center",
+    marginVertical: hp(2),
+  },
+  inputContainer: {
+    marginBottom: 20,
+    width: wp(90),
+  },
+  label: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+  },
+  input: {
+    fontSize: wp(5.5),
+    fontFamily: "Montserrat-SemiBold",
+    borderBottomWidth: 2,
+    borderBottomColor: "#ccc",
+    paddingVertical: 8,
+    color: "#000",
+  },
+  autocompleteContainer: {
+    borderWidth: 0,
+  },
+  button: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    minWidth: 100,
+    backgroundColor: Colors.primary,
+  },
   title: {
     fontSize: 25,
     fontWeight: "bold",
@@ -305,18 +451,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.grey.f,
   },
-  input: {
-    fontSize: 18,
-    color: Colors.black,
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: Colors.white,
-    paddingLeft: 15,
-    borderColor: Colors.black,
-    borderWidth: 1,
-    borderRadius: 5,
-    width: "70%",
-  },
+  // input: {
+  //   fontSize: 18,
+  //   color: Colors.black,
+  //   marginTop: "5%",
+  //   alignSelf: "center",
+  //   backgroundColor: Colors.white,
+  //   paddingLeft: 15,
+  //   borderColor: Colors.black,
+  //   borderWidth: 1,
+  //   borderRadius: 5,
+  //   width: "70%",
+  // },
   inputs: {
     marginTop: "1%",
     flex: 1,

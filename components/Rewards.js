@@ -17,6 +17,7 @@ import Animated from "react-native-reanimated";
 import { format, fromUnixTime } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { setMembership } from "../redux/actions/counts";
+import FastImage from "react-native-fast-image";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -94,7 +95,18 @@ const RewardsCard = ({
               color="black"
               style={styles.icon}
             />
-            {amount && <Text style={styles.amount}>₹{amount}</Text>}
+            {amount && (
+              <Text style={styles.amount}>
+                <FastImage
+                  source={require("../images/GoCoins.png")}
+                  style={{
+                    height: wp(4.5),
+                    width: wp(4.5),
+                  }}
+                />
+                {amount}
+              </Text>
+            )}
             {title && <Text style={styles.cardTitle}>{title}</Text>}
           </View>
         </View>

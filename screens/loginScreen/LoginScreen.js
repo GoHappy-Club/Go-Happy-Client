@@ -379,6 +379,7 @@ class LoginScreen extends Component {
           const profileImage = await AsyncStorage.getItem("profileImage");
           const token = await AsyncStorage.getItem("token");
           const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+          const dob = await AsyncStorage.getItem("dob")
           const sessionsAttended = await AsyncStorage.getItem(
             "sessionsAttended"
           );
@@ -474,6 +475,30 @@ class LoginScreen extends Component {
                 response.data.age
               );
 
+              AsyncStorage.setItem("email", response.data.email);
+              AsyncStorage.setItem("phone", response.data.phone);
+              AsyncStorage.setItem("profileImage", response.data.profileImage);
+              AsyncStorage.setItem("token", response.data.token);
+              AsyncStorage.setItem(
+                "sessionsAttended",
+                response.data.sessionsAttended
+              );
+              AsyncStorage.setItem(
+                "dateOfJoining",
+                response.data.dateOfJoining
+              );
+              AsyncStorage.setItem(
+                "selfInviteCode",
+                response.data.selfInviteCode
+              );
+              AsyncStorage.setItem("city", response.data.city);
+              AsyncStorage.setItem(
+                "emergencyContact",
+                response.data.emergencyContact
+              );
+              AsyncStorage.setItem("fcmToken", response.data.fcmToken);
+              AsyncStorage.setItem("age", response.data.age);
+              AsyncStorage.setItem("dob", response.data.dob);
               this.setMembership({
                 membershipType: response.data.membershipType,
                 id: response.data.id,
@@ -495,6 +520,8 @@ class LoginScreen extends Component {
             dateOfJoining: dateOfJoining,
             city: city,
             emergencyContact: emergencyContact,
+            profileImage: profileImage,
+            dob: dob,
           });
           return;
         }
@@ -620,7 +647,7 @@ class LoginScreen extends Component {
               state: this.state.state,
               city: response.data.city,
               emergencyContact: response.data.emergencyContact,
-              // dob: response.data.dob,
+              dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
             return;

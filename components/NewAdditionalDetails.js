@@ -32,7 +32,7 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 
-const EditProfile = () => {
+const NewAdditionalDetails = ({ route }) => {
   const profile = useSelector((state) => state.profile.profile);
 
   const parseDate = (date) => {
@@ -171,35 +171,7 @@ const EditProfile = () => {
         </View>
       </Pressable>
       <StatusBar barStyle="dark-content" />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-          marginBottom: hp(2.5),
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            padding: 4,
-            backgroundColor: Colors.white,
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor: Colors.white,
-            shadowColor: Colors.black,
-            elevation: 10,
-            shadowOffset: { height: 2 },
-            shadowOpacity: 0.3,
-            position: "relative",
-            top: 15,
-            left: 15,
-          }}
-          onPress={() => navigation.goBack()}
-        >
-          <Text>back</Text>
-        </TouchableOpacity>
-      </View>
+
       <View style={styles.basicDetailsContainer}>
         <View style={styles.coverContainer}>
           <FastImage
@@ -220,17 +192,6 @@ const EditProfile = () => {
               <Camera size={24} color={"#666"} fill={"white"} />
             </View>
           </Pressable>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.profileName}>{formatName(profile.name)}</Text>
-          <Text style={styles.phoneNumber}>
-            {formatPhoneNumber(profile.phoneNumber)}
-          </Text>
         </View>
       </View>
       <ScrollView
@@ -306,15 +267,15 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default NewAdditionalDetails;
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Colors.beige,
+    paddingTop: hp(5),
   },
   container: {
-    // alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: wp(5),
     paddingTop: hp(7),
