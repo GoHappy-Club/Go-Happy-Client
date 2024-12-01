@@ -35,6 +35,8 @@ import { Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
 import { useZoom } from "../helpers/zoomUtils.js";
+import CalendarStrip from "react-native-calendar-strip";
+import dayjs from "dayjs";
 
 const HomeDashboard = ({
   events,
@@ -139,12 +141,7 @@ const HomeDashboard = ({
 
   const changeSelectedDate = (date) => {
     const parsedSelect = parseISO(date);
-
     parsedSelect.setHours(0, 0, 0, 0);
-    // Add 5 hours and 30 minutes to adjust to IST (GMT+5:30)
-    // const istDate = addHours(parsedSelect, 5.5);
-    // console.log(istDate);
-
     const select = format(parsedSelect, "EEE MMM dd yyyy");
     const tempDate = getTime(parsedSelect);
 
@@ -557,13 +554,57 @@ const HomeDashboard = ({
         checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
       />
       <View style={{ flex: 1, backgroundColor: Colors.white }}>
-        <CalendarDays
-          numberOfDays={15}
-          daysInView={3}
-          paginate={true}
-          onDateSelect={(date) => changeSelectedDate(date)}
-          width={wp(95)}
+        <CalendarStrip
+          calendarAnimation={{ type: "sequence", duration: 10 }}
+          daySelectionAnimation={{
+            type: "background",
+            duration: 200,
+            borderWidth: 2,
+            borderHighlightColor: "#FF5733",
+          }}
+          minDate={new Date()}
+          maxDate={dayjs().add(8, "days").toDate()}
+          style={calendarStyles.calendarStrip}
+          calendarHeaderStyle={calendarStyles.headerStyle}
+          selectedDate={new Date()}
+          calendarColor={"#fff"}
+          dateNumberStyle={calendarStyles.dateNumberStyle}
+          dateNameStyle={calendarStyles.dateNameStyle}
+          highlightDateNumberStyle={calendarStyles.highlightDateNumberStyle}
+          highlightDateNameStyle={calendarStyles.highlightDateNameStyle}
+          disabledDateNameStyle={calendarStyles.disabledDateNameStyle}
+          disabledDateNumberStyle={calendarStyles.disabledDateNumberStyle}
+          showDayName={false}
+          dayContainerStyle={{
+            borderRadius: 0,
+            marginHorizontal: 2,
+          }}
+          numDaysInWeek={5}
+          dayComponent={({ date, selected, onDateSelected }) => (
+            <TouchableOpacity
+              onPress={() => onDateSelected && onDateSelected(date)}
+              style={{
+                alignItems: "center",
+                padding: 5,
+                backgroundColor: selected ? "#FF5733" : "transparent",
+                borderRadius: 5,
+              }}
+            >
+              <Text
+                style={{ fontSize: 12, color: selected ? "white" : "black" }}
+              >
+                {date.format("MMM")}
+              </Text>
+              <Text
+                style={{ fontSize: 16, color: selected ? "white" : "black" }}
+              >
+                {date.format("DD")}
+              </Text>
+            </TouchableOpacity>
+          )}
+          onDateSelected={(date) => changeSelectedDate(date.toISOString())}
         />
+
         <Text
           h4
           style={{
@@ -724,6 +765,50 @@ const HomeDashboard = ({
     </>
   );
 };
+
+const calendarStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F5F5F5",
+  },
+  calendarStrip: {
+    height: hp(10),
+  },
+  headerStyle: {
+    color: "#333",
+    fontSize: 18,
+    display: "none",
+  },
+  dateNumberStyle: {
+    color: "#333",
+    fontSize: 16,
+    backgroundColor: "red",
+    padding: 5,
+    width: wp(10),
+    height: wp(10),
+  },
+  dateNameStyle: {
+    color: "#666",
+    fontSize: 14,
+  },
+  highlightDateNumberStyle: {
+    color: "blue",
+    fontWeight: "bold",
+    fontSize: 16,
+    backgroundColor: "red",
+    padding: 10,
+  },
+  disabledDateNameStyle: {
+    color: "#CCC",
+  },
+  disabledDateNumberStyle: {
+    color: "#CCC",
+  },
+  iconContainer: {
+    flex: 0.1,
+  },
+});
 
 const styles = StyleSheet.create({
   item: {
