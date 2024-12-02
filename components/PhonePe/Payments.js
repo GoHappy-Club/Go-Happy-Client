@@ -108,11 +108,11 @@ class Payments extends Component {
     )
       .then(async (result) => {
         console.log("init success", result);
-        _this.setState({
-          message: "Message: SDK Initialisation ->",
-        });
+        // _this.setState({
+        //   message: "Message: SDK Initialisation ->",
+        // });
         console.log(_this.state.message);
-        await this.startTransaction(
+        await _this.startTransaction(
           phone,
           amount,
           callback,
