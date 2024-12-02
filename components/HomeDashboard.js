@@ -245,8 +245,8 @@ const HomeDashboard = ({
 
   const sorry = () => (
     <Text
-      h4
       style={{
+        fontSize: 18,
         height: "100%",
         marginTop: "20%",
         alignSelf: "center",

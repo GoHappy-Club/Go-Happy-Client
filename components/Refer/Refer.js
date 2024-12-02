@@ -6,12 +6,12 @@ import {
   ScrollView,
   Share,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
   View,
   BackHandler,
   useWindowDimensions,
 } from "react-native";
+import Toast from "react-native-simple-toast";
 import { Text } from "react-native-elements";
 import BottomSheet, {
   BottomSheetScrollView,
@@ -100,9 +100,7 @@ class Refer extends Component {
   }
   copyToClipboard = () => {
     Clipboard.setString(this.state.referralLink);
-    if (Platform.OS == "android") {
-      ToastAndroid.show("Referral link copied", ToastAndroid.LONG);
-    }
+    Toast.show("Referral link copied", Toast.LONG);
   };
   trimContent(text, cut) {
     if (text.length < cut) {

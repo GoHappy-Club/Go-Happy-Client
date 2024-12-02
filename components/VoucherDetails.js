@@ -3,11 +3,11 @@ import {
   View,
   StyleSheet,
   Text,
-  ToastAndroid,
   Platform,
   Pressable,
   ScrollView,
 } from "react-native";
+import Toast from "react-native-simple-toast";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Animated, {
   FadeInDown,
@@ -66,9 +66,7 @@ const VoucherDetails = () => {
 
   const copyToClipboard = () => {
     Clipboard.setString(code);
-    if (Platform.OS == "android") {
-      ToastAndroid.show("Voucher code copied", ToastAndroid.LONG);
-    }
+    Toast.show("Voucher code copied", Toast.LONG);
   };
 
   return (

@@ -18,6 +18,7 @@ import { format, fromUnixTime } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { setMembership } from "../redux/actions/counts";
 import FastImage from "react-native-fast-image";
+import GOHLoader from "../commonComponents/GOHLoader";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -380,13 +381,17 @@ const Rewards = ({ rewards, vouchers }) => {
           animationType="spring"
         >
           <TabView.Item style={{ width: "100%", height: "100%" }}>
-            <CoinbackRewards
-              rewards={rewards}
-              navigation={navigation}
-              profile={profile}
-              dispatch={dispatch}
-              membership={membership}
-            />
+            {rewards.length > 0 ? (
+              <CoinbackRewards
+                rewards={rewards}
+                navigation={navigation}
+                profile={profile}
+                dispatch={dispatch}
+                membership={membership}
+              />
+            ) : (
+              <GOHLoader />
+            )}
           </TabView.Item>
           <TabView.Item style={{ width: "100%", height: "100%" }}>
             <Vouchers vouchers={vouchers} navigation={navigation} />

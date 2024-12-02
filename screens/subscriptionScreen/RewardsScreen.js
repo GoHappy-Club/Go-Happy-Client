@@ -72,12 +72,9 @@ const RewardsScreen = () => {
 
   return (
     <>
-      {loading && <GOHLoader />}
-      {!loading && (
-        <View>
-          <Rewards rewards={rewards} vouchers={vouchers} />
-        </View>
-      )}
+      <View>
+        <Rewards rewards={rewards} vouchers={vouchers} />
+      </View>
     </>
   );
 };
