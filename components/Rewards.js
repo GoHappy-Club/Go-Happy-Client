@@ -217,6 +217,7 @@ const CoinbackRewards = ({
   profile,
   dispatch,
   membership,
+  setAmount,
 }) => {
   const [fixedRewards, setFixedRewards] = useState([]);
 
@@ -236,13 +237,16 @@ const CoinbackRewards = ({
       return reward;
     });
     setFixedRewards(updatedRewards);
+    setAmount(
+      updatedRewards
+        .filter((item) => item.scratched == true)
+        .reduce((_acc, item) => _acc + item.amount, 0)
+    );
     await saveScratchInBackend(id, amount);
   };
 
   const saveScratchInBackend = async (id, amount) => {
     try {
-      console.log("here in save");
-
       const res = await axios.post(
         `${SERVER_URL}/membership/scratchCardReward`,
         {
@@ -333,14 +337,27 @@ const Vouchers = ({ vouchers, navigation }) => (
 
 const Rewards = ({ rewards, vouchers }) => {
   const [index, setIndex] = useState(0);
-  const amount = rewards
-    .filter((item) => item.scratched == true)
-    .reduce((_acc, item) => _acc + item.amount, 0);
+  // const amount = rewards
+  //   .filter((item) => item.scratched == true)
+  //   .reduce((_acc, item) => _acc + item.amount, 0);
+  const [amount, setAmount] = useState(
+    rewards
+      .filter((item) => item.scratched == true)
+      .reduce((_acc, item) => _acc + item.amount, 0)
+  );
   const navigation = useNavigation();
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setAmount(
+      rewards
+        .filter((item) => item.scratched == true)
+        .reduce((_acc, item) => _acc + item.amount, 0)
+    );
+  }, [rewards]);
 
   return (
     <>
@@ -388,6 +405,7 @@ const Rewards = ({ rewards, vouchers }) => {
                 profile={profile}
                 dispatch={dispatch}
                 membership={membership}
+                setAmount={setAmount}
               />
             ) : (
               <GOHLoader />

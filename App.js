@@ -25,7 +25,7 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_ios/config.json";
+import * as configData from "./config/local_android/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -61,6 +61,7 @@ import FestiveWish from "./components/FestiveWish.js";
 import NewProfile from "./components/NewProfile.js";
 import EditProfile from "./components/EditProfile.js";
 import GOHLoader from "./commonComponents/GOHLoader.js";
+import NewAdditionalDetails from "./components/NewAdditionalDetails.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -584,7 +585,7 @@ export default function App() {
                     name="Additional Details"
                     // component={AdditionalDetails}
                     children={(props) => (
-                      <AdditionalDetails {...props} propProfile={profile} />
+                      <NewAdditionalDetails {...props} propProfile={profile} />
                     )}
                     options={{
                       headerLeft: () => <View />,

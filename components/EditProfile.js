@@ -31,14 +31,15 @@ import { TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
+import AutocompleteCityInput from "./Autocomplete";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
 
   const parseDate = (date) => {
     const splittedDate = date.split("-");
-    const month = splittedDate[0];
-    const day = splittedDate[1];
+    const day = splittedDate[0];
+    const month = splittedDate[1];
     const year = splittedDate[2];
     const d = new Date(year, month - 1, day);
     const finalDate = dayjs(d);
@@ -57,8 +58,9 @@ const EditProfile = () => {
     emergencyContact: profile.emergencyContact,
     whatsappLink: "",
     dob: profile.dob
-      ? parseDate(profile.dob)
-      : getFormattedDate(dayjs().subtract(50, "years")),
+      ? profile.dob
+      : getFormattedDate(dayjs().subtract(49, "years")),
+    city: profile.city,
   });
 
   const [updated, setUpdated] = useState(false);
@@ -102,19 +104,28 @@ const EditProfile = () => {
     try {
       setState((prevState) => ({ ...prevState, loading: true }));
       const response = await axios.post(`${SERVER_URL}/user/update`, {
+        phone: profile.phoneNumber,
+        name: state.name,
         email: state.email,
         emergencyContact: state.emergencyContact,
-        phone: profile.phoneNumber,
+        city: state.city,
+        dob: state.dob,
       });
       dispatch(
         setProfile({
           ...profile,
           email: state.email,
           emergencyContact: state.emergencyContact,
+          name: state.name,
+          city: state.city,
+          dob: state.dob,
         })
       );
       AsyncStorage.setItem("email", state.email);
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
+      AsyncStorage.setItem("name", state.name);
+      AsyncStorage.setItem("city", state.city);
+      AsyncStorage.setItem("dob", state.dob);
       setState((prevState) => ({ ...prevState, loading: false }));
       setUpdated(true);
     } catch (error) {
@@ -159,14 +170,17 @@ const EditProfile = () => {
           <DateTimePicker
             timePicker={false}
             date={parseDate(state.dob)}
-            onChange={(params) => {
-              const finalDate = `${params.date.get("date")}-${
-                params.date.get("month") + 1
-              }-${params.date.get("year")}`;
+            onChange={({ date }) => {
+              const finalDate = `${String(date.get("date")).padStart(
+                2,
+                "0"
+              )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
+                "year"
+              )}`;
 
               setState((prev) => ({ ...prev, dob: finalDate }));
             }}
-            maxDate={dayjs().subtract(49, "year")}
+            maxDate={dayjs().subtract(49, "years")}
           />
         </View>
       </Pressable>
@@ -200,49 +214,57 @@ const EditProfile = () => {
           <Text>back</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.basicDetailsContainer}>
-        <View style={styles.coverContainer}>
-          <FastImage
-            style={styles.cover}
-            resizeMode="cover"
-            source={{
-              uri: profile.profileImage,
-            }}
-          />
-          <Pressable style={styles.cameraContainer} onPress={handleSelectImage}>
-            <View
-              style={{
-                backgroundColor: "#00000080",
-                padding: 8,
-                borderRadius: 300,
-              }}
-            >
-              <Camera size={24} color={"#666"} fill={"white"} />
-            </View>
-          </Pressable>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.profileName}>{formatName(profile.name)}</Text>
-          <Text style={styles.phoneNumber}>
-            {formatPhoneNumber(profile.phoneNumber)}
-          </Text>
-        </View>
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
+        keyboardDismissMode="interactive"
       >
+        <View style={styles.basicDetailsContainer}>
+          <View style={styles.coverContainer}>
+            <FastImage
+              style={styles.cover}
+              resizeMode="cover"
+              source={{
+                uri: profile.profileImage,
+              }}
+            />
+            <Pressable
+              style={styles.cameraContainer}
+              onPress={handleSelectImage}
+            >
+              <View
+                style={{
+                  backgroundColor: "#00000080",
+                  padding: 8,
+                  borderRadius: 300,
+                }}
+              >
+                <Camera size={24} color={"#666"} fill={"white"} />
+              </View>
+            </Pressable>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.profileName}>{formatName(profile.name)}</Text>
+            <Text style={styles.phoneNumber}>
+              {formatPhoneNumber(profile.phoneNumber)}
+            </Text>
+          </View>
+        </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Name : </Text>
           <TextInput
             style={styles.input}
             placeholder="Name"
             value={state.name}
+            onChangeText={(text) => {
+              setUpdated(false);
+              setState((prev) => ({ ...prev, name: text }));
+            }}
           />
         </View>
 
@@ -254,6 +276,10 @@ const EditProfile = () => {
             keyboardType="email-address"
             autoCapitalize="none"
             value={state.email}
+            onChangeText={(text) => {
+              setUpdated(false);
+              setState((prev) => ({ ...prev, email: text }));
+            }}
           />
         </View>
 
@@ -263,7 +289,12 @@ const EditProfile = () => {
             style={styles.input}
             value={state.emergencyContact}
             placeholder="Emergency Contact"
+            maxLength={10}
             keyboardType="phone-pad"
+            onChangeText={(text) => {
+              setUpdated(false);
+              setState((prev) => ({ ...prev, emergencyContact: text }));
+            }}
           />
         </View>
 
@@ -285,18 +316,18 @@ const EditProfile = () => {
             <Calendar size={24} color={"black"} />
           </Pressable>
         </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>State : </Text>
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>District : </Text>
-        </View>
+        <AutocompleteCityInput
+          label={"City : "}
+          input={state.city}
+          setInput={(text) => {
+            setUpdated(false);
+            setState((prev) => ({ ...prev, city: text }));
+          }}
+        />
       </ScrollView>
       <Button
         outline
-        title={"Save"}
+        title={updated ? "Updated✅" : "Save"}
         loading={state.loading}
         buttonStyle={styles.button}
         onPress={updateUser}
@@ -317,7 +348,6 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: wp(5),
-    paddingTop: hp(7),
   },
   cover: {
     width: wp(50),
@@ -373,7 +403,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: wp(5.5),
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: "Montserrat-Regular",
     borderBottomWidth: 2,
     borderBottomColor: "#ccc",
     paddingVertical: 8,

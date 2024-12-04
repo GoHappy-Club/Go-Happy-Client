@@ -34,6 +34,7 @@ import {
 import AwesomeAlert from "react-native-awesome-alerts";
 import { firebase } from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FastImage from "react-native-fast-image";
 
 const NewProfile = () => {
   const [state, setState] = useState({
@@ -170,13 +171,15 @@ const NewProfile = () => {
     <>
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.container}>
-          <View style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            marginBottom:hp(2.5)
-          }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              marginBottom: hp(2.5),
+            }}
+          >
             <TouchableOpacity
               style={{
                 padding: 4,
@@ -332,8 +335,8 @@ const NewProfile = () => {
                       style={{
                         width: wp(25),
                         height: wp(12),
-                        resizeMode: "contain",
                       }}
+                      resizeMode={FastImage.resizeMode.contain}
                       source={require("../images/wordLogo.png")}
                     />
                     <Text
@@ -484,8 +487,8 @@ const styles = StyleSheet.create({
   dashedBorder: {
     height: 1,
     width: "90%",
-    borderTopColor: "black",
-    borderTopWidth: 1,
+    borderColor: "black",
+    borderWidth: 1,
     borderStyle: "dashed",
     marginTop: wp(8),
   },

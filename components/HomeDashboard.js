@@ -397,6 +397,51 @@ const HomeDashboard = ({
         <View
           style={{
             position: "absolute",
+            bottom: 10,
+            left: 10,
+            backgroundColor: Colors.grey.f0,
+            padding: 5,
+            borderRadius: wp(10),
+            borderColor: "white",
+            borderWidth: 1,
+            paddingHorizontal: wp(3),
+            backdropFilter: "blur(12px)",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+            elevation: 8,
+            flexDirection: "row",
+            gap: 4,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <FastImage
+            source={{ uri: item.expertImage }}
+            style={{
+              width: wp(6),
+              aspectRatio: 1,
+              borderRadius: wp(50),
+            }}
+            resizeMode={FastImage.resizeMode.center}
+          />
+          <Text
+            style={{
+              fontFamily: "Montserrat-SemiBold",
+              textAlign: "center",
+              fontSize: 12,
+            }}
+          >
+            {item.expertName}
+          </Text>
+        </View>
+        <View
+          style={{
+            position: "absolute",
             top: 10,
             left: 10,
             backgroundColor: Colors.grey.f0,
@@ -475,7 +520,9 @@ const HomeDashboard = ({
                 fontSize: wp(4),
               }}
             >
-              {ratings?.length > 0 && ratings[item.subCategory]?.toFixed(1)}/5
+              {ratings && ratings[item.subCategory] != undefined
+                ? ratings[item.subCategory]?.toFixed(1) + "/5"
+                : "-/5"}
             </Text>
           </View>
         </View>
@@ -569,8 +616,6 @@ const HomeDashboard = ({
           dateNumberStyle={calendarStyles.dateNumberStyle}
           dateNameStyle={calendarStyles.dateNameStyle}
           highlightDateNumberStyle={calendarStyles.highlightDateNumberStyle}
-          highlightDateNameStyle={calendarStyles.highlightDateNameStyle}
-          disabledDateNameStyle={calendarStyles.disabledDateNameStyle}
           disabledDateNumberStyle={calendarStyles.disabledDateNumberStyle}
           showDayName={false}
           dayContainerStyle={{

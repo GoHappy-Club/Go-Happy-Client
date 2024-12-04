@@ -141,7 +141,8 @@ class LoginScreen extends Component {
     city,
     emergencyContact,
     fcmToken,
-    age
+    age,
+    dob
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -158,6 +159,7 @@ class LoginScreen extends Component {
       emergencyContact: emergencyContact,
       fcmToken: fcmToken,
       age: age,
+      dob: dob,
     };
     actions.setProfile(profile);
   }
@@ -379,7 +381,7 @@ class LoginScreen extends Component {
           const profileImage = await AsyncStorage.getItem("profileImage");
           const token = await AsyncStorage.getItem("token");
           const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-          const dob = await AsyncStorage.getItem("dob")
+          const dob = await AsyncStorage.getItem("dob");
           const sessionsAttended = await AsyncStorage.getItem(
             "sessionsAttended"
           );
@@ -472,13 +474,13 @@ class LoginScreen extends Component {
                 response.data.city,
                 response.data.emergencyContact,
                 response.data.fcmToken,
-                response.data.age
+                response.data.age,
+                response.data.dob
               );
 
               AsyncStorage.setItem("email", response.data.email);
               AsyncStorage.setItem("phone", response.data.phone);
               AsyncStorage.setItem("profileImage", response.data.profileImage);
-              AsyncStorage.setItem("token", response.data.token);
               AsyncStorage.setItem(
                 "sessionsAttended",
                 response.data.sessionsAttended

@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-  Pressable,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
 
 // import axios from "../config/CustomAxios.js";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -20,11 +12,10 @@ import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AutocompleteCityInput from "./Autocomplete.js";
 import { Colors } from "../assets/colors/color.js";
-import FastImage from "react-native-fast-image";
-import { Calendar, Camera } from "lucide-react-native";
-import { hp, wp } from "../helpers/common.js";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
+import ImagePicker from "react-native-image-crop-picker";
+import { hp, wp } from "../helpers/common.js";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -35,22 +26,18 @@ class AdditionalDetails extends Component {
       city: props.route.params.city,
       phoneNumber: props.route.params.phoneNumber,
       emergencyContact: props.route.params.emergencyContact,
-      profileImage: props.route.params.profileImage,
       loadingButton: false,
       date: new Date(),
       open: false,
       uiDate: "",
       showAlert: false,
       alertMessage: "",
-      dob: "1-12-1974",
+      // dob: props.route.params.dob,
       age: props.route.params.age,
     };
 
     if (this.pending() == false) {
-      this.props.route.params.navigation.reset({
-        index: 0,
-        routes: [{ name: "GoHappy Club" }],
-      });
+      this.props.route.params.navigation.replace("GoHappy Club");
     }
     // this.pending();
   }
@@ -97,6 +84,39 @@ class AdditionalDetails extends Component {
     actions.setProfile(profile);
   }
 
+  handleSelectImage = async () => {
+    try {
+      const options = {
+        width: 350,
+        height: 400,
+        cropping: true,
+        includeBase64: true,
+        freeStyleCropEnabled: true,
+      };
+      ImagePicker.openPicker(options)
+        .then((image) => {
+          const base64Image = `data:${image.mime};base64,${image.data}`;
+          var url = SERVER_URL + "/user/updateProfileImage";
+          axios
+            .post(url, {
+              phoneNumber: this.props.profile.phoneNumber,
+              profileImage: base64Image,
+            })
+            .then(() => {
+              let { profile, actions } = this.props;
+              const newProfile = { ...profile, profileImage: base64Image };
+              actions.setProfile(newProfile);
+              this.setState({ ...prevState, image: base64Image });
+              AsyncStorage.setItem("profileImage", base64Image);
+            })
+            .catch((error) => {});
+        })
+        .catch((error) => {});
+    } catch (error) {
+      console.log("Error in handleSelectImage:", error);
+    }
+  };
+
   updateDetails() {
     if (
       this.state.name == null ||
@@ -134,8 +154,8 @@ class AdditionalDetails extends Component {
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
-          if (response.data.phoneNumber != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.phoneNumber);
+          if (response.data.phone != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.phone);
           }
           // AsyncStorage.setItem('fullName',response.data.fullName);
           if (response.data.name != null) {
@@ -185,178 +205,179 @@ class AdditionalDetails extends Component {
       });
   }
 
-  parseDate = (date) => {
-    const splittedDate = date.split("-");
-    const month = splittedDate[0];
-    const day = splittedDate[1];
-    const year = splittedDate[2];
-    const d = new Date(year, month - 1, day);
-    const finalDate = dayjs(d);
-    return finalDate;
-  };
-
-  getFormattedDate = (dayjsObject) => {
-    const finalDate = `${dayjsObject.get("date")}-${
-      dayjsObject.get("month") + 1
-    }-${dayjsObject.get("year")}`;
-    return finalDate;
-  };
-
   render() {
+    var open = this.state.open;
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <Pressable
-          style={{
-            display: this.state.open ? "flex" : "none",
-            position: "absolute",
-            backgroundColor: "#000000a0",
-            height: hp(100),
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000000,
-            width: wp(100),
-          }}
-          onPress={() => setOpen(false)}
-        >
-          <View
+      <>
+        <SafeAreaView style={styles.mainContainer}>
+          <Pressable
             style={{
-              backgroundColor: "white",
-              zIndex: 10000,
-              width: wp(90),
-              borderRadius: 10,
-              padding: 20,
+              display: open ? "flex" : "none",
+              position: "absolute",
+              backgroundColor: "#000000a0",
+              height: hp(100),
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000000,
+              width: wp(100),
             }}
+            onPress={() => setOpen(false)}
           >
-            <DateTimePicker
-              timePicker={false}
-              date={this.parseDate(this.state.dob)}
-              onChange={(params) => {
-                const finalDate = `${params.date.get("date")}-${
-                  params.date.get("month") + 1
-                }-${params.date.get("year")}`;
-
-                // setState((prev) => ({ ...prev, dob: finalDate }));
-                this.setState({ dob: finalDate });
-              }}
-              maxDate={dayjs().subtract(49, "year")}
-            />
-          </View>
-        </Pressable>
-        <Text style={styles.title}>Add Information</Text>
-
-        <View style={styles.basicDetailsContainer}>
-          <View style={styles.coverContainer}>
-            <FastImage
-              style={styles.cover}
-              resizeMode="cover"
-              source={{
-                uri: this.state.profileImage,
-              }}
-            />
-            <Pressable style={styles.cameraContainer} onPress={() => {}}>
-              <View
-                style={{
-                  backgroundColor: "#00000080",
-                  padding: 8,
-                  borderRadius: 300,
-                }}
-              >
-                <Camera size={24} color={"#666"} fill={"white"} />
-              </View>
-            </Pressable>
-          </View>
-        </View>
-        <ScrollView
-          contentContainerStyle={styles.container}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Name : </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              value={this.state.name}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email : </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={this.state.email}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Emergency Contact : </Text>
-            <TextInput
-              style={styles.input}
-              value={this.state.emergencyContact}
-              placeholder="Emergency Contact"
-              keyboardType="phone-pad"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Date of Birth : </Text>
-            <Pressable
+            <View
               style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
-                borderBottomWidth: 2,
-                borderBottomColor: "#ccc",
+                backgroundColor: "white",
+                zIndex: 10000,
+                width: wp(90),
+                borderRadius: 10,
+                padding: 20,
               }}
-              onPress={() => this.setState({ open: true })}
             >
-              <Text style={[styles.input, { borderBottomWidth: 0 }]}>
-                {this.state.dob}
-              </Text>
-              <Calendar size={24} color={"black"} />
-            </Pressable>
-          </View>
+              <DateTimePicker
+                timePicker={false}
+                date={parseDate(state.dob)}
+                onChange={({ date }) => {
+                  const finalDate = `${String(date.get("date")).padStart(
+                    2,
+                    "0"
+                  )}-${String(date.get("month") + 1).padStart(
+                    2,
+                    "0"
+                  )}-${date.get("year")}`;
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>this.state : </Text>
-          </View>
+                  setState((prev) => ({ ...prev, dob: finalDate }));
+                }}
+                maxDate={dayjs().subtract(49, "year")}
+              />
+            </View>
+          </Pressable>
+          <StatusBar barStyle="dark-content" />
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardDismissMode="interactive"
+          >
+            <View style={styles.basicDetailsContainer}>
+              <View style={styles.coverContainer}>
+                <FastImage
+                  style={styles.cover}
+                  resizeMode="cover"
+                  source={{
+                    uri: profile.profileImage,
+                  }}
+                />
+                <Pressable
+                  style={styles.cameraContainer}
+                  onPress={handleSelectImage}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#00000080",
+                      padding: 8,
+                      borderRadius: 300,
+                    }}
+                  >
+                    <Camera size={24} color={"#666"} fill={"white"} />
+                  </View>
+                </Pressable>
+              </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Name : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Name"
+                value={this.state.name}
+                onChangeText={(text) => this.setState({ name: text })}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Age : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Age"
+                value={this.state.age}
+                onChangeText={(text) => this.setState({ age: text })}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={this.state.email}
+                onChangeText={(text) => this.setState({ email: text })}
+              />
+            </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>District : </Text>
-          </View>
-        </ScrollView>
-        <Button
-          outline
-          title="Save"
-          loading={this.state.loadingButton}
-          buttonStyle={styles.button}
-          ViewComponent={LinearGradient}
-          linearGradientProps={{
-            colors: Colors.linearGradient,
-            start: { x: 0, y: 0.25 },
-            end: { x: 0.5, y: 1 },
-            locations: [0, 0.5, 0.6],
-          }}
-          onPress={this.updateDetails.bind(this)}
-        />
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Emergency Contact : </Text>
+              <TextInput
+                style={styles.input}
+                value={this.state.emergencyContact}
+                placeholder="Emergency Contact"
+                maxLength={10}
+                keyboardType="phone-pad"
+                onChangeText={(text) =>
+                  this.setState({ emergencyContact: text })
+                }
+              />
+            </View>
 
-        <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={false}
-          title="Error"
-          message={this.state.alertMessage}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Try Again"
-          confirmButtonColor={Colors.errorButton}
-          onConfirmPressed={() => {
-            this.setState({ showAlert: false });
-          }}
-        />
-      </SafeAreaView>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Date of Birth : </Text>
+              <Pressable
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  borderBottomWidth: 2,
+                  borderBottomColor: "#ccc",
+                }}
+                onPress={() => this.setState({ open: true })}
+              >
+                <Text style={[styles.input, { borderBottomWidth: 0 }]}>
+                  {this.state.dob}
+                </Text>
+                <Calendar size={24} color={"black"} />
+              </Pressable>
+            </View>
+            <AutocompleteCityInput
+              label={"City : "}
+              input={this.state.city}
+              setInput={(city) => setState({ city: city })}
+            />
+          </ScrollView>
+          <Button
+            outline
+            title={"Save"}
+            loading={state.loading}
+            buttonStyle={styles.button}
+            onPress={this.updateDetails.bind(this)}
+            disabled={state.loading}
+          />
+        </SafeAreaView>
+        {this.state.showAlert && (
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error!"
+            message={this.state.alertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            confirmText="Try Again"
+            confirmButtonColor={Colors.deepskyblue}
+            onConfirmPressed={() => {
+              this.setState({
+                showAlert: false,
+                alertMessage: "",
+              });
+            }}
+          />
+        )}
+      </>
     );
   }
 }
@@ -437,132 +458,9 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 8,
     paddingHorizontal: 16,
+    borderRadius: 5,
     minWidth: 100,
     backgroundColor: Colors.primary,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: Colors.black,
-    marginTop: "15%",
-    alignSelf: "center",
-  },
-  container1: {
-    flex: 1,
-    backgroundColor: Colors.grey.f,
-  },
-  // input: {
-  //   fontSize: 18,
-  //   color: Colors.black,
-  //   marginTop: "5%",
-  //   alignSelf: "center",
-  //   backgroundColor: Colors.white,
-  //   paddingLeft: 15,
-  //   borderColor: Colors.black,
-  //   borderWidth: 1,
-  //   borderRadius: 5,
-  //   width: "70%",
-  // },
-  inputs: {
-    marginTop: "1%",
-    flex: 1,
-    flexDirection: "column",
-  },
-  dateInput: {
-    fontSize: 20,
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: Colors.white,
-    width: "40%",
-  },
-  btnContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  userBtn: {
-    backgroundColor: "#f0ad4e",
-    paddingVertical: 15,
-    height: 60,
-  },
-  btnTxt: {
-    fontSize: 20,
-    textAlign: "center",
-    color: Colors.black,
-    fontWeight: "700",
-  },
-  registerTxt: {
-    marginTop: 5,
-    fontSize: 15,
-    textAlign: "center",
-    color: Colors.white,
-  },
-  welcome: {
-    fontSize: 30,
-    textAlign: "center",
-    margin: 10,
-    color: Colors.white,
-  },
-  logo: {
-    width: 250,
-    height: 250,
-  },
-  logoContainer: {
-    alignItems: "center",
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-
-  newinput: {
-    height: 50,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginBottom: 10,
-    color: Colors.white,
-    paddingHorizontal: 10,
-  },
-  container2: {
-    flex: 1,
-    backgroundColor: "#aaa",
-  },
-  title2: {
-    color: Colors.black,
-    marginTop: "30%",
-    marginBottom: 10,
-    opacity: 0.9,
-    textAlign: "center",
-    fontSize: 30,
-  },
-  page: {
-    marginTop: "20%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textInput: {
-    width: "90%",
-    height: 40,
-    borderColor: Colors.phoneInputBorder,
-    borderWidth: 2,
-    borderRadius: 5,
-    paddingLeft: 10,
-    color: Colors.white,
-    fontSize: 16,
-  },
-  themeButton: {
-    width: "100%",
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderRadius: 5,
-  },
-  themeButtonTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.white,
-  },
-  verificationView: {
-    width: "100%",
-    alignItems: "center",
-    marginTop: 50,
   },
 });
 const mapStateToProps = (state) => ({
