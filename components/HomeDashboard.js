@@ -35,7 +35,6 @@ const { width: screenWidth } = Dimensions.get("window");
 import { useZoom } from "../helpers/zoomUtils.js";
 import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
-import SoundPlayer from "react-native-sound-player";
 import Sound from "react-native-sound";
 const HomeDashboard = ({
   events,
@@ -225,7 +224,7 @@ const HomeDashboard = ({
       return;
     }
     item.loadingButton = true;
-    bookEvent(item, profile.phoneNumber, state.selectedDateRaw,playSound);
+    bookEvent(item, profile.phoneNumber, state.selectedDateRaw, playSound);
   };
 
   const giveRewards = async (item) => {
@@ -664,6 +663,7 @@ const HomeDashboard = ({
           )}
           onDateSelected={(date) => changeSelectedDate(date.toISOString())}
         />
+        {/* <DatePicker /> */}
 
         <Text
           style={{

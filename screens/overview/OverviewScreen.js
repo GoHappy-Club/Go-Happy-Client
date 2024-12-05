@@ -3,7 +3,7 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
-import { View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { bindActionCreators } from "redux";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
@@ -132,43 +132,46 @@ class OverviewScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <View
-          pointerEvents={this.state.isBlocking ? "none" : "auto"}
-          style={{ backgroundColor: "white" }}
-        >
-          <ScrollView
-            ref={this.scrollViewRef}
-            showsVerticalScrollIndicator={false}
+        <>
+        <StatusBar barStyle={"dark-content"}/>
+          <View
+            pointerEvents={this.state.isBlocking ? "none" : "auto"}
+            style={{ backgroundColor: "white" }}
           >
-            <TopBanner
-              navigation={this.props.navigation}
-              posters={this.state.posters}
-            />
+            <ScrollView
+              ref={this.scrollViewRef}
+              showsVerticalScrollIndicator={false}
+            >
+              <TopBanner
+                navigation={this.props.navigation}
+                posters={this.state.posters}
+              />
 
-            <Sections
-              navigation={this.props.navigation}
-              helpUrl={
-                this.props.profile.properties
-                  ? this.props.profile.properties.whatsappHelpLink
-                  : this.state.whatsappLink
-              }
-            />
-            <UpcomingWorkshops
-              navigation={this.props.navigation}
-              upcomingWorkshops={this.state.upcomingWorkshops}
-              reloadOverview={this.getOverviewData.bind(this)}
-            />
-            <TrendingSessions
-              navigation={this.props.navigation}
-              trendingSessions={this.state.trendingSessions}
-              reloadOverview={this.getOverviewData.bind(this)}
-            />
-            <PromotionSection navigation={this.props.navigation} />
-          </ScrollView>
-          {this.props.profile.age == null || this.props.profile.age >= 50 ? (
-            <WhatsAppFAB />
-          ) : null}
-        </View>
+              <Sections
+                navigation={this.props.navigation}
+                helpUrl={
+                  this.props.profile.properties
+                    ? this.props.profile.properties.whatsappHelpLink
+                    : this.state.whatsappLink
+                }
+              />
+              <UpcomingWorkshops
+                navigation={this.props.navigation}
+                upcomingWorkshops={this.state.upcomingWorkshops}
+                reloadOverview={this.getOverviewData.bind(this)}
+              />
+              <TrendingSessions
+                navigation={this.props.navigation}
+                trendingSessions={this.state.trendingSessions}
+                reloadOverview={this.getOverviewData.bind(this)}
+              />
+              <PromotionSection navigation={this.props.navigation} />
+            </ScrollView>
+            {this.props.profile.age == null || this.props.profile.age >= 50 ? (
+              <WhatsAppFAB />
+            ) : null}
+          </View>
+        </>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)

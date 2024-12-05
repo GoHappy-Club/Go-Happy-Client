@@ -33,7 +33,7 @@ const Wallet = ({ transactions }) => {
         backgroundColor: Colors.white,
       }}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
             paddingHorizontal: wp(7),

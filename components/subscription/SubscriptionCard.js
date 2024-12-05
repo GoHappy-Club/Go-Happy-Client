@@ -46,65 +46,109 @@ const SubscriptionCard = () => {
     return (
       <>
         <LinearGradient
-          colors={["#ff9a9e", "#fad0c4"]}
-          style={styles.card}
+          colors={COLORS_MAPPING['Silver']["gradient"]}
+          style={[
+            styles.card,
+            {
+              borderColor:
+                COLORS_MAPPING['Silver']["borderColor"],
+            },
+          ]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
           <View style={styles.nameContainer}>
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                gap: 10,
+                flexDirection: "column",
+                gap: 0,
               }}
             >
-              <FastImage
-                style={styles.cover}
-                resizeMode={FastImage.resizeMode.cover}
-                source={{
-                  uri: profile.profileImage,
-                }}
-              />
-              <Text style={styles.name}>{profile.name}</Text>
-              <Crown size={24} color={"#FFD700"} fill={"#FFD700"} />
+              <Text
+                style={[
+                  styles.name,
+                  {
+                    color:
+                      COLORS_MAPPING['Silver']["textColor"],
+                    textShadowColor:
+                      COLORS_MAPPING['Silver'][
+                        "textShadowColor"
+                      ],
+                  },
+                ]}
+              >
+                {profile.name}
+              </Text>
+              <Text
+                style={[
+                  styles.expiry,
+                  {
+                    color:
+                      COLORS_MAPPING['Silver']["textColor"],
+                    textShadowColor:
+                      COLORS_MAPPING['Silver'][
+                        "textShadowColor"
+                      ],
+                  },
+                ]}
+              >
+                {loadDate(membership.membershipEndDate)}
+              </Text>
             </View>
-            <Text style={styles.phoneNumber}>
-              XXXXX{profile?.phoneNumber?.substring(7, 12)}
-            </Text>
           </View>
-          <View
+          <FastImage
+            source={COLORS_MAPPING['Silver']["logo"]}
             style={{
+              width: wp(20),
+              height: wp(8),
               position: "absolute",
-              right: 20,
-              top: 10,
+              top: 5,
+              right: 5,
             }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+          <Text
+            style={[
+              styles.membershipType,
+              {
+                color: COLORS_MAPPING['Silver']["textColor"],
+                textShadowColor:
+                  COLORS_MAPPING['Silver']["textShadowColor"],
+              },
+            ]}
           >
-            <FastImage
-              source={require("../../images/logo.png")}
-              style={{
-                width: wp(20),
-                height: wp(8),
-              }}
-            />
-            <Text style={styles.identifier}>GoHappy Club</Text>
-          </View>
-          <Text style={styles.membershipType}>{membership.membershipType}</Text>
+            {membership.membershipType}
+          </Text>
+          <Text
+            style={[
+              styles.membershipText,
+              {
+                color: COLORS_MAPPING['Silver']["textColor"],
+                textShadowColor:
+                  COLORS_MAPPING['Silver']["textShadowColor"],
+              },
+            ]}
+          >
+            Membership
+          </Text>
+          <FastImage
+            style={styles.cover}
+            resizeMode="cover"
+            source={{
+              uri: profile.profileImage,
+            }}
+          />
+        </LinearGradient>
           <BlurView
             blurAmount={8}
             blurType="light"
             style={{
-              position: "fixed",
-              top: "-15%",
-              left: "-20%",
-              // bottom: 0,
-              // right: 0,
-              width: wp(150),
-              height: hp(25),
+              position:"absolute",
+              width: wp(100),
+              height: hp(23),
+              borderRadius: 10,
             }}
           />
-        </LinearGradient>
       </>
     );
   }
