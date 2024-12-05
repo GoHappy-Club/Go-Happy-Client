@@ -35,7 +35,8 @@ const { width: screenWidth } = Dimensions.get("window");
 import { useZoom } from "../helpers/zoomUtils.js";
 import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
-
+import SoundPlayer from "react-native-sound-player";
+import Sound from "react-native-sound";
 const HomeDashboard = ({
   events,
   ratings,
@@ -105,7 +106,7 @@ const HomeDashboard = ({
   const joinMeeting = async (item) => {
     try {
       await zoom.joinMeeting({
-        userName: profile.name,
+        userName: profile.name + String(profile.phoneNumber),
         meetingNumber: extractMeetingNumber(item?.meetingLink),
         password: "12345",
       });
@@ -224,7 +225,7 @@ const HomeDashboard = ({
       return;
     }
     item.loadingButton = true;
-    bookEvent(item, profile.phoneNumber, state.selectedDateRaw);
+    bookEvent(item, profile.phoneNumber, state.selectedDateRaw,playSound);
   };
 
   const giveRewards = async (item) => {
@@ -349,6 +350,20 @@ const HomeDashboard = ({
     })
       .then((result) => {})
       .catch((errorMsg) => {});
+  };
+
+  const playSound = () => {
+    const sound = new Sound("booked.mp3", Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log("failed to load the sound", error);
+        return;
+      }
+      sound.play((success) => {
+        if (!success) {
+          console.log("playback failed due to audio decoding errors");
+        }
+      });
+    });
   };
 
   const renderItem = ({ item }) => (
@@ -544,15 +559,16 @@ const HomeDashboard = ({
         >
           Seats Left : {item.seatsLeft}
         </Text>
-        {item.costType == "paid" && (
-          <Text
-            style={{
-              fontFamily: "Montserrat-Regular",
-              color: Colors.grey.grey,
-              fontSize: wp(3.5),
-            }}
-          >
-            {item.cost}
+
+        <Text
+          style={{
+            fontFamily: "Montserrat-Regular",
+            color: Colors.grey.grey,
+            fontSize: wp(3.5),
+          }}
+        >
+          {item.costType == "paid" ? item.cost : "FREE"}
+          {item.costType == "paid" && (
             <FastImage
               source={require("../images/GoCoins.png")}
               style={{
@@ -560,8 +576,8 @@ const HomeDashboard = ({
                 width: 15,
               }}
             />
-          </Text>
-        )}
+          )}
+        </Text>
       </View>
       <Button
         disabled={isDisabled(item)}
@@ -588,6 +604,7 @@ const HomeDashboard = ({
           fontWeight: "bold",
           letterSpacing: 1,
         }}
+        touchSoundDisabled={true}
       />
     </TouchableOpacity>
   );

@@ -124,7 +124,7 @@ class HomeScreen extends Component {
       });
   }
 
-  bookEvent(item, phoneNumber, selectedDate) {
+  bookEvent(item, phoneNumber, selectedDate,playSound) {
     let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
     if (phoneNumber == "" || phoneNumber == undefined) {
       phoneNumber = this.state.phoneNumber;
@@ -158,6 +158,7 @@ class HomeScreen extends Component {
               membership.coins = membership.coins - item.cost;
               actions.setMembership({ ...membership });
             }
+            playSound();
             this.loadEvents(selectedDate);
             // _callback();
             // item.seatsLeft = item.seatsLeft - 1;

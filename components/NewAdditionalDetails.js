@@ -242,6 +242,7 @@ const NewAdditionalDetails = ({ route }) => {
                 setState((prev) => ({ ...prev, dob: finalDate }));
               }}
               maxDate={dayjs().subtract(49, "year")}
+              selectedItemColor={Colors.primary}
             />
           </View>
         </Pressable>

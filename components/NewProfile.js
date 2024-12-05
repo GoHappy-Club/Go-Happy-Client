@@ -133,11 +133,8 @@ const NewProfile = () => {
     return formattedName;
   };
 
-  const formatPhoneNumber = (phoneNumber) => {
-    const countryCode = phoneNumber.slice(0, 2);
-    const number = phoneNumber.slice(2);
-    return `+${countryCode} ${number}`;
-  };
+  const formatPhoneNumber = (phoneNumber) =>
+    `+${phoneNumber.slice(0, -10)} ${phoneNumber.slice(-10)}`;
 
   const formatDuration = (dateOfJoining) => {
     const now = new Date();

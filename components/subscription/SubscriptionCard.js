@@ -8,6 +8,7 @@ import { hp, wp } from "../../helpers/common";
 import { format, fromUnixTime } from "date-fns";
 import { BlurView } from "@react-native-community/blur";
 import { Colors } from "../../assets/colors/color";
+import FastImage from "react-native-fast-image";
 
 const COLORS_MAPPING = {
   Silver: {
@@ -61,7 +62,7 @@ const SubscriptionCard = () => {
             >
               <FastImage
                 style={styles.cover}
-                resizeMode="cover"
+                resizeMode={FastImage.resizeMode.cover}
                 source={{
                   uri: profile.profileImage,
                 }}
@@ -82,7 +83,10 @@ const SubscriptionCard = () => {
           >
             <FastImage
               source={require("../../images/logo.png")}
-              style={{ width: 40, height: 40 }}
+              style={{
+                width: wp(20),
+                height: wp(8),
+              }}
             />
             <Text style={styles.identifier}>GoHappy Club</Text>
           </View>
@@ -160,7 +164,7 @@ const SubscriptionCard = () => {
           top: 5,
           right: 5,
         }}
-        resizeMode="contain"
+        resizeMode={FastImage.resizeMode.contain}
       />
       <Text
         style={[

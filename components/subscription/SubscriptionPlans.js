@@ -28,7 +28,7 @@ import GradientText from "../../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import BottomSheet from "../BottomSheet";
-import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
+import { differenceInMonths } from "date-fns";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 

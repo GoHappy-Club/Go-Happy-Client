@@ -25,6 +25,10 @@ const AutocompleteCityInput = ({ label, input, setInput }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [dropdownHeight] = useState(new Animated.Value(0));
 
+  useEffect(() => {
+    setIsSelected(true);
+  }, []);
+
   const fetchSuggestions = useCallback(
     async (text) => {
       try {
@@ -73,7 +77,7 @@ const AutocompleteCityInput = ({ label, input, setInput }) => {
   );
 
   useEffect(() => {
-    if (input?.length >1 && !isSelected) {
+    if (input?.length > 1 && !isSelected) {
       debouncedFetchSuggestions(input);
     } else {
       setSuggestions([]);
@@ -104,7 +108,10 @@ const AutocompleteCityInput = ({ label, input, setInput }) => {
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputWrapper}>
         <Animated.View
-          style={[styles.suggestionsContainer, { maxHeight: dropdownHeight }]}
+          style={[
+            styles.suggestionsContainer,
+            { height: dropdownHeight },
+          ]}
         >
           <FlatList
             data={suggestions}
@@ -120,7 +127,9 @@ const AutocompleteCityInput = ({ label, input, setInput }) => {
               </Pressable>
             )}
             keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
           />
         </Animated.View>
         <TextInput
@@ -182,3 +191,4 @@ const styles = StyleSheet.create({
 });
 
 export default AutocompleteCityInput;
+

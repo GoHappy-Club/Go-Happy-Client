@@ -32,6 +32,7 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 import AutocompleteCityInput from "./Autocomplete";
+import Toast from "react-native-simple-toast";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -128,6 +129,7 @@ const EditProfile = () => {
       AsyncStorage.setItem("dob", state.dob);
       setState((prevState) => ({ ...prevState, loading: false }));
       setUpdated(true);
+      Toast.show("New Profile Saved✅", Toast.LONG);
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
@@ -141,7 +143,7 @@ const EditProfile = () => {
       .join(" ");
 
   const formatPhoneNumber = (phoneNumber) =>
-    `+${phoneNumber.slice(0, 2)} ${phoneNumber.slice(2)}`;
+    `+${phoneNumber.slice(0, -10)} ${phoneNumber.slice(-10)}`;
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -181,6 +183,7 @@ const EditProfile = () => {
               setState((prev) => ({ ...prev, dob: finalDate }));
             }}
             maxDate={dayjs().subtract(49, "years")}
+            selectedItemColor={Colors.primary}
           />
         </View>
       </Pressable>
@@ -327,7 +330,7 @@ const EditProfile = () => {
       </ScrollView>
       <Button
         outline
-        title={updated ? "Updated✅" : "Save"}
+        title={"Save"}
         loading={state.loading}
         buttonStyle={styles.button}
         onPress={updateUser}

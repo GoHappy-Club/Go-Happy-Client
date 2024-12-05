@@ -33,7 +33,14 @@ const WalletScreen = () => {
     <>
       {loading && <GOHLoader />}
       {!loading && (
-        <SafeAreaView>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: "#fff",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Wallet transactions={transactions} />
         </SafeAreaView>
       )}
