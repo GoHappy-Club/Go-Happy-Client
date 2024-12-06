@@ -273,6 +273,26 @@ const CoinbackRewards = ({
         alignItems: rewards.length == 1 ? "flex-start" : "center",
       }}
     >
+      {rewards?.length == 0 && (
+        <View
+          style={{
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.greyishText,
+              fontSize: wp(4),
+              fontWeight: "bold",
+              textAlign: "center",
+              marginTop: hp(10),
+            }}
+          >
+            You don't have any reward yet.
+          </Text>
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={styles.grid}
         showsVerticalScrollIndicator={false}
@@ -302,6 +322,26 @@ const Vouchers = ({ vouchers, navigation }) => (
       alignItems: vouchers.length == 1 ? "flex-start" : "center",
     }}
   >
+    {vouchers?.length == 0 && (
+        <View
+          style={{
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.greyishText,
+              fontSize: wp(4),
+              fontWeight: "bold",
+              textAlign: "center",
+              marginTop: hp(10),
+            }}
+          >
+            You don't have any voucher yet.
+          </Text>
+        </View>
+      )}
     <ScrollView
       contentContainerStyle={styles.grid}
       showsVerticalScrollIndicator={false}
@@ -335,7 +375,7 @@ const Vouchers = ({ vouchers, navigation }) => (
   </View>
 );
 
-const Rewards = ({ rewards, vouchers }) => {
+const Rewards = ({ rewards, vouchers, loading }) => {
   const [index, setIndex] = useState(0);
   // const amount = rewards
   //   .filter((item) => item.scratched == true)
@@ -398,7 +438,7 @@ const Rewards = ({ rewards, vouchers }) => {
           animationType="spring"
         >
           <TabView.Item style={{ width: "100%", height: "100%" }}>
-            {rewards.length > 0 ? (
+            {loading == false ? (
               <CoinbackRewards
                 rewards={rewards}
                 navigation={navigation}

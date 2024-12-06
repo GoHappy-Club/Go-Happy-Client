@@ -73,7 +73,7 @@ const RewardsScreen = () => {
   return (
     <>
       <View>
-        <Rewards rewards={rewards} vouchers={vouchers} />
+        <Rewards rewards={rewards} vouchers={vouchers} loading={loading} />
       </View>
     </>
   );

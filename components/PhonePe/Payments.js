@@ -52,40 +52,40 @@ class Payments extends Component {
     );
     requestBody = payload.requestBody;
     checksum = payload.checksum;
-    // const options = {
-    //   method: "post",
-    //   url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
-    //   headers: {
-    //     accept: "application/json",
-    //     "Content-Type": "application/json",
-    //     "X-VERIFY": checksum,
-    //   },
-    //   data: {
-    //     request: requestBody,
-    //   },
-    // };
-    // try {
-    //   const response = await axios.request(options);
-    //   let shareableLink =
-    //     response.data.data.instrumentResponse.redirectInfo.url;
-    //   const shortenLinkApi =
-    //     "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
-    //   const shortenLinkApiCall = await axios
-    //     .request({
-    //       method: "get",
-    //       url: shortenLinkApi,
-    //     })
-    //     .then((re) => {
-    //       console.log(re.data);
-    //       shareableLink = re.data;
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    //   return shareableLink;
-    // } catch (error) {
-    //   error_handler();
-    // }
+    const options = {
+      method: "post",
+      url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+        "X-VERIFY": checksum,
+      },
+      data: {
+        request: requestBody,
+      },
+    };
+    try {
+      const response = await axios.request(options);
+      let shareableLink =
+        response.data.data.instrumentResponse.redirectInfo.url;
+      const shortenLinkApi =
+        "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
+      const shortenLinkApiCall = await axios
+        .request({
+          method: "get",
+          url: shortenLinkApi,
+        })
+        .then((re) => {
+          console.log(re.data);
+          shareableLink = re.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      return shareableLink;
+    } catch (error) {
+      error_handler();
+    }
   }
   phonePe(
     phone,
