@@ -40,7 +40,7 @@ const NewAdditionalDetails = ({ route }) => {
   const parseDate = (date) => {
     console.log("date in parse", date);
 
-    const splittedDate = date.split("-");
+    const splittedDate = date?.split("-");
     const day = splittedDate[0];
     const month = splittedDate[1];
     const year = splittedDate[2];
