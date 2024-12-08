@@ -25,7 +25,7 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_ios/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
+  SafeAreaView,
 } from "react-native";
 //import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -707,7 +708,7 @@ class LoginScreen extends Component {
       return <GOHLoader />;
     }
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={{ width: "40%", marginLeft: "auto" }}>
           <Button
             style={{ marginLeft: "auto" }}
@@ -915,7 +916,7 @@ class LoginScreen extends Component {
             this.setState({ showAlert: false });
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }

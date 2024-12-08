@@ -185,7 +185,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
       >
         <Text
           style={{
-            color: "white",
+            color: Colors.primaryText,
             fontSize: 12,
             fontWeight: "bold",
           }}
@@ -205,7 +205,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
               ? Colors.primary
               : voucher.status == "ACTIVE"
               ? "white"
-              : "#666",
+              : Colors.bottomNavigation,
             borderColor: isSelected ? Colors.white : "#e0e0e0",
             borderWidth: isSelected ? 2 : 1,
           },
