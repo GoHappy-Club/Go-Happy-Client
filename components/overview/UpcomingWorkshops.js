@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },

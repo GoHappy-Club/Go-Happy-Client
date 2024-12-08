@@ -94,13 +94,22 @@ class TripsScreen extends Component {
             onChange={(index) => {
               this.setState({ index: index });
             }}
+            style={{ backgroundColor: Colors.background }}
             dense
+            indicatorStyle={{
+              backgroundColor: Colors.black, // Change the indicator color to green
+            }}
+            titleStyle={{
+              color: Colors.black, // Set color of both active and inactive tab labels to green
+            }}
           >
             <Tab.Item>Upcoming</Tab.Item>
             <Tab.Item>Past</Tab.Item>
           </Tab>
           <TabView
-            containerStyle={{ height: "100%" }}
+            containerStyle={{
+              height: "100%",
+            }}
             value={this.state.index}
             onChange={(index) => {
               this.setState({ index: index });
@@ -139,7 +148,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
   },
   textContainer: {
     padding: 16,

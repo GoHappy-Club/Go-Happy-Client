@@ -8,15 +8,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  BackHandler,
-  useWindowDimensions,
 } from "react-native";
 import Toast from "react-native-simple-toast";
 import { Text } from "react-native-elements";
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+
 import { connect, useSelector } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
@@ -25,16 +20,10 @@ import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS.js";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Clipboard from "@react-native-clipboard/clipboard";
-import RenderHtml from "react-native-render-html";
 import toUnicodeVariant from "../toUnicodeVariant.js";
-// import { refreshProfile } from "../services/profile/ProfileService";
-import ReferralsList from "./ReferralsList.js";
-import { FlatList } from "react-native-gesture-handler";
+
 import { Colors } from "../../assets/colors/color.js";
-import { X } from "lucide-react-native";
-import { wp } from "../../helpers/common.js";
 import ReferBottomSheet from "./ReferBottomSheet.js";
-const screenWidth = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
     super(props);
@@ -55,10 +44,6 @@ class Refer extends Component {
       referralLink: "",
       conditionDialog: false,
       htmlContentWidth: 0,
-      conditionText:
-        '<p style="text-align:center"><span style="font-size:16px"><strong>Follow these simple steps:</strong></span></p><ol><li>&nbsp;Share the referral link with&nbsp;your friends who are above&nbsp;50 years of age.</li><li>Ask them to click on the link, install the GoHappy Club app and register themselves in the app.</li><li>Once registered, ask them to book and attend any session they want.</li><li>Receive <strong>Thank You Gift</strong> from GoHappy Club delivered to your home once you have seven successful referrals.</li></ol>',
-      profileImage:
-        "https://upload.wikimedia.org/wikipedia/en/thumb/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg/220px-Matt_LeBlanc_as_Joey_Tribbiani.jpg",
       type: "",
     };
     this._retrieveData();
@@ -208,7 +193,7 @@ class Refer extends Component {
   render() {
     const { referralLink } = this.state;
     return (
-      <View style={{ backgroundColor: Colors.white }}>
+      <View style={{ backgroundColor: Colors.background }}>
         <ScrollView>
           <Text style={styles.title}>Refer & Win</Text>
           <Text style={styles.subtitle}>
@@ -345,7 +330,7 @@ class Refer extends Component {
               // marginLeft: "10%",
               // marginRight: "10%",
             }}
-            source={require("../../images/refer.png")}
+            source={require("../../images/refer Background Removed.png")}
           />
 
           <ReferBottomSheet
@@ -442,7 +427,7 @@ const styles = StyleSheet.create({
   },
   messageBox: {
     width: "90%",
-    backgroundColor: "#fef9f3",
+    backgroundColor: "#F2EBE2",
     alignSelf: "center",
     alignItems: "center",
     marginTop: "5%",
@@ -455,7 +440,7 @@ const styles = StyleSheet.create({
   messageText: {
     marginTop: "3%",
     width: "80%",
-    backgroundColor: "#fef9f3",
+    backgroundColor: "#F2EBE2",
     textAlign: "center",
     alignSelf: "center",
     fontWeight: "bold",

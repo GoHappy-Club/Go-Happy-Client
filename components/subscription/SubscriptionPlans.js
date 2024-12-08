@@ -6,6 +6,7 @@ import {
   ScrollView,
   Platform,
   Share,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import phonepe_payments from "../PhonePe/Payments";
@@ -28,7 +29,7 @@ import GradientText from "../../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import BottomSheet from "../BottomSheet";
-import { differenceInMonths } from "date-fns";
+import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -462,10 +463,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
   };
 
   return (
-    <>
-      <Text style={[styles.heading, { marginBottom: hp(5) }]}>
-        Choose Your Plan
-      </Text>
+    <SafeAreaView style={styles.safeArea}>
+      <Text style={[styles.heading]}>Choose Your Plan</Text>
       <ScrollView
         ref={scrollRef}
         showsHorizontalScrollIndicator={false}
@@ -527,9 +526,8 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 opacity: pressed ? 0.8 : 1,
               },
               {
-                backgroundColor: isDisabled()
-                  ? Colors.grey.c
-                  : Colors.referLinkBackground,
+                backgroundColor: isDisabled() ? Colors.grey.c : Colors.primary,
+
                 padding: 10,
                 borderRadius: 6,
                 justifyContent: "center",
@@ -551,7 +549,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={[
                   styles.footerButtonText,
                   {
-                    color: isDisabled() ? Colors.grey.f0 : Colors.black,
+                    color: isDisabled() ? Colors.black : Colors.white,
                   },
                 ]}
               >
@@ -614,16 +612,21 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           onDismiss={() => setPaymentSharePopUp(false)}
         />
       )}
-    </>
+    </SafeAreaView>
   );
 };
 
 export default SubscriptionPlans;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    paddingTop: Platform.OS === "android" ? hp(4) : 0,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: Colors.background,
     flexDirection: "row",
   },
   heading: {
@@ -633,13 +636,9 @@ const styles = StyleSheet.create({
     // marginTop: 20,
     color: "#1a1a1a",
     fontFamily: "NunitoSans-SemiBold",
+    marginBottom: Platform.OS === "android" ? hp(4) : hp(2),
   },
-  subheading: {
-    fontSize: 16,
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 20,
-  },
+
   scrollContent: {
     paddingHorizontal: wp(10),
     // paddingVertical: 10,
@@ -647,7 +646,7 @@ const styles = StyleSheet.create({
   card: {
     width: wp(70),
     marginHorizontal: CARD_MARGIN,
-    backgroundColor: "white",
+    backgroundColor: Colors.background,
     borderRadius: 20,
     padding: 20,
     backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -715,7 +714,7 @@ const styles = StyleSheet.create({
   },
   selectedPlanContainer: {
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: Colors.background,
     borderTopWidth: 1,
     borderTopColor: "#e0e0e0",
   },
@@ -746,14 +745,8 @@ const styles = StyleSheet.create({
   selectedDurationButtonText: {
     color: "white",
   },
-  selectedPlanContainer: {
-    padding: 20,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
-  },
   footerContainer: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.bottomNavigation,
     paddingVertical: hp(2),
     paddingHorizontal: wp(5),
     borderTopRightRadius: wp(8),
@@ -782,7 +775,7 @@ const styles = StyleSheet.create({
     gap: hp(1),
   },
   footerPlainText: {
-    fontSize: hp(2),
+    fontSize: 18,
     color: Colors.black,
   },
   footerTitleText: {

@@ -13,6 +13,7 @@ import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
 import Sections from "../../components/overview/Sections.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
+import { Colors } from "../../assets/colors/color.js";
 
 class OverviewScreen extends Component {
   constructor(props) {
@@ -133,10 +134,10 @@ class OverviewScreen extends Component {
     if (this.state.error == true) {
       return (
         <>
-        <StatusBar barStyle={"dark-content"}/>
+          <StatusBar barStyle={"dark-content"} />
           <View
             pointerEvents={this.state.isBlocking ? "none" : "auto"}
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: Colors.background }}
           >
             <ScrollView
               ref={this.scrollViewRef}

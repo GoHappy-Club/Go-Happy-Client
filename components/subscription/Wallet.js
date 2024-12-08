@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Image,
   Pressable,
+  ScrollView,
   Platform,
 } from "react-native";
 import React, { useState } from "react";
@@ -15,7 +16,6 @@ import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import TransactionHistory from "./TransactionHistory";
-import { ScrollView } from "react-native";
 
 const Wallet = ({ transactions }) => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
@@ -24,26 +24,15 @@ const Wallet = ({ transactions }) => {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView
-      style={{
-        paddingTop: hp(6),
-        alignItems: "center",
-        minHeight: "100%",
-        flex: 1,
-        backgroundColor: Colors.white,
-      }}
-    >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            paddingHorizontal: wp(7),
-            width: "100%",
-          }}
-        >
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.subscriptionContainer}>
           <SubscriptionCard />
         </View>
         <View style={styles.coinsContainer}>
-          {/* Inner Container with Text and Image */}
           <View style={styles.innerContainer}>
             <View style={{ justifyContent: "center" }}>
               <Text style={styles.titleText}>Happy Coins</Text>
@@ -61,8 +50,7 @@ const Wallet = ({ transactions }) => {
                 {membership.coins}
               </Text>
             </View>
-
-            <FastImage
+            <Image
               source={require("../../images/GoCoins.png")}
               style={styles.coinImage}
             />
@@ -82,7 +70,7 @@ const Wallet = ({ transactions }) => {
             }}
           >
             <View style={styles.buttonContent}>
-              <FastImage
+              <Image
                 source={require("../../images/GoCoins.png")}
                 style={styles.buttonImage}
               />
@@ -90,16 +78,9 @@ const Wallet = ({ transactions }) => {
             </View>
           </Pressable>
         </View>
-        <View
-          style={{
-            width: wp(95),
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <View style={styles.transactionHistoryContainer}>
           <TransactionHistory transactions={transactions} seeAll={true} />
         </View>
-        {/* <TransactionHistory transactions={transactions}/> */}
       </ScrollView>
       {nonMemberPopUp && (
         <AwesomeAlert
@@ -138,16 +119,31 @@ const Wallet = ({ transactions }) => {
 export default Wallet;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    paddingTop: Platform.OS === "android" ? hp(6) : 0, // Ensure space for Android status bar
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    paddingBottom: hp(1), // Prevent overlap with bottom edges
+  },
+  subscriptionContainer: {
+    paddingHorizontal: wp(7),
+    width: "100%",
+    // marginBottom: hp(2),
+  },
   coinsContainer: {
     width: wp(95),
-    backgroundColor: "#FFF5D7", // Light gold background for a premium feel
+    backgroundColor: Colors.bottomNavigation,
     borderRadius: 20,
     padding: hp(2),
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 10, // Shadow for Android
+    elevation: 10,
     marginVertical: hp(2),
   },
   innerContainer: {
@@ -193,5 +189,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  transactionHistoryContainer: {
+    width: wp(95),
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

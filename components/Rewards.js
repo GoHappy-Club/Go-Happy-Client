@@ -323,25 +323,25 @@ const Vouchers = ({ vouchers, navigation }) => (
     }}
   >
     {vouchers?.length == 0 && (
-        <View
+      <View
+        style={{
+          justifyContent: "center",
+          flex: 1,
+        }}
+      >
+        <Text
           style={{
-            justifyContent: "center",
-            flex: 1,
+            color: Colors.greyishText,
+            fontSize: wp(4),
+            fontWeight: "bold",
+            textAlign: "center",
+            marginTop: hp(10),
           }}
         >
-          <Text
-            style={{
-              color: Colors.greyishText,
-              fontSize: wp(4),
-              fontWeight: "bold",
-              textAlign: "center",
-              marginTop: hp(10),
-            }}
-          >
-            You don't have any voucher yet.
-          </Text>
-        </View>
-      )}
+          You don't have any voucher yet.
+        </Text>
+      </View>
+    )}
     <ScrollView
       contentContainerStyle={styles.grid}
       showsVerticalScrollIndicator={false}
@@ -404,6 +404,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
       <View
         style={{
           height: "100%",
+          backgroundColor: Colors.background,
         }}
       >
         <View style={styles.totalRewards}>
@@ -425,6 +426,13 @@ const Rewards = ({ rewards, vouchers, loading }) => {
             setIndex(index);
           }}
           dense={true}
+          style={{ backgroundColor: Colors.background }}
+          indicatorStyle={{
+            backgroundColor: Colors.primary, // Change the indicator color to green
+          }}
+          titleStyle={{
+            color: Colors.primary, // Set color of both active and inactive tab labels to green
+          }}
         >
           <Tab.Item>Rewards</Tab.Item>
           <Tab.Item>Vouchers</Tab.Item>
@@ -462,11 +470,11 @@ const Rewards = ({ rewards, vouchers, loading }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.background,
   },
   totalRewards: {
     padding: 24,
-    backgroundColor: "#FFC107",
+    backgroundColor: Colors.bottomNavigation,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     height: hp(30),

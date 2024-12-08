@@ -17,8 +17,6 @@ const SubscriptionScreen = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const membership = useSelector((state) => state.membership.membership);
-
   const navigation = useNavigation();
 
   const getPlans = async () => {
@@ -42,44 +40,16 @@ const SubscriptionScreen = () => {
     getPlans();
   }, []);
 
-  const RenderHeader = () => {
-    return (
-      <>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            width: wp(100),
-          }}
-        >
-          <View style={styles.goHappyClubLogoWrapper}>
-            <FastImage
-              source={require("../../images/logo.png")}
-              style={styles.logo}
-            />
-          </View>
-        </View>
-      </>
-    );
-  };
-
   return (
-    <>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors.background,
+      }}
+    >
       {loading && <GOHLoader />}
-      {!loading && (
-        <SafeAreaView
-          style={{
-            flex: 1,
-            backgroundColor: Colors.grey.f0,
-          }}
-        >
-          {/* <RenderHeader /> */}
-          <SubscriptionPlans plans={plans} />
-        </SafeAreaView>
-      )}
-    </>
+      {!loading && <SubscriptionPlans plans={plans} />}
+    </SafeAreaView>
   );
 };
 

@@ -230,8 +230,11 @@ const Header = () => {
   };
 
   return (
-    <SafeAreaView>
-      <StatusBar barStyle="default" backgroundColor="transparent" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={Colors.bottomNavigation}
+      />
       <BottomSheet
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
@@ -287,18 +290,6 @@ const Header = () => {
             resizeMode="cover"
             style={styles.profileImage}
           />
-          {/* <View
-          style={{
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "flex-start",
-          }}
-        >
-          <Text style={styles.helloText}>Hello</Text>
-          <Text style={styles.username}>
-            {trimContent(profile.name.split(" ")[0])}
-          </Text>
-        </View> */}
         </Pressable>
         <View style={styles.rightWrapper}>
           <TouchableOpacity
@@ -306,11 +297,11 @@ const Header = () => {
             onPress={() => navigation.navigate("SubscriptionPlans")}
           >
             <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
-            <GradientText
+            {/* <GradientText
               text="Upgrade"
               style={styles.upgradeText}
               colors={Colors.headerLinearGradient}
-            />
+            /> */}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.credits}
@@ -346,6 +337,10 @@ const Header = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    backgroundColor: Colors.background, // Matches the status bar color
+  },
   header: {
     // flex: 1,
     flexDirection: "row",
@@ -353,7 +348,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 0.25 * StatusBar.currentHeight,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
     elevation: 30,
   },
   userInfo: {
@@ -388,7 +383,7 @@ const styles = StyleSheet.create({
   credits: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.grey.lightgrey,
+    backgroundColor: Colors.bottomNavigation,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 15,

@@ -462,14 +462,14 @@ const SessionDetails = ({
   return (
     <SafeAreaView
       style={{
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.background,
         flex: 1,
       }}
     >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         style={{
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.background,
         }}
       >
         <View
@@ -699,7 +699,7 @@ const SessionDetails = ({
         children={
           <SafeAreaView
             style={{
-              backgroundColor: Colors.beige,
+              backgroundColor: Colors.bottomNavigation,
               paddingVertical: hp(1),
               paddingHorizontal: wp(3),
               borderTopRightRadius: wp(8),
@@ -815,7 +815,10 @@ const SessionDetails = ({
                 buttonStyle={{
                   backgroundColor: Colors.primary,
                   // minWidth: WIDTH * 0.55,
-                  // width: "100%",
+                  width:
+                    getTitle().toLowerCase() == "cancel your booking"
+                      ? "auto"
+                      : "100%",
                   minHeight: HEIGHT * 0.05,
                 }}
                 title={getTitle()}

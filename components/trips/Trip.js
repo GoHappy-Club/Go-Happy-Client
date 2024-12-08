@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: Colors.white,
+
+    backgroundColor: Colors.background,
   },
   textContainer: {
     padding: 16,

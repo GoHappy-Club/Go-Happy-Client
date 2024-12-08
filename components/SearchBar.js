@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: Colors.background,
   },
   searchIcon: {
     top: 15,
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.grey.f0,
+    backgroundColor: Colors.primary,
     borderRadius: 20,
     paddingHorizontal: 15,
   },

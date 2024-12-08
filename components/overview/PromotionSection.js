@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },

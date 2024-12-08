@@ -66,9 +66,9 @@ export const Itinerary = ({ details, vouchers }) => {
     ]);
   }, [details]);
 
-    const getMaxVouchersValue = () => {
+  const getMaxVouchersValue = () => {
     let maxDiscount = 0;
-    vouchers.forEach(voucher => {
+    vouchers.forEach((voucher) => {
       if (voucher.value) {
         maxDiscount = Math.max(maxDiscount, voucher.value);
       }
@@ -97,7 +97,14 @@ export const Itinerary = ({ details, vouchers }) => {
       duration: daysDifference + " Days / " + (daysDifference - 1) + " Nights",
     };
     return (
-      <View style={{ margin: "7%", marginBottom: 0, marginTop: "5%" }}>
+      <View
+        style={{
+          margin: "7%",
+          marginBottom: 0,
+          marginTop: "5%",
+          // backgroundColor: Colors.background,
+        }}
+      >
         <View
           style={
             {
@@ -168,7 +175,8 @@ export const Itinerary = ({ details, vouchers }) => {
             style={{
               fontSize: 18,
               textAlignVertical: "center",
-              textDecorationLine: vouchers.length >= 1 ? "line-through" : "none",
+              textDecorationLine:
+                vouchers?.length >= 1 ? "line-through" : "none",
               marginLeft: wp(2),
             }}
           >
@@ -232,7 +240,13 @@ export const Itinerary = ({ details, vouchers }) => {
   };
 
   return (
-    <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      }}
+    >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {item && <QuickView />}
         <Accordion
@@ -268,12 +282,10 @@ export const Itinerary = ({ details, vouchers }) => {
 
 const styles = StyleSheet.create({
   test: {
-    //backgroundColor: "green",
     margin: "5%",
-    // marginTop: "5%",
   },
   header: {
-    backgroundColor: Colors.pink.pink,
+    backgroundColor: Colors.bottomNavigation,
     borderRadius: 8,
     padding: "5%",
     display: "flex",

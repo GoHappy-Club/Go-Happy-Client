@@ -372,7 +372,11 @@ const NewProfile = () => {
                 navigation.navigate("PastSessions");
               }}
             >
-              <FontAwesomeIcon icon={faHistory} size={24} color="#666" />
+              <FontAwesomeIcon
+                icon={faHistory}
+                size={24}
+                color={Colors.primaryText}
+              />
               <View style={styles.textContainer}>
                 <Text style={styles.title}>Check Past Sessions</Text>
               </View>
@@ -382,7 +386,11 @@ const NewProfile = () => {
               style={styles.menuItem}
               onPress={() => navigation.navigate("About GoHappy Club")}
             >
-              <FontAwesomeIcon icon={faInfoCircle} size={24} color="#666" />
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                size={24}
+                color={Colors.primaryText}
+              />
               <View style={styles.textContainer}>
                 <Text style={styles.title}>About GoHappy Club</Text>
               </View>
@@ -393,7 +401,11 @@ const NewProfile = () => {
                 style={styles.menuItem}
                 onPress={() => Linking.openURL(state.whatsappLink)}
               >
-                <FontAwesomeIcon icon={faUsers} size={24} color="#666" />
+                <FontAwesomeIcon
+                  icon={faUsers}
+                  size={24}
+                  color={Colors.primaryText}
+                />
                 <View style={styles.textContainer}>
                   <Text style={styles.title}>Join WhatsApp Support Group</Text>
                 </View>
@@ -406,7 +418,11 @@ const NewProfile = () => {
                 setState((prevState) => ({ ...prevState, logoutPopup: true }))
               }
             >
-              <FontAwesomeIcon icon={faSignOutAlt} size={24} color="#666" />
+              <FontAwesomeIcon
+                icon={faSignOutAlt}
+                size={24}
+                color={Colors.primaryText}
+              />
               <View style={styles.textContainer}>
                 <Text style={styles.title}>Logout</Text>
               </View>
@@ -506,14 +522,14 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   achievmentValue: {
+    color: Colors.primaryText,
     fontSize: wp(5),
     fontFamily: "Montserrat-SemiBold",
-    color: "black",
   },
   achievmentKey: {
     fontSize: wp(3),
     fontFamily: "Montserrat-Regular",
-    color: "black",
+    color: Colors.primaryText,
     maxWidth: wp(25),
   },
   menuItem: {
@@ -530,6 +546,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#202124",
+    color: Colors.primaryText,
   },
 });

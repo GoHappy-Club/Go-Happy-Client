@@ -71,14 +71,14 @@ const ReferBottomSheet = ({
     <BottomSheetModal
       ref={modalRef}
       index={0}
-      snapPoints={["50%","80%"]}
+      snapPoints={["50%", "80%"]}
       enablePanDownToClose={true}
       enableDismissOnClose={true}
       handleStyle={{ display: "none" }}
       backdropComponent={renderBackdrop}
       backgroundStyle={{
         borderRadius: 40,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.background,
         shadowColor: "#000",
         shadowOffset: {
           width: 2,
@@ -136,9 +136,8 @@ const ReferBottomSheet = ({
                   they want.
                 </Text>
                 <Text style={styles.listItem}>
-                  4. Receive Thank You Gift{" "}
-                  from GoHappy Club delivered to your home once you have seven
-                  successful referrals.
+                  4. Receive Thank You Gift from GoHappy Club delivered to your
+                  home once you have seven successful referrals.
                 </Text>
               </View>
             </ScrollView>
@@ -153,6 +152,7 @@ const ReferBottomSheet = ({
           }}
           style={{
             flex: 1,
+            backgroundColor: Colors.background,
           }}
         >
           <TouchableOpacity
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: "bold",
-    fontSize: 18
+    fontSize: 18,
   },
   listContainer: {
     marginTop: 10,

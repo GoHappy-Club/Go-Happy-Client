@@ -25,7 +25,7 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_android/config.json";
+import * as configData from "./config/local_ios/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -546,6 +546,7 @@ export default function App() {
                       headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
+                      // headerBackground: Colors.background,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -565,8 +566,7 @@ export default function App() {
                       <MembershipScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -589,8 +589,7 @@ export default function App() {
                     )}
                     options={{
                       headerLeft: () => <View />,
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerShadowVisible: false,
                     }}
@@ -602,8 +601,7 @@ export default function App() {
                       <About {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -625,8 +623,7 @@ export default function App() {
                       <MySessionsScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -649,8 +646,6 @@ export default function App() {
                     )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
-                      // headerTransparent:
-                      //   Platform.OS === "android" ? true : false,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -671,8 +666,7 @@ export default function App() {
                       <TripDetailsScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -709,8 +703,7 @@ export default function App() {
                     name="SubscriptionPlans"
                     children={(props) => <SubscriptionScreen />}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -746,8 +739,7 @@ export default function App() {
                     name="WalletScreen"
                     children={(props) => <WalletScreen />}
                     options={({ navigation }) => ({
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
@@ -826,8 +818,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -846,8 +837,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -866,8 +856,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       headerLeft: () => (
                         <TouchableOpacity
                           style={styles.backButton}
@@ -887,8 +876,7 @@ export default function App() {
                     children={(props) => <FestiveWish />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerTransparent:
-                        Platform.OS === "android" ? true : false,
+                      headerTransparent: true,
                       headerRight: () => (
                         <TouchableOpacity
                           style={styles.backButton}

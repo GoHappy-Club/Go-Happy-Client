@@ -117,7 +117,7 @@ export default class ReferralsList extends React.Component {
     );
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{ backgroundColor: Colors.background }}>
         <View style={styles.questContainer}>
           <Text style={styles.label}>Referral Level</Text>
           {openedChestCount <= 1 && (

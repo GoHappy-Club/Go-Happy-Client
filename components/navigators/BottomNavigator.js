@@ -40,7 +40,7 @@ export default function BottomNavigator() {
         elevation: 64,
         borderTopLeftRadius: 21,
         borderTopRightRadius: 21,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.bottomNavigation,
         padding: 10,
         zIndex: 10000,
       }}

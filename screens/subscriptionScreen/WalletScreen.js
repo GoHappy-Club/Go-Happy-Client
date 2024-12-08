@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Wallet from "../../components/subscription/Wallet";
 import { useSelector } from "react-redux";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import { Colors } from "../../assets/colors/color";
 
 const WalletScreen = () => {
   const [transactions, setTransactions] = useState([]);
@@ -30,21 +31,17 @@ const WalletScreen = () => {
     getTransactions();
   }, [membership]);
   return (
-    <>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors.background,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       {loading && <GOHLoader />}
-      {!loading && (
-        <SafeAreaView
-          style={{
-            flex: 1,
-            backgroundColor: "#fff",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Wallet transactions={transactions} />
-        </SafeAreaView>
-      )}
-    </>
+      {!loading && <Wallet transactions={transactions} />}
+    </SafeAreaView>
   );
 };
 

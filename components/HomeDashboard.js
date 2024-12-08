@@ -374,7 +374,7 @@ const HomeDashboard = ({
         flexDirection: "column",
         margin: 1,
         width: wp(88),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.background,
         justifyContent: "center",
         alignItems: "center",
         marginVertical: 10,
@@ -614,14 +614,14 @@ const HomeDashboard = ({
         loadCaller={loadCaller}
         checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
       />
-      <View style={{ flex: 1, backgroundColor: Colors.white }}>
+      <View style={{ flex: 1, backgroundColor: Colors.background }}>
         <CalendarStrip
           calendarAnimation={{ type: "sequence", duration: 10 }}
           daySelectionAnimation={{
             type: "background",
             duration: 200,
             borderWidth: 2,
-            borderHighlightColor: "#FF5733",
+            borderHighlightColor: Colors.background,
           }}
           minDate={new Date()}
           maxDate={dayjs().add(8, "days").toDate()}
@@ -645,7 +645,7 @@ const HomeDashboard = ({
               style={{
                 alignItems: "center",
                 padding: 5,
-                backgroundColor: selected ? "#FF5733" : "transparent",
+                backgroundColor: selected ? Colors.primary : "transparent",
                 borderRadius: 5,
               }}
             >
@@ -833,36 +833,37 @@ const calendarStyles = StyleSheet.create({
   },
   calendarStrip: {
     height: hp(10),
+    backgroundColor: Colors.background,
   },
   headerStyle: {
-    color: "#333",
+    // color: "#333",
     fontSize: 18,
     display: "none",
   },
   dateNumberStyle: {
-    color: "#333",
+    // color: "#333",
     fontSize: 16,
-    backgroundColor: "red",
+    // backgroundColor: "red",
     padding: 5,
     width: wp(10),
     height: wp(10),
   },
   dateNameStyle: {
-    color: "#666",
+    // color: "#666",
     fontSize: 14,
   },
   highlightDateNumberStyle: {
-    color: "blue",
+    // color: "blue",
     fontWeight: "bold",
     fontSize: 16,
-    backgroundColor: "red",
+    // backgroundColor: "red",
     padding: 10,
   },
   disabledDateNameStyle: {
-    color: "#CCC",
+    // color: "#CCC",
   },
   disabledDateNumberStyle: {
-    color: "#CCC",
+    // color: "#CCC",
   },
   iconContainer: {
     flex: 0.1,

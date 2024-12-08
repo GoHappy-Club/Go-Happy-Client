@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },
@@ -172,10 +173,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
   },
-  text: {
-    textAlign: "center",
-    fontSize: 12,
-  },
+  text: { color: Colors.primaryText, textAlign: "center", fontSize: 12 },
   subText: {
     marginHorizontal: 10,
     fontSize: 12,

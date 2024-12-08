@@ -71,11 +71,13 @@ class MySessions extends Component {
   sorry() {
     return (
       <>
-        <View style={{
-          height:hp(100),
-          justifyContent:"center",
-          alignItems:"center",
-        }}>
+        <View
+          style={{
+            height: hp(100),
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Text
             h3
             style={{
@@ -117,8 +119,8 @@ class MySessions extends Component {
                     style={{
                       fontSize: wp(5),
                       color: Colors.white,
-                      paddingHorizontal:wp(1),
-                      paddingVertical:wp(1.5),
+                      paddingHorizontal: wp(1),
+                      paddingVertical: wp(1.5),
                     }}
                   >
                     Become a member now
@@ -145,7 +147,7 @@ class MySessions extends Component {
           marginLeft: 10,
           marginRight: 10,
           marginBottom: 10,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.bottomNavigation,
         }}
       >
         <TouchableOpacity
@@ -217,20 +219,7 @@ class MySessions extends Component {
                   {this.trimContent(item.expertName, 17)}
                 </Title>
               </View>
-              {type == "ongoing" && (
-                <Button
-                  disabled={
-                    item.participantsList != null &&
-                    item.participantsList.includes(this.props.phoneNumber)
-                      ? true
-                      : false
-                  }
-                  title="Join"
-                  buttonStyle={{ backgroundColor: Colors.primary }}
-                  onPress={this.startEvent.bind(this, item)}
-                  loading={item.loadingButton}
-                />
-              )}
+
               {type == "expired" && (
                 <Button
                   disabled={
@@ -252,56 +241,15 @@ class MySessions extends Component {
     );
 
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: Colors.background }}
+      >
         {this.props.ongoingEvents.length == 0 &&
           this.props.upcomingEvents.length == 0 &&
           this.props.expiredEvents.length == 0 &&
           this.sorry()}
-        {this.props.ongoingEvents.length > 0 && (
-          <Text h4 style={{ marginLeft: 5, marginTop: 20, marginBottom: 15 }}>
-            {this.props.ongoingEvents.length > 0 && (
-              <Text
-                h4
-                style={{ marginLeft: 30, marginTop: 20, marginBottom: 15 }}
-              >
-                Ongoing Events
-              </Text>
-            )}
-            {this.props.childLoader == true && (
-              <MaterialIndicator color={Colors.blue.blue} />
-            )}
-          </Text>
-        )}
-        <SafeAreaView style={styles.container}>
-          <FlatList
-            data={this.props.ongoingEvents}
-            renderItem={(item) => renderItem(item, "ongoing")}
-            keyExtractor={(item) => item.id}
-          />
-        </SafeAreaView>
-        {this.props.upcomingEvents.length > 0 && (
-          <Text h4 style={{ marginLeft: 5, marginTop: 20, marginBottom: 15 }}>
-            {this.props.upcomingEvents.length > 0 && (
-              <Text
-                h4
-                style={{ marginLeft: 30, marginTop: 20, marginBottom: 15 }}
-              >
-                Upcoming Events
-              </Text>
-            )}
-            {this.props.childLoader == true && (
-              <MaterialIndicator color={Colors.blue.blue} />
-            )}
-          </Text>
-        )}
-        <SafeAreaView style={styles.container}>
-          <FlatList
-            horizontal={true}
-            data={this.props.upcomingEvents}
-            renderItem={(item) => renderItem(item, "upcoming")}
-            keyExtractor={(item) => item.id}
-          />
-        </SafeAreaView>
+
         {this.props.expiredEvents.length > 0 && (
           <Text h4 style={{ marginLeft: 5, marginTop: 20, marginBottom: 15 }}>
             {this.props.childLoader == true && (
@@ -309,7 +257,7 @@ class MySessions extends Component {
             )}
           </Text>
         )}
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{ backgroundColor: Colors.background }}>
           <FlatList
             data={this.props.expiredEvents}
             renderItem={(item) => renderItem(item, "expired")}
@@ -342,11 +290,11 @@ class MySessions extends Component {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.bottomNavigation,
     marginBottom: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.white,
+    borderColor: Colors.bottomNavigation,
   },
   container1: {
     flex: 1,

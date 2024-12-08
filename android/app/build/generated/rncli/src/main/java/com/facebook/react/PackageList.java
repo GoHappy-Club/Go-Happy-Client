@@ -59,6 +59,8 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-share
 import cl.json.RNSharePackage;
+// react-native-sound
+import com.zmxv.RNSound.RNSoundPackage;
 // react-native-svg
 import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
@@ -142,6 +144,7 @@ public class PackageList {
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSharePackage(),
+      new RNSoundPackage(),
       new SvgPackage(),
       new VectorIconsPackage(),
       new ReactVideoPackage(),

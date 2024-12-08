@@ -16,15 +16,30 @@
       <change beforePath="$PROJECT_DIR$/../App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../components/Autocomplete.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Autocomplete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/generated/rncli/src/main/java/com/facebook/react/PackageList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../assets/colors/color.js" beforeDir="false" afterPath="$PROJECT_DIR$/../assets/colors/color.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/About.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/About.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/HeaderComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/HeaderComponent.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../components/HomeDashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/HomeDashboard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../components/Membership.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Membership.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../components/PhonePe/Payments.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/PhonePe/Payments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Refer/Refer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Refer/Refer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Refer/ReferBottomSheet.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Refer/ReferBottomSheet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Refer/ReferralsList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Refer/ReferralsList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/Rewards.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/Rewards.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/SearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/SearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/SessionDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/SessionDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/navigators/BottomNavigator.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/navigators/BottomNavigator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/subscription/SubscriptionPlans.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/subscription/SubscriptionPlans.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/subscription/TransactionHistory.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/subscription/TransactionHistory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/subscription/Wallet.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/subscription/Wallet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../components/trips/TripsList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../components/trips/TripsList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../config/CustomAxios.js" beforeDir="false" afterPath="$PROJECT_DIR$/../config/CustomAxios.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/GoHappyClient.xcworkspace/xcuserdata/rakshitsharma.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Podfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../screens/subscriptionScreen/SubscriptionScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/subscriptionScreen/SubscriptionScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/Trips/TripsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/Trips/TripsScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/overview/OverviewScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/overview/OverviewScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../screens/subscriptionScreen/WalletScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/../screens/subscriptionScreen/WalletScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
