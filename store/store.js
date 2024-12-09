@@ -3,7 +3,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import countReducer from "../redux/reducers/countReducer";
 import profileReducer from "../redux/reducers/profileReducer";
 import membershipReducer from "../redux/reducers/membershipReducer";
-import reactotron from "../RectotronConfig";
+if (__DEV__) {
+  require("./RectotronConfig");
+}
 
 const rootReducer = combineReducers({
   count: countReducer,
