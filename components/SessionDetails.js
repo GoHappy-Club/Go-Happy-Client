@@ -255,7 +255,8 @@ const SessionDetails = ({
         event.eventName,
         event.coverImage,
         event.subCategory,
-        phoneNumber
+        phoneNumber,
+        event.endTime
       );
       setSessionAttended(phoneNumber);
       // await Linking.openURL(event.meetingLink);

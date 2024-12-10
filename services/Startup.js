@@ -42,19 +42,19 @@ export const checkPendingFeedback = async (
   setShowRating,
   setCurrentSession
 ) => {
+  const currentTime = new Date().getTime();
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
     const parsedSessions = sessions ? JSON.parse(sessions) : [];
-    const sessionNeedingFeedback = parsedSessions.filter(
-      (session) => session.hasGivenFeedback == false
-    );
+    const sessionNeedingFeedback = parsedSessions
+      .filter((session) => session.hasGivenFeedback == false)
+      .filter((session) => session.sessionEndTime > currentTime);
 
     if (sessionNeedingFeedback.length > 0) {
       setCurrentSession(sessionNeedingFeedback[0]);
       setShowRating(true);
     }
     // remove older sessions
-    const currentTime = new Date().getTime();
     const updatedSessions = parsedSessions.filter(
       (session) => currentTime - session.timestamp < 24 * 60 * 60 * 1000
     );
@@ -72,7 +72,8 @@ export const storeCompletedSession = async (
   sessionName,
   sessionImage,
   sessionSubCategory,
-  phone
+  phone,
+  sessionEndTime
 ) => {
   try {
     const sessions = await AsyncStorage.getItem("completedSessions");
@@ -85,6 +86,7 @@ export const storeCompletedSession = async (
       sessionName,
       sessionImage,
       sessionSubCategory,
+      sessionEndTime,
       phone,
       timestamp: new Date().getTime(),
       hasGivenFeedback: false,

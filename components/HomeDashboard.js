@@ -37,6 +37,8 @@ import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
 import Sound from "react-native-sound";
 import CustomCalendarStrip from "../commonComponents/CalendarStrip.js";
+import { EventNotification } from "../services/LocalPushController.js";
+import { toZonedTime, } from "date-fns-tz";
 const HomeDashboard = ({
   events,
   ratings,
@@ -211,7 +213,8 @@ const HomeDashboard = ({
         item.eventName,
         item.coverImage,
         item.subCategory,
-        profile.phoneNumber
+        profile.phoneNumber,
+        item.endTime
       );
       setSessionAttended(profile.phoneNumber);
       // await Linking.openURL(item.meetingLink);
@@ -615,7 +618,7 @@ const HomeDashboard = ({
         checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
       />
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
-        {/* <CalendarStrip
+        <CalendarStrip
           calendarAnimation={{ type: "sequence", duration: 10 }}
           daySelectionAnimation={{
             type: "background",
@@ -662,11 +665,13 @@ const HomeDashboard = ({
             </TouchableOpacity>
           )}
           onDateSelected={(date) => changeSelectedDate(date.toISOString())}
-        /> */}
-        <CustomCalendarStrip
-          selectedDate={state.selectedDateRaw}
-          changeSelectedDate={(date) => {changeSelectedDate(date)}}
         />
+        {/* <CustomCalendarStrip
+          selectedDate={state.selectedDateRaw}
+          changeSelectedDate={(date) => {
+            changeSelectedDate(date);
+          }}
+        /> */}
 
         <Text
           style={{
