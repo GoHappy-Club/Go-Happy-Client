@@ -392,7 +392,6 @@ export default function App() {
   const recheck = async () => {
     try {
       const response = await axios.get(SERVER_URL);
-      console.log(response);
       if (response.status == 200) {
         setIsConnected(true);
       } else {

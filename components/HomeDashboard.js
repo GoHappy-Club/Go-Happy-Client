@@ -36,6 +36,7 @@ import { useZoom } from "../helpers/zoomUtils.js";
 import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
 import Sound from "react-native-sound";
+import CustomCalendarStrip from "../commonComponents/CalendarStrip.js";
 const HomeDashboard = ({
   events,
   ratings,
@@ -142,7 +143,6 @@ const HomeDashboard = ({
     parsedSelect.setHours(0, 0, 0, 0);
     const select = format(parsedSelect, "EEE MMM dd yyyy");
     const tempDate = getTime(parsedSelect);
-
     setState((prevState) => ({
       ...prevState,
       selectedDate: select,
@@ -615,7 +615,7 @@ const HomeDashboard = ({
         checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
       />
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
-        <CalendarStrip
+        {/* <CalendarStrip
           calendarAnimation={{ type: "sequence", duration: 10 }}
           daySelectionAnimation={{
             type: "background",
@@ -662,8 +662,11 @@ const HomeDashboard = ({
             </TouchableOpacity>
           )}
           onDateSelected={(date) => changeSelectedDate(date.toISOString())}
+        /> */}
+        <CustomCalendarStrip
+          selectedDate={state.selectedDateRaw}
+          changeSelectedDate={(date) => {changeSelectedDate(date)}}
         />
-        {/* <DatePicker /> */}
 
         <Text
           style={{

@@ -35,7 +35,6 @@ import AutocompleteCityInput from "./Autocomplete";
 
 const NewAdditionalDetails = ({ route }) => {
   const profile = useSelector((state) => state.profile.profile);
-  console.log("Route in add==>", route);
 
   const parseDate = (date) => {
     console.log("date in parse", date);
