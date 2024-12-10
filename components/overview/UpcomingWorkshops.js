@@ -94,7 +94,7 @@ class UpcomingWorkshops extends Component {
       }
     >
       <View style={styles.container}>
-        <Image source={{ uri: item.coverImage }} style={styles.image} />
+        <FastImage source={{ uri: item.coverImage }} style={styles.image} />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
             {this.trimContent(item.eventName, 20)}
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },

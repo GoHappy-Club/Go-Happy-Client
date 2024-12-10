@@ -1,8 +1,17 @@
+if (__DEV__) {
+  require("./RectotronConfig");
+}
 /**
  * @format
  */
 
-import { AppRegistry, StatusBar, Text, useWindowDimensions, View } from "react-native";
+import {
+  AppRegistry,
+  StatusBar,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import App from "./App";
 import { name as appName } from "./app.json";
 import { Provider } from "react-redux";
@@ -13,6 +22,9 @@ import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
 import { Colors } from "./assets/colors/color";
+import firebase from "@react-native-firebase/app";
+// import { ZoomSDKProvider } from "zoom-msdk-rn";
+import { generateZoomSignature } from "./helpers/generateZoomSignature";
 // const my_store = store();
 
 const RNRedux = () => {
@@ -28,11 +40,37 @@ const RNRedux = () => {
       stepNumberComponent={StepNumber}
     >
       <Provider store={store()}>
-        <App />
+        {/* <ZoomSDKProvider
+          config={{
+            jwtToken: String(generateZoomSignature()),
+            domain: "zoom.us",
+            enableLog: true,
+            logSize: 5,
+          }}
+        > */}
+          <App />
+        {/* </ZoomSDKProvider> */}
       </Provider>
     </CopilotProvider>
   );
 };
+
+firebase.messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
+function HeadlessCheck({ isHeadless }) {
+  if (isHeadless) {
+    // App has been launched in the background by iOS, ignore
+    console.log("App has been launched in the background by iOS, ignore");
+
+    return null;
+  }
+
+  return <RNRedux />;
+}
+
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
-AppRegistry.registerComponent(appName, () => RNRedux);
+AppRegistry.registerComponent(appName, () => HeadlessCheck);
+// AppRegistry.registerComponent('app', () => HeadlessCheck);

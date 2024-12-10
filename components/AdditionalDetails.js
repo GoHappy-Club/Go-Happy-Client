@@ -12,6 +12,10 @@ import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AutocompleteCityInput from "./Autocomplete.js";
 import { Colors } from "../assets/colors/color.js";
+import DateTimePicker from "react-native-ui-datepicker";
+import dayjs from "dayjs";
+import ImagePicker from "react-native-image-crop-picker";
+import { hp, wp } from "../helpers/common.js";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);
@@ -55,7 +59,6 @@ class AdditionalDetails extends Component {
     name,
     age,
     profileImage,
-    plan,
     sessionsAttended,
     selfInviteCode,
     city,
@@ -73,7 +76,6 @@ class AdditionalDetails extends Component {
       phoneNumber: profile.phoneNumber,
       token: profile.token,
       profileImage: profileImage,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       city: city,
       emergencyContact: emergencyContact,
@@ -82,8 +84,40 @@ class AdditionalDetails extends Component {
     actions.setProfile(profile);
   }
 
+  handleSelectImage = async () => {
+    try {
+      const options = {
+        width: 350,
+        height: 400,
+        cropping: true,
+        includeBase64: true,
+        freeStyleCropEnabled: true,
+      };
+      ImagePicker.openPicker(options)
+        .then((image) => {
+          const base64Image = `data:${image.mime};base64,${image.data}`;
+          var url = SERVER_URL + "/user/updateProfileImage";
+          axios
+            .post(url, {
+              phoneNumber: this.props.profile.phoneNumber,
+              profileImage: base64Image,
+            })
+            .then(() => {
+              let { profile, actions } = this.props;
+              const newProfile = { ...profile, profileImage: base64Image };
+              actions.setProfile(newProfile);
+              this.setState({ ...prevState, image: base64Image });
+              AsyncStorage.setItem("profileImage", base64Image);
+            })
+            .catch((error) => {});
+        })
+        .catch((error) => {});
+    } catch (error) {
+      console.log("Error in handleSelectImage:", error);
+    }
+  };
+
   updateDetails() {
-    //  || this.state.uiDate=='' || this.state.uiDate==null
     if (
       this.state.name == null ||
       this.state.name == "" ||
@@ -120,8 +154,8 @@ class AdditionalDetails extends Component {
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
           // this.setState({fullName: userInfo.fullName});
-          if (response.data.phoneNumber != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.phoneNumber);
+          if (response.data.phone != null) {
+            AsyncStorage.setItem("phoneNumber", response.data.phone);
           }
           // AsyncStorage.setItem('fullName',response.data.fullName);
           if (response.data.name != null) {
@@ -144,12 +178,10 @@ class AdditionalDetails extends Component {
             response.data.name,
             response.data.age,
             response.data.profileImage,
-            response.data.membership,
             response.data.sessionsAttended,
             response.data.selfInviteCode,
             response.data.city,
-            response.data.emergencyContact,
-            response.data.age
+            response.data.emergencyContact
           );
           this.setState({ loader: true });
 
@@ -158,10 +190,10 @@ class AdditionalDetails extends Component {
           this.props.navigation.navigate("GoHappy Club");
           this.setState({ loader: false });
           await analytics().logEvent("signup_click", {
-            phoneNumber: response.data.phoneNumber,
-            email: response.data.email,
-            age: response.data.age,
-            name: response.data.name,
+            phoneNumber: response.data.user.phoneNumber,
+            email: response.data.user.email,
+            age: response.data.user.age,
+            name: response.data.user.name,
           });
         } else if (response.data == "ERROR") {
           this.setState({ showAlert: true, loader: false });
@@ -172,257 +204,264 @@ class AdditionalDetails extends Component {
         this.setState({ loadingButton: false });
       });
   }
-  setDate() {}
 
   render() {
     var open = this.state.open;
     return (
-      <ScrollView style={styles.container1}>
-        <Text style={styles.title}>Add Information</Text>
-
-        <View style={styles.inputs}>
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Name *"
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.name}
-            onChangeText={(text) => this.setState({ name: text })}
-          />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            keyboardType="numeric"
-            placeholder="Age *"
-            maxLength={2}
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.age}
-            onChangeText={(text) => this.setState({ age: text })}
-          />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Email"
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            value={this.state.email}
-            onChangeText={(text) => this.setState({ email: text })}
-          />
-          <AutocompleteCityInput input={this.state.city} setInput={(city)=>this.setState({city:city})} />
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={Colors.transparent}
-            placeholder="Emergency Contact Number"
-            placeholderTextColor="#000"
-            value={this.state.emergencyContact}
-            keyboardType="phone-pad"
-            onChangeText={(text) => this.setState({ emergencyContact: text })}
-          />
-          <Text
+      <>
+        <SafeAreaView style={styles.mainContainer}>
+          <Pressable
             style={{
-              fontSize: 14,
-              color: Colors.black,
-              marginTop: "5%",
-              alignSelf: "center",
-              alignContent: "center",
-              textAlign: "center",
-              paddingLeft: 15,
+              display: open ? "flex" : "none",
+              position: "absolute",
+              backgroundColor: "#000000a0",
+              height: hp(100),
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000000,
+              width: wp(100),
             }}
+            onPress={() => setOpen(false)}
           >
-            GoHappy Club: An Initiative exclusively for aged 50 years and above.
-          </Text>
-          {/* <Pressable onPress={() => this.setState({open:true})} >
-						<View pointerEvents="none">
-							<TextInput style = {styles.input}
-								underlineColorAndroid = {Colors.transparent}
-								placeholder = "Date Of Birth *"
-								editable={false}
-								placeholderTextColor = "#000"
-								autoCapitalize = "none"
-								value={this.state.date}
+            <View
+              style={{
+                backgroundColor: "white",
+                zIndex: 10000,
+                width: wp(90),
+                borderRadius: 10,
+                padding: 20,
+              }}
+            >
+              <DateTimePicker
+                timePicker={false}
+                date={parseDate(state.dob)}
+                onChange={({ date }) => {
+                  const finalDate = `${String(date.get("date")).padStart(
+                    2,
+                    "0"
+                  )}-${String(date.get("month") + 1).padStart(
+                    2,
+                    "0"
+                  )}-${date.get("year")}`;
 
-								// onPress={() => this.setState({open:true})}
-							/>
-						</View>
-					</Pressable> */}
-          {/* <DateTimePickerModal
-						isVisible={open}
-						mode="date"
-						onConfirm={(date) => {
-							this.setState({open:false})
-							//this.setState({date:date})
+                  setState((prev) => ({ ...prev, dob: finalDate }));
+                }}
+                maxDate={dayjs().subtract(49, "year")}
+                selectedItemColor={Colors.primary}
+              />
+            </View>
+          </Pressable>
+          <StatusBar barStyle="dark-content" />
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardDismissMode="interactive"
+          >
+            <View style={styles.basicDetailsContainer}>
+              <View style={styles.coverContainer}>
+                <FastImage
+                  style={styles.cover}
+                  resizeMode="cover"
+                  source={{
+                    uri: profile.profileImage,
+                  }}
+                />
+                <Pressable
+                  style={styles.cameraContainer}
+                  onPress={handleSelectImage}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#00000080",
+                      padding: 8,
+                      borderRadius: 300,
+                    }}
+                  >
+                    <Camera size={24} color={"#666"} fill={"white"} />
+                  </View>
+                </Pressable>
+              </View>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Name : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Name"
+                value={this.state.name}
+                onChangeText={(text) => this.setState({ name: text })}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Age : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Age"
+                value={this.state.age}
+                onChangeText={(text) => this.setState({ age: text })}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email : </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={this.state.email}
+                onChangeText={(text) => this.setState({ email: text })}
+              />
+            </View>
 
-							var uiDate = JSON.stringify(date).substring(1,JSON.stringify(date).indexOf('T'));
-							this.setState({date:uiDate})
-							this.setState({uiDate:uiDate})}}
-						onCancel={() => this.setState({open:false})}
-					/> */}
-        </View>
-        <Button
-          outline
-          title="Save"
-          loading={this.state.loadingButton}
-          buttonStyle={{ width: "50%", alignSelf: "center", marginTop: "5%" }}
-          ViewComponent={LinearGradient}
-          linearGradientProps={{
-            colors: Colors.linearGradient,
-            start: { x: 0, y: 0.25 },
-            end: { x: 0.5, y: 1 },
-            locations: [0, 0.5, 0.6],
-          }}
-          onPress={this.updateDetails.bind(this)}
-        />
-        {/* <Button  buttonStyle = {styles.dateInput}
-					// buttonStyle={{backgroundColor:'white'}}
-					titleStyle={{color:Colors.primary}}
-					title="Set Date of Birth"
-					onPress={() => this.setState({open:true})} /> */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Emergency Contact : </Text>
+              <TextInput
+                style={styles.input}
+                value={this.state.emergencyContact}
+                placeholder="Emergency Contact"
+                maxLength={10}
+                keyboardType="phone-pad"
+                onChangeText={(text) =>
+                  this.setState({ emergencyContact: text })
+                }
+              />
+            </View>
 
-        <AwesomeAlert
-          show={this.state.showAlert}
-          showProgress={false}
-          title="Error"
-          message={this.state.alertMessage}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Try Again"
-          confirmButtonColor={Colors.errorButton}
-          onConfirmPressed={() => {
-            this.setState({ showAlert: false });
-          }}
-        />
-      </ScrollView>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Date of Birth : </Text>
+              <Pressable
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  borderBottomWidth: 2,
+                  borderBottomColor: "#ccc",
+                }}
+                onPress={() => this.setState({ open: true })}
+              >
+                <Text style={[styles.input, { borderBottomWidth: 0 }]}>
+                  {this.state.dob}
+                </Text>
+                <Calendar size={24} color={"black"} />
+              </Pressable>
+            </View>
+            <AutocompleteCityInput
+              label={"City : "}
+              input={this.state.city}
+              setInput={(city) => setState({ city: city })}
+            />
+          </ScrollView>
+          <Button
+            outline
+            title={"Save"}
+            loading={state.loading}
+            buttonStyle={styles.button}
+            onPress={this.updateDetails.bind(this)}
+            disabled={state.loading}
+          />
+        </SafeAreaView>
+        {this.state.showAlert && (
+          <AwesomeAlert
+            show={this.state.showAlert}
+            showProgress={false}
+            title="Error!"
+            message={this.state.alertMessage}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={true}
+            showConfirmButton={true}
+            confirmText="Try Again"
+            confirmButtonColor={Colors.deepskyblue}
+            onConfirmPressed={() => {
+              this.setState({
+                showAlert: false,
+                alertMessage: "",
+              });
+            }}
+          />
+        )}
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: Colors.black,
-    marginTop: "15%",
-    alignSelf: "center",
-  },
-  container1: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: Colors.grey.f,
+    backgroundColor: Colors.beige,
+  },
+  container: {
+    justifyContent: "flex-start",
+    paddingHorizontal: wp(5),
+    paddingTop: hp(7),
+  },
+  cover: {
+    width: wp(50),
+    aspectRatio: 1,
+    borderRadius: wp(30),
+  },
+  coverContainer: {
+    aspectRatio: 1,
+    borderWidth: 4,
+    borderColor: "black",
+    borderRadius: wp(30),
+    padding: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  cameraContainer: {
+    position: "absolute",
+    bottom: -20,
+    alignSelf: "center",
+    backgroundColor: Colors.beige,
+    padding: 4,
+    borderRadius: wp(10),
+  },
+  basicDetailsContainer: {
+    width: "100%",
+    paddingHorizontal: wp(10),
+    flexDirection: "column",
+    alignItems: "center",
+    gap: wp(8),
+  },
+  profileName: {
+    fontSize: wp(7),
+    fontFamily: "Montserrat-SemiBold",
+  },
+  phoneNumber: {
+    fontSize: wp(4),
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.8,
+  },
+  profileInfo: {
+    alignItems: "center",
+    marginVertical: hp(2),
+  },
+  inputContainer: {
+    marginBottom: 20,
+    width: wp(90),
+  },
+  label: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
   },
   input: {
-    fontSize: 18,
-    color: Colors.black,
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: Colors.white,
-    paddingLeft: 15,
-    borderColor: Colors.black,
-    borderWidth: 1,
+    fontSize: wp(5.5),
+    fontFamily: "Montserrat-SemiBold",
+    borderBottomWidth: 2,
+    borderBottomColor: "#ccc",
+    paddingVertical: 8,
+    color: "#000",
+  },
+  autocompleteContainer: {
+    borderWidth: 0,
+  },
+  button: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 5,
-    width: "70%",
-  },
-  inputs: {
-    marginTop: "1%",
-    flex: 1,
-    flexDirection: "column",
-  },
-  dateInput: {
-    fontSize: 20,
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: Colors.white,
-    width: "40%",
-  },
-  btnContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  userBtn: {
-    backgroundColor: "#f0ad4e",
-    paddingVertical: 15,
-    height: 60,
-  },
-  btnTxt: {
-    fontSize: 20,
-    textAlign: "center",
-    color: Colors.black,
-    fontWeight: "700",
-  },
-  registerTxt: {
-    marginTop: 5,
-    fontSize: 15,
-    textAlign: "center",
-    color: Colors.white,
-  },
-  welcome: {
-    fontSize: 30,
-    textAlign: "center",
-    margin: 10,
-    color: Colors.white,
-  },
-  logo: {
-    width: 250,
-    height: 250,
-  },
-  logoContainer: {
-    alignItems: "center",
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-
-  newinput: {
-    height: 50,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginBottom: 10,
-    color: Colors.white,
-    paddingHorizontal: 10,
-  },
-  container2: {
-    flex: 1,
-    backgroundColor: "#aaa",
-  },
-  title2: {
-    color: Colors.black,
-    marginTop: "30%",
-    marginBottom: 10,
-    opacity: 0.9,
-    textAlign: "center",
-    fontSize: 30,
-  },
-  page: {
-    marginTop: "20%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textInput: {
-    width: "90%",
-    height: 40,
-    borderColor: Colors.phoneInputBorder,
-    borderWidth: 2,
-    borderRadius: 5,
-    paddingLeft: 10,
-    color: Colors.white,
-    fontSize: 16,
-  },
-  themeButton: {
-    width: "100%",
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderRadius: 5,
-  },
-  themeButtonTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.white,
-  },
-  verificationView: {
-    width: "100%",
-    alignItems: "center",
-    marginTop: 50,
+    minWidth: 100,
+    backgroundColor: Colors.primary,
   },
 });
 const mapStateToProps = (state) => ({

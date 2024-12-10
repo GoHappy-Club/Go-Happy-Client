@@ -30,7 +30,6 @@ class Trip extends Component {
       index: 0,
     };
     crashlytics().log(JSON.stringify(props.propProfile));
-    // alert(JSON.stringify(props));
   }
 
   CarouselComponent = ({ images }) => {
@@ -59,7 +58,7 @@ class Trip extends Component {
     return (
       <TouchableOpacity key={index}>
         {/* <View style={styles.container}> */}
-        <Image
+        <FastImage
           source={{ uri: item }}
           style={styles.image}
           // style={{ width: "100%", height: "100%" }}
@@ -79,7 +78,10 @@ class Trip extends Component {
 
         <this.CarouselComponent images={this.props.details.coverImages} />
 
-        <Itinerary details={this.props.details} />
+        <Itinerary
+          details={this.props.details}
+          vouchers={this.props.vouchers}
+        />
         {/* </ScrollView> */}
       </View>
     );
@@ -95,7 +97,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: Colors.white,
+
+    backgroundColor: Colors.background,
   },
   textContainer: {
     padding: 16,
