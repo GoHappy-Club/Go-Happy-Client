@@ -55,6 +55,13 @@ export default function Sections(props) {
       link: "Rewards",
       text: "See your earned rewards here.",
     },
+    {
+      title: "Quotes",
+      imgUrl:
+        "https://static.vecteezy.com/system/resources/thumbnails/008/486/043/small_2x/open-gift-box-surprise-earn-point-and-get-rewards-special-offer-concept-3d-rendering-illustration-png.png",
+      link: "QuotesPage",
+      text: "Get Daily Positive Quotes here.",
+    },
   ];
 
   useEffect(() => {

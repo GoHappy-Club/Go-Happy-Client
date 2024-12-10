@@ -62,6 +62,7 @@ import NewProfile from "./components/NewProfile.js";
 import EditProfile from "./components/EditProfile.js";
 import GOHLoader from "./commonComponents/GOHLoader.js";
 import NewAdditionalDetails from "./components/NewAdditionalDetails.js";
+import Quotes from "./components/Quotes.js";
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -873,6 +874,27 @@ export default function App() {
                   <Stack.Screen
                     name="FestiveWish"
                     children={(props) => <FestiveWish />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerTransparent: true,
+                      headerRight: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <X color="#000" size={24} />
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      presentation: "transparentModal",
+                      animation: "fade",
+                      headerLeft: () => <View />,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="QuotesPage"
+                    children={(props) => <Quotes />}
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
