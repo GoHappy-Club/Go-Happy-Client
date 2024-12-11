@@ -32,7 +32,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setMembership } from "../redux/actions/counts";
 import dayjs from "dayjs";
 import quotes from "../constants/quotes.json";
-import { ScheduledNotifcation } from "../services/LocalPushController";
+import {
+  ScheduledNotifcation,
+  scheduleWaterReminders,
+} from "../services/LocalPushController";
 
 const width = Dimensions.get("window").width;
 
@@ -84,6 +87,7 @@ const Header = () => {
       return quoteData;
     };
     getRandomQuote();
+    scheduleWaterReminders();
   });
 
   useEffect(() => {

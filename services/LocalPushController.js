@@ -14,6 +14,7 @@ export const localNotification = (title, quote) => {
     soundName: "default",
   });
 };
+
 export const ScheduledNotifcation = (title, quote, fireTime) => {
   PushNotification.localNotificationSchedule({
     autoCancel: true,
@@ -31,5 +32,42 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
       screen: "QuotesPage",
       params: { test: "12345" },
     },
+  });
+};
+
+const getNext9AM = () => {
+  const now = new Date();
+  const next9AM = new Date();
+  next9AM.setHours(9, 0, 0, 0);
+  if (now > next9AM) {
+    next9AM.setDate(next9AM.getDate() + 1);
+  }
+  return next9AM;
+};
+
+export const scheduleWaterReminders = () => {
+  PushNotification.getScheduledLocalNotifications((notifications) => {
+    const waterReminderExists = notifications.some(
+      (notif) =>
+        notif.message === "Drink a glass of water to stay healthy and hydrated."
+    );
+
+    if (!waterReminderExists) {
+      const next9AM = getNext9AM();
+
+      PushNotification.localNotificationSchedule({
+        channelId: "water reminders",
+        title: "Time to Hydrate!",
+        message: "Drink a glass of water to stay healthy and hydrated.",
+        date: next9AM,
+        allowWhileIdle: true,
+        repeatType: "time",
+        repeatTime: 1 * 1000,
+      });
+
+      console.log("Water reminder scheduled!");
+    } else {
+      console.log("Water reminder already scheduled.");
+    }
   });
 };
