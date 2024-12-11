@@ -14,6 +14,7 @@ import {
 import FastImage from "react-native-fast-image";
 import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
+  createNavigationContainerRef,
   NavigationContainer,
   usePreventRemoveContext,
 } from "@react-navigation/native";
@@ -63,6 +64,9 @@ import EditProfile from "./components/EditProfile.js";
 import GOHLoader from "./commonComponents/GOHLoader.js";
 import NewAdditionalDetails from "./components/NewAdditionalDetails.js";
 import Quotes from "./components/Quotes.js";
+import PushNotification from "react-native-push-notification";
+
+const navigationRef = createNavigationContainerRef();
 
 global.axios = axios;
 global.AsyncStorage = AsyncStorage;
@@ -75,18 +79,53 @@ Icon.loadFont();
 
 const Stack = createNativeStackNavigator();
 
-// PushNotification.createChannel(
-//   {
-//     channelId: "events", // (required)
-//     channelName: "My channel", // (required)
-//     channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-//     playSound: true, // (optional) default: true
-//     soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-//     importance: 4, // (optional) default: 4. Int value of the Android notification importance
-//     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-//   },
-//   (created) => crashlytics().log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-// );
+let pendingNavigation = null;
+
+export const handleNotification = (notification) => {
+  if (notification?.data?.screen) {
+    if (navigationRef.isReady()) {
+      navigationRef.navigate(
+        notification.data.screen,
+        notification.data?.params || {}
+      );
+    } else {
+      pendingNavigation = notification;
+    }
+  }
+};
+
+navigationRef.addListener("state", () => {
+  if (navigationRef.isReady() && pendingNavigation) {
+    const { screen, params } = pendingNavigation.data;
+    navigationRef.navigate(screen, params || {});
+    pendingNavigation = null;
+  }
+});
+
+PushNotification.configure({
+  onNotification: function (notification) {
+    handleNotification(notification);
+  },
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+  popInitialNotification: true,
+  requestPermissions: true,
+});
+PushNotification.createChannel(
+  {
+    channelId: "Quote",
+    channelName: "My channel",
+    channelDescription: "A channel to categorise your notifications",
+    playSound: true,
+    soundName: "default",
+    importance: 4,
+    vibrate: true,
+  },
+  (created) => crashlytics().log(`createChannel returned '${created}'`)
+);
 
 const requestNotificationPermission = async () => {
   if (Platform.OS === "android") {
@@ -136,8 +175,8 @@ const toastConfig = {
 };
 
 export default function App() {
-  // requestNotificationPermission();
-  const navigationRef = React.createRef();
+  requestNotificationPermission();
+  // const navigationRef = React.createRef();
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
   const [notify, setNotify] = useState(null);

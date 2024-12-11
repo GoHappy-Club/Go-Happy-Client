@@ -30,6 +30,9 @@ import {
 } from "../services/Startup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setMembership } from "../redux/actions/counts";
+import dayjs from "dayjs";
+import quotes from "../constants/quotes.json";
+import { ScheduledNotifcation } from "../services/LocalPushController";
 
 const width = Dimensions.get("window").width;
 
@@ -50,6 +53,38 @@ const Header = () => {
   const modalRef = useRef();
   const ratingModalRef = useRef();
   const [appState, setAppState] = useState(AppState.currentState);
+
+  useEffect(() => {
+    const getRandomQuote = async () => {
+      const today = new Date().toISOString().split("T")[0];
+
+      const storedQuoteData = await AsyncStorage.getItem("dailyQuote");
+      if (storedQuoteData) {
+        const parsedData = JSON.parse(storedQuoteData);
+        if (parsedData.date === today) {
+          return parsedData;
+        }
+      }
+      const randomIndex = Math.floor(Math.random() * quotes.quotes.length);
+      const randomQuote = quotes.quotes[randomIndex];
+
+      const quoteData = {
+        date: today,
+        quote: randomQuote,
+      };
+
+      await AsyncStorage.setItem("dailyQuote", JSON.stringify(quoteData));
+      const notificationTime = dayjs().add(1, "day").toDate();
+
+      ScheduledNotifcation(
+        "Your Daily Motivation",
+        randomQuote.english,
+        notificationTime
+      );
+      return quoteData;
+    };
+    getRandomQuote();
+  });
 
   useEffect(() => {
     const getFestival = async () => {

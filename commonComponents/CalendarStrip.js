@@ -104,11 +104,15 @@ export default function CustomCalendarStrip({
   return (
     <View style={styles.container}>
       <View style={styles.scrollContainer}>
-        {selectedDate != dates[0].getTime() && (
-          <TouchableOpacity style={styles.navButton} onPress={handlePrevious} disabled={selectedDate == dates[0].getTime()}>
-            <ChevronLeft size={24} color="#000" />
-          </TouchableOpacity>
-        )}
+        {/* {selectedDate != dates[0].getTime() && ( */}
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={handlePrevious}
+          disabled={selectedDate == dates[0].getTime()}
+        >
+          <ChevronLeft size={24} color="#000" />
+        </TouchableOpacity>
+         {/* )} */}
         <ScrollView
           ref={scrollViewRef}
           horizontal
@@ -132,9 +136,11 @@ export default function CustomCalendarStrip({
             />
           ))}
         </ScrollView>
-        {selectedDate != dates[dates.length-1].getTime() &&<TouchableOpacity style={styles.navButton} onPress={handleNext}>
-          <ChevronRight size={24} color="#000" />
-        </TouchableOpacity>}
+        {/* {selectedDate != dates[dates.length - 1].getTime() && ( */}
+          <TouchableOpacity style={styles.navButton} onPress={handleNext}>
+            <ChevronRight size={24} color="#000" />
+          </TouchableOpacity>
+        {/* )} */}
       </View>
     </View>
   );
@@ -157,17 +163,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     minWidth: wp(16),
+    padding:4
   },
   selectedCard: {
     backgroundColor: Colors.primary,
   },
   monthText: {
-    fontSize: wp(4),
+    fontSize: wp(3.8),
     color: "#000",
-    marginBottom: 4,
+    // marginBottom: 4,
   },
   dateText: {
-    fontSize: wp(4.2),
+    fontSize: wp(4),
     color: "#000",
   },
   selectedText: {

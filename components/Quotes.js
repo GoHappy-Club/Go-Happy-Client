@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LottieView from "lottie-react-native";
 import { hp, wp } from "../helpers/common";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Quotes = () => {
+  const [quote, setQuote] = useState({});
+
+  useEffect(() => {
+    const getTodaysQuote = async () => {
+      const todayQuote = await AsyncStorage.getItem("dailyQuote");
+      const parsedQuote = JSON.parse(todayQuote);
+      setQuote(parsedQuote);
+    };
+    getTodaysQuote();
+  }, []);
+
   return (
     <>
       <View
@@ -38,8 +50,8 @@ const Quotes = () => {
           }}
         /> */}
         <View style={styles.quoteContainer}>
-          <Text style={styles.quoteHindi}>जीवन एक यात्रा है</Text>
-          <Text style={styles.quoteEnglish}>Life is a journey</Text>
+          <Text style={styles.quoteHindi}>{quote?.quote?.hindi}</Text>
+          <Text style={styles.quoteEnglish}>{quote?.quote?.english}</Text>
         </View>
       </View>
     </>
@@ -63,7 +75,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   quoteEnglish: {
-    fontFamily: "Beautiful Heart",
+    // fontFamily: "Beautiful Heart",
+    fontFamily: "Montserrat-Regular",
     fontSize: wp(15),
     color: "rgba(255, 255, 255, 0.8)",
     textAlign: "center",

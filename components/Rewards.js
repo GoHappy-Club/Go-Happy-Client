@@ -61,16 +61,20 @@ const RewardsCard = ({
           activeOpacity={0.8}
           style={[styles.card, { backgroundColor: color }]}
           onPress={() => {
-            navigation.navigate("VoucherScratch", {
-              id: id,
-              amount: amount,
-              title: title,
-              color: color,
-              icon: icon,
-              setScratchTrue: (id, amount) => {
-                setScratchedTrue(id, amount);
-              },
-            });
+            try {
+              navigation.navigate("VoucherScratch", {
+                id: id,
+                amount: amount,
+                title: title,
+                color: color,
+                icon: icon,
+                setScratchTrue: (id, amount) => {
+                  setScratchedTrue(id, amount);
+                },
+              });
+            } catch (error) {
+              console.log("Error in navigation from voucher", error);
+            }
           }}
         >
           <FastImage
@@ -96,19 +100,27 @@ const RewardsCard = ({
               color="black"
               style={styles.icon}
             />
-            {amount && (
-              <Text style={styles.amount}>
-                <FastImage
-                  source={require("../images/GoCoins.png")}
-                  style={{
-                    height: wp(4.5),
-                    width: wp(4.5),
-                  }}
-                />
-                {amount}
-              </Text>
-            )}
-            {title && <Text style={styles.cardTitle}>{title}</Text>}
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "transparent",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 16,
+              }}
+            >
+              <FastImage
+                source={require("../images/GoCoins.png")}
+                style={{
+                  height: wp(8),
+                  width: wp(8),
+                }}
+              />
+              {amount && <Text style={styles.amount}>{amount}</Text>}
+            </View>
+            {/* {title && <Text style={styles.cardTitle}>{title}</Text>} */}
           </View>
         </View>
       )}
@@ -222,10 +234,18 @@ const CoinbackRewards = ({
   const [fixedRewards, setFixedRewards] = useState([]);
 
   useEffect(() => {
-    const rewardsWithColor = rewards.map((item) => ({
-      ...item,
-      color: item.color || getRandomColor(),
-    }));
+    const rewardsWithColor = rewards
+      .map((item) => ({
+        ...item,
+        color: item.color || getRandomColor(),
+      }))
+      .sort((a, b) => {
+        // Sort so that items with scratched: false come first
+        if (a.scratched === false && b.scratched !== false) return -1;
+        if (a.scratched !== false && b.scratched === false) return 1;
+        return 0;
+      });
+
     setFixedRewards(rewardsWithColor);
   }, [rewards]);
 
@@ -303,6 +323,7 @@ const CoinbackRewards = ({
             key={index}
             icon={item.source == "coinback" ? faGift : faTrophy}
             amount={item.amount}
+            title={item.title}
             color={item.color}
             scratched={item.scratched}
             navigation={navigation}

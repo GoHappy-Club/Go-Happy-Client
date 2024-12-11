@@ -48,7 +48,7 @@ export const checkPendingFeedback = async (
     const parsedSessions = sessions ? JSON.parse(sessions) : [];
     const sessionNeedingFeedback = parsedSessions
       .filter((session) => session.hasGivenFeedback == false)
-      .filter((session) => session.sessionEndTime > currentTime);
+      .filter((session) => session.sessionEndTime < currentTime);
 
     if (sessionNeedingFeedback.length > 0) {
       setCurrentSession(sessionNeedingFeedback[0]);

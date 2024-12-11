@@ -12,6 +12,7 @@ import { Linking } from "react-native";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
+import FastImage from "react-native-fast-image";
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
@@ -21,44 +22,38 @@ export default function Sections(props) {
   const data1 = [
     {
       title: "Free Sessions",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
+      imgUrl: require("../../images/sessions.png"),
       link: "HomeScreen",
       text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
       title: "Contribute",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
+      imgUrl: require("../../images/contribute.png"),
       link: "MembershipScreen",
       text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
       title: "Trips",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      imgUrl: require("../../images/trips.png"),
       link: "Trips",
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
       title: "Get Help",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
+      imgUrl: require("../../images/help.png"),
       link: "props.helpUrl",
       type: "external",
       text: "Need assistance? Click here to get help and find the support you need.",
     },
     {
       title: "Rewards",
-      imgUrl:
-        "https://static.vecteezy.com/system/resources/thumbnails/008/486/043/small_2x/open-gift-box-surprise-earn-point-and-get-rewards-special-offer-concept-3d-rendering-illustration-png.png",
+      imgUrl: require("../../images/rewards.png"),
       link: "Rewards",
       text: "See your earned rewards here.",
     },
     {
       title: "Quotes",
-      imgUrl:
-        "https://static.vecteezy.com/system/resources/thumbnails/008/486/043/small_2x/open-gift-box-surprise-earn-point-and-get-rewards-special-offer-concept-3d-rendering-illustration-png.png",
+      imgUrl: require("../../images/rewards.png"),
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
     },
@@ -112,7 +107,7 @@ export default function Sections(props) {
                 >
                   <View style={styles.container}>
                     <FastImage
-                      source={{ uri: item.imgUrl }}
+                      source={item.imgUrl}
                       style={styles.image}
                       resizeMode="cover"
                     />
