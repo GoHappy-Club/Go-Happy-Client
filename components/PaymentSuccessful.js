@@ -40,6 +40,19 @@ const PaymentSuccessful = () => {
   if (type && type == "normal")
     return (
       <View style={styles.container}>
+        <LottieView
+          source={require("../assets/lottie/correct.lottie")}
+          autoPlay
+          loop
+          style={{
+            width: wp(100),
+            height: hp(30),
+            // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
+            zIndex: 1000,
+            position: "absolute",
+          }}
+          speed={0.5}
+        />
         <FastImage
           source={require("../images/hurray.png")}
           style={styles.image}
@@ -86,6 +99,19 @@ const PaymentSuccessful = () => {
 
   return (
     <View style={styles.container}>
+      <LottieView
+        source={require("../assets/lottie/correct.lottie")}
+        autoPlay
+        loop
+        style={{
+          width: wp(100),
+          height: hp(30),
+          // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
+          zIndex: 1000,
+          position: "absolute",
+        }}
+        speed={0.5}
+      />
       <FastImage
         source={require("../images/hurray.png")}
         style={styles.image}

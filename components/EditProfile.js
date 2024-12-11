@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 import AutocompleteCityInput from "./Autocomplete";
 import Toast from "react-native-simple-toast";
+import LottieView from "lottie-react-native";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -129,6 +130,10 @@ const EditProfile = () => {
       AsyncStorage.setItem("dob", state.dob);
       setState((prevState) => ({ ...prevState, loading: false }));
       setUpdated(true);
+      const timeout = setTimeout(() => {
+        clearTimeout(timeout);
+        setUpdated(false);
+      }, 3000);
       Toast.show("New Profile Saved✅", Toast.LONG);
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
@@ -187,6 +192,21 @@ const EditProfile = () => {
           />
         </View>
       </Pressable>
+      {updated && (
+        <LottieView
+          source={require("../assets/lottie/correct.lottie")}
+          autoPlay
+          loop
+          style={{
+            width: wp(100),
+            height: hp(100),
+            // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
+            zIndex: 1000,
+            position: "absolute",
+          }}
+          speed={0.5}
+        />
+      )}
       <StatusBar barStyle="dark-content" />
       <View
         style={{
