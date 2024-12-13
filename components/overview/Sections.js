@@ -53,9 +53,15 @@ export default function Sections(props) {
     },
     {
       title: "Quotes",
-      imgUrl: require("../../images/rewards.png"),
+      imgUrl: require("../../images/quotes.png"),
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
+    },
+    {
+      title: "Reels",
+      imgUrl: require("../../images/rewards.png"),
+      link: "ReelsPage",
+      text: "See videos especially tailored for you.",
     },
   ];
 
@@ -77,9 +83,9 @@ export default function Sections(props) {
 
     handleHelp();
   }, []);
+
   return (
     <View style={styles.mainContainer}>
-      {/* <Button title="Start tutorial" onPress={() => start()} /> */}
       <View style={styles.headingContainer}>
         <View style={styles.line} />
         <Text style={styles.headingText}>Explore</Text>

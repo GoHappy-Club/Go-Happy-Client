@@ -14,6 +14,7 @@ import Sections from "../../components/overview/Sections.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
 import { Colors } from "../../assets/colors/color.js";
+import Feed from "../../components/Feed.js";
 
 class OverviewScreen extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class OverviewScreen extends Component {
       trendingSessions: null,
       upcomingWorkshops: null,
       posters: [],
+      videos: [],
       timer: null,
       isInteractionBlocked: true,
       isBlocking: false,
@@ -99,6 +101,7 @@ class OverviewScreen extends Component {
           trendingSessions: response.data.trendingSessions,
           upcomingWorkshops: response.data.upcomingWorkshops,
           posters: response.data.posters,
+          videos: response.data.videos,
         });
         this.setupTimer();
       }
@@ -161,6 +164,7 @@ class OverviewScreen extends Component {
                 upcomingWorkshops={this.state.upcomingWorkshops}
                 reloadOverview={this.getOverviewData.bind(this)}
               />
+              <Feed videos={this.state.videos} />
               <TrendingSessions
                 navigation={this.props.navigation}
                 trendingSessions={this.state.trendingSessions}

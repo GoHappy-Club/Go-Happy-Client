@@ -65,6 +65,7 @@ import GOHLoader from "./commonComponents/GOHLoader.js";
 import NewAdditionalDetails from "./components/NewAdditionalDetails.js";
 import Quotes from "./components/Quotes.js";
 import PushNotification from "react-native-push-notification";
+import Reels from "./components/Reels.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -949,6 +950,26 @@ export default function App() {
                       headerShadowVisible: false,
                       presentation: "transparentModal",
                       animation: "fade",
+                      headerLeft: () => <View />,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="ReelsPage"
+                    children={(props) => <Reels />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerTransparent: true,
+                      headerRight: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <X color="#000" size={24} />
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      animation: "slide_from_right",
                       headerLeft: () => <View />,
                     })}
                   />

@@ -133,8 +133,7 @@ const EditProfile = () => {
       const timeout = setTimeout(() => {
         clearTimeout(timeout);
         setUpdated(false);
-      }, 3000);
-      Toast.show("New Profile Saved✅", Toast.LONG);
+      }, 1500);
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
@@ -196,13 +195,14 @@ const EditProfile = () => {
         <LottieView
           source={require("../assets/lottie/correct.lottie")}
           autoPlay
-          loop
           style={{
-            width: wp(100),
-            height: hp(100),
-            // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
+            width: wp(50),
+            height: hp(50),
             zIndex: 1000,
             position: "absolute",
+            padding:wp(25),
+            left:wp(25),
+            top:hp(25),
           }}
           speed={0.5}
         />
