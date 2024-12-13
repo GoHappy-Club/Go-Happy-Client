@@ -1,6 +1,3 @@
-if (__DEV__) {
-  require("./RectotronConfig");
-}
 /**
  * @format
  */
