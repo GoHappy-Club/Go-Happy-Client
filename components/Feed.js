@@ -36,7 +36,7 @@ export default function Feed({ videos }) {
             activeOpacity={0.5}
           >
             <FastImage
-              resizeMode={FastImage.resizeMode.stretch}
+              resizeMode={FastImage.resizeMode.cover}
               source={{ uri: video.thumbnail }}
               style={styles.thumbnail}
             />
