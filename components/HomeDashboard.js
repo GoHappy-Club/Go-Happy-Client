@@ -33,12 +33,10 @@ import { Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
 import { useZoom } from "../helpers/zoomUtils.js";
-import CalendarStrip from "react-native-calendar-strip";
+// import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
 import Sound from "react-native-sound";
 import CustomCalendarStrip from "../commonComponents/CalendarStrip.js";
-import { EventNotification } from "../services/LocalPushController.js";
-import { toZonedTime, } from "date-fns-tz";
 const HomeDashboard = ({
   events,
   ratings,
@@ -618,60 +616,12 @@ const HomeDashboard = ({
         checkIsParticipantInSameEvent={checkIsParticipantInSameEvent}
       />
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
-        <CalendarStrip
-          calendarAnimation={{ type: "sequence", duration: 10 }}
-          daySelectionAnimation={{
-            type: "background",
-            duration: 200,
-            borderWidth: 2,
-            borderHighlightColor: Colors.background,
-          }}
-          minDate={new Date()}
-          maxDate={dayjs().add(8, "days").toDate()}
-          style={calendarStyles.calendarStrip}
-          calendarHeaderStyle={calendarStyles.headerStyle}
-          selectedDate={new Date()}
-          calendarColor={"#fff"}
-          dateNumberStyle={calendarStyles.dateNumberStyle}
-          dateNameStyle={calendarStyles.dateNameStyle}
-          highlightDateNumberStyle={calendarStyles.highlightDateNumberStyle}
-          disabledDateNumberStyle={calendarStyles.disabledDateNumberStyle}
-          showDayName={false}
-          dayContainerStyle={{
-            borderRadius: 0,
-            marginHorizontal: 2,
-          }}
-          numDaysInWeek={7}
-          dayComponent={({ date, selected, onDateSelected }) => (
-            <TouchableOpacity
-              onPress={() => onDateSelected && onDateSelected(date)}
-              style={{
-                alignItems: "center",
-                padding: 5,
-                backgroundColor: selected ? Colors.primary : "transparent",
-                borderRadius: 5,
-              }}
-            >
-              <Text
-                style={{ fontSize: 12, color: selected ? "white" : "black" }}
-              >
-                {date.format("MMM")}
-              </Text>
-              <Text
-                style={{ fontSize: 16, color: selected ? "white" : "black" }}
-              >
-                {date.format("DD")}
-              </Text>
-            </TouchableOpacity>
-          )}
-          onDateSelected={(date) => changeSelectedDate(date.toISOString())}
-        />
-        {/* <CustomCalendarStrip
+        <CustomCalendarStrip
           selectedDate={state.selectedDateRaw}
           changeSelectedDate={(date) => {
             changeSelectedDate(date);
           }}
-        /> */}
+        />
 
         <Text
           style={{
