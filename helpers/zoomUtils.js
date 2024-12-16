@@ -3,7 +3,7 @@ let useZoom;
 if (!__DEV__) {
   try {
     // Dynamically require in production
-    useZoom = require("zoom-msdk-rn").useZoom;
+    useZoom = require("@zoom/meetingsdk-react-native").useZoom;
   } catch (error) {
     console.error("Failed to load useZoom in production:", error);
     useZoom = () => ({

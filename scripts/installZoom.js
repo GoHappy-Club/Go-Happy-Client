@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 function installZoomSDK() {
-  const installProcess = spawn('npm', ['install', 'zoom-msdk-rn'], {
+  const installProcess = spawn('npm', ['install', '@zoom/meetingsdk-react-native'], {
     stdio: 'inherit',
     shell: true
   });
@@ -13,7 +13,7 @@ function installZoomSDK() {
 
   installProcess.on('close', (code) => {
     if (code === 0) {
-      console.log('zoom-msdk-rn installed successfully');
+      console.log('@zoom/meetingsdk-react-native installed successfully');
     } else {
       console.error(`Installation failed with code ${code}`);
     }

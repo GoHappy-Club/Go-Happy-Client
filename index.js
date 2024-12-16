@@ -20,7 +20,7 @@ import CustomTooltip from "./commonComponents/tooltip";
 import StepNumber from "./commonComponents/StepNumber";
 import { Colors } from "./assets/colors/color";
 import firebase from "@react-native-firebase/app";
-// import { ZoomSDKProvider } from "zoom-msdk-rn";
+// import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
 import { generateZoomSignature } from "./helpers/generateZoomSignature";
 // const my_store = store();
 
@@ -53,7 +53,7 @@ const RNRedux = () => {
 };
 
 firebase.messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log('Message handled in the background!', remoteMessage);
+  console.log("Message handled in the background!", remoteMessage);
 });
 
 function HeadlessCheck({ isHeadless }) {

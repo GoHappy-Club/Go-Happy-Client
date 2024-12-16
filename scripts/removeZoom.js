@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 function removeZoom() {
-  const installProcess = spawn('npm', ['uninstall', 'zoom-msdk-rn'], {
+  const installProcess = spawn('npm', ['uninstall', '@zoom/meetingsdk-react-native'], {
     stdio: 'inherit',
     shell: true
   });
@@ -13,7 +13,7 @@ function removeZoom() {
 
   installProcess.on('close', (code) => {
     if (code === 0) {
-      console.log('zoom-msdk-rn uninstalled successfully');
+      console.log('@zoom/meetingsdk-react-native uninstalled successfully');
     } else {
       console.error(`Uninstallation failed with code ${code}`);
     }
