@@ -33,7 +33,10 @@ class PromotionSection extends Component {
         title: "Refer Banner",
         image:
           "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
-        to: this.props.profile.age ==null || this.props.profile.age >= 50 ? "Refer" : "OverviewScreen",
+        to:
+          this.props.profile.age == null || this.props.profile.age >= 50
+            ? "Refer"
+            : "OverviewScreen",
         text: "Invite friends to join and benefit! Click here to refer and earn rewards.",
       },
       {
@@ -58,7 +61,7 @@ class PromotionSection extends Component {
             return (
               <CopilotStep
                 name={item.title}
-                order={index + 5}
+                order={index + 6}
                 text={item.text}
                 key={index}
               >
@@ -69,7 +72,7 @@ class PromotionSection extends Component {
                   }}
                 >
                   {/* <View style={styles.card}> */}
-                  <Image
+                  <FastImage
                     source={{ uri: item.image }}
                     resizeMode="contain"
                     style={styles.image}
@@ -128,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },

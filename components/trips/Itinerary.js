@@ -16,8 +16,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import RenderHTML from "react-native-render-html";
 import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
 
-export const Itinerary = ({ details }) => {
+export const Itinerary = ({ details, vouchers }) => {
   const [activeSections, setActiveSections] = useState([]);
   const [item, setItem] = useState(undefined);
   const [sections, setSections] = useState([]);
@@ -65,6 +66,22 @@ export const Itinerary = ({ details }) => {
     ]);
   }, [details]);
 
+  const getMaxVouchersValue = () => {
+    let maxDiscount = 0;
+    vouchers.forEach((voucher) => {
+      if (voucher.value) {
+        maxDiscount = Math.max(maxDiscount, voucher.value);
+      }
+      if (voucher.percent) {
+        let percentDiscount = (details.cost * voucher.percent) / 100;
+        if (voucher.limit) {
+          percentDiscount = Math.min(percentDiscount, voucher.limit);
+        }
+        maxDiscount = Math.max(maxDiscount, percentDiscount);
+      }
+    });
+    return maxDiscount;
+  };
   const QuickView = () => {
     const timeDifference = Math.abs(details.endTime - details.startTime);
 
@@ -80,7 +97,14 @@ export const Itinerary = ({ details }) => {
       duration: daysDifference + " Days / " + (daysDifference - 1) + " Nights",
     };
     return (
-      <View style={{ margin: "7%", marginBottom: 0, marginTop: "5%" }}>
+      <View
+        style={{
+          margin: "7%",
+          marginBottom: 0,
+          marginTop: "5%",
+          // backgroundColor: Colors.background,
+        }}
+      >
         <View
           style={
             {
@@ -123,7 +147,11 @@ export const Itinerary = ({ details }) => {
           </Text>
         </View>
         <View style={styles.quickViewItem}>
-          <FontAwesomeIcon icon={faCloudSun} size={20} color={Colors.blue.blue} />
+          <FontAwesomeIcon
+            icon={faCloudSun}
+            size={20}
+            color={Colors.blue.blue}
+          />
           <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
             {"  "}
             {data.duration}
@@ -143,10 +171,35 @@ export const Itinerary = ({ details }) => {
         </View>
         <View style={styles.quickViewItem}>
           <FontAwesomeIcon icon={faMoneyBill} size={20} color={Colors.green} />
-          <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
-            {"  "}₹ {data.cost}/- per person
+          <Text
+            style={{
+              fontSize: 18,
+              textAlignVertical: "center",
+              textDecorationLine:
+                vouchers?.length >= 1 ? "line-through" : "none",
+              marginLeft: wp(2),
+            }}
+          >
+            ₹ {data.cost}
           </Text>
+          {vouchers?.length >= 1 && (
+            <Text style={{ fontSize: 18, textAlignVertical: "center" }}>
+              {" "}
+              ₹ {data.cost - getMaxVouchersValue()}/- per person
+            </Text>
+          )}
         </View>
+        {vouchers?.length >= 1 && (
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: Colors.green,
+              fontSize: 14,
+            }}
+          >
+            Yayy! You have a coupon, ask our team to get this discount.
+          </Text>
+        )}
         <RenderHTML
           source={{
             html: "<hr/>",
@@ -187,7 +240,13 @@ export const Itinerary = ({ details }) => {
   };
 
   return (
-    <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      }}
+    >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {item && <QuickView />}
         <Accordion
@@ -223,12 +282,10 @@ export const Itinerary = ({ details }) => {
 
 const styles = StyleSheet.create({
   test: {
-    //backgroundColor: "green",
     margin: "5%",
-    // marginTop: "5%",
   },
   header: {
-    backgroundColor: Colors.pink.pink,
+    backgroundColor: Colors.bottomNavigation,
     borderRadius: 8,
     padding: "5%",
     display: "flex",

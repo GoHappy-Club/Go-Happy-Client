@@ -71,7 +71,7 @@ class TripsList extends Component {
     );
 
     return (
-      <View style={styles.scrollContainer}>
+      <View style={{ backgroundColor: Colors.background }}>
         {this.props.trips.length > 0 ? (
           <FlatList
             data={this.props.trips}

@@ -11,6 +11,8 @@ import { Linking } from "react-native";
 //import axios from "axios";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
+import FastImage from "react-native-fast-image";
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
@@ -20,45 +22,48 @@ export default function Sections(props) {
   const data1 = [
     {
       title: "Free Sessions",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/session_section_pills.png",
+      imgUrl: require("../../images/sessions.png"),
       link: "HomeScreen",
       text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
       title: "Contribute",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_section_pill.jpeg",
+      imgUrl: require("../../images/contribute.png"),
       link: "MembershipScreen",
       text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
       title: "Trips",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/trips_section_pill.png",
+      imgUrl: require("../../images/trips.png"),
       link: "Trips",
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
       title: "Get Help",
-      imgUrl:
-        "https://storage.googleapis.com/gohappy-main-bucket/Assets/help_sections_pill.png",
+      imgUrl: require("../../images/help.png"),
       link: "props.helpUrl",
       type: "external",
       text: "Need assistance? Click here to get help and find the support you need.",
     },
+    {
+      title: "Rewards",
+      imgUrl: require("../../images/rewards.png"),
+      link: "Rewards",
+      text: "See your earned rewards here.",
+    },
+    {
+      title: "Quotes",
+      imgUrl: require("../../images/quotes.png"),
+      link: "QuotesPage",
+      text: "Get Daily Positive Quotes here.",
+    },
+    {
+      title: "Reels",
+      imgUrl: require("../../images/rewards.png"),
+      link: "ReelsPage",
+      text: "See videos especially tailored for you.",
+    },
   ];
-
-  // useEffect(() => {
-  //   if (!walktroughStarted.current) {
-  //     const timer = setTimeout(() => {
-  //       start();
-  //       walktroughStarted.current = true;
-  //     }, 3000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [start]);
 
   useEffect(() => {
     async function handleHelp() {
@@ -78,45 +83,47 @@ export default function Sections(props) {
 
     handleHelp();
   }, []);
+
   return (
     <View style={styles.mainContainer}>
-      {/* <Button title="Start tutorial" onPress={() => start()} /> */}
       <View style={styles.headingContainer}>
         <View style={styles.line} />
         <Text style={styles.headingText}>Explore</Text>
         <View style={styles.line} />
       </View>
 
-      <View style={styles.sectionsContainer}>
-        {data1.map((item, index) => (
-          <CopilotStep
-            key={index}
-            text={item.text}
-            order={index + 1}
-            name={`step_${index + 1}`}
-          >
-            <Walkthroughable>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.type && item.type === "external") {
-                    Linking.openURL(whatsappLink);
-                  } else {
-                    props.navigation.navigate(item.link);
-                  }
-                }}
-              >
-                <View style={styles.container}>
-                  <Image
-                    source={{ uri: item.imgUrl }}
-                    style={styles.image}
-                    resizeMode="cover"
-                  />
-                  <Text style={styles.text}>{item.title}</Text>
-                </View>
-              </TouchableOpacity>
-            </Walkthroughable>
-          </CopilotStep>
-        ))}
+      <View style={styles.outerSectionsContainer}>
+        <View style={styles.sectionsContainer}>
+          {data1.map((item, index) => (
+            <CopilotStep
+              key={index}
+              text={item.text}
+              order={index + 1}
+              name={`step_${index + 1}`}
+            >
+              <Walkthroughable>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (item.type && item.type === "external") {
+                      Linking.openURL(whatsappLink);
+                    } else {
+                      props.navigation.navigate(item.link);
+                    }
+                  }}
+                >
+                  <View style={styles.container}>
+                    <FastImage
+                      source={item.imgUrl}
+                      style={styles.image}
+                      resizeMode="cover"
+                    />
+                    <Text style={styles.text}>{item.title}</Text>
+                  </View>
+                </TouchableOpacity>
+              </Walkthroughable>
+            </CopilotStep>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -128,6 +135,8 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 0,
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollContainer: {},
   headingContainer: {
@@ -137,6 +146,7 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },
@@ -146,26 +156,32 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   container: {
-    margin: 0,
-    flex: 1,
-    height: "100%",
+    width: wp(20),
+    aspectRatio: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    margin: 5,
+  },
+  outerSectionsContainer: {
+    width: wp(100),
+    alignItems: "center",
+    justifyContent: "center",
   },
   sectionsContainer: {
+    width: wp(95),
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: "4%",
-    marginRight: "4%",
+    flexWrap: "wrap",
+    gap: 5,
+    paddingVertical: wp(1),
   },
   image: {
-    borderRadius: 80,
+    // borderRadius: 80,
     alignSelf: "center",
     width: 60,
     height: 60,
   },
-  text: {
-    textAlign: "center",
-    fontSize: 12,
-  },
+  text: { color: Colors.primaryText, textAlign: "center", fontSize: 12 },
   subText: {
     marginHorizontal: 10,
     fontSize: 12,

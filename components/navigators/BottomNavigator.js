@@ -40,7 +40,7 @@ export default function BottomNavigator() {
         elevation: 64,
         borderTopLeftRadius: 21,
         borderTopRightRadius: 21,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.bottomNavigation,
         padding: 10,
         zIndex: 10000,
       }}
@@ -68,10 +68,6 @@ export default function BottomNavigator() {
       />
       <Tab.Screen
         name="HomeScreen"
-        // component={HomeScreen}
-        // children={(props) => (
-        //   <MySessionsScreen propProfile={profile} {...props} />
-        //
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         options={{
           tabBarLabel: "Sessions",
@@ -84,29 +80,6 @@ export default function BottomNavigator() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="MySessions"
-        children={(props) => (
-          <MySessionsScreen propProfile={profile} {...props} />
-        )}
-        options={{
-          tabBarLabel: "Sessions",
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faClipboardList}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      /> */}
-      {/* <Tab.Screen name="ReferScreen" component={ReferScreen}
-      options={{
-        tabBarLabel: 'Refer & Earn',
-        tabBarIcon: ({ color }) => (
-          <FontAwesomeIcon icon={ faProjectDiagram } color={ '#2f2f31' } size={25} />
-       ),
-      }} /> */}
       <Tab.Screen
         name="MembershipScreen"
         children={(props) => (
@@ -145,24 +118,6 @@ export default function BottomNavigator() {
           }}
         />
       ) : null}
-      <Tab.Screen
-        name="MyProfile"
-        children={(props) => (
-          <MyProfileScreen propProfile={profile} {...props} />
-        )}
-        options={{
-          tabBarLabel: "Profile",
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faChild}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
