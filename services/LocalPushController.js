@@ -64,10 +64,7 @@ export const scheduleWaterReminders = () => {
         repeatType: "time",
         repeatTime: 1 * 1000,
       });
-
       console.log("Water reminder scheduled!");
-    } else {
-      console.log("Water reminder already scheduled.");
     }
   });
 };

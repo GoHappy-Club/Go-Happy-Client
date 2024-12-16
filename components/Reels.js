@@ -14,6 +14,8 @@ import { Colors } from "../assets/colors/color";
 import { hp, wp } from "../helpers/common";
 import { useRoute } from "@react-navigation/native";
 import { Share2 } from "lucide-react-native";
+import { TouchableOpacity } from "react-native";
+import { Share } from "react-native";
 
 const { height, width } = Dimensions.get("window");
 
@@ -38,7 +40,7 @@ const ReelsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (currentIndex === videos.length - 2) {
+    if (currentIndex === videos.length - 3) {
       fetchVideos();
     }
   }, [videos, currentIndex]);
@@ -49,9 +51,12 @@ const ReelsPage = () => {
     try {
       const response = await axios.get(`${SERVER_URL}/videos/getRandom`);
       const data = response.data;
-      const newVideos = [...videos,...data];
-      const uniqueVideos = new Set(newVideos.map((video) => video.id));
-      setVideos((prev) => [...prev, ...data]);
+
+      const allVideos = [...videos, ...data];
+      const uniqueVideos = Array.from(
+        new Map(allVideos.map((video) => [video.id, video])).values()
+      );
+      setVideos(uniqueVideos);
     } catch (error) {
       console.error("Error fetching videos:", error);
     } finally {
@@ -66,9 +71,21 @@ const ReelsPage = () => {
     }));
   };
 
+  const handleShare = () => {
+    const shareMessage = `🌟 Enjoy amazing videos from our app GoHappyClub for seniors! \n\nDiscover inspiring bhajans and informational content specially curated for senior citizens. \n\nDownload the app now and explore more: https://www.gohappyclub.in/videos \n\n#Inspiration #BhajansForSeniors #StayInformed`;
+    const shareOptions = {
+      message: shareMessage,
+    };
+    Share.share(shareOptions);
+  };
+
   const renderItem = ({ item, index }) => {
-    const videoId = extractVideoId(item.videoUrl);
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+    let videoId;
+    let contentUrl = item.contentUrl;
+    if (item?.category?.toLowerCase() != "promotion") {
+      videoId = extractVideoId(item.contentUrl);
+      contentUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+    }
 
     return (
       <View style={styles.videoContainer}>
@@ -78,33 +95,81 @@ const ReelsPage = () => {
             togglePlay(index);
           }}
         >
-          {currentIndex === index ? (
-            <YoutubePlayer
-              play={!playStates[index]}
-              videoId={videoId}
-              height={320}
-              width={width}
-              webViewProps={{
-                renderToHardwareTextureAndroid: true,
-                allowsInlineMediaPlayback: true,
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 10,
+              position: "absolute",
+              top: hp(2),
+              left: 5,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Montserrat-Regular",
+                fontSize: wp(4),
+                color: Colors.white,
               }}
-              initialPlayerParams={{
-                controls: false,
-                rel: false,
-                modestbranding: true,
-                iv_load_policy: 3,
-                showinfo: 0,
-                fs: false,
-                playsinline: true,
+            >
+              Powered by
+            </Text>
+            <FastImage
+              source={require("../images/wordLogo.png")}
+              style={{
+                width: wp(20),
+                height: wp(8),
               }}
-              style={{ backgroundColor: Colors.black }}
+              resizeMode={FastImage.resizeMode.contain}
             />
+          </View>
+          {currentIndex === index &&
+          item?.category?.toLowerCase() != "promotion" ? (
+            <Pressable>
+              <View
+                pointerEvents="none"
+                style={{
+                  zIndex: 100000,
+                }}
+              >
+                <YoutubePlayer
+                  play={!playStates[index]}
+                  videoId={videoId}
+                  height={300}
+                  width={width}
+                  webViewProps={{
+                    renderToHardwareTextureAndroid: true,
+                    allowsInlineMediaPlayback: true,
+                  }}
+                  initialPlayerParams={{
+                    controls: false,
+                    rel: false,
+                    modestbranding: true,
+                    iv_load_policy: 3,
+                    showinfo: 0,
+                    fs: false,
+                    playsinline: true,
+                    sandbox:
+                      "allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation",
+                  }}
+                  style={{ backgroundColor: Colors.black }}
+                />
+                <TouchableOpacity
+                  style={{
+                    top: 0,
+                    height: 50,
+                    width: "100%",
+                    position: "absolute",
+                  }}
+                />
+              </View>
+            </Pressable>
           ) : (
             <FastImage
-              source={{ uri: thumbnailUrl }}
+              source={{ uri: contentUrl }}
               style={{
-                width: "70%",
-                height: "70%",
+                width: "100%",
+                height: "100%",
                 backgroundColor: Colors.black,
               }}
               resizeMode="cover"
@@ -112,6 +177,38 @@ const ReelsPage = () => {
           )}
         </Pressable>
         <View style={styles.gradient}>
+          <View
+            style={{
+              backgroundColor: Colors.grey.f0,
+              padding: 5,
+              borderRadius: wp(10),
+              borderColor: Colors.white,
+              borderWidth: 1,
+              paddingHorizontal: wp(1.5),
+              backdropFilter: "blur(12px)",
+              shadowColor: Colors.white,
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+              width: "auto",
+              maxWidth: wp(35),
+              marginBottom: wp(2.5),
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Montserrat-SemiBold",
+                textAlign: "center",
+                fontSize: 12,
+              }}
+            >
+              {item.category}
+            </Text>
+          </View>
           <View
             style={{
               width: wp(95),
@@ -137,30 +234,30 @@ const ReelsPage = () => {
           </View>
         </View>
 
-        <View style={styles.interactionButtonsContainer}>
-          <Pressable
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              gap: hp(1),
-            }}
-            onPress={() => {
-              console.log("HEre");
-            }}
-          >
-            <View style={styles.iconButton}>
-              <Share2 size={20} color={Colors.black} />
-            </View>
-            <Text
+        {item?.category?.toLowerCase() != "promotion" && (
+          <View style={styles.interactionButtonsContainer}>
+            <Pressable
               style={{
-                fontSize: hp(1.5),
-                color: Colors.white,
+                justifyContent: "center",
+                alignItems: "center",
+                gap: hp(1),
               }}
+              onPress={handleShare}
             >
-              Share
-            </Text>
-          </Pressable>
-        </View>
+              <View style={styles.iconButton}>
+                <Share2 size={20} color={Colors.black} />
+              </View>
+              <Text
+                style={{
+                  fontSize: hp(1.5),
+                  color: Colors.white,
+                }}
+              >
+                Share
+              </Text>
+            </Pressable>
+          </View>
+        )}
       </View>
     );
   };
@@ -212,13 +309,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.black,
-  },
-  videoContainer: {
-    height: height,
-    width: width,
-    backgroundColor: Colors.black,
-    justifyContent: "center",
-    alignItems: "center",
   },
   videoWrapper: {
     width: width,

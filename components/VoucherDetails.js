@@ -81,7 +81,6 @@ const VoucherDetails = () => {
       />
       <View style={styles.container}>
         <Animated.View
-          sharedTransitionTag={`sharedBg${id}`}
           style={[
             styles.card,
             {
@@ -102,7 +101,6 @@ const VoucherDetails = () => {
           >
             <View style={styles.logoContainer}>
               <Animated.Image
-                sharedTransitionTag={id}
                 source={{
                   uri:
                     image ||
@@ -112,17 +110,9 @@ const VoucherDetails = () => {
               />
             </View>
             <View>
-              <Animated.Text
-                sharedTransitionTag={`sharedText${id}`}
-                style={styles.title}
-              >
-                {title}
-              </Animated.Text>
+              <Animated.Text style={styles.title}>{title}</Animated.Text>
 
-              <Animated.Text
-                sharedTransitionTag={`sharedValue${id}`}
-                style={styles.offer}
-              >
+              <Animated.Text style={styles.offer}>
                 {value != null ? `₹${value}` : `${percent}% OFF`}
               </Animated.Text>
             </View>
@@ -169,10 +159,7 @@ const VoucherDetails = () => {
             </Pressable>
           )}
           <View style={styles.footer}>
-            <Animated.Text
-              sharedTransitionTag={`sharedExpiryDate${id}`}
-              style={styles.footerText}
-            >
+            <Animated.Text style={styles.footerText}>
               {status == "ACTIVE"
                 ? "Valid until"
                 : `${

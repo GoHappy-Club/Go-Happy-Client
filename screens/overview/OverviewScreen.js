@@ -164,12 +164,12 @@ class OverviewScreen extends Component {
                 upcomingWorkshops={this.state.upcomingWorkshops}
                 reloadOverview={this.getOverviewData.bind(this)}
               />
-              <Feed videos={this.state.videos} />
               <TrendingSessions
                 navigation={this.props.navigation}
                 trendingSessions={this.state.trendingSessions}
                 reloadOverview={this.getOverviewData.bind(this)}
               />
+              <Feed videos={this.state.videos} />
               <PromotionSection navigation={this.props.navigation} />
             </ScrollView>
             {this.props.profile.age == null || this.props.profile.age >= 50 ? (

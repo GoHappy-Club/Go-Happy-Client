@@ -120,7 +120,6 @@ const RewardsCard = ({
               />
               {amount && <Text style={styles.amount}>{amount}</Text>}
             </View>
-            {/* {title && <Text style={styles.cardTitle}>{title}</Text>} */}
           </View>
         </View>
       )}
@@ -156,7 +155,6 @@ const VouchersCard = ({ voucher, id, onPress }) => {
         </View>
       )}
       <Animated.View
-        sharedTransitionTag={`sharedBg${id}`}
         style={[
           styles.borderedContainer,
           {
@@ -167,7 +165,6 @@ const VouchersCard = ({ voucher, id, onPress }) => {
       >
         <View style={styles.topSection}>
           <Animated.Image
-            sharedTransitionTag={id}
             source={{
               uri: voucher.image,
             }}
@@ -185,22 +182,17 @@ const VouchersCard = ({ voucher, id, onPress }) => {
           }}
         />
         <Animated.View style={styles.titleSection}>
-          <Animated.Text
-            sharedTransitionTag={`sharedValue${id}`}
-            style={styles.amount}
-          >
+          <Animated.Text style={styles.amount}>
             {voucher.value != null
               ? `₹${voucher.value}`
               : `${voucher.percent}% OFF`}
           </Animated.Text>
           <Animated.Text
-            sharedTransitionTag={`sharedText${id}`}
             style={styles.cardTitle}
           >
             {voucher.title}
           </Animated.Text>
           <Animated.Text
-            sharedTransitionTag={`sharedExpiryDate${id}`}
             style={styles.validityText}
           >
             {voucher.status == "ACTIVE"

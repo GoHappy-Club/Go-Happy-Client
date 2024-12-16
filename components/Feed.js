@@ -26,7 +26,11 @@ export default function Feed({ videos }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Playlists for you</Text>
+      <View style={styles.headingContainer}>
+        <View style={styles.line} />
+        <Text style={styles.headingText}>Videos for you</Text>
+        <View style={styles.line} />
+      </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {videos.map((video) => (
           <TouchableOpacity
@@ -36,7 +40,7 @@ export default function Feed({ videos }) {
             activeOpacity={0.5}
           >
             <FastImage
-              resizeMode={FastImage.resizeMode.stretch}
+              resizeMode={FastImage.resizeMode.cover}
               source={{ uri: video.thumbnail }}
               style={styles.thumbnail}
             />
@@ -56,6 +60,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 15,
     marginBottom: 10,
+  },
+  headingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    margin: "5%",
+    marginBottom: "2%",
+  },
+  headingText: {
+    color: Colors.primaryText,
+    marginHorizontal: 10,
+    fontWeight: "bold",
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.grey.grey,
   },
   playlistCard: {
     width: width * 0.4,

@@ -26,7 +26,6 @@ const VoucherScratch = () => {
             style={styles.icon}
           />
           {amount && <Text style={styles.amount}>₹{amount}</Text>}
-          {/* {title && <Text style={styles.cardTitle}>{title}</Text>} */}
         </View>
         {scratchPercent < 55 && (
           <View
@@ -54,7 +53,7 @@ const VoucherScratch = () => {
       <View
         style={{
           ...StyleSheet.absoluteFillObject,
-          backgroundColor: "rgba(0,0,0,0.5)",
+          backgroundColor: "rgba(0,0,0,0.7)",
           zIndex: -10000,
         }}
       />

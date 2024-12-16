@@ -26,7 +26,7 @@ import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import AdditionalDetails from "./components/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/local_android/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
@@ -85,10 +85,7 @@ let pendingNavigation = null;
 export const handleNotification = (notification) => {
   if (notification?.data?.screen) {
     if (navigationRef.isReady()) {
-      navigationRef.navigate(
-        notification.data.screen,
-        notification.data?.params || {}
-      );
+      navigationRef.navigate("QuotesPage", notification.data?.params || {});
     } else {
       pendingNavigation = notification;
     }
@@ -98,7 +95,7 @@ export const handleNotification = (notification) => {
 navigationRef.addListener("state", () => {
   if (navigationRef.isReady() && pendingNavigation) {
     const { screen, params } = pendingNavigation.data;
-    navigationRef.navigate(screen, params || {});
+    navigationRef.navigate("QuotesPage", params || {});
     pendingNavigation = null;
   }
 });
@@ -897,15 +894,16 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerTransparent: true,
-                      headerLeft: () => (
+                      headerRight: () => (
                         <TouchableOpacity
                           style={styles.backButton}
                           onPress={() => navigation.goBack()}
                           underlayColor={Colors.white}
                         >
-                          <Text style={styles.backText}>back</Text>
+                          <X color="#000" size={24} />
                         </TouchableOpacity>
                       ),
+                      headerLeft: () => <View />,
                       headerShadowVisible: false,
                       presentation: "transparentModal",
                       animation: "fade",
@@ -948,7 +946,6 @@ export default function App() {
                         </TouchableOpacity>
                       ),
                       headerShadowVisible: false,
-                      presentation: "transparentModal",
                       animation: "fade",
                       headerLeft: () => <View />,
                     })}
