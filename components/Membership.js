@@ -171,64 +171,6 @@ The Link will Expire in 20 Minutes.`;
     }
   }
 
-  async phonePeWrapper1(type) {
-    var _this = this;
-    this.setState({
-      payButtonLoading: true,
-    });
-    // PhonePePaymentSDK.init("PRODUCTION", "GOHAPPYCLUBONLINE", null, true)
-    //   .then(async (result) => {
-    //     console.log("init success", result);
-    //     // _this.setState({
-    //     //   message: "Message: SDK Initialisation ->",
-    //     // });
-    //     console.log(_this.state.message);
-    payload = await getPayload(
-      this.props.profile.phoneNumber,
-      this.state.amount * 100,
-      "contribution",
-      null,
-      null,
-      "",
-      ""
-    );
-    requestBody = payload.requestBody;
-    checksum = payload.checksum;
-    console.log(requestBody);
-    console.log(checksum);
-    console.log(requestBody);
-    PhonePePaymentSDK.startTransaction(
-      requestBody,
-      checksum,
-      null,
-      "gohappyclub"
-    )
-      .then((a) => {
-        console.log(a);
-        this.setState({
-          message: JSON.stringify(a),
-        });
-        if (a.status == "SUCCESS") {
-          callback(phone);
-        } else {
-          throw Error;
-        }
-      })
-      .catch((error) => {
-        this.setState({
-          message: error.message,
-        });
-        error_handler();
-      });
-    // })
-    // .catch((error) => {
-    //   this.setState({
-    //     message: "error:" + error.message,
-    //   });
-    //   error_handler(error);
-    // });
-  }
-
   planSelected(plan, index) {
     var allPlans = this.state.plans;
     plan.backgroundColor = Colors.blue.blue;
@@ -470,7 +412,7 @@ The Link will Expire in 20 Minutes.`;
                         loading={this.state.payButtonLoading}
                         buttonStyle={[styles.AApayButton, styles.AAbutton]}
                         onPress={() => {
-                          this.phonePeWrapper1("self", this.state.itemToBuy);
+                          this.phonePeWrapper("self", this.state.itemToBuy);
                         }}
                         disabled={this.state.payButtonLoading}
                       />
