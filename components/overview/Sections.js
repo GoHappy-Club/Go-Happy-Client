@@ -59,7 +59,7 @@ export default function Sections(props) {
     },
     {
       title: "Reels",
-      imgUrl: require("../../images/rewards.png"),
+      imgUrl: require("../../images/reels.png"),
       link: "ReelsPage",
       text: "See videos especially tailored for you.",
     },

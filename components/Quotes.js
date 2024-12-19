@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StyleSheet, Text, View, Animated, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  Alert,
+  StatusBar,
+  ScrollView,
+} from "react-native";
 import LottieView from "lottie-react-native";
 import { hp, wp } from "../helpers/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,6 +18,7 @@ import RNFS from "react-native-fs";
 import { Colors } from "../assets/colors/color";
 import FastImage from "react-native-fast-image";
 import Share from "react-native-share";
+import { Share2 } from "lucide-react-native";
 
 const Quotes = () => {
   const [quote, setQuote] = useState({});
@@ -42,11 +51,10 @@ const Quotes = () => {
       }/${new Date().getTime()}_daily_quote.png`;
 
       await RNFS.writeFile(filePath, base64Data, "base64");
-      await Share.shareSingle({
+      await Share.open({
         title: "Daily Quote",
         message: "Check out today's quote!",
         url: `file://${filePath}`,
-        social: Share.Social.WHATSAPP,
       });
     } catch (error) {
       console.error(error);
@@ -54,88 +62,96 @@ const Quotes = () => {
   };
 
   return (
-    <LinearGradient
-      colors={["#4A1259", "#2D0F45", "#1A0B2E"]}
-      style={styles.container}
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
+        height: hp(100),
+      }}
     >
-      <ViewShot
-        ref={viewShotRef}
-        options={{ format: "png", quality: 0.9 }}
-        style={styles.quoteContainer}
+      <LinearGradient
+        colors={["#4A1259", "#2D0F45", "#1A0B2E"]}
+        style={styles.container}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 10,
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-          }}
+        <ViewShot
+          ref={viewShotRef}
+          options={{ format: "png", quality: 0.9 }}
+          style={styles.quoteContainer}
         >
-          <Text
+          <View
             style={{
-              fontFamily: "Montserrat-Regular",
-              fontSize: wp(3),
-              color: Colors.white,
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 10,
+              position: "absolute",
+              bottom: 10,
+              right: 10,
             }}
           >
-            Powered by
-          </Text>
-          <FastImage
-            source={require("../images/wordLogo.png")}
-            style={{
-              width: wp(20),
-              height: wp(8),
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
-        </View>
-        <Animated.View
-          style={[
-            {
-              opacity: fadeAnim,
-              transform: [
-                {
-                  translateY: fadeAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [20, 0],
-                  }),
-                },
-              ],
-            },
-            {
-              justifyContent: "center",
-              alignItems: "center",
-            },
-          ]}
-        >
-          <View style={styles.decorativeLine} />
-          <AnimatedText
-            text={quote?.quote?.hindi}
-            style={styles.quoteHindi}
-            duration={300}
-          />
-          <View style={styles.separator} />
-          <AnimatedText
-            text={quote?.quote?.english}
-            style={styles.quoteEnglish}
-            duration={300}
-          />
-          <View style={styles.decorativeLine} />
-        </Animated.View>
-      </ViewShot>
-      <Button
-        title={ButtonTitle}
-        onPress={shareQuoteOnWhatsApp}
-        buttonStyle={styles.shareButton}
-        titleStyle={{
-          color: Colors.black,
-        }}
-      />
-    </LinearGradient>
+            <Text
+              style={{
+                fontFamily: "Montserrat-Regular",
+                fontSize: wp(3),
+                color: Colors.white,
+              }}
+            >
+              Powered by
+            </Text>
+            <FastImage
+              source={require("../images/wordLogo.png")}
+              style={{
+                width: wp(20),
+                height: wp(8),
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          </View>
+          <Animated.View
+            style={[
+              {
+                opacity: fadeAnim,
+                transform: [
+                  {
+                    translateY: fadeAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
+              },
+              {
+                justifyContent: "center",
+                alignItems: "center",
+              },
+            ]}
+          >
+            <View style={styles.decorativeLine} />
+            <AnimatedText
+              text={quote?.quote?.hindi}
+              style={styles.quoteHindi}
+              duration={300}
+            />
+            <View style={styles.separator} />
+            <AnimatedText
+              text={quote?.quote?.english}
+              style={styles.quoteEnglish}
+              duration={300}
+            />
+            <View style={styles.decorativeLine} />
+          </Animated.View>
+        </ViewShot>
+        <Button
+          title={ButtonTitle}
+          onPress={shareQuoteOnWhatsApp}
+          buttonStyle={styles.shareButton}
+          titleStyle={{
+            color: Colors.black,
+          }}
+        />
+      </LinearGradient>
+    </ScrollView>
   );
 };
+
 const ButtonTitle = () => {
   return (
     <View
@@ -153,19 +169,9 @@ const ButtonTitle = () => {
           color: Colors.black,
         }}
       >
-        Share On WhatsApp
+        Share with friends
       </Text>
-      <FastImage
-        source={require("../images/whatsapp.png")}
-        style={{
-          width: 30,
-          height: 24,
-          alignSelf: "center",
-          backgroundColor: Colors.white,
-          borderRadius: 20,
-          padding: 4,
-        }}
-      />
+      <Share2 color={Colors.black} size={24} />
     </View>
   );
 };
@@ -173,6 +179,20 @@ const ButtonTitle = () => {
 const AnimatedText = ({ text, style, duration }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const determineFontSize = (text) => {
+    const textLength = text?.length || 0;
+
+    if (textLength <= 50) {
+      return wp(12);
+    } else if (textLength <= 100) {
+      return wp(8);
+    } else {
+      return wp(6);
+    }
+  };
+
+  const adjustedFontSize = determineFontSize(text);
 
   useEffect(() => {
     if (currentIndex < text?.length) {
@@ -185,7 +205,15 @@ const AnimatedText = ({ text, style, duration }) => {
     }
   }, [currentIndex, text, duration]);
 
-  return <Text style={style}>{displayedText}</Text>;
+  return (
+    <Text
+      // numberOfLines={3}
+      // adjustsFontSizeToFit
+      style={[style, { fontSize: adjustedFontSize }]}
+    >
+      {displayedText}
+    </Text>
+  );
 };
 
 export default Quotes;
@@ -195,6 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: StatusBar.currentHeight,
   },
   backgroundAnimation: {
     width: wp(100),
@@ -219,7 +248,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
-    minHeight: hp(60),
+    minHeight: hp(75),
   },
   decorativeLine: {
     width: wp(20),

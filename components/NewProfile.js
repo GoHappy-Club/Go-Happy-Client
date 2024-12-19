@@ -146,6 +146,53 @@ const NewProfile = () => {
     return `${days} ${dayString}`;
   };
 
+  const showRedDot = () => {
+    if (
+      profile.email == "" ||
+      profile.email == null ||
+      profile.email == undefined
+    ) {
+      return true;
+    } else if (
+      profile.phoneNumber == "" ||
+      profile.phoneNumber == null ||
+      profile.phoneNumber == undefined
+    ) {
+      return true;
+    } else if (
+      profile.profileImage == "" ||
+      profile.profileImage == null ||
+      profile.profileImage == undefined
+    ) {
+      return true;
+    } else if (
+      profile.age == "" ||
+      profile.age == null ||
+      profile.age == undefined
+    ) {
+      return true;
+    } else if (
+      profile.emergencyContact == "" ||
+      profile.emergencyContact == null ||
+      profile.emergencyContact == undefined
+    ) {
+      return true;
+    } else if (
+      profile.city == "" ||
+      profile.city == null ||
+      profile.city == undefined
+    ) {
+      return true;
+    } else if (
+      profile.dob == "" ||
+      profile.dob == null ||
+      profile.dob == undefined
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   const data = [
     {
       key: "Sessions Attended",
@@ -258,6 +305,23 @@ const NewProfile = () => {
                   Edit
                 </Text>
                 <Pencil size={18} color={Colors.beige} />
+
+                {showRedDot() && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      backgroundColor: Colors.red,
+                      borderRadius: 10,
+                      width: 10,
+                      height: 10,
+                      zIndex: 1,
+                      borderWidth: 1,
+                      borderColor: Colors.background,
+                    }}
+                  />
+                )}
               </Pressable>
             </View>
           </View>
