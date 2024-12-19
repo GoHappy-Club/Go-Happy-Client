@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     alignSelf: "center",
     width: "88%",
+    borderWidth: 0.5,
   },
   clip: {
     marginTop: "-10%",
@@ -483,6 +484,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 2,
+    // borderColor:Colors.black,
+    // borderWidth:1
   },
   copyButton: {
     // height: "39%",
