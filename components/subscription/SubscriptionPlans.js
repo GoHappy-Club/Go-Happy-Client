@@ -659,7 +659,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 8,
-    height: hp(60),
+    flex: 1,
   },
   badge: {
     paddingHorizontal: 12,
@@ -746,6 +746,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   footerContainer: {
+    marginTop: "2%",
     backgroundColor: Colors.bottomNavigation,
     paddingVertical: hp(2),
     paddingHorizontal: wp(5),
