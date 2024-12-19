@@ -11,6 +11,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../assets/colors/color";
 import FastImage from "react-native-fast-image";
+import { Skeleton } from "@rneui/themed";
 
 const { width } = Dimensions.get("window");
 
@@ -25,33 +26,59 @@ export default function Feed({ videos }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headingContainer}>
-        <View style={styles.line} />
-        <Text style={styles.headingText}>Videos for you</Text>
-        <View style={styles.line} />
-      </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {videos.map((video) => (
-          <TouchableOpacity
-            key={video.id}
-            style={styles.playlistCard}
-            onPress={() => handlePlaylistPress(video)}
-            activeOpacity={0.5}
-          >
-            <FastImage
-              resizeMode={FastImage.resizeMode.cover}
-              source={{ uri: video.thumbnail }}
-              style={styles.thumbnail}
-            />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+    <>
+      {videos == [] && (
+        <View style={{ marginTop: "3%" }}>
+          <View style={{}}>
+            <View style={styles.skeletonContainer}>
+              <Skeleton
+                animation="pulse"
+                height={100}
+                style={{ borderRadius: 8 }}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+      {videos && videos?.length > 0 && (
+        <View style={styles.container}>
+          <View style={styles.headingContainer}>
+            <View style={styles.line} />
+            <Text style={styles.headingText}>Videos for you</Text>
+            <View style={styles.line} />
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {videos.map((video) => (
+              <TouchableOpacity
+                key={video.id}
+                style={styles.playlistCard}
+                onPress={() => handlePlaylistPress(video)}
+                activeOpacity={0.5}
+              >
+                <FastImage
+                  resizeMode={FastImage.resizeMode.cover}
+                  source={{ uri: video.thumbnail }}
+                  style={styles.thumbnail}
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  skeletonContainer: {
+    // flexDirection: "row",
+    // alignItems: "center",
+    borderRadius: 8,
+    borderColor: Colors.grey.grey,
+    borderWidth: 0.2,
+    margin: 10,
+    width: 200,
+  },
   container: {
     marginVertical: 10,
   },

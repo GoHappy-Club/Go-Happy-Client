@@ -51,12 +51,10 @@ const ReelsPage = () => {
     try {
       const response = await axios.get(`${SERVER_URL}/videos/getRandom`);
       const data = response.data;
+      const shuffledVideos = data.sort(() => Math.random() - 0.5);
+      const allVideos = [...videos, ...shuffledVideos];
 
-      const allVideos = [...videos, ...data];
-      const uniqueVideos = Array.from(
-        new Map(allVideos.map((video) => [video.id, video])).values()
-      );
-      setVideos(uniqueVideos);
+      setVideos(allVideos);
     } catch (error) {
       console.error("Error fetching videos:", error);
     } finally {
@@ -194,9 +192,8 @@ const ReelsPage = () => {
               shadowOpacity: 0.1,
               shadowRadius: 12,
               elevation: 8,
-              width: "auto",
-              maxWidth: wp(35),
               marginBottom: wp(2.5),
+              alignSelf: "flex-start",
             }}
           >
             <Text
