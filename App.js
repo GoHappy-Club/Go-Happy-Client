@@ -835,7 +835,7 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerStyle: {
-                        backgroundColor: "#FFF5D7",
+                        backgroundColor: Colors.background,
                       },
                       headerLeft: () => (
                         <TouchableOpacity
