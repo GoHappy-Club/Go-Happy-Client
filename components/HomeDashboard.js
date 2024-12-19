@@ -560,14 +560,21 @@ const HomeDashboard = ({
           Seats Left : {item.seatsLeft}
         </Text>
 
-        <Text
+        <View
           style={{
-            fontFamily: "Montserrat-Regular",
-            color: Colors.grey.grey,
-            fontSize: wp(3.5),
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          {item.costType == "paid" ? item.cost : "FREE"}
+          <Text
+            style={{
+              fontFamily: "Montserrat-Regular",
+              color: Colors.grey.grey,
+              fontSize: wp(3.5),
+            }}
+          >
+            {item.costType == "paid" ? item.cost : "FREE"}
+          </Text>
           {item.costType == "paid" && (
             <FastImage
               source={require("../images/GoCoins.png")}
@@ -577,7 +584,7 @@ const HomeDashboard = ({
               }}
             />
           )}
-        </Text>
+        </View>
       </View>
       <Button
         disabled={isDisabled(item)}

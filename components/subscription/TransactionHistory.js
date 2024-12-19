@@ -30,13 +30,20 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
           <Text style={styles.transactionTitle}>{item.title}</Text>
           <Text style={styles.timestamp}>{loadDate(item.transactionDate)}</Text>
         </View>
-        <Text
-          style={[
-            styles.amount,
-            isCredit ? styles.creditAmount : styles.debitAmount,
-          ]}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
         >
-          {isCredit ? "+" : "-"} {item.amount}{" "}
+          <Text
+            style={[
+              styles.amount,
+              isCredit ? styles.creditAmount : styles.debitAmount,
+            ]}
+          >
+            {isCredit ? "+" : "-"} {item.amount}{" "}
+          </Text>
           <FastImage
             source={require("../../images/GoCoins.png")}
             style={{
@@ -44,7 +51,7 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
               width: 18,
             }}
           />
-        </Text>
+        </View>
       </View>
     );
   };
