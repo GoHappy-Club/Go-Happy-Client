@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { wp } from "../../helpers/common";
 import Video from "react-native-video";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import { Colors } from "../../assets/colors/color";
 
 const AllTransactions = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -45,7 +46,8 @@ const AllTransactions = () => {
             // justifyContent: "center",
             alignItems: "center",
             height: wp(100),
-            backgroundColor: "#FFF5D7",
+            // backgroundColor: "#FFF5D7",
+            backgroundColor:Colors.background
           }}
         >
           <TransactionHistory transactions={transactions} />
