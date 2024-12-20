@@ -62,12 +62,7 @@ const Quotes = () => {
   };
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        height: hp(100),
-      }}
-    >
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
       <LinearGradient
         colors={["#4A1259", "#2D0F45", "#1A0B2E"]}
         style={styles.container}
@@ -223,7 +218,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: StatusBar.currentHeight,
+    paddingVertical: StatusBar.currentHeight*2.5,
   },
   backgroundAnimation: {
     width: wp(100),
