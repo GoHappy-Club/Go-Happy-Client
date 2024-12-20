@@ -143,6 +143,10 @@ const HomeDashboard = ({
     parsedSelect.setHours(0, 0, 0, 0);
     const select = format(parsedSelect, "EEE MMM dd yyyy");
     const tempDate = getTime(parsedSelect);
+    parsedSelect.setHours(23, 59, 0, 0);
+    const midnightDate = getTime(parsedSelect);
+    console.log(tempDate, midnightDate);
+
     setState((prevState) => ({
       ...prevState,
       selectedDate: select,
@@ -150,7 +154,7 @@ const HomeDashboard = ({
       events: [],
     }));
 
-    loadEvents(tempDate);
+    loadEvents(tempDate, midnightDate);
   };
 
   const trimContent = (text, cut) => {

@@ -93,7 +93,7 @@ class HomeScreen extends Component {
       );
     }
   }
-  loadEvents(selectedDate) {
+  loadEvents(selectedDate,midnightDate) {
     this.setState({ childLoader: true });
     this.setState({ events: [] });
     var url = SERVER_URL + "/event/getEventsByDate";
@@ -102,7 +102,7 @@ class HomeScreen extends Component {
     }
 
     axios
-      .post(url, { date: selectedDate })
+      .post(url, { date: selectedDate,midnightDate })
       .then((response) => {
         if (response.data) {
           for (var i = 0; i < response.data.events.length; i++) {
