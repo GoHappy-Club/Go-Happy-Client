@@ -19,7 +19,7 @@ const uuidv4 = () => {
   });
 };
 
-const AutocompleteCityInput = ({ label, input, setInput }) => {
+const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, setSelectedFromDropdown }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [correlationId] = useState(uuidv4());
   const [isSelected, setIsSelected] = useState(false);
@@ -95,11 +95,13 @@ const AutocompleteCityInput = ({ label, input, setInput }) => {
   const handleInputChange = (text) => {
     setInput(text);
     setIsSelected(false);
+    setSelectedFromDropdown(false);
   };
 
   const handleSelection = (item) => {
     setInput((item.charAt(0).toUpperCase() + item.slice(1)).replace("...", ""));
     setIsSelected(true);
+    setSelectedFromDropdown(true);
     setSuggestions([]);
   };
 

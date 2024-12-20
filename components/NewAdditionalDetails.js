@@ -66,6 +66,7 @@ const NewAdditionalDetails = ({ route }) => {
     showAlert: false,
     alertMessage: "",
     phoneNumber: route.params?.phoneNumber,
+    selectedFromDropdown: true,
   });
 
   const [updated, setUpdated] = useState(false);
@@ -351,6 +352,11 @@ const NewAdditionalDetails = ({ route }) => {
             label={"City : "}
             input={state.city}
             setInput={(city) => setState((prev) => ({ ...prev, city: city }))}
+            selectedFromDropdown={state.selectedFromDropdown}
+            setSelectedFromDropdown={(value) => {
+              setUpdated(false);
+              setState((prev) => ({ ...prev, selectedFromDropdown: value }));
+            }}
           />
         </ScrollView>
         <Button

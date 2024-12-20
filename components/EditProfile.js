@@ -67,6 +67,7 @@ const EditProfile = () => {
     showAlert: false,
     alertMessage: "",
     alertTitle: "",
+    selectedFromDropdown: true,
   });
 
   const [updated, setUpdated] = useState(false);
@@ -121,6 +122,15 @@ const EditProfile = () => {
         ...prevState,
         alertTitle: "Invalid emergency contact",
         alertMessage: "Please enter a valid emergency contact number.",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!state.selectedFromDropdown) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid city",
+        alertMessage: "Please select a city from the dropdown only.",
         showAlert: true,
       }));
       return;
@@ -378,6 +388,11 @@ const EditProfile = () => {
             setInput={(text) => {
               setUpdated(false);
               setState((prev) => ({ ...prev, city: text }));
+            }}
+            selectedFromDropdown={state.selectedFromDropdown}
+            setSelectedFromDropdown={(value) => {
+              setUpdated(false);
+              setState((prev) => ({ ...prev, selectedFromDropdown: value }));
             }}
           />
         </ScrollView>
