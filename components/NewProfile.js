@@ -310,8 +310,8 @@ const NewProfile = () => {
                   <View
                     style={{
                       position: "absolute",
-                      top: 0,
-                      right: 0,
+                      top: -4,
+                      right: -4,
                       backgroundColor: Colors.red,
                       borderRadius: 10,
                       width: 10,

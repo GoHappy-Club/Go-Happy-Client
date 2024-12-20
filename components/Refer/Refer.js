@@ -471,7 +471,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     alignSelf: "center",
     width: "88%",
-    borderWidth: 0.5,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   clip: {
     marginTop: "-10%",
