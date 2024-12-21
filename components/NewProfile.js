@@ -353,7 +353,7 @@ const NewProfile = () => {
         </View>
         <BottomSheet
           index={0}
-          snapPoints={["48%"]}
+          snapPoints={[hp(42)]}
           enablePanDownToClose={true}
           enableDismissOnClose={true}
           handleStyle={{ display: "none" }}
@@ -362,7 +362,7 @@ const NewProfile = () => {
             overflow: "hidden",
             borderRadius: 40,
             paddingHorizontal: wp(5),
-            paddingVertical: wp(5),
+            paddingVertical: hp(2),
           }}
           backgroundStyle={{
             borderRadius: 40,
@@ -526,15 +526,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    // flex: 1,
-    height: hp(60),
+    height: hp(65),
     backgroundColor: Colors.beige,
     justifyContent: "start",
     alignItems: "center",
+    paddingBottom: hp(5),
   },
   scrollViewContent: {
     paddingBottom: hp(10),
-    // marginTop: hp(2),
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -567,23 +566,25 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     borderStyle: "dashed",
-    marginTop: wp(8),
+    marginTop: hp(4),
+    marginBottom: hp(2),
   },
   achievmentsContainer: {
     width: "100%",
-    flex: 1,
+    // marginTop: hp(2),
+    marginBottom: hp(4),
     paddingHorizontal: wp(1),
-    paddingVertical: 5,
+    // paddingVertical: hp(2),
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
   achievmentItem: {
     alignSelf: "flex-start",
-    padding: 20,
+    padding: wp(4),
     borderRadius: 20,
     alignItems: "center",
-    gap: 10,
+    gap: wp(2),
   },
   achievmentValue: {
     color: Colors.primaryText,
@@ -613,3 +614,4 @@ const styles = StyleSheet.create({
     color: Colors.primaryText,
   },
 });
+

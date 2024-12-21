@@ -568,7 +568,8 @@ class LoginScreen extends Component {
             response.data.city,
             response.data.emergencyContact,
             this.state.fcmToken,
-            response.data.age
+            response.data.age,
+            response.data.dob
           );
           this.setMembership({
             membershipType: response.data.membershipType,
@@ -609,6 +610,7 @@ class LoginScreen extends Component {
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
           AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           AsyncStorage.setItem("age", response.data.age);
+          AsyncStorage.setItem("dob", response.data.dob);
 
           // store membership details in async storage
           AsyncStorage.setItem("membershipType", response.data.membershipType);

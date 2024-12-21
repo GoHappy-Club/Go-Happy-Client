@@ -1,24 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
-  Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { Linking } from "react-native";
-//import axios from "axios";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
-import { Colors } from "../../assets/colors/color";
-import { wp } from "../../helpers/common";
 import FastImage from "react-native-fast-image";
+import { Colors } from "../../assets/colors/color";
+
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
-  const [whatsappLink, setWhatsappLink] = useState("");
+  const { width: windowWidth } = useWindowDimensions();
   const { start, copilotEvents } = useCopilot();
-  const walktroughStarted = useRef(false);
+
+  const minItemWidth = 85;
+  const spacing = 12;
+  const horizontalPadding = 12;
+  
+  const numColumns = Math.floor(
+    (windowWidth - horizontalPadding * 2 + spacing) / (minItemWidth + spacing)
+  );
+  
+  const itemWidth = (windowWidth - horizontalPadding * 2 - spacing * (numColumns - 1)) / numColumns;
+
   const data1 = [
     {
       title: "Free Sessions",
@@ -65,25 +74,6 @@ export default function Sections(props) {
     },
   ];
 
-  useEffect(() => {
-    async function handleHelp() {
-      const url = `${SERVER_URL}/properties/list`;
-      try {
-        const response = await axios.get(url);
-        if (response.data) {
-          const properties = response.data.properties;
-          if (properties && properties.length > 0) {
-            setWhatsappLink(properties[0].whatsappHelpLink);
-          }
-        }
-      } catch (error) {
-        // Handle the error
-      }
-    }
-
-    handleHelp();
-  }, []);
-
   return (
     <View style={styles.mainContainer}>
       <View style={styles.headingContainer}>
@@ -92,111 +82,101 @@ export default function Sections(props) {
         <View style={styles.line} />
       </View>
 
-      <View style={styles.outerSectionsContainer}>
-        <View style={styles.sectionsContainer}>
-          {data1.map((item, index) => (
-            <CopilotStep
-              key={index}
-              text={item.text}
-              order={index + 1}
-              name={`step_${index + 1}`}
-            >
-              <Walkthroughable>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (item.type && item.type === "external") {
-                      Linking.openURL(whatsappLink);
-                    } else {
-                      props.navigation.navigate(item.link);
-                    }
-                  }}
-                >
-                  <View style={styles.container}>
-                    <FastImage
-                      source={item.imgUrl}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                    <Text style={styles.text}>{item.title}</Text>
-                  </View>
-                </TouchableOpacity>
-              </Walkthroughable>
-            </CopilotStep>
-          ))}
-        </View>
+      <View style={[styles.gridContainer, { padding: horizontalPadding }]}>
+        {data1.map((item, index) => (
+          <CopilotStep
+            key={index}
+            text={item.text}
+            order={index + 1}
+            name={`step_${index + 1}`}
+          >
+            <Walkthroughable>
+              <TouchableOpacity
+                onPress={() => {
+                  if (item.type === "external") {
+                    Linking.openURL(props.helpUrl);
+                  } else {
+                    props.navigation.navigate(item.link);
+                  }
+                }}
+                style={[
+                  styles.gridItem,
+                  {
+                    width: itemWidth,
+                    marginRight: (index + 1) % numColumns ? spacing : 0,
+                    marginBottom: spacing,
+                  },
+                ]}
+              >
+                <FastImage
+                  source={item.imgUrl}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+                <Text style={styles.text} numberOfLines={2}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            </Walkthroughable>
+          </CopilotStep>
+        ))}
       </View>
     </View>
   );
 }
 
-const SLIDER_WIDTH = Dimensions.get("window").width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
-
 const styles = StyleSheet.create({
   mainContainer: {
-    marginTop: 0,
-    alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
+    backgroundColor: Colors.background,
   },
-  scrollContainer: {},
   headingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    margin: "5%",
-    marginBottom: "2%",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   headingText: {
     color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
+    fontSize: 16,
   },
   line: {
     flex: 1,
     height: 1,
     backgroundColor: Colors.grey.grey,
   },
-  container: {
-    width: wp(20),
-    aspectRatio: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    margin: 5,
-  },
-  outerSectionsContainer: {
-    width: wp(100),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sectionsContainer: {
-    width: wp(95),
+  gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 5,
-    paddingVertical: wp(1),
+  },
+  gridItem: {
+    aspectRatio: 1,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   image: {
-    // borderRadius: 80,
-    alignSelf: "center",
-    width: 60,
-    height: 60,
+    width: '60%',
+    height: '60%',
+    marginBottom: 8,
   },
-  text: { color: Colors.primaryText, textAlign: "center", fontSize: 12 },
-  subText: {
-    marginHorizontal: 10,
-    fontSize: 12,
-  },
-  startButton: {
-    color: Colors.primary,
+  text: {
+    color: Colors.primaryText,
     textAlign: "center",
-    margin: 10,
-    padding: 10,
-    backgroundColor: Colors.white,
-    borderRadius: 5,
-  },
-  walkthroughableView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 12,
+    fontWeight: "500",
   },
 });
+

@@ -7,12 +7,13 @@ import {
   Text,
   Pressable,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import FastImage from "react-native-fast-image";
 import { Colors } from "../assets/colors/color";
 import { hp, wp } from "../helpers/common";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Share2 } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { Share } from "react-native";
@@ -57,7 +58,7 @@ const ReelsPage = () => {
       setVideos(allVideos);
     } catch (error) {
       console.error("Error fetching videos:", error);
-      crashlytics().log(`Error in getting randomVideos ${error}`)
+      crashlytics().log(`Error in getting randomVideos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -77,6 +78,7 @@ const ReelsPage = () => {
     };
     Share.share(shareOptions);
   };
+  const navigation = useNavigation();
 
   const renderItem = ({ item, index }) => {
     let videoId;
@@ -91,6 +93,14 @@ const ReelsPage = () => {
         <Pressable
           style={styles.videoWrapper}
           onPress={() => {
+            if (item.category?.toLowerCase() == "promotion") {
+              console.log("item", item.playlistLink);
+              if (item?.playlistLink?.includes("https")) {
+                Linking.openURL(item?.playlistLink);
+              } else {
+                navigation.navigate(item?.playlistLink);
+              }
+            }
             togglePlay(index);
           }}
         >
