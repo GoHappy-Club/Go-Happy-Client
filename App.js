@@ -124,6 +124,30 @@ PushNotification.createChannel(
   },
   (created) => crashlytics().log(`createChannel returned '${created}'`)
 );
+PushNotification.createChannel(
+  {
+    channelId: "Water Reminders",
+    channelName: "My channel",
+    channelDescription: "A channel to categorise your notifications",
+    playSound: true,
+    soundName: "default",
+    importance: 4,
+    vibrate: true,
+  },
+  (created) => crashlytics().log(`createChannel returned '${created}'`)
+);
+PushNotification.createChannel(
+  {
+    channelId: "Medicine Reminders",
+    channelName: "My channel",
+    channelDescription: "A channel to categorise your notifications",
+    playSound: true,
+    soundName: "default",
+    importance: 4,
+    vibrate: true,
+  },
+  (created) => crashlytics().log(`createChannel returned '${created}'`)
+);
 
 const requestNotificationPermission = async () => {
   if (Platform.OS === "android") {

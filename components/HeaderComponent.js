@@ -34,6 +34,7 @@ import dayjs from "dayjs";
 import quotes from "../constants/quotes.json";
 import {
   ScheduledNotifcation,
+  scheduleMedicineReminders,
   scheduleWaterReminders,
 } from "../services/LocalPushController";
 
@@ -88,6 +89,7 @@ const Header = () => {
     };
     getRandomQuote();
     scheduleWaterReminders();
+    scheduleMedicineReminders();
   });
 
   useEffect(() => {

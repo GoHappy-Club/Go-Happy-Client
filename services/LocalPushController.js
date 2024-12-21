@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import PushNotification from "react-native-push-notification";
 
 export const localNotification = (title, quote) => {
@@ -30,7 +31,6 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
     soundName: "default",
     data: {
       screen: "QuotesPage",
-      params: { test: "12345" },
     },
   });
 };
@@ -54,17 +54,82 @@ export const scheduleWaterReminders = () => {
 
     if (!waterReminderExists) {
       const next9AM = getNext9AM();
+      const isDuplicate = notifications.some((n) => n.date == next9AM);
+      if (isDuplicate) {
+        return;
+      }
 
       PushNotification.localNotificationSchedule({
-        channelId: "water reminders",
+        autoCancel: true,
+        date: next9AM,
         title: "Time to Hydrate!",
         message: "Drink a glass of water to stay healthy and hydrated.",
-        date: next9AM,
-        allowWhileIdle: true,
+        channelId: "Water Reminders",
+        vibrate: true,
+        vibration: 400,
+        playSound: true,
+        soundName: "default",
         repeatType: "time",
-        repeatTime: 1 * 1000,
+        repeatTime: 2 * 60 * 60 * 1000,
       });
       console.log("Water reminder scheduled!");
+    }
+  });
+};
+
+const getNextMedicineTime = () => {
+  const now = new Date();
+  const times = [
+    { hours: 9, minutes: 0 },
+    { hours: 14, minutes: 0 },
+    { hours: 21, minutes: 0 },
+  ];
+
+  const todayTimes = times.map(({ hours, minutes }) => {
+    const time = new Date(now);
+    time.setHours(hours, minutes, 0, 0);
+    return time;
+  });
+
+  const nextTime = todayTimes.find((time) => time > now);
+
+  if (!nextTime) {
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(times[0].hours, times[0].minutes, 0, 0);
+    return tomorrow;
+  }
+
+  return nextTime;
+};
+
+export const scheduleMedicineReminders = () => {
+  PushNotification.getScheduledLocalNotifications((notifications) => {
+    const medicineReminderExists = notifications.some(
+      (notif) => notif.message === "Time to take your medicine."
+    );
+
+    if (!medicineReminderExists) {
+      const next9AM = getNext9AM();
+      const isDuplicate = notifications.some((n) => n.date == next9AM);
+      if (isDuplicate) {
+        return;
+      }
+
+      PushNotification.localNotificationSchedule({
+        autoCancel: true,
+        date: getNextMedicineTime(),
+        channelId: "Medicine Reminders",
+        title: "Medicine Reminder",
+        message: "Time to take your medicine.",
+        vibrate: true,
+        vibration: 400,
+        playSound: true,
+        soundName: "default",
+        repeatType: "time",
+        repeatTime: 5 * 60 * 60 * 1000,
+      });
+      console.log("Medicine reminder scheduled!");
     }
   });
 };
