@@ -26,6 +26,7 @@ const AllTransactions = () => {
         setTransactions(response.data);
         setLoading(false);
       } catch (error) {
+        crashlytics().log(`Error in getAllTransactions ${error}`)
         setLoading(false);
         console.log("Error in gettin all transactions ==>", error);
       }

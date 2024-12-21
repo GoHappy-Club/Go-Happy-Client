@@ -57,6 +57,7 @@
 		"react-native-device-info": "^10.13.1",
 		"react-native-dotenv": "^3.4.11",
 		"react-native-elements": "3.4.3",
+		"react-native-error-boundary": "^1.2.7",
 		"react-native-fast-image": "^8.6.3",
 		"react-native-fs": "^2.20.0",
 		"react-native-gesture-handler": "^2.9.0",

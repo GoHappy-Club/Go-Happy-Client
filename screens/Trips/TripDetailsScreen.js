@@ -45,6 +45,7 @@ class TripDetailsScreen extends Component {
         });
       }
     } catch (error) {
+      crashlytics().log(`Error in getTripDetails ${error} ${url}`)
       this.error = true;
       // throw new Error("Error getting order ID");
     }

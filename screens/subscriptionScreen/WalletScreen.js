@@ -24,6 +24,7 @@ const WalletScreen = () => {
         setTransactions(response.data);
         setLoading(false);
       } catch (error) {
+        crashlytics().log(`Error in getRecentTransactions WalletScreen ${error}`)
         setLoading(false);
         console.log("Error in getting transaction ==>", error);
       }

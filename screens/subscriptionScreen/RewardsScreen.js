@@ -21,6 +21,7 @@ const RewardsScreen = () => {
         );
       } catch (error) {
         console.log("Error in updating vouchers ==>", error);
+        crashlytics().log(`Error in updateVouchers RewardsScreen ${error}`)
       }
     };
     const getRewards = async () => {
@@ -62,6 +63,7 @@ const RewardsScreen = () => {
         setLoading(false);
         await updateVouchers(expiredVouchersIds);
       } catch (error) {
+        crashlytics().log(`Error in getRewards RewardsScreen ${error}`)
         setLoading(false);
         console.log("Error in getting rewards ==>", error);
       }

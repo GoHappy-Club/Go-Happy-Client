@@ -47,6 +47,7 @@ class TripsScreen extends Component {
         });
       }
     } catch (error) {
+      crashlytics().log(`Error in getPastTripsData ${error}`)
       this.error = true;
       // throw new Error("Error getting order ID");
     }
@@ -63,6 +64,7 @@ class TripsScreen extends Component {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log(`Error in getUpcomingTripsData ${error}`)
       // throw new Error("Error getting order ID");
     }
   }

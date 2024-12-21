@@ -39,6 +39,7 @@ const WhatsAppFAB = () => {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log("Error in getting properties list",error);
     }
   };
 

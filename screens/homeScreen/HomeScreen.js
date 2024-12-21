@@ -102,7 +102,7 @@ class HomeScreen extends Component {
     }
 
     axios
-      .post(url, { date: selectedDate,midnightDate })
+      .post(url, { date: selectedDat,midnightDate })
       .then((response) => {
         if (response.data) {
           for (var i = 0; i < response.data.events.length; i++) {

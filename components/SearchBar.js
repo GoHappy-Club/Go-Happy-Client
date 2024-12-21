@@ -165,6 +165,7 @@ const SearchBar = () => {
     } catch (error) {
       console.log(error);
       setError(true);
+      crashlytics().log(`Error in searching events ${error}`)
     } finally {
       setLoading(false);
     }

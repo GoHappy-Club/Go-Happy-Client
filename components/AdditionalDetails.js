@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
 
-// import axios from "../config/CustomAxios.js";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { connect } from "react-redux";
 import { setProfile } from "../redux/actions/counts.js";

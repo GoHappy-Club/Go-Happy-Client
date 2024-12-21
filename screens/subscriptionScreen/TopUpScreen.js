@@ -25,6 +25,7 @@ const TopUpScreen = () => {
       setPackages(response.data);
       setLoading(false);
     } catch (error) {
+      crashlytics().log(`Error in getCoinPackages TopUpScreen ${error}`)
       setLoading(false);
       console.log("Error in fetching plans", error);
     }

@@ -261,7 +261,6 @@ const SessionDetails = ({
       setSessionAttended(phoneNumber);
       // await Linking.openURL(event.meetingLink);
       joinMeeting();
-      await giveRewards();
       return;
     }
 
@@ -277,6 +276,7 @@ const SessionDetails = ({
       });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
+      crashlytics().log(`Error in giveRewards SessionDetails ${error}`)
     }
   };
 
@@ -455,6 +455,7 @@ const SessionDetails = ({
     } catch (error) {
       setState((prev) => ({ ...prev, voucherLoading: false }));
       console.log("Error in getting rewards ==>", error);
+      crashlytics().log(`Error in loadVouchers SessionDetails ${error}`)
     }
   };
 

@@ -31,6 +31,7 @@ const SubscriptionScreen = () => {
       setPlans(plansToShow);
       setLoading(false);
     } catch (error) {
+      crashlytics().log(`Error in getPlans SubscriptionScreen ${error}`)
       setLoading(false);
       console.log("Error in fetching plans", error);
     }

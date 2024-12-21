@@ -13,7 +13,7 @@ import App from "./App";
 import { name as appName } from "./app.json";
 import { Provider } from "react-redux";
 import { rectangleSvgPath } from "./commonComponents/svgPath";
-import React from "react";
+import React, { useEffect } from "react";
 import store from "./store/store";
 import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
@@ -23,21 +23,27 @@ import firebase from "@react-native-firebase/app";
 // import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
 import { generateZoomSignature } from "./helpers/generateZoomSignature";
 // const my_store = store();
+import RNErrorBoundary from "react-native-error-boundary";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 const RNRedux = () => {
-  const { height } = useWindowDimensions();
   return (
-    <CopilotProvider
-      verticalOffset={StatusBar.currentHeight}
-      arrowColor={Colors.copilotArrow}
-      animated={true}
-      tooltipComponent={CustomTooltip}
-      overlay="svg"
-      svgMaskPath={rectangleSvgPath}
-      stepNumberComponent={StepNumber}
+    <RNErrorBoundary
+      onError={(error) =>
+        crashlytics().log("Error : ", error.message, error.stack)
+      }
     >
-      <Provider store={store()}>
-        {/* <ZoomSDKProvider
+      <CopilotProvider
+        verticalOffset={StatusBar.currentHeight}
+        arrowColor={Colors.copilotArrow}
+        animated={true}
+        tooltipComponent={CustomTooltip}
+        overlay="svg"
+        svgMaskPath={rectangleSvgPath}
+        stepNumberComponent={StepNumber}
+      >
+        <Provider store={store()}>
+          {/* <ZoomSDKProvider
           config={{
             jwtToken: String(generateZoomSignature()),
             domain: "zoom.us",
@@ -46,28 +52,13 @@ const RNRedux = () => {
           }}
         > */}
           <App />
-        {/* </ZoomSDKProvider> */}
-      </Provider>
-    </CopilotProvider>
+          {/* </ZoomSDKProvider> */}
+        </Provider>
+      </CopilotProvider>
+    </RNErrorBoundary>
   );
 };
-
-firebase.messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log("Message handled in the background!", remoteMessage);
-});
-
-function HeadlessCheck({ isHeadless }) {
-  if (isHeadless) {
-    // App has been launched in the background by iOS, ignore
-    console.log("App has been launched in the background by iOS, ignore");
-
-    return null;
-  }
-
-  return <RNRedux />;
-}
-
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
-AppRegistry.registerComponent(appName, () => HeadlessCheck);
+AppRegistry.registerComponent(appName, () => RNRedux);
 // AppRegistry.registerComponent('app', () => HeadlessCheck);

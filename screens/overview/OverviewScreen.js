@@ -107,6 +107,7 @@ class OverviewScreen extends Component {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log(`Error in getOverviewData OverviewScreen ${error}`)
       // throw new Error("Error getting order ID");
     }
   }

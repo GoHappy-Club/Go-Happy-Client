@@ -221,7 +221,6 @@ const HomeDashboard = ({
       setSessionAttended(profile.phoneNumber);
       // await Linking.openURL(item.meetingLink);
       joinMeeting(item);
-      await giveRewards(item);
       return;
     }
     if (checkIsParticipantInSameEvent(item)) {
@@ -239,6 +238,7 @@ const HomeDashboard = ({
         eventId: item.id,
       });
     } catch (error) {
+      crashlytics().log(`Error in giveRewards HomeDashboard ${error}`)
       console.log("Error in giveRewards ==>", error);
     }
   };

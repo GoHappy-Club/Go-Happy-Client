@@ -273,6 +273,7 @@ const CoinbackRewards = ({
         })
       );
     } catch (error) {
+      crashlytics().log(`Error in saveScratchInBackend: ${error}`);
       console.log("error in saving==>", error);
     }
   };

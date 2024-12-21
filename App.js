@@ -460,6 +460,7 @@ export default function App() {
         setIsConnected(false);
       }
     } catch (error) {
+      crashlytics().log(`Error in recheck App.js`, error);
       setIsConnected(false);
     }
   };
@@ -482,6 +483,7 @@ export default function App() {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log(`Error in checkVersionHelper : ${error}`)
       // throw new Error("Error getting order ID");
     }
   };

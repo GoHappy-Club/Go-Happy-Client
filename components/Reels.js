@@ -57,6 +57,7 @@ const ReelsPage = () => {
       setVideos(allVideos);
     } catch (error) {
       console.error("Error fetching videos:", error);
+      crashlytics().log(`Error in getting randomVideos ${error}`)
     } finally {
       setLoading(false);
     }
