@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { Colors } from "../assets/colors/color";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -35,6 +35,12 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { firebase } from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FastImage from "react-native-fast-image";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { BlurView } from "@react-native-community/blur";
 
 const NewProfile = () => {
   const [state, setState] = useState({
@@ -51,12 +57,14 @@ const NewProfile = () => {
     image: null,
     logoutPopup: false,
     whatsappLink: "",
+    showBackdrop: false,
   });
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const ref = useRef();
 
   const retrieveData = useCallback(async () => {
     try {
@@ -211,6 +219,50 @@ const NewProfile = () => {
     },
   ];
 
+  const closeModal = () => {
+    ref.current?.snapToPosition("42%");
+    setState((prev) => ({ ...prev, showBackdrop: false }));
+  };
+
+  const renderBackdrop = useCallback(
+    ({ animatedIndex }) => {
+      const containerAnimatedStyle = useAnimatedStyle(() => {
+        const opacity = interpolate(
+          animatedIndex.value,
+          [-1, 0],
+          [0, 1],
+          Extrapolation.CLAMP
+        );
+        return { opacity };
+      });
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      return (
+        <Animated.View style={containerStyle}>
+          <TouchableOpacity
+            style={StyleSheet.absoluteFill}
+            onPress={closeModal}
+            activeOpacity={1}
+          >
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurAmount={1}
+              blurType="regular"
+            />
+          </TouchableOpacity>
+        </Animated.View>
+      );
+    },
+    [closeModal]
+  );
+
+  const snapPoints = React.useMemo(() => ["42%", "70%"], []);
+
+  const handleSheetChanges = useCallback((index) => {
+    if (index == 1) setState((prev) => ({ ...prev, showBackdrop: true }));
+    if (index == 0) setState((prev) => ({ ...prev, showBackdrop: false }));
+  }, []);
   return (
     <>
       <SafeAreaView style={styles.mainContainer}>
@@ -352,12 +404,14 @@ const NewProfile = () => {
           </View>
         </View>
         <BottomSheet
+          ref={ref}
           index={0}
-          snapPoints={[hp(42)]}
-          enablePanDownToClose={true}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          enablePanDownToClose={false}
           enableDismissOnClose={true}
           handleStyle={{ display: "none" }}
-          enableContentPanningGesture={false}
+          backdropComponent={state.showBackdrop ? renderBackdrop : null}
           style={{
             overflow: "hidden",
             borderRadius: 40,
@@ -370,7 +424,6 @@ const NewProfile = () => {
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.scrollViewContent}
-            showsVerticalScrollIndicator={false}
             style={{
               borderRadius: 40,
             }}
@@ -398,7 +451,7 @@ const NewProfile = () => {
                         height: wp(12),
                       }}
                       resizeMode={FastImage.resizeMode.contain}
-                      source={require("../images/wordLogo.png")}
+                      source={require("../images/darkWordLogo.png")}
                     />
                     <Text
                       style={{
@@ -614,4 +667,3 @@ const styles = StyleSheet.create({
     color: Colors.primaryText,
   },
 });
-
