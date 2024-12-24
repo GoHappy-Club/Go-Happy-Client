@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 import AutocompleteCityInput from "./Autocomplete";
 import AwesomeAlert from "react-native-awesome-alerts";
+import UserDetailsForm from "../commonComponents/UserDetailsForm";
 
 const NewAdditionalDetails = ({ route }) => {
   const profile = useSelector((state) => state.profile.profile);
@@ -90,8 +91,6 @@ const NewAdditionalDetails = ({ route }) => {
     }-${dayjsObject.get("year")}`;
     return finalDate;
   };
-  // useEffect(() => {
-  // }, []);
 
   const handleSelectImage = async () => {
     try {
@@ -268,8 +267,11 @@ const NewAdditionalDetails = ({ route }) => {
                 )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
                   "year"
                 )}`;
-
-                setState((prev) => ({ ...prev, dob: finalDate }));
+                const d = parseDate(finalDate).toDate();
+                const millis = new Date().getTime() - d.getTime();
+                const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
+                setState((prev) => ({ ...prev, dob: finalDate, age: age }));
+                setOpen(false);
               }}
               maxDate={dayjs().subtract(49, "year")}
               selectedItemColor={Colors.primary}
@@ -308,85 +310,12 @@ const NewAdditionalDetails = ({ route }) => {
               </Pressable>
             </View>
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Name : </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              value={state.name}
-              onChangeText={(text) =>
-                setState((prev) => ({ ...prev, name: text }))
-              }
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Age : </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Age"
-              value={state.age}
-              onChangeText={(text) =>
-                setState((prev) => ({ ...prev, age: text }))
-              }
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email : </Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={state.email}
-              onChangeText={(text) =>
-                setState((prev) => ({ ...prev, email: text }))
-              }
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Emergency Contact : </Text>
-            <TextInput
-              style={styles.input}
-              value={state.emergencyContact}
-              placeholder="Emergency Contact"
-              maxLength={10}
-              keyboardType="phone-pad"
-              onChangeText={(text) =>
-                setState((prev) => ({ ...prev, emergencyContact: text }))
-              }
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Date of Birth : </Text>
-            <Pressable
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
-                borderBottomWidth: 2,
-                borderBottomColor: "#ccc",
-              }}
-              onPress={() => setOpen(true)}
-            >
-              <Text style={[styles.input, { borderBottomWidth: 0 }]}>
-                {state.dob}
-              </Text>
-              <Calendar size={24} color={"black"} />
-            </Pressable>
-          </View>
-          <AutocompleteCityInput
-            label={"City : "}
-            input={state.city}
-            setInput={(city) => setState((prev) => ({ ...prev, city: city }))}
-            selectedFromDropdown={state.selectedFromDropdown}
-            setSelectedFromDropdown={(value) => {
-              setUpdated(false);
-              setState((prev) => ({ ...prev, selectedFromDropdown: value }));
-            }}
+          <UserDetailsForm
+            state={state}
+            setState={setState}
+            setOpen={setOpen}
+            setUpdated={setUpdated}
+            styles={styles}
           />
         </ScrollView>
         <Button
