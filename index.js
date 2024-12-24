@@ -23,15 +23,17 @@ import firebase from "@react-native-firebase/app";
 // import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
 import { generateZoomSignature } from "./helpers/generateZoomSignature";
 // const my_store = store();
-import RNErrorBoundary from "react-native-error-boundary";
+import ErrorBoundary from "react-native-error-boundary";
 import crashlytics from "@react-native-firebase/crashlytics";
+import Fallback from "./commonComponents/Fallback";
 
 const RNRedux = () => {
   return (
-    <RNErrorBoundary
+    <ErrorBoundary
       onError={(error) =>
         crashlytics().log("Error : ", error.message, error.stack)
       }
+      FallbackComponent={Fallback}
     >
       <CopilotProvider
         verticalOffset={StatusBar.currentHeight}
@@ -55,7 +57,7 @@ const RNRedux = () => {
           {/* </ZoomSDKProvider> */}
         </Provider>
       </CopilotProvider>
-    </RNErrorBoundary>
+    </ErrorBoundary>
   );
 };
 Text.defaultProps = Text.defaultProps || {};

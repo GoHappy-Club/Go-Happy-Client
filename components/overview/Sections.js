@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     aspectRatio: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.beige,
     borderRadius: 12,
     padding: 8,
     alignItems: 'center',
