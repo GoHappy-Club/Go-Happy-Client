@@ -401,6 +401,7 @@ const EditProfile = () => {
           title={"Save"}
           loading={state.loading}
           buttonStyle={styles.button}
+         loadingProps={{ color: Colors.black }}
           onPress={updateUser}
           disabled={state.loading}
         />

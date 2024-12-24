@@ -191,7 +191,7 @@ const NewAdditionalDetails = ({ route }) => {
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
-      crashlytics().log(`Error in updateUser NewAdditionalDetails ${error}`)
+      crashlytics().log(`Error in updateUser NewAdditionalDetails ${error}`);
     }
   };
 
@@ -367,6 +367,7 @@ const NewAdditionalDetails = ({ route }) => {
           buttonStyle={styles.button}
           onPress={updateUser}
           disabled={state.loading}
+          loadingProps={{ color: Colors.black }}
         />
       </SafeAreaView>
       {state.showAlert && (
