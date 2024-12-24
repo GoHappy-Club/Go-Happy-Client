@@ -7,6 +7,7 @@ import {
   Alert,
   StatusBar,
   ScrollView,
+  Image,
 } from "react-native";
 import LottieView from "lottie-react-native";
 import { hp, wp } from "../helpers/common";
@@ -19,11 +20,14 @@ import { Colors } from "../assets/colors/color";
 import FastImage from "react-native-fast-image";
 import Share from "react-native-share";
 import { Share2 } from "lucide-react-native";
+import { useSelector } from "react-redux";
 
 const Quotes = () => {
   const [quote, setQuote] = useState({});
+  const [showUserData, setShowUserData] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
   const viewShotRef = useRef(null);
+  const profile = useSelector((state) => state.profile.profile);
 
   useEffect(() => {
     const getTodaysQuote = async () => {
@@ -40,12 +44,14 @@ const Quotes = () => {
   }, []);
 
   const shareQuoteOnWhatsApp = async () => {
+    setShowUserData(true);
     try {
       const base64Data = await captureRef(viewShotRef, {
         format: "png",
         quality: 0.9,
         result: "base64",
       });
+      setShowUserData(false);
       const filePath = `${
         RNFS.TemporaryDirectoryPath
       }/${new Date().getTime()}_daily_quote.png`;
@@ -58,6 +64,8 @@ const Quotes = () => {
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      setShowUserData(false);
     }
   };
 
@@ -72,34 +80,15 @@ const Quotes = () => {
           options={{ format: "png", quality: 0.9 }}
           style={styles.quoteContainer}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 10,
-              position: "absolute",
-              bottom: 10,
-              right: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Montserrat-Regular",
-                fontSize: wp(3),
-                color: Colors.white,
-              }}
-            >
-              Powered by
-            </Text>
-            <FastImage
-              source={require("../images/wordLogo.png")}
-              style={{
-                width: wp(20),
-                height: wp(8),
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
+          {showUserData && (
+            <View style={styles.userInfo}>
+              <Image
+                source={{ uri: profile.profileImage }}
+                style={styles.userPhoto}
+              />
+              <Text style={styles.userName}>{profile.name}</Text>
+            </View>
+          )}
           <Animated.View
             style={[
               {
@@ -133,6 +122,34 @@ const Quotes = () => {
             />
             <View style={styles.decorativeLine} />
           </Animated.View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 10,
+              position: "absolute",
+              bottom: 10,
+              right: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Montserrat-Regular",
+                fontSize: wp(3),
+                color: Colors.white,
+              }}
+            >
+              Powered by
+            </Text>
+            <FastImage
+              source={require("../images/wordLogo.png")}
+              style={{
+                width: wp(20),
+                height: wp(8),
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          </View>
         </ViewShot>
         <Button
           title={ButtonTitle}
@@ -201,13 +218,7 @@ const AnimatedText = ({ text, style, duration }) => {
   }, [currentIndex, text, duration]);
 
   return (
-    <Text
-      // numberOfLines={3}
-      // adjustsFontSizeToFit
-      style={[style, { fontSize: adjustedFontSize }]}
-    >
-      {displayedText}
-    </Text>
+    <Text style={[style, { fontSize: adjustedFontSize }]}>{displayedText}</Text>
   );
 };
 
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: StatusBar.currentHeight*2.5,
+    paddingVertical: StatusBar.currentHeight * 2.5,
   },
   backgroundAnimation: {
     width: wp(100),
@@ -285,5 +296,23 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1.5),
     borderRadius: 5,
     color: Colors.black,
+  },
+  userInfo: {
+    position: "absolute",
+    top: 25,
+    left: 25,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  userPhoto: {
+    width: wp(10),
+    height: wp(10),
+    borderRadius: wp(5),
+    marginRight: 10,
+  },
+  userName: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: wp(4),
+    color: Colors.white,
   },
 });
