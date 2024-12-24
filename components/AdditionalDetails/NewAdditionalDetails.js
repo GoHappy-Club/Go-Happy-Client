@@ -11,10 +11,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { Colors } from "../assets/colors/color";
-import { hp, wp } from "../helpers/common";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Award,
@@ -26,22 +26,57 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImagePicker from "react-native-image-crop-picker";
-import { setProfile } from "../redux/actions/counts";
+import { setProfile } from "../../redux/actions/counts";
 import { TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
-import AutocompleteCityInput from "./Autocomplete";
-import Toast from "react-native-simple-toast";
-import LottieView from "lottie-react-native";
+import AutocompleteCityInput from "../Autocomplete";
 import AwesomeAlert from "react-native-awesome-alerts";
-import UserDetailsForm from "../commonComponents/UserDetailsForm";
+import UserDetailsForm from "../../commonComponents/UserDetailsForm";
 
-const EditProfile = () => {
+const NewAdditionalDetails = ({ route }) => {
   const profile = useSelector((state) => state.profile.profile);
 
+  const [state, setState] = useState({
+    name: route.params?.name,
+    email: route.params?.email,
+    emergencyContact: route.params?.emergencyContact,
+    dob: route.params?.dob
+      ? route.params?.dob
+      : getFormattedDate(dayjs().subtract(49, "years")),
+    city: route.params?.city,
+    age: route.params?.age,
+    showAlert: false,
+    alertMessage: "",
+    phoneNumber: route.params?.phoneNumber,
+    selectedFromDropdown: false,
+  });
+
+  const [updated, setUpdated] = useState(false);
+  const [open, setOpen] = useState(false);
+  const membership = useSelector((state) => state.membership.membership);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const pending = () => {
+    if (
+      state.phoneNumber == null ||
+      state.phoneNumber.length == 0 ||
+      state.name == null ||
+      state.name.length == 0
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  if (pending() == false) {
+    navigation.replace("GoHappy Club");
+  }
+
   const parseDate = (date) => {
-    const splittedDate = date.split("-");
+    const splittedDate = date?.split("-");
     const day = splittedDate[0];
     const month = splittedDate[1];
     const year = splittedDate[2];
@@ -56,27 +91,6 @@ const EditProfile = () => {
     }-${dayjsObject.get("year")}`;
     return finalDate;
   };
-  const [state, setState] = useState({
-    name: profile.name,
-    email: profile.email,
-    emergencyContact: profile.emergencyContact,
-    whatsappLink: "",
-    dob: profile.dob
-      ? profile.dob
-      : getFormattedDate(dayjs().subtract(49, "years")),
-    city: profile.city,
-    showAlert: false,
-    alertMessage: "",
-    alertTitle: "",
-    selectedFromDropdown: true,
-    age: profile.age,
-  });
-
-  const [updated, setUpdated] = useState(false);
-  const [open, setOpen] = useState(false);
-  const membership = useSelector((state) => state.membership.membership);
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const handleSelectImage = async () => {
     try {
@@ -109,12 +123,48 @@ const EditProfile = () => {
     }
   };
 
+  const validateMail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(state.email);
+  };
+
+  const validateEmergencyContact = () => {
+    const mobileRegex = /^[0-9]{10}$/;
+    return mobileRegex.test(state.emergencyContact);
+  };
+
   const updateUser = async () => {
+    if (
+      state.name == null ||
+      state.name == "" ||
+      state.age == null ||
+      state.age == "" ||
+      state.city == null ||
+      state.city == "" ||
+      state.dob == null ||
+      state.dob == ""
+    ) {
+      setState((prev) => ({
+        ...prev,
+        showAlert: true,
+        alertMessage: "Mandatory details are missing",
+      }));
+
+      return;
+    }
+    if (state.age < 16) {
+      setState((prev) => ({
+        ...prev,
+        showAlert: true,
+        alertMessage: "Sorry, you must be atleast 16 years old to log in.",
+      }));
+      return;
+    }
     if (!validateMail()) {
       setState((prevState) => ({
         ...prevState,
         alertTitle: "Invalid Email",
-        alertMessage: "Please enter a valid email address",
+        alertMessage: "Please enter a valid email address\n eg:-name@gmail.com",
         showAlert: true,
       }));
       return;
@@ -140,57 +190,46 @@ const EditProfile = () => {
     try {
       setState((prevState) => ({ ...prevState, loading: true }));
       const response = await axios.post(`${SERVER_URL}/user/update`, {
-        phone: profile.phoneNumber,
         name: state.name,
         email: state.email,
         emergencyContact: state.emergencyContact,
+        phone: profile.phoneNumber,
         city: state.city,
         dob: state.dob,
+        age: state.age,
       });
       dispatch(
         setProfile({
           ...profile,
+          name: state.name,
           email: state.email,
           emergencyContact: state.emergencyContact,
-          name: state.name,
           city: state.city,
           dob: state.dob,
+          age: state.age,
         })
       );
+      AsyncStorage.setItem("phoneNumber", response.data.phone);
+      AsyncStorage.setItem("name", state.name);
       AsyncStorage.setItem("email", state.email);
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
-      AsyncStorage.setItem("name", state.name);
       AsyncStorage.setItem("city", state.city);
       AsyncStorage.setItem("dob", state.dob);
+      AsyncStorage.setItem("age", state.age);
       setState((prevState) => ({ ...prevState, loading: false }));
-      setUpdated(true);
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout);
-        setUpdated(false);
-      }, 1500);
+      AsyncStorage.setItem("showTour", "true");
+      navigation.navigate("GoHappy Club");
+      await analytics().logEvent("signup_click", {
+        phoneNumber: response.data.phone,
+        email: response.data.email,
+        age: response.data.age,
+        name: response.data.name,
+      });
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
+      crashlytics().log(`Error in updateUser NewAdditionalDetails ${error}`);
     }
-  };
-
-  const formatName = (name) =>
-    name
-      ?.split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-
-  const formatPhoneNumber = (phoneNumber) =>
-    `+${phoneNumber.slice(0, -10)} ${phoneNumber.slice(-10)}`;
-
-  const validateMail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(state.email);
-  };
-
-  const validateEmergencyContact = () => {
-    const mobileRegex = /^[0-9]{10}$/;
-    return mobileRegex.test(state.emergencyContact);
   };
 
   return (
@@ -234,57 +273,13 @@ const EditProfile = () => {
                 setState((prev) => ({ ...prev, dob: finalDate, age: age }));
                 setOpen(false);
               }}
-              maxDate={dayjs().subtract(49, "years")}
+              maxDate={dayjs().subtract(49, "year")}
               selectedItemColor={Colors.primary}
             />
           </View>
         </Pressable>
-        {updated && (
-          <LottieView
-            source={require("../assets/lottie/correct.lottie")}
-            autoPlay
-            style={{
-              width: wp(50),
-              height: hp(50),
-              zIndex: 1000,
-              position: "absolute",
-              padding: wp(25),
-              left: wp(25),
-              top: hp(25),
-            }}
-            speed={0.5}
-          />
-        )}
         <StatusBar barStyle="dark-content" />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            marginBottom: hp(2.5),
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              padding: 4,
-              backgroundColor: Colors.white,
-              borderRadius: 4,
-              borderWidth: 1,
-              borderColor: Colors.white,
-              shadowColor: Colors.black,
-              elevation: 10,
-              shadowOffset: { height: 2 },
-              shadowOpacity: 0.3,
-              position: "relative",
-              top: 15,
-              left: 15,
-            }}
-            onPress={() => navigation.goBack()}
-          >
-            <Text>back</Text>
-          </TouchableOpacity>
-        </View>
+
         <ScrollView
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
@@ -314,19 +309,7 @@ const EditProfile = () => {
                 </View>
               </Pressable>
             </View>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={styles.profileName}>{formatName(profile.name)}</Text>
-              <Text style={styles.phoneNumber}>
-                {formatPhoneNumber(profile.phoneNumber)}
-              </Text>
-            </View>
           </View>
-
           <UserDetailsForm
             state={state}
             setState={setState}
@@ -340,33 +323,36 @@ const EditProfile = () => {
           title={"Save"}
           loading={state.loading}
           buttonStyle={styles.button}
-          loadingProps={{ color: Colors.black }}
           onPress={updateUser}
           disabled={state.loading}
+          loadingProps={{ color: Colors.black }}
         />
       </SafeAreaView>
       {state.showAlert && (
         <AwesomeAlert
           show={state.showAlert}
           showProgress={false}
-          title={state.alertTitle}
+          title="Error!"
           message={state.alertMessage}
           closeOnTouchOutside={true}
-          showCancelButton={false}
+          closeOnHardwareBackPress={true}
           showConfirmButton={true}
-          confirmButtonColor={Colors.primary}
-          confirmText="Okay"
-          onConfirmPressed={() =>
-            setState((prev) => ({ ...prev, showAlert: false }))
-          }
-          onDismiss={() => setState((prev) => ({ ...prev, showAlert: false }))}
+          confirmText="Try Again"
+          confirmButtonColor={Colors.deepskyblue}
+          onConfirmPressed={() => {
+            setState((prev) => ({
+              ...prev,
+              showAlert: false,
+              alertMessage: "",
+            }));
+          }}
         />
       )}
     </>
   );
 };
 
-export default EditProfile;
+export default NewAdditionalDetails;
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -374,9 +360,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
   },
   container: {
-    // alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: wp(5),
+    paddingTop: hp(5),
   },
   cover: {
     width: wp(50),
@@ -432,7 +418,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: wp(5.5),
-    fontFamily: "Montserrat-Regular",
+    fontFamily: "Montserrat-SemiBold",
     borderBottomWidth: 2,
     borderBottomColor: "#ccc",
     paddingVertical: 8,

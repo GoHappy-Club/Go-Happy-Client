@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useRoute } from "@react-navigation/native";
 import { BlurView } from "@react-native-community/blur";
-import { hp, wp } from "../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import { ScratchCard } from "rn-scratch-card";
 
 const VoucherScratch = () => {
@@ -39,7 +39,7 @@ const VoucherScratch = () => {
             }}
           >
             <ScratchCard
-              source={require("../images/scratch_foreground.png")}
+              source={require("../../images/scratch_foreground.png")}
               brushWidth={100}
               onScratch={(e) => {
                 console.log("Scratched", e);

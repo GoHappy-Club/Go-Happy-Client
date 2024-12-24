@@ -19,8 +19,8 @@ import { Colors } from "../assets/colors/color";
 import { useDispatch, useSelector } from "react-redux";
 import GradientText from "../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
-import BottomSheet from "./BottomSheet";
-import SessionRatingSheet from "./RatingSheet";
+import BottomSheet from "./CustomBottomSheet/BottomSheet";
+import SessionRatingSheet from "./CustomBottomSheet/RatingSheet";
 import {
   activateFreeTrial,
   checkPendingFeedback,

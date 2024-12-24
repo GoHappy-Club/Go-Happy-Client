@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Clock, SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import { format, fromUnixTime, getUnixTime, startOfDay } from "date-fns";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -58,7 +58,7 @@ const Item = ({ item, onPress }) => {
                 ? {
                     uri: item.expertImage,
                   }
-                : require("../images/profile_image.jpeg")
+                : require("../../images/profile_image.jpeg")
             }
             size={30}
           />
@@ -355,7 +355,7 @@ const SearchBar = () => {
             }}
           >
             <FastImage
-              source={require("../images/noSearchResult.png")}
+              source={require("../../images/noSearchResult.png")}
               resizeMode="cover"
               style={{
                 width: width,

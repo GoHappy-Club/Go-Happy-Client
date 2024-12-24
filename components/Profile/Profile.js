@@ -15,12 +15,12 @@ import { Text } from "react-native-elements";
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { changeCount, setProfile } from "../redux/actions/counts.js";
+import { changeCount, setProfile } from "../../redux/actions/counts.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import ImagePicker from "react-native-image-crop-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { Colors } from "../assets/colors/color.js";
+import { Colors } from "../../assets/colors/color.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyProfile = ({ navigation }) => {

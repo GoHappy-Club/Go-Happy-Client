@@ -4,7 +4,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
-import Membership from "../../components/Membership";
+import Membership from "../../components/Contribution/Contribution";
 
 class MembershipScreen extends Component {
   constructor(props) {

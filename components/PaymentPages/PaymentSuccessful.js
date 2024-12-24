@@ -7,8 +7,8 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { Colors } from "../assets/colors/color";
-import { hp, wp } from "../helpers/common";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PaymentSuccessful = () => {
@@ -41,7 +41,7 @@ const PaymentSuccessful = () => {
     return (
       <View style={styles.container}>
         <LottieView
-          source={require("../assets/lottie/correct.lottie")}
+          source={require("../../assets/lottie/correct.lottie")}
           autoPlay
           loop
           style={{
@@ -54,7 +54,7 @@ const PaymentSuccessful = () => {
           speed={0.5}
         />
         <FastImage
-          source={require("../images/hurray.png")}
+          source={require("../../images/hurray.png")}
           style={styles.image}
         />
         <View style={styles.textWrapper}>
@@ -100,7 +100,7 @@ const PaymentSuccessful = () => {
   return (
     <View style={styles.container}>
       <LottieView
-        source={require("../assets/lottie/correct.lottie")}
+        source={require("../../assets/lottie/correct.lottie")}
         autoPlay
         loop
         style={{
@@ -113,7 +113,7 @@ const PaymentSuccessful = () => {
         speed={0.5}
       />
       <FastImage
-        source={require("../images/hurray.png")}
+        source={require("../../images/hurray.png")}
         style={styles.image}
       />
       <View style={styles.textWrapper}>

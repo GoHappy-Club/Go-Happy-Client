@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Rewards from "../../components/Rewards";
+import Rewards from "../../components/Rewards/Rewards";
 import GOHLoader from "../../commonComponents/GOHLoader";
 
 const RewardsScreen = () => {

@@ -19,8 +19,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BlurView } from "@react-native-community/blur";
-import { hp, wp } from "../helpers/common";
-import { Colors } from "../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import { Colors } from "../../assets/colors/color";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faFrown,

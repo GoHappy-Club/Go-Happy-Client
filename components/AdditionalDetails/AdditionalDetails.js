@@ -3,18 +3,18 @@ import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
 
 import AwesomeAlert from "react-native-awesome-alerts";
 import { connect } from "react-redux";
-import { setProfile } from "../redux/actions/counts.js";
+import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Button } from "react-native-elements";
 import analytics from "@react-native-firebase/analytics";
 import LinearGradient from "react-native-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AutocompleteCityInput from "./Autocomplete.js";
-import { Colors } from "../assets/colors/color.js";
+import AutocompleteCityInput from "../Autocomplete.js";
+import { Colors } from "../../assets/colors/color.js";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import ImagePicker from "react-native-image-crop-picker";
-import { hp, wp } from "../helpers/common.js";
+import { hp, wp } from "../../helpers/common.js";
 class AdditionalDetails extends Component {
   constructor(props) {
     super(props);

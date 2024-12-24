@@ -14,7 +14,7 @@ import Sections from "../../components/overview/Sections.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
 import { Colors } from "../../assets/colors/color.js";
-import Feed from "../../components/Feed.js";
+import Feed from "../../components/Reels/Feed.js";
 
 class OverviewScreen extends Component {
   constructor(props) {

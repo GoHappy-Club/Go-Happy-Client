@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Colors } from "../assets/colors/color";
-import { hp, wp } from "../helpers/common";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 
 export const FreeTrialContent = ({ cta }) => {
   return (

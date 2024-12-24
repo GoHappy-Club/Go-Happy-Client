@@ -12,7 +12,7 @@ import {
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { X, Heart, CheckCircle, Star } from "lucide-react-native";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import Animated, {
   Extrapolation,
   interpolate,

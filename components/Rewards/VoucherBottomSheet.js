@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BlurView } from "@react-native-community/blur";
-import { hp, wp } from "../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import { MaterialIndicator } from "react-native-indicators";
 import { formatDate, getRandomColor } from "./Rewards";
 

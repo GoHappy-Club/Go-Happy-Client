@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import FastImage from "react-native-fast-image";
 import { Skeleton } from "@rneui/themed";
 

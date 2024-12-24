@@ -17,8 +17,8 @@ import Animated, {
   FadeOutRight,
 } from "react-native-reanimated";
 import { formatDate } from "./Rewards";
-import { hp, wp } from "../helpers/common";
-import { Colors } from "../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import { Colors } from "../../assets/colors/color";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native";
 

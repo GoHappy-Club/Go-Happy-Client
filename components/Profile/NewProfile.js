@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { hp, wp } from "../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Award,
@@ -451,7 +451,7 @@ const NewProfile = () => {
                         height: wp(12),
                       }}
                       resizeMode={FastImage.resizeMode.contain}
-                      source={require("../images/darkWordLogo.png")}
+                      source={require("../../images/darkWordLogo.png")}
                     />
                     <Text
                       style={{

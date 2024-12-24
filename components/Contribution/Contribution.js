@@ -9,24 +9,24 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import phonepe_payments from "./PhonePe/Payments.js";
+import phonepe_payments from "../PhonePe/Payments.js";
 
 import { Button, Text } from "react-native-elements";
 
 import Video from "react-native-video";
 
 import { connect } from "react-redux";
-import { setProfile } from "../redux/actions/counts.js";
+import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import toUnicodeVariant from "./toUnicodeVariant.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 import tambola from "tambola";
-import { Colors } from "../assets/colors/color.js";
+import { Colors } from "../../assets/colors/color.js";
 import PhonePePaymentSDK from "react-native-phonepe-pg";
-import { getPayload } from "../services/PhonePe/PaymentServices.js";
+import { getPayload } from "../../services/PhonePe/PaymentServices.js";
 
-class Membership extends Component {
+class Contribution extends Component {
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
@@ -248,7 +248,7 @@ The Link will Expire in 20 Minutes.`;
           <View style={{ flex: 1, flexDirection: "row", marginTop: "5%" }}>
             <FastImage
               style={{ height: 40, width: 40 }}
-              source={require("../images/secured.png")}
+              source={require("../../images/secured.png")}
             />
             <Text
               style={{
@@ -436,7 +436,7 @@ The Link will Expire in 20 Minutes.`;
 
           {this.state.success && (
             <Video
-              source={require("../images/success_anim.mp4")}
+              source={require("../../images/success_anim.mp4")}
               style={{
                 position: "absolute",
                 // top: 0,
@@ -614,4 +614,4 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Membership);
+export default connect(mapStateToProps, mapDispatchToProps)(Contribution);

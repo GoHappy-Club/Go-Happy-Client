@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import PushNotification from "react-native-push-notification";
 import Video from "react-native-video";
 import { Linking, StyleSheet } from "react-native";
-import SessionDetails from "../../components/SessionDetails";
+import SessionDetails from "../../components/SessionDetails/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from "../../services/events/EventService";
 import { setMembership, setProfile } from "../../redux/actions/counts";

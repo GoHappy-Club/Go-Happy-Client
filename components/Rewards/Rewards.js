@@ -9,16 +9,16 @@ import {
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGift, faTrophy } from "@fortawesome/free-solid-svg-icons";
-import { hp, wp } from "../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import { Tab, TabView } from "@rneui/themed";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import Animated from "react-native-reanimated";
 import { format, fromUnixTime } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
-import { setMembership } from "../redux/actions/counts";
+import { setMembership } from "../../redux/actions/counts";
 import FastImage from "react-native-fast-image";
-import GOHLoader from "../commonComponents/GOHLoader";
+import GOHLoader from "../../commonComponents/GOHLoader";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -78,7 +78,7 @@ const RewardsCard = ({
           }}
         >
           <FastImage
-            source={require("../images/scratch_foreground.png")}
+            source={require("../../images/scratch_foreground.png")}
             style={styles.card}
           />
         </TouchableOpacity>
@@ -112,7 +112,7 @@ const RewardsCard = ({
               }}
             >
               <FastImage
-                source={require("../images/GoCoins.png")}
+                source={require("../../images/GoCoins.png")}
                 style={{
                   height: wp(8),
                   width: wp(8),
@@ -424,7 +424,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
         <View style={styles.totalRewards}>
           <Text style={styles.rewardsAmount}>
             <FastImage
-              source={require("../images/GoCoins.png")}
+              source={require("../../images/GoCoins.png")}
               style={{
                 height: 70,
                 width: 70,

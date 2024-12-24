@@ -15,26 +15,26 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { WebView } from "react-native-webview";
 import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
-import toUnicodeVariant from "./toUnicodeVariant.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
-import { setSessionAttended } from "../services/events/EventService";
+import { setSessionAttended } from "../../services/events/EventService";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import RenderHtml from "react-native-render-html";
 import firebase from "@react-native-firebase/app";
-import { FirebaseDynamicLinksProps } from "../config/CONSTANTS";
+import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CountdownTimer from "../commonComponents/countdown.js";
-import { useZoom } from "../helpers/zoomUtils.js";
+import CountdownTimer from "../../commonComponents/countdown.js";
+import { useZoom } from "../../helpers/zoomUtils.js";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "../assets/colors/color.js";
-import { hp, wp } from "../helpers/common.js";
-import { storeCompletedSession } from "../services/Startup.js";
-import VoucherBottomSheet from "./VoucherBottomSheet.js";
+import { Colors } from "../../assets/colors/color.js";
+import { hp, wp } from "../../helpers/common.js";
+import { storeCompletedSession } from "../../services/Startup.js";
+import VoucherBottomSheet from "../Rewards/VoucherBottomSheet.js";
 
 const SessionDetails = ({
   route,
@@ -664,7 +664,7 @@ const SessionDetails = ({
                     ? {
                         uri: item.expertImage,
                       }
-                    : require("../images/profile_image.jpeg")
+                    : require("../../images/profile_image.jpeg")
                 }
                 size={30}
               />

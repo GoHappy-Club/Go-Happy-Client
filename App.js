@@ -23,16 +23,16 @@ import LoginScreen from "./screens/loginScreen/LoginScreen";
 import BottomNavigator from "./components/navigators/BottomNavigator";
 import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
-import AdditionalDetails from "./components/AdditionalDetails";
+import AdditionalDetails from "./components/AdditionalDetails/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_android/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 // import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
 import firebase from "@react-native-firebase/app";
 import { useSelector, useDispatch } from "react-redux";
-import ErrorScreen from "./components/NoInternet";
+import ErrorScreen from "./commonComponents/NoInternet";
 import { WhatsNewMessage } from "./config/CONSTANTS";
 import AwesomeAlert from "react-native-awesome-alerts";
 import RenderHtml from "react-native-render-html";
@@ -50,22 +50,22 @@ import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.
 import { X } from "lucide-react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import WalletScreen from "./screens/subscriptionScreen/WalletScreen.js";
-import TopUpScreen from "./screens/subscriptionScreen/TopUpScreen.js";
-import PaymentFailed from "./components/PaymentFailed.js";
-import PaymentSuccessful from "./components/PaymentSuccessful.js";
+import WalletScreen from "./screens/WalletScreens/WalletScreen.js";
+import TopUpScreen from "./screens/WalletScreens/TopUpScreen.js";
+import PaymentFailed from "./components/PaymentPages/PaymentFailed.js";
+import PaymentSuccessful from "./components/PaymentPages/PaymentSuccessful.js";
 import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
-import RewardsScreen from "./screens/subscriptionScreen/RewardsScreen.js";
-import VoucherDetails from "./components/VoucherDetails.js";
-import VoucherScratch from "./components/VoucherScratch.js";
-import FestiveWish from "./components/FestiveWish.js";
-import NewProfile from "./components/NewProfile.js";
-import EditProfile from "./components/EditProfile.js";
+import RewardsScreen from "./screens/RewardsScreen/RewardsScreen.js";
+import VoucherDetails from "./components/Rewards/VoucherDetails.js";
+import VoucherScratch from "./components/Rewards/VoucherScratch.js";
+import FestiveWish from "./components/Festivals/FestiveWish.js";
+import NewProfile from "./components/Profile/NewProfile.js";
+import EditProfile from "./components/Profile/EditProfile.js";
 import GOHLoader from "./commonComponents/GOHLoader.js";
-import NewAdditionalDetails from "./components/NewAdditionalDetails.js";
-import Quotes from "./components/Quotes.js";
+import NewAdditionalDetails from "./components/AdditionalDetails/NewAdditionalDetails.js";
+import Quotes from "./components/Quotes/Quotes.js";
 import PushNotification from "react-native-push-notification";
-import Reels from "./components/Reels.js";
+import Reels from "./components/Reels/Reels.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -505,7 +505,7 @@ export default function App() {
           },
         },
         "Session Details": "session_details/:deepId",
-        "Membership Details": "contribute",
+        "Contribution Details": "contribute",
         "About GoHappy Club": "about",
         Trips: "trips",
         TripDetails: "trip_details",
@@ -623,7 +623,7 @@ export default function App() {
                     })}
                   />
                   <Stack.Screen
-                    name="Membership Details"
+                    name="Contribution Details"
                     // component={MembershipScreen}
                     children={(props) => (
                       <MembershipScreen {...props} propProfile={profile} />

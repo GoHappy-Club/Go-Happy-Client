@@ -7,8 +7,8 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Colors } from "../assets/colors/color";
-import { hp, wp } from "../helpers/common";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PaymentFailed = () => {
@@ -22,7 +22,7 @@ const PaymentFailed = () => {
     return (
       <View style={styles.container}>
         <FastImage
-          source={require("../images/paymentError.png")}
+          source={require("../../images/paymentError.png")}
           style={styles.image}
         />
         <Text style={styles.sorryTitle}>Sorry!</Text>
@@ -58,7 +58,7 @@ const PaymentFailed = () => {
   return (
     <View style={styles.container}>
       <FastImage
-        source={require("../images/paymentError.png")}
+        source={require("../../images/paymentError.png")}
         style={styles.image}
       />
       <Text style={styles.sorryTitle}>Sorry!</Text>

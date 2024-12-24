@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import FastImage from "react-native-fast-image";
-import { Colors } from "../assets/colors/color";
-import { hp, wp } from "../helpers/common";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Share2 } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
@@ -124,7 +124,7 @@ const ReelsPage = () => {
               Powered by
             </Text>
             <FastImage
-              source={require("../images/wordLogo.png")}
+              source={require("../../images/wordLogo.png")}
               style={{
                 width: wp(20),
                 height: wp(8),

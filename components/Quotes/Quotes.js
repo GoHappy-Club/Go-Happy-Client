@@ -10,13 +10,13 @@ import {
   Image,
 } from "react-native";
 import LottieView from "lottie-react-native";
-import { hp, wp } from "../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "react-native-linear-gradient";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import { Button } from "react-native-elements";
 import RNFS from "react-native-fs";
-import { Colors } from "../assets/colors/color";
+import { Colors } from "../../assets/colors/color";
 import FastImage from "react-native-fast-image";
 import Share from "react-native-share";
 import { Share2 } from "lucide-react-native";
@@ -142,7 +142,7 @@ const Quotes = () => {
               Powered by
             </Text>
             <FastImage
-              source={require("../images/wordLogo.png")}
+              source={require("../../images/wordLogo.png")}
               style={{
                 width: wp(20),
                 height: wp(8),

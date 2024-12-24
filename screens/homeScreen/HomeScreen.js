@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 //import axios from "axios";
-import HomeDashboard from "../../components/HomeDashboard.js";
+import HomeDashboard from "../../components/HomeDashboard/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 
 import tambola from "tambola";

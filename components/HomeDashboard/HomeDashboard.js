@@ -22,21 +22,21 @@ import { Dimensions } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setSessionAttended } from "../services/events/EventService";
+import { setSessionAttended } from "../../services/events/EventService";
 
-import toUnicodeVariant from "./toUnicodeVariant.js";
-import { Colors } from "../assets/colors/color.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
+import { Colors } from "../../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
-import { hp, wp } from "../helpers/common.js";
-import { storeCompletedSession } from "../services/Startup.js";
+import { hp, wp } from "../../helpers/common.js";
+import { storeCompletedSession } from "../../services/Startup.js";
 import { Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
-import { useZoom } from "../helpers/zoomUtils.js";
+import { useZoom } from "../../helpers/zoomUtils.js";
 // import CalendarStrip from "react-native-calendar-strip";
 import dayjs from "dayjs";
 import Sound from "react-native-sound";
-import CustomCalendarStrip from "../commonComponents/CalendarStrip.js";
+import CustomCalendarStrip from "../../commonComponents/CalendarStrip.js";
 const HomeDashboard = ({
   events,
   ratings,
@@ -581,7 +581,7 @@ const HomeDashboard = ({
           </Text>
           {item.costType == "paid" && (
             <FastImage
-              source={require("../images/GoCoins.png")}
+              source={require("../../images/GoCoins.png")}
               style={{
                 height: 15,
                 width: 15,
