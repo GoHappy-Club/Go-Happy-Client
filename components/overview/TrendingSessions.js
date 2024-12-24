@@ -100,7 +100,7 @@ class TrendingSessions extends Component {
             {this.trimContent(item.value.eventName, 13)}
           </Text>
           <Text style={styles.subText}>
-            {this.loadDate(item.value.startTime)}
+            {this.loadDate(item.value.eventDate)}
           </Text>
         </View>
       </View>
