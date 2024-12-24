@@ -4,7 +4,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
-import Membership from "../../components/Membership";
+import Membership from "../../components/Contribution/Contribution";
 
 class MembershipScreen extends Component {
   constructor(props) {
@@ -24,22 +24,6 @@ class MembershipScreen extends Component {
     profile.lastPaymentDate = new Date().getTime();
     actions.setProfile(profile);
     //console.log("this is the profile", profile);
-  }
-  setMembership(email, planName, _callback) {
-    var url = SERVER_URL + "/user/setMembership";
-
-    axios
-      .post(url, { email: email, planName: planName })
-      .then((response) => {
-        // if (response.data) {
-        AsyncStorage.setItem("membership", planName);
-        this.setProfile(planName);
-        _callback();
-        // }
-      })
-      .catch((error) => {
-        this.error = true;
-      });
   }
   setPaymentData(id, phoneNumber, amount, _callback) {
     var url = SERVER_URL + "/user/setPaymentData";

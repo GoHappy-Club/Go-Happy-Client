@@ -1,0 +1,42 @@
+{
+  "quotes": [
+    {
+      "id": 1,
+      "hindi": "आत्मविश्वास को परिवर्तित करें",
+      "english": "Believe in yourself."
+    },
+    { "id": 2, "hindi": "कोशिश के बीज हो", "english": "Be the light of hope." },
+    { "id": 3, "hindi": "कार्य किजिए।", "english": "Keep working hard." },
+    {
+      "id": 4,
+      "hindi": "चीन्तन को प्रमुख देखें",
+      "english": "Welcome challenges."
+    },
+    {
+      "id": 5,
+      "hindi": "उम्मीद की चीन्तन को प्रोज्ज्वित करें",
+      "english": "Appreciate the beauty of life."
+    },
+    {
+      "id": 6,
+      "hindi": "कमजोरी की सुरक्षा करें",
+      "english": "Empower kindness."
+    },
+    { "id": 7, "hindi": "प्राक्त को मेरा करें", "english": "Spread love." },
+    {
+      "id": 8,
+      "hindi": "हर पल नई शुरुआता के साथ चींपी कीजें",
+      "english": "Start every day with a positive thought."
+    },
+    {
+      "id": 9,
+      "hindi": "अपने स्वप्न पर विश्वास करें",
+      "english": "Have faith in yourself."
+    },
+    {
+      "id": 10,
+      "hindi": "होंसली की खोज को चुनें",
+      "english": "Choose the joy of simplicity."
+    }
+  ]
+}

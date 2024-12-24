@@ -80,8 +80,9 @@ android {
         applicationId "com.gohappyclient"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 143
-        versionName "2.3.1"
+        versionCode 152
+        versionName "2.3.2"
+        vectorDrawables.useSupportLibrary = true
     }
     signingConfigs {
         debug {
@@ -115,6 +116,14 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+        
 
     // // applicationVariants are e.g. debug, release
     // applicationVariants.all { variant ->
@@ -138,6 +147,9 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+    implementation project(':react-native-fs')
+//    implementation group: 'com.google.android.flexbox', name: 'flexbox', version: '3.0.0'
+//    implementation project(':mobilertc')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-clipboard/clipboard
 import com.reactnativecommunity.clipboard.ClipboardPackage;
+// @react-native-community/blur
+import com.reactnativecommunity.blurview.BlurViewPackage;
 // @react-native-firebase/analytics
 import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 // @react-native-firebase/app
@@ -27,46 +29,52 @@ import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage;
 import io.invertase.firebase.dynamiclinks.ReactNativeFirebaseDynamicLinksPackage;
 // @react-native-firebase/messaging
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
-// @react-native-google-signin/google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
-// lottie-react-native
-import com.airbnb.android.react.lottie.LottiePackage;
-// react-native-branch
-import io.branch.rnbranch.RNBranchPackage;
-// react-native-contacts
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-// react-native-date-picker
-import com.henninghall.date_picker.DatePickerPackage;
+// @react-native-masked-view/masked-view
+import org.reactnative.maskedview.RNCMaskedViewPackage;
 // react-native-device-info
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+// react-native-fast-image
+import com.dylanvann.fastimage.FastImageViewPackage;
+// react-native-fs
+import com.rnfs.RNFSPackage;
 // react-native-gesture-handler
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.gesturehandler.RNGestureHandlerPackage;
+// react-native-image-crop-picker
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 // react-native-image-picker
 import com.imagepicker.ImagePickerPackage;
 // react-native-linear-gradient
 import com.BV.LinearGradient.LinearGradientPackage;
-// react-native-lottie-splash-screen
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
 // react-native-otp-verify
 import com.faizal.OtpVerify.OtpVerifyPackage;
 // react-native-phonepe-pg
 import com.phonepepaymentsdk.PhonePePaymentSDKPackage;
 // react-native-push-notification
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+// react-native-reanimated
+import com.swmansion.reanimated.ReanimatedPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-share
 import cl.json.RNSharePackage;
+// react-native-sound
+import com.zmxv.RNSound.RNSoundPackage;
 // react-native-svg
 import com.horcrux.svg.SvgPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
 // react-native-video
 import com.brentvatne.react.ReactVideoPackage;
+// react-native-view-shot
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 // react-native-webview
 import com.reactnativecommunity.webview.RNCWebViewPackage;
+// rn-fetch-blob
+import com.RNFetchBlob.RNFetchBlobPackage;
+// rn-scratch-card
+import com.rnscratchcard.RnScratchCardPackage;
 
 public class PackageList {
   private Application application;
@@ -114,32 +122,36 @@ public class PackageList {
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
       new ClipboardPackage(),
+      new BlurViewPackage(),
       new ReactNativeFirebaseAnalyticsPackage(),
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseCrashlyticsPackage(),
       new ReactNativeFirebaseDynamicLinksPackage(),
       new ReactNativeFirebaseMessagingPackage(),
-      new RNGoogleSigninPackage(),
-      new LottiePackage(),
-      new RNBranchPackage(),
-      new ReactNativeContacts(),
-      new DatePickerPackage(),
+      new RNCMaskedViewPackage(),
       new RNDeviceInfo(),
+      new FastImageViewPackage(),
+      new RNFSPackage(),
       new RNGestureHandlerPackage(),
+      new PickerPackage(),
       new ImagePickerPackage(),
       new LinearGradientPackage(),
-      new SplashScreenReactPackage(),
       new OtpVerifyPackage(),
       new PhonePePaymentSDKPackage(),
       new ReactNativePushNotificationPackage(),
+      new ReanimatedPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSharePackage(),
+      new RNSoundPackage(),
       new SvgPackage(),
       new VectorIconsPackage(),
       new ReactVideoPackage(),
-      new RNCWebViewPackage()
+      new RNViewShotPackage(),
+      new RNCWebViewPackage(),
+      new RNFetchBlobPackage(),
+      new RnScratchCardPackage()
     ));
   }
 }
