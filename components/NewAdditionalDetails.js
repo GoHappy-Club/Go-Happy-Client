@@ -32,13 +32,49 @@ import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 import AutocompleteCityInput from "./Autocomplete";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const NewAdditionalDetails = ({ route }) => {
   const profile = useSelector((state) => state.profile.profile);
 
-  const parseDate = (date) => {
-    console.log("date in parse", date);
+  const [state, setState] = useState({
+    name: route.params?.name,
+    email: route.params?.email,
+    emergencyContact: route.params?.emergencyContact,
+    dob: route.params?.dob
+      ? route.params?.dob
+      : getFormattedDate(dayjs().subtract(49, "years")),
+    city: route.params?.city,
+    age: route.params?.age,
+    showAlert: false,
+    alertMessage: "",
+    phoneNumber: route.params?.phoneNumber,
+    selectedFromDropdown: false,
+  });
 
+  const [updated, setUpdated] = useState(false);
+  const [open, setOpen] = useState(false);
+  const membership = useSelector((state) => state.membership.membership);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const pending = () => {
+    if (
+      state.phoneNumber == null ||
+      state.phoneNumber.length == 0 ||
+      state.name == null ||
+      state.name.length == 0
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  if (pending() == false) {
+    navigation.replace("GoHappy Club");
+  }
+
+  const parseDate = (date) => {
     const splittedDate = date?.split("-");
     const day = splittedDate[0];
     const month = splittedDate[1];
@@ -54,43 +90,9 @@ const NewAdditionalDetails = ({ route }) => {
     }-${dayjsObject.get("year")}`;
     return finalDate;
   };
-  const [state, setState] = useState({
-    name: route.params?.name,
-    email: route.params?.email,
-    emergencyContact: route.params?.emergencyContact,
-    dob: route.params?.dob
-      ? route.params?.dob
-      : getFormattedDate(dayjs().subtract(49, "years")),
-    city: route.params?.city,
-    age: route.params?.age,
-    showAlert: false,
-    alertMessage: "",
-    phoneNumber: route.params?.phoneNumber,
-    selectedFromDropdown: true,
-  });
+  // useEffect(() => {
+  // }, []);
 
-  const [updated, setUpdated] = useState(false);
-  const [open, setOpen] = useState(false);
-  const membership = useSelector((state) => state.membership.membership);
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  useEffect(() => {
-    if (pending() == false) {
-      navigation.replace("GoHappy Club");
-    }
-  }, []);
-
-  const pending = () => {
-    if (
-      state.phoneNumber == null ||
-      state.phoneNumber.length == 0 ||
-      state.name == null ||
-      state.name.length == 0
-    ) {
-      return true;
-    }
-    return false;
-  };
   const handleSelectImage = async () => {
     try {
       const options = {
@@ -122,6 +124,16 @@ const NewAdditionalDetails = ({ route }) => {
     }
   };
 
+  const validateMail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(state.email);
+  };
+
+  const validateEmergencyContact = () => {
+    const mobileRegex = /^[0-9]{10}$/;
+    return mobileRegex.test(state.emergencyContact);
+  };
+
   const updateUser = async () => {
     if (
       state.name == null ||
@@ -133,10 +145,11 @@ const NewAdditionalDetails = ({ route }) => {
       state.dob == null ||
       state.dob == ""
     ) {
-      setState({
+      setState((prev) => ({
+        ...prev,
         showAlert: true,
         alertMessage: "Mandatory details are missing",
-      });
+      }));
 
       return;
     }
@@ -145,6 +158,33 @@ const NewAdditionalDetails = ({ route }) => {
         ...prev,
         showAlert: true,
         alertMessage: "Sorry, you must be atleast 16 years old to log in.",
+      }));
+      return;
+    }
+    if (!validateMail()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid Email",
+        alertMessage: "Please enter a valid email address\n eg:-name@gmail.com",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!validateEmergencyContact()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid emergency contact",
+        alertMessage: "Please enter a valid emergency contact number.",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!state.selectedFromDropdown) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid city",
+        alertMessage: "Please select a city from the dropdown only.",
+        showAlert: true,
       }));
       return;
     }
@@ -179,8 +219,6 @@ const NewAdditionalDetails = ({ route }) => {
       AsyncStorage.setItem("age", state.age);
       setState((prevState) => ({ ...prevState, loading: false }));
       AsyncStorage.setItem("showTour", "true");
-      console.log("Navigating");
-
       navigation.navigate("GoHappy Club");
       await analytics().logEvent("signup_click", {
         phoneNumber: response.data.phone,
@@ -194,15 +232,6 @@ const NewAdditionalDetails = ({ route }) => {
       crashlytics().log(`Error in updateUser NewAdditionalDetails ${error}`);
     }
   };
-
-  const formatName = (name) =>
-    name
-      ?.split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
-
-  const formatPhoneNumber = (phoneNumber) =>
-    `+${phoneNumber.slice(0, 2)} ${phoneNumber.slice(2)}`;
 
   return (
     <>
@@ -404,7 +433,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",
     paddingHorizontal: wp(5),
-    paddingTop: hp(7),
+    paddingTop: hp(5),
   },
   cover: {
     width: wp(50),
