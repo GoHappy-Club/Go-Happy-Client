@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMembership } from "../../redux/actions/counts";
 import FastImage from "react-native-fast-image";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import CoinbackRewards from "./CoinbackRewards";
+import VouchersCard from "./VouchersCard";
 
 const COLORS = {
   blue: "#B8D8FF",
@@ -44,289 +46,6 @@ export const formatDate = (date) => {
   return finalTime;
 };
 
-const RewardsCard = ({
-  id,
-  icon,
-  amount,
-  title,
-  color,
-  scratched,
-  navigation,
-  setScratchedTrue,
-}) => {
-  return (
-    <>
-      {!scratched && (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.card, { backgroundColor: color }]}
-          onPress={() => {
-            try {
-              navigation.navigate("VoucherScratch", {
-                id: id,
-                amount: amount,
-                title: title,
-                color: color,
-                icon: icon,
-                setScratchTrue: (id, amount) => {
-                  setScratchedTrue(id, amount);
-                },
-              });
-            } catch (error) {
-              console.log("Error in navigation from voucher", error);
-            }
-          }}
-        >
-          <FastImage
-            source={require("../../images/scratch_foreground.png")}
-            style={styles.card}
-          />
-        </TouchableOpacity>
-      )}
-      {scratched && (
-        <View style={[styles.card, { backgroundColor: color }]}>
-          <View
-            style={{
-              position: "absolute",
-              width: "100%",
-              backgroundColor: "transparent",
-              alignItems: "center",
-              borderRadius: 16,
-            }}
-          >
-            <FontAwesomeIcon
-              size={34}
-              icon={icon}
-              color="black"
-              style={styles.icon}
-            />
-            <View
-              style={{
-                width: "100%",
-                height: "100%",
-                backgroundColor: "transparent",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 16,
-              }}
-            >
-              <FastImage
-                source={require("../../images/GoCoins.png")}
-                style={{
-                  height: wp(8),
-                  width: wp(8),
-                }}
-              />
-              {amount && <Text style={styles.amount}>{amount}</Text>}
-            </View>
-          </View>
-        </View>
-      )}
-    </>
-  );
-};
-
-const VouchersCard = ({ voucher, id, onPress }) => {
-  return (
-    <TouchableOpacity style={[styles.voucherCard]} onPress={onPress}>
-      {voucher.status != "ACTIVE" && (
-        <View
-          style={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            zIndex: 1,
-            backgroundColor: "black",
-            paddingHorizontal: wp(1),
-            paddingVertical: wp(0.5),
-            borderRadius: 10,
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 12,
-              fontWeight: "bold",
-            }}
-          >
-            {voucher.status == "ACTIVE" ? "" : voucher.status}
-          </Text>
-        </View>
-      )}
-      <Animated.View
-        style={[
-          styles.borderedContainer,
-          {
-            backgroundColor:
-              voucher.status == "ACTIVE" ? "white" : Colors.grey.d,
-          },
-        ]}
-      >
-        <View style={styles.topSection}>
-          <Animated.Image
-            source={{
-              uri: voucher.image,
-            }}
-            style={styles.logoImage}
-          />
-        </View>
-        <View
-          style={{
-            borderColor: "#666",
-            height: "100%",
-            borderLeftWidth: 1,
-            borderStyle: "dashed",
-            marginLeft: wp(2),
-            marginRight: wp(4),
-          }}
-        />
-        <Animated.View style={styles.titleSection}>
-          <Animated.Text style={styles.amount}>
-            {voucher.value != null
-              ? `₹${voucher.value}`
-              : `${voucher.percent}% OFF`}
-          </Animated.Text>
-          <Animated.Text
-            style={styles.cardTitle}
-          >
-            {voucher.title}
-          </Animated.Text>
-          <Animated.Text
-            style={styles.validityText}
-          >
-            {voucher.status == "ACTIVE"
-              ? "Valid until"
-              : `${
-                  voucher?.status?.charAt(0) +
-                  voucher.status.slice(1).toLowerCase()
-                } on`}{" "}
-            {voucher.status == "REDEEMED"
-              ? formatDate(voucher?.redemptionTime)
-              : formatDate(
-                  Math.min(voucher.expiryDate, voucher.parentExpiryDate)
-                )}
-          </Animated.Text>
-        </Animated.View>
-      </Animated.View>
-      <View style={styles.cutoutLeft} />
-      <View style={styles.cutoutRight} />
-    </TouchableOpacity>
-  );
-};
-
-const CoinbackRewards = ({
-  rewards,
-  navigation,
-  profile,
-  dispatch,
-  membership,
-  setAmount,
-}) => {
-  const [fixedRewards, setFixedRewards] = useState([]);
-
-  useEffect(() => {
-    const rewardsWithColor = rewards
-      .map((item) => ({
-        ...item,
-        color: item.color || getRandomColor(),
-      }))
-      .sort((a, b) => {
-        // Sort so that items with scratched: false come first
-        if (a.scratched === false && b.scratched !== false) return -1;
-        if (a.scratched !== false && b.scratched === false) return 1;
-        return 0;
-      });
-
-    setFixedRewards(rewardsWithColor);
-  }, [rewards]);
-
-  const setScratchedTrue = async (id, amount) => {
-    const updatedRewards = fixedRewards.map((reward) => {
-      if (reward.id === id) {
-        return { ...reward, scratched: true };
-      }
-      return reward;
-    });
-    setFixedRewards(updatedRewards);
-    setAmount(
-      updatedRewards
-        .filter((item) => item.scratched == true)
-        .reduce((_acc, item) => _acc + item.amount, 0)
-    );
-    await saveScratchInBackend(id, amount);
-  };
-
-  const saveScratchInBackend = async (id, amount) => {
-    try {
-      const res = await axios.post(
-        `${SERVER_URL}/membership/scratchCardReward`,
-        {
-          phone: profile.phoneNumber,
-          coinTransactionId: id,
-        }
-      );
-      dispatch(
-        setMembership({
-          ...membership,
-          coins: Number.parseInt(membership.coins) + amount,
-        })
-      );
-    } catch (error) {
-      crashlytics().log(`Error in saveScratchInBackend: ${error}`);
-      console.log("error in saving==>", error);
-    }
-  };
-
-  return (
-    <View
-      style={{
-        width: "100%",
-        height: "100%",
-        alignItems: rewards.length == 1 ? "flex-start" : "center",
-      }}
-    >
-      {rewards?.length == 0 && (
-        <View
-          style={{
-            justifyContent: "center",
-            flex: 1,
-          }}
-        >
-          <Text
-            style={{
-              color: Colors.greyishText,
-              fontSize: wp(4),
-              fontWeight: "bold",
-              textAlign: "center",
-              marginTop: hp(10),
-            }}
-          >
-            You don't have any reward yet.
-          </Text>
-        </View>
-      )}
-      <ScrollView
-        contentContainerStyle={styles.grid}
-        showsVerticalScrollIndicator={false}
-      >
-        {fixedRewards.map((item, index) => (
-          <RewardsCard
-            id={item.id}
-            key={index}
-            icon={item.source == "coinback" ? faGift : faTrophy}
-            amount={item.amount}
-            title={item.title}
-            color={item.color}
-            scratched={item.scratched}
-            navigation={navigation}
-            setScratchedTrue={setScratchedTrue}
-          />
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
 
 const Vouchers = ({ vouchers, navigation }) => (
   <View
@@ -383,6 +102,7 @@ const Vouchers = ({ vouchers, navigation }) => (
               parentExpiryDate: item.parentExpiryDate,
             })
           }
+          styles={styles}
         />
       ))}
     </ScrollView>
@@ -391,9 +111,6 @@ const Vouchers = ({ vouchers, navigation }) => (
 
 const Rewards = ({ rewards, vouchers, loading }) => {
   const [index, setIndex] = useState(0);
-  // const amount = rewards
-  //   .filter((item) => item.scratched == true)
-  //   .reduce((_acc, item) => _acc + item.amount, 0);
   const [amount, setAmount] = useState(
     rewards
       .filter((item) => item.scratched == true)
@@ -468,6 +185,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
                 dispatch={dispatch}
                 membership={membership}
                 setAmount={setAmount}
+                styles={styles}
               />
             ) : (
               <GOHLoader />
