@@ -205,22 +205,22 @@ const NewProfile = () => {
     {
       key: "Sessions Attended",
       value: profile.sessionsAttended,
-      icon: <Calendar size={32} color={"#FFC107"} />,
+      icon: <Calendar size={32} color={Colors.background} />,
     },
     {
       key: "Membership",
       value: membership.membershipType,
-      icon: <Award size={32} color={"#FFC107"} />,
+      icon: <Award size={32} color={Colors.background} />,
     },
     {
       key: "Member Since",
       value: formatDuration(profile.dateOfJoining),
-      icon: <Clock size={32} color={"#FFC107"} />,
+      icon: <Clock size={32} color={Colors.background} />,
     },
   ];
 
   const closeModal = () => {
-    ref.current?.snapToPosition("42%");
+    ref.current?.snapToIndex(0);
     setState((prev) => ({ ...prev, showBackdrop: false }));
   };
 
@@ -383,7 +383,7 @@ const NewProfile = () => {
               <View style={styles.achievmentItem} key={item.key}>
                 <View
                   style={{
-                    backgroundColor: "#FFF8E1",
+                    backgroundColor: Colors.primary,
                     padding: 15,
                     borderRadius: 300,
                   }}
@@ -638,6 +638,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     gap: wp(2),
+    minWidth: wp(30),
   },
   achievmentValue: {
     color: Colors.primaryText,

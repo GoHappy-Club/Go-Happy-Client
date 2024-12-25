@@ -36,6 +36,23 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
 
 const NewAdditionalDetails = ({ route }) => {
+  const parseDate = (date) => {
+    const splittedDate = date?.split("-");
+    const day = splittedDate[0];
+    const month = splittedDate[1];
+    const year = splittedDate[2];
+    const d = new Date(year, month - 1, day);
+    const finalDate = dayjs(d);
+    return finalDate;
+  };
+
+  const getFormattedDate = (dayjsObject) => {
+    const finalDate = `${dayjsObject.get("date")}-${
+      dayjsObject.get("month") + 1
+    }-${dayjsObject.get("year")}`;
+    return finalDate;
+  };
+
   const profile = useSelector((state) => state.profile.profile);
 
   const [state, setState] = useState({
@@ -75,22 +92,7 @@ const NewAdditionalDetails = ({ route }) => {
     navigation.replace("GoHappy Club");
   }
 
-  const parseDate = (date) => {
-    const splittedDate = date?.split("-");
-    const day = splittedDate[0];
-    const month = splittedDate[1];
-    const year = splittedDate[2];
-    const d = new Date(year, month - 1, day);
-    const finalDate = dayjs(d);
-    return finalDate;
-  };
 
-  const getFormattedDate = (dayjsObject) => {
-    const finalDate = `${dayjsObject.get("date")}-${
-      dayjsObject.get("month") + 1
-    }-${dayjsObject.get("year")}`;
-    return finalDate;
-  };
 
   const handleSelectImage = async () => {
     try {
