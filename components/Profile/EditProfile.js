@@ -146,6 +146,7 @@ const EditProfile = () => {
         emergencyContact: state.emergencyContact,
         city: state.city,
         dob: state.dob,
+        age:state.age
       });
       dispatch(
         setProfile({
@@ -155,6 +156,7 @@ const EditProfile = () => {
           name: state.name,
           city: state.city,
           dob: state.dob,
+          age:state.age
         })
       );
       AsyncStorage.setItem("email", state.email);
@@ -162,6 +164,7 @@ const EditProfile = () => {
       AsyncStorage.setItem("name", state.name);
       AsyncStorage.setItem("city", state.city);
       AsyncStorage.setItem("dob", state.dob);
+      AsyncStorage.setItem("age", state.age);
       setState((prevState) => ({ ...prevState, loading: false }));
       setUpdated(true);
       const timeout = setTimeout(() => {
