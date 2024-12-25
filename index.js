@@ -27,14 +27,13 @@ import ErrorBoundary from "react-native-error-boundary";
 import crashlytics from "@react-native-firebase/crashlytics";
 import Fallback from "./commonComponents/Fallback";
 
+const errorHandler = (error, stackTrace) => {
+  crashlytics().log("Error(Caught with error boundary) : ", error, stackTrace);
+};
+
 const RNRedux = () => {
   return (
-    <ErrorBoundary
-      onError={(error) =>
-        crashlytics().log("Error : ", error.message, error.stack)
-      }
-      FallbackComponent={Fallback}
-    >
+    <ErrorBoundary onError={errorHandler} FallbackComponent={Fallback}>
       <CopilotProvider
         verticalOffset={StatusBar.currentHeight}
         arrowColor={Colors.copilotArrow}
