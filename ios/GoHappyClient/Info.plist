@@ -20,6 +20,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We will use your Bluetooth to access your Bluetooth headphones.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>For people to hear you during meetings, we need access to your microphone.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
