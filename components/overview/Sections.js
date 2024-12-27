@@ -11,22 +11,25 @@ import { Linking } from "react-native";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
+import { useSelector } from "react-redux";
 
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const { width: windowWidth } = useWindowDimensions();
-  const { start, copilotEvents } = useCopilot();
 
+  const profile = useSelector((state) => state.profile.profile);
   const minItemWidth = 85;
   const spacing = 12;
   const horizontalPadding = 12;
-  
+
   const numColumns = Math.floor(
     (windowWidth - horizontalPadding * 2 + spacing) / (minItemWidth + spacing)
   );
-  
-  const itemWidth = (windowWidth - horizontalPadding * 2 - spacing * (numColumns - 1)) / numColumns;
+
+  const itemWidth =
+    (windowWidth - horizontalPadding * 2 - spacing * (numColumns - 1)) /
+    numColumns;
 
   const data1 = [
     {
@@ -48,17 +51,16 @@ export default function Sections(props) {
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
-      title: "Get Help",
-      imgUrl: require("../../images/help.png"),
-      link: "props.helpUrl",
-      type: "external",
-      text: "Need assistance? Click here to get help and find the support you need.",
-    },
-    {
       title: "Rewards",
       imgUrl: require("../../images/rewards.png"),
       link: "Rewards",
       text: "See your earned rewards here.",
+    },
+    {
+      title: "Reels",
+      imgUrl: require("../../images/reels.png"),
+      link: "ReelsPage",
+      text: "See videos especially tailored for you.",
     },
     {
       title: "Quotes",
@@ -67,10 +69,11 @@ export default function Sections(props) {
       text: "Get Daily Positive Quotes here.",
     },
     {
-      title: "Reels",
-      imgUrl: require("../../images/reels.png"),
-      link: "ReelsPage",
-      text: "See videos especially tailored for you.",
+      title: "Get Help",
+      imgUrl: require("../../images/help.png"),
+      link: "props.helpUrl",
+      type: "external",
+      text: "Need assistance? Click here to get help and find the support you need.",
     },
   ];
 
@@ -92,6 +95,9 @@ export default function Sections(props) {
           >
             <Walkthroughable>
               <TouchableOpacity
+                disabled={
+                  item.title == "Rewards" && profile.age && profile.age < 50
+                }
                 onPress={() => {
                   if (item.type === "external") {
                     Linking.openURL(props.helpUrl);
@@ -106,11 +112,29 @@ export default function Sections(props) {
                     marginRight: (index + 1) % numColumns ? spacing : 0,
                     marginBottom: spacing,
                   },
+                  {
+                    backgroundColor:
+                      item.title == "Rewards" &&
+                      profile.age &&
+                      profile.age < 50
+                        ? Colors.grey.lightgrey
+                        : Colors.beige,
+                  },
                 ]}
               >
                 <FastImage
                   source={item.imgUrl}
-                  style={styles.image}
+                  style={[
+                    styles.image,
+                    {
+                      opacity:
+                        item.title == "Rewards" &&
+                        profile.age &&
+                        profile.age < 50
+                          ? 0.4
+                          : 1,
+                    },
+                  ]}
                   resizeMode="cover"
                 />
                 <Text style={styles.text} numberOfLines={2}>
@@ -156,8 +180,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.beige,
     borderRadius: 12,
     padding: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -168,8 +192,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   image: {
-    width: '60%',
-    height: '60%',
+    width: "60%",
+    height: "60%",
     marginBottom: 8,
   },
   text: {
@@ -179,4 +203,3 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 });
-
