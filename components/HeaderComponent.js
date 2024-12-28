@@ -27,6 +27,7 @@ import {
   deactivateFreeTrial,
   getTodaysFestival,
   submitRating,
+  checkFreeTrialExpired,
 } from "../services/Startup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setMembership } from "../redux/actions/counts";
