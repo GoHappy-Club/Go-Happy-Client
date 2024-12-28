@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Share,
+  Platform,
 } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -238,7 +239,7 @@ const HomeDashboard = ({
         eventId: item.id,
       });
     } catch (error) {
-      crashlytics().log(`Error in giveRewards HomeDashboard ${error}`)
+      crashlytics().log(`Error in giveRewards HomeDashboard ${error}`);
       console.log("Error in giveRewards ==>", error);
     }
   };

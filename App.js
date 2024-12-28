@@ -11,6 +11,9 @@ import {
   useWindowDimensions,
   Image,
 } from "react-native";
+
+import Constants from "expo-constants";
+
 import FastImage from "react-native-fast-image";
 import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
@@ -292,6 +295,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    console.log("constants from expo", Constants.systemFonts);
     recheck();
     // checkVersion();
     const fetchData = async () => {
@@ -304,14 +308,12 @@ export default function App() {
           const phoneNumber = await AsyncStorage.getItem("phoneNumber");
           const name = await AsyncStorage.getItem("name");
           const email = await AsyncStorage.getItem("email");
-          const emergencyContact = await AsyncStorage.getItem(
-            "emergencyContact"
-          );
+          const emergencyContact =
+            await AsyncStorage.getItem("emergencyContact");
           const city = await AsyncStorage.getItem("city");
           const profileImage = await AsyncStorage.getItem("profileImage");
-          const sessionsAttended = await AsyncStorage.getItem(
-            "sessionsAttended"
-          );
+          const sessionsAttended =
+            await AsyncStorage.getItem("sessionsAttended");
           const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
           const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
           const age = await AsyncStorage.getItem("age");
@@ -322,9 +324,8 @@ export default function App() {
           const membershipStartDate = await AsyncStorage.getItem(
             "membershipStartDate"
           );
-          const membershipEndDate = await AsyncStorage.getItem(
-            "membershipEndDate"
-          );
+          const membershipEndDate =
+            await AsyncStorage.getItem("membershipEndDate");
           const coins = await AsyncStorage.getItem("coins");
 
           setNewProfile(
@@ -483,7 +484,7 @@ export default function App() {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log(`Error in checkVersionHelper : ${error}`)
+      crashlytics().log(`Error in checkVersionHelper : ${error}`);
       // throw new Error("Error getting order ID");
     }
   };

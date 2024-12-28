@@ -42,6 +42,8 @@
 		"date-fns": "^4.1.0",
 		"date-fns-tz": "^3.2.0",
 		"dayjs": "^1.11.13",
+		"expo": "^51.0.0",
+		"expo-updates": "~0.25.27",
 		"jsrsasign": "^11.1.0",
 		"lodash": "^4.17.21",
 		"lodash.debounce": "^4.0.8",

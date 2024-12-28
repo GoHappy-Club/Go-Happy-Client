@@ -80,3 +80,7 @@ yarn-error.log
 .env
 mobilertc.aar
 mobilertc
+# Expo
+.expo
+dist/
+web-build/
