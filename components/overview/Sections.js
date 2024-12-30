@@ -12,11 +12,13 @@ import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
 import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const { width: windowWidth } = useWindowDimensions();
+  const { t } = useTranslation();
 
   const profile = useSelector((state) => state.profile.profile);
   const minItemWidth = 85;
@@ -33,43 +35,43 @@ export default function Sections(props) {
 
   const data1 = [
     {
-      title: "Free Sessions",
+      title: t("free_sessions"),
       imgUrl: require("../../images/sessions.png"),
       link: "HomeScreen",
       text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
-      title: "Contribute",
+      title: t("contribute"),
       imgUrl: require("../../images/contribute.png"),
       link: "MembershipScreen",
       text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
-      title: "Trips",
+      title: t("trips"),
       imgUrl: require("../../images/trips.png"),
       link: "Trips",
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
-      title: "Rewards",
+      title: t("rewards"),
       imgUrl: require("../../images/rewards.png"),
       link: "Rewards",
       text: "See your earned rewards here.",
     },
     {
-      title: "Reels",
+      title: t("reels"),
       imgUrl: require("../../images/reels.png"),
       link: "ReelsPage",
       text: "See videos especially tailored for you.",
     },
     {
-      title: "Quotes",
+      title: t("quotes"),
       imgUrl: require("../../images/quotes.png"),
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
     },
     {
-      title: "Get Help",
+      title: t("get_help"),
       imgUrl: require("../../images/help.png"),
       link: "props.helpUrl",
       type: "external",
@@ -114,9 +116,7 @@ export default function Sections(props) {
                   },
                   {
                     backgroundColor:
-                      item.title == "Rewards" &&
-                      profile.age &&
-                      profile.age < 50
+                      item.title == "Rewards" && profile.age && profile.age < 50
                         ? Colors.grey.lightgrey
                         : Colors.beige,
                   },

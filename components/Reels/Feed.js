@@ -12,11 +12,13 @@ import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../assets/colors/color";
 import FastImage from "react-native-fast-image";
 import { Skeleton } from "@rneui/themed";
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get("window");
 
 export default function Feed({ videos }) {
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const handlePlaylistPress = (video) => {
     const videoAsArray = Array.of(video);
@@ -44,7 +46,7 @@ export default function Feed({ videos }) {
         <View style={styles.container}>
           <View style={styles.headingContainer}>
             <View style={styles.line} />
-            <Text style={styles.headingText}>Videos for you</Text>
+            <Text style={styles.headingText}>{t("videos_for_you")}</Text>
             <View style={styles.line} />
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>

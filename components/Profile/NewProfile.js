@@ -41,6 +41,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BlurView } from "@react-native-community/blur";
+import i18n from "../../i18n";
+import { useTranslation } from "react-i18next";
 
 const NewProfile = () => {
   const [state, setState] = useState({
@@ -65,6 +67,7 @@ const NewProfile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const ref = useRef();
+  const {t} = useTranslation();
 
   const retrieveData = useCallback(async () => {
     try {
@@ -203,17 +206,17 @@ const NewProfile = () => {
 
   const data = [
     {
-      key: "Sessions Attended",
+      key: t("sessions_attended"),
       value: profile.sessionsAttended,
       icon: <Calendar size={32} color={Colors.background} />,
     },
     {
-      key: "Membership",
+      key: t("membership"),
       value: membership.membershipType,
       icon: <Award size={32} color={Colors.background} />,
     },
     {
-      key: "Member Since",
+      key: t("member_since"),
       value: formatDuration(profile.dateOfJoining),
       icon: <Clock size={32} color={Colors.background} />,
     },
@@ -222,6 +225,11 @@ const NewProfile = () => {
   const closeModal = () => {
     ref.current?.snapToIndex(0);
     setState((prev) => ({ ...prev, showBackdrop: false }));
+  };
+
+  const changeLanguage = async (lang) => {
+    i18n.changeLanguage(lang);
+    await AsyncStorage.setItem("@lang", lang);
   };
 
   const renderBackdrop = useCallback(
@@ -314,7 +322,7 @@ const NewProfile = () => {
                     fontSize: wp(4),
                   }}
                 >
-                  Help
+                  {t("help")}
                 </Text>
               </Pressable>
             )}
@@ -354,7 +362,7 @@ const NewProfile = () => {
                     color: Colors.white,
                   }}
                 >
-                  Edit
+                  {t("edit")}
                 </Text>
                 <Pencil size={18} color={Colors.beige} />
 
@@ -495,7 +503,7 @@ const NewProfile = () => {
                 color={Colors.primaryText}
               />
               <View style={styles.textContainer}>
-                <Text style={styles.title}>Check Past Sessions</Text>
+                <Text style={styles.title}>{t("Check_past_essions")}</Text>
               </View>
             </TouchableOpacity>
 
@@ -509,7 +517,7 @@ const NewProfile = () => {
                 color={Colors.primaryText}
               />
               <View style={styles.textContainer}>
-                <Text style={styles.title}>About GoHappy Club</Text>
+                <Text style={styles.title}>{t("about_goHappy")}</Text>
               </View>
             </TouchableOpacity>
 
@@ -524,10 +532,36 @@ const NewProfile = () => {
                   color={Colors.primaryText}
                 />
                 <View style={styles.textContainer}>
-                  <Text style={styles.title}>Join WhatsApp Support Group</Text>
+                  <Text style={styles.title}>{t("join_whatsapp")}</Text>
                 </View>
               </TouchableOpacity>
             )}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => changeLanguage("hi")}
+            >
+              <FontAwesomeIcon
+                icon={faUsers}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Change lang-hindi</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => changeLanguage("en")}
+            >
+              <FontAwesomeIcon
+                icon={faUsers}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Change lang-english</Text>
+              </View>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuItem}
@@ -541,7 +575,7 @@ const NewProfile = () => {
                 color={Colors.primaryText}
               />
               <View style={styles.textContainer}>
-                <Text style={styles.title}>Logout</Text>
+                <Text style={styles.title}>{t("logout")}</Text>
               </View>
             </TouchableOpacity>
           </BottomSheetScrollView>

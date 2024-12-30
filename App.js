@@ -69,6 +69,7 @@ import NewAdditionalDetails from "./components/AdditionalDetails/NewAdditionalDe
 import Quotes from "./components/Quotes/Quotes.js";
 import PushNotification from "react-native-push-notification";
 import Reels from "./components/Reels/Reels.js";
+import "./i18n.js"
 
 const navigationRef = createNavigationContainerRef();
 

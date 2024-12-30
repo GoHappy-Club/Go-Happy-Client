@@ -14,6 +14,7 @@ import { Colors } from "../../assets/colors/color";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
+import { withTranslation } from "react-i18next";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
@@ -27,6 +28,7 @@ class PromotionSection extends Component {
   }
 
   render() {
+    const { t } = this.props;
     const data = [
       {
         id: 1,
@@ -53,7 +55,7 @@ class PromotionSection extends Component {
       <View style={styles.mainContainer}>
         <View style={styles.headingContainer}>
           <View style={styles.line} />
-          <Text style={styles.headingText}>Help Us Grow</Text>
+          <Text style={styles.headingText}>{t("help_us_grow")}</Text>
           <View style={styles.line} />
         </View>
         <View style={styles.cardsContainer}>
@@ -145,4 +147,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(PromotionSection);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTranslation()(PromotionSection));
