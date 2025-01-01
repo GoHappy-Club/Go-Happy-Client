@@ -1,5 +1,4 @@
 import {
-  BackHandler,
   Dimensions,
   Image,
   ScrollView,
@@ -8,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Colors } from "../../assets/colors/color";
 import Animated, {
@@ -87,23 +86,6 @@ const VoucherBottomSheet = ({
     setSelectedVoucher(selectedVoucherL);
     closeModal();
   };
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        console.log("show vouchers", showVouchers);
-        
-        if (showVouchers) {
-          closeModal();
-          return true;
-        }
-        return false;
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [showVouchers]);
 
   return (
     <BottomSheet
@@ -211,8 +193,8 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
           {voucher.status == "ACTIVE"
             ? ""
             : voucher.status == "REDEEMED"
-              ? "REDEEMED"
-              : "EXPIRED"}
+            ? "REDEEMED"
+            : "EXPIRED"}
         </Text>
       </View>
       <View
@@ -222,8 +204,8 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
             backgroundColor: isSelected
               ? Colors.primary
               : voucher.status == "ACTIVE"
-                ? "white"
-                : Colors.bottomNavigation,
+              ? "white"
+              : Colors.bottomNavigation,
             borderColor: isSelected ? Colors.white : "#e0e0e0",
             borderWidth: isSelected ? 2 : 1,
           },
