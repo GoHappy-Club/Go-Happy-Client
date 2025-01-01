@@ -1,4 +1,4 @@
-import {
+import {  BackHandler,
   Image,
   Linking,
   Pressable,
@@ -67,7 +67,7 @@ const NewProfile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const ref = useRef();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const retrieveData = useCallback(async () => {
     try {
@@ -134,6 +134,24 @@ const NewProfile = () => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        console.log("Back Pressed");
+        console.log(ref.current);
+        ref.current?.snapToIndex(0);
+        setState((prevState) => ({
+          ...prevState,
+          showBackdrop: false,
+        }));
+        return false;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const formatName = (name) => {
     const names = name.split(" ");

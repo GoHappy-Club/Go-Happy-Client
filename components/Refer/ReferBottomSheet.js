@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Dimensions,
   ScrollView,
   StyleSheet,
@@ -6,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   BottomSheetModal,
   BottomSheetScrollView,
@@ -66,6 +67,18 @@ const ReferBottomSheet = ({
     },
     [closeModal]
   );
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        closeModal();
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <BottomSheetModal
