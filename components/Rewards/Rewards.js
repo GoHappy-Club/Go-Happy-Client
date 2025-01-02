@@ -103,6 +103,7 @@ const Vouchers = ({ vouchers, navigation }) => (
             })
           }
           styles={styles}
+          formatDate={formatDate}
         />
       ))}
     </ScrollView>

@@ -62,7 +62,10 @@ const Wallet = ({ transactions }) => {
               { opacity: pressed ? 0.8 : 1 },
             ]}
             onPress={() => {
-              if (membership.membershipType === "Free") {
+              if (
+                membership.membershipType === "Free" ||
+                membership.freeTrialActive == true
+              ) {
                 navigation.navigate("SubscriptionPlans");
                 return;
               }

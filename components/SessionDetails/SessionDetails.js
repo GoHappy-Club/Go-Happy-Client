@@ -276,7 +276,7 @@ const SessionDetails = ({
       });
     } catch (error) {
       console.log("Error in giveRewards ==>", error);
-      crashlytics().log(`Error in giveRewards SessionDetails ${error}`)
+      crashlytics().log(`Error in giveRewards SessionDetails ${error}`);
     }
   };
 
@@ -455,7 +455,7 @@ const SessionDetails = ({
     } catch (error) {
       setState((prev) => ({ ...prev, voucherLoading: false }));
       console.log("Error in getting rewards ==>", error);
-      crashlytics().log(`Error in loadVouchers SessionDetails ${error}`)
+      crashlytics().log(`Error in loadVouchers SessionDetails ${error}`);
     }
   };
 
@@ -797,8 +797,8 @@ const SessionDetails = ({
                   state.title == "Cancel Your Booking"
                     ? "center"
                     : Platform.OS == "ios"
-                    ? "center"
-                    : "",
+                      ? "center"
+                      : "",
                 // gap: WIDTH * 0.02,
               }}
             >
@@ -834,6 +834,9 @@ const SessionDetails = ({
                     item.costType == "paid" &&
                     getTitle().startsWith("Book")
                   ) {
+                    if (event?.type?.toLowerCase() == "workshop") {
+                      // paid workshop flow
+                    }
                     if (!isBookingAllowed()) return;
                     sessionActionL();
                     return;

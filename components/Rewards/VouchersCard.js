@@ -4,7 +4,7 @@ import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import Animated from "react-native-reanimated";
 
-const VouchersCard = ({ voucher, id, onPress,styles }) => {
+const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
   return (
     <TouchableOpacity style={[styles.voucherCard]} onPress={onPress}>
       {voucher.status != "ACTIVE" && (
