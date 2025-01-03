@@ -227,11 +227,6 @@ const NewProfile = () => {
     setState((prev) => ({ ...prev, showBackdrop: false }));
   };
 
-  const changeLanguage = async (lang) => {
-    i18n.changeLanguage(lang);
-    await AsyncStorage.setItem("@lang", lang);
-  };
-
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
       const containerAnimatedStyle = useAnimatedStyle(() => {
@@ -503,7 +498,7 @@ const NewProfile = () => {
                 color={Colors.primaryText}
               />
               <View style={styles.textContainer}>
-                <Text style={styles.title}>{t("Check_past_essions")}</Text>
+                <Text style={styles.title}>{t("check_past_sessions")}</Text>
               </View>
             </TouchableOpacity>
 
@@ -538,7 +533,7 @@ const NewProfile = () => {
             )}
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => changeLanguage("hi")}
+              onPress={() => navigation.navigate("Languages")}
             >
               <FontAwesomeIcon
                 icon={faUsers}
@@ -546,20 +541,7 @@ const NewProfile = () => {
                 color={Colors.primaryText}
               />
               <View style={styles.textContainer}>
-                <Text style={styles.title}>Change lang-hindi</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => changeLanguage("en")}
-            >
-              <FontAwesomeIcon
-                icon={faUsers}
-                size={24}
-                color={Colors.primaryText}
-              />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Change lang-english</Text>
+                <Text style={styles.title}>{t("change_language")}</Text>
               </View>
             </TouchableOpacity>
 

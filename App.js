@@ -69,7 +69,8 @@ import NewAdditionalDetails from "./components/AdditionalDetails/NewAdditionalDe
 import Quotes from "./components/Quotes/Quotes.js";
 import PushNotification from "react-native-push-notification";
 import Reels from "./components/Reels/Reels.js";
-import "./i18n.js"
+import "./i18n.js";
+import Language from "./components/ChangeLanguage/Language.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -996,6 +997,28 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "slide_from_right",
                       headerLeft: () => <View />,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Languages"
+                    children={(props) => <Language />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerStyle: {
+                        backgroundColor: Colors.background,
+                      },
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      animation: "ios_from_right",
                     })}
                   />
                 </>
