@@ -69,8 +69,14 @@ export const scheduleWaterReminders = () => {
         vibration: 400,
         playSound: true,
         soundName: "default",
-        repeatType: "time",
-        repeatTime: 2 * 60 * 60 * 1000,
+        repeatTime: [11, 13, 15, 17, 19].map((hour) => {
+          let date = new Date();
+          date.setHours(hour, 0, 0, 0);
+          if (date < new Date()) {
+            date.setDate(date.getDate() + 1);
+          }
+          return date;
+        }),
       });
       console.log("Water reminder scheduled!");
     }
@@ -126,8 +132,18 @@ export const scheduleMedicineReminders = () => {
         vibration: 400,
         playSound: true,
         soundName: "default",
-        repeatType: "time",
-        repeatTime: 5 * 60 * 60 * 1000,
+        repeatTime: [
+          { hours: 9, minutes: 0 },
+          { hours: 14, minutes: 0 },
+          { hours: 21, minutes: 0 },
+        ].map(({ hours, minutes }) => {
+          const date = new Date();
+          date.setHours(hours, minutes, 0, 0);
+          if (date < new Date()) {
+            date.setDate(date.getDate() + 1);
+          }
+          return date;
+        }),
       });
       console.log("Medicine reminder scheduled!");
     }
