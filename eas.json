@@ -11,9 +11,15 @@
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview"
+      "channel": "preview",
+      "env": {
+        "ANDROID_SDK_ROOT": "/Users/rakshitsharma/Library/Android/sdk"
+      }
     },
     "production": {
+      "android": {
+        "buildType": "app-bundle"
+      },
       "autoIncrement": true,
       "channel": "production"
     }
