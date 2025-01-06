@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -38,31 +39,53 @@ const VoucherBottomSheet = ({
 
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
-      const containerAnimatedStyle = useAnimatedStyle(() => {
-        const opacity = interpolate(
+      const containerAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: interpolate(
           animatedIndex.value,
           [-1, 0],
           [0, 1],
           Extrapolation.CLAMP
+        ),
+      }));
+  
+      const containerStyle = [
+        StyleSheet.absoluteFill,
+        containerAnimatedStyle
+      ];
+  
+      if (Platform.OS === 'ios') {
+        return (
+          <Animated.View style={containerStyle}>
+            <TouchableOpacity
+              style={StyleSheet.absoluteFill}
+              onPress={closeModal}
+              activeOpacity={1}
+            >
+              <BlurView
+                style={StyleSheet.absoluteFill}
+                blurAmount={1}
+                blurType="regular"
+              />
+            </TouchableOpacity>
+          </Animated.View>
         );
-        return { opacity };
-      });
-
-      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
-
+      }
+  
       return (
-        <Animated.View style={containerStyle}>
+        <Animated.View
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            },
+            containerAnimatedStyle,
+          ]}
+        >
           <TouchableOpacity
             style={StyleSheet.absoluteFill}
             onPress={closeModal}
             activeOpacity={1}
-          >
-            <BlurView
-              style={StyleSheet.absoluteFill}
-              blurAmount={1}
-              blurType="regular"
-            />
-          </TouchableOpacity>
+          />
         </Animated.View>
       );
     },
@@ -114,6 +137,7 @@ const VoucherBottomSheet = ({
           closeModal();
         }
       }}
+      onClose={closeModal}
     >
       <View style={styles.container}>
         <BottomSheetScrollView contentContainerStyle={styles.scrollViewContent}>

@@ -2,6 +2,7 @@ import { getPayload } from "../../services/PhonePe/PaymentServices";
 import React, { Component } from "react";
 import axios from "axios";
 import PhonePePaymentSDK from "react-native-phonepe-pg";
+import { Platform } from "react-native";
 
 class Payments extends Component {
   constructor(props) {
@@ -223,7 +224,7 @@ class Payments extends Component {
   }
 
   getPackageSignatureForAndroid() {
-    if (Platform.OS === "android") {
+    if (Platformtform.OS === "android") {
       PhonePePaymentSDK.getPackageSignatureForAndroid()
         .then((packageSignture) => {
           setMessage(JSON.stringify(packageSignture));
