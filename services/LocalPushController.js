@@ -17,24 +17,37 @@ export const localNotification = (title, quote) => {
 };
 
 export const ScheduledNotifcation = (title, quote, fireTime) => {
-  PushNotification.localNotificationSchedule({
-    autoCancel: true,
-    bigText: title,
-    date: fireTime,
-    subText: "Click here to see today's positive quote.",
-    title: title,
-    message: quote,
-    channelId: "Quote",
-    vibrate: true,
-    vibration: 400,
-    playSound: true,
-    soundName: "default",
-    data: {
-      screen: "QuotesPage",
-    },
+  PushNotification.getScheduledLocalNotifications((notifications) => {
+    const quoteNotif = notifications.some(
+      (notif) => notif?.title === "Your Daily Motivation"
+    );
+
+    if (!quoteNotif) {
+      const isDuplicate = notifications.some((n) => n.date == fireTime);
+      if (isDuplicate) {
+        return;
+      }
+
+      PushNotification.localNotificationSchedule({
+        autoCancel: true,
+        bigText: title,
+        date: fireTime,
+        subText: "Click here to see today's positive quote.",
+        title: title,
+        message: quote,
+        channelId: "Quote",
+        vibrate: true,
+        vibration: 400,
+        playSound: true,
+        soundName: "default",
+        data: {
+          screen: "QuotesPage",
+        },
+      });
+      console.log("Medicine reminder scheduled!");
+    }
   });
 };
-
 const getNext9AM = () => {
   const now = new Date();
   const next9AM = new Date();
@@ -45,6 +58,16 @@ const getNext9AM = () => {
   return next9AM;
 };
 
+const getNextTimeForHour = (hour) => {
+  const now = new Date();
+  const nextTime = new Date();
+  nextTime.setHours(hour, 0, 0, 0);
+  if (nextTime <= now) {
+    nextTime.setDate(nextTime.getDate() + 1);
+  }
+  return nextTime;
+};
+
 export const scheduleWaterReminders = () => {
   PushNotification.getScheduledLocalNotifications((notifications) => {
     const waterReminderExists = notifications.some(
@@ -53,59 +76,41 @@ export const scheduleWaterReminders = () => {
     );
 
     if (!waterReminderExists) {
-      const next9AM = getNext9AM();
-      const isDuplicate = notifications.some((n) => n.date == next9AM);
-      if (isDuplicate) {
-        return;
-      }
+      const hours = [9, 11, 13, 15, 17, 19];
 
-      PushNotification.localNotificationSchedule({
-        autoCancel: true,
-        date: next9AM,
-        title: "Time to Hydrate!",
-        message: "Drink a glass of water to stay healthy and hydrated.",
-        channelId: "Water Reminders",
-        vibrate: true,
-        vibration: 400,
-        playSound: true,
-        soundName: "default",
-        repeatTime: [11, 13, 15, 17, 19].map((hour) => {
-          let date = new Date();
-          date.setHours(hour, 0, 0, 0);
-          if (date < new Date()) {
-            date.setDate(date.getDate() + 1);
-          }
-          return date;
-        }),
+      hours.forEach((hour) => {
+        const notificationTime = getNextTimeForHour(hour);
+
+        const isDuplicate = notifications.some(
+          (n) => new Date(n.date).getTime() === notificationTime.getTime()
+        );
+
+        if (!isDuplicate) {
+          PushNotification.localNotificationSchedule({
+            autoCancel: true,
+            date: notificationTime,
+            title: "Time to Hydrate!",
+            message: "Drink a glass of water to stay healthy and hydrated.",
+            channelId: "Water Reminders",
+            vibrate: true,
+            vibration: 400,
+            playSound: true,
+            soundName: "default",
+          });
+          console.log(`Water reminder scheduled for ${notificationTime}`);
+        }
       });
-      console.log("Water reminder scheduled!");
     }
   });
 };
 
-const getNextMedicineTime = () => {
+const getNextMedicineTimeForHour = (hours, minutes) => {
   const now = new Date();
-  const times = [
-    { hours: 9, minutes: 0 },
-    { hours: 14, minutes: 0 },
-    { hours: 21, minutes: 0 },
-  ];
-
-  const todayTimes = times.map(({ hours, minutes }) => {
-    const time = new Date(now);
-    time.setHours(hours, minutes, 0, 0);
-    return time;
-  });
-
-  const nextTime = todayTimes.find((time) => time > now);
-
-  if (!nextTime) {
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(times[0].hours, times[0].minutes, 0, 0);
-    return tomorrow;
+  const nextTime = new Date(now);
+  nextTime.setHours(hours, minutes, 0, 0);
+  if (nextTime <= now) {
+    nextTime.setDate(nextTime.getDate() + 1);
   }
-
   return nextTime;
 };
 
@@ -116,36 +121,34 @@ export const scheduleMedicineReminders = () => {
     );
 
     if (!medicineReminderExists) {
-      const next9AM = getNext9AM();
-      const isDuplicate = notifications.some((n) => n.date == next9AM);
-      if (isDuplicate) {
-        return;
-      }
+      const medicineTimes = [
+        { hours: 9, minutes: 0 },
+        { hours: 14, minutes: 0 },
+        { hours: 21, minutes: 0 },
+      ];
 
-      PushNotification.localNotificationSchedule({
-        autoCancel: true,
-        date: getNextMedicineTime(),
-        channelId: "Medicine Reminders",
-        title: "Medicine Reminder",
-        message: "Time to take your medicine.",
-        vibrate: true,
-        vibration: 400,
-        playSound: true,
-        soundName: "default",
-        repeatTime: [
-          { hours: 9, minutes: 0 },
-          { hours: 14, minutes: 0 },
-          { hours: 21, minutes: 0 },
-        ].map(({ hours, minutes }) => {
-          const date = new Date();
-          date.setHours(hours, minutes, 0, 0);
-          if (date < new Date()) {
-            date.setDate(date.getDate() + 1);
-          }
-          return date;
-        }),
+      medicineTimes.forEach(({ hours, minutes }) => {
+        const notificationTime = getNextMedicineTimeForHour(hours, minutes);
+
+        const isDuplicate = notifications.some(
+          (n) => new Date(n.date).getTime() === notificationTime.getTime()
+        );
+
+        if (!isDuplicate) {
+          PushNotification.localNotificationSchedule({
+            autoCancel: true,
+            date: notificationTime,
+            channelId: "Medicine Reminders",
+            title: "Medicine Reminder",
+            message: "Time to take your medicine.",
+            vibrate: true,
+            vibration: 400,
+            playSound: true,
+            soundName: "default",
+          });
+          console.log(`Medicine reminder scheduled for ${notificationTime}`);
+        }
       });
-      console.log("Medicine reminder scheduled!");
     }
   });
 };
