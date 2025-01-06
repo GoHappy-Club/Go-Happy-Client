@@ -231,10 +231,8 @@ const SubscriptionPlans = ({ plans }) => {
       const enDate = new Date(Number(membership.membershipEndDate));
 
       const durationOfMembership = differenceInMonths(enDate, stDate);
-      console.log(durationOfMembership);
       const idk = plans.filter((plan) => plan.duration == durationOfMembership);
       if (idk) {
-        console.log("FOUND", idk);
         setSelectedPlan(idk[0]);
         setPaymentSharePopUp(true);
       }

@@ -1,0 +1,12 @@
+name: Update Production App
+
+on:
+  push:
+	  branches:
+	    - 'master'
+jobs:
+  update:
+    type: update
+    params:
+      platform: all
+      channel: production
