@@ -1,15 +1,16 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import Video from "react-native-video";
+import { ResizeMode, Video } from "expo-av";
 
 const GOHLoader = () => {
   return (
     <Video
       source={require("../images/logo_splash.mp4")}
+      shouldPlay={true}
       style={styles.loaderAnim}
       muted={true}
       repeat={true}
-      resizeMode="cover"
+      resizeMode={ResizeMode.CONTAIN}
     />
   );
 };

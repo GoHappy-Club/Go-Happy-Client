@@ -13,7 +13,7 @@ import phonepe_payments from "../PhonePe/Payments.js";
 
 import { Button, Text } from "react-native-elements";
 
-import Video from "react-native-video";
+import Video, { ResizeMode } from "expo-av";
 
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
@@ -437,6 +437,7 @@ The Link will Expire in 20 Minutes.`;
           {this.state.success && (
             <Video
               source={require("../../images/success_anim.mp4")}
+              shouldPlay={true}
               style={{
                 position: "absolute",
                 // top: 0,
@@ -453,7 +454,7 @@ The Link will Expire in 20 Minutes.`;
               onEnd={() => setTimeout(this.changeSuccess.bind(this), 3000)}
               muted={true}
               // repeat={true}
-              resizeMode="cover"
+              resizeMode={ResizeMode.COVER}
             />
           )}
           {this.state.showPaymentAlert && (

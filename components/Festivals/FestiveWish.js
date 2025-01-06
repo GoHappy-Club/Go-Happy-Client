@@ -1,9 +1,8 @@
 import { Image, Pressable, StyleSheet, Text, View, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useRoute } from "@react-navigation/native";
-import { BlurView } from "@react-native-community/blur";
 import { hp, wp } from "../../helpers/common";
-import Video from "react-native-video";
+import { Video,ResizeMode } from "expo-av";
 import { Colors } from "../../assets/colors/color";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import Share from "react-native-share";
@@ -61,7 +60,8 @@ const FestiveWish = () => {
             <Video
               source={{ uri: asset }}
               style={styles.media}
-              resizeMode="contain"
+              resizeMode={ResizeMode.CONTAIN}
+              shouldPlay={true}
               controls={false}
               repeat
               muted={true}
