@@ -71,6 +71,7 @@ import PushNotification from "react-native-push-notification";
 import Reels from "./components/Reels/Reels.js";
 import "./i18n.js";
 import Language from "./components/ChangeLanguage/Language.js";
+import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -1002,6 +1003,28 @@ export default function App() {
                   <Stack.Screen
                     name="Languages"
                     children={(props) => <Language />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerStyle: {
+                        backgroundColor: Colors.background,
+                      },
+                      headerLeft: () => (
+                        <TouchableOpacity
+                          style={styles.backButton}
+                          onPress={() => navigation.goBack()}
+                          underlayColor={Colors.white}
+                        >
+                          <Text style={styles.backText}>back</Text>
+                        </TouchableOpacity>
+                      ),
+                      headerShadowVisible: false,
+                      animation: "ios_from_right",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="MembershipDetails"
+                    children={(props) => <MembershipDetails />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
