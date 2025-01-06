@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
   Image,
 } from "react-native";
+import * as Updates from "expo-updates";
 
 import Constants from "expo-constants";
 
@@ -204,6 +205,11 @@ const toastConfig = {
 
 export default function App() {
   requestNotificationPermission();
+  try {
+    Updates.setLogLevel(Updates.LogLevel.DEBUG);
+  } catch (error) {
+    console.log(error);
+  }
   // const navigationRef = React.createRef();
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
@@ -227,6 +233,24 @@ export default function App() {
 
   const { copilotEvents } = useCopilot();
 
+  const checkForUpdates = async () => {
+    try {
+      console.log("Checking for updates...");
+      const update = await Updates.checkForUpdateAsync();
+      console.log("Update check result:", update);
+
+      if (update.isAvailable) {
+        console.log("Fetching update...");
+        await Updates.fetchUpdateAsync();
+        console.log("Update fetched. Reloading...");
+        await Updates.reloadAsync(); // This reloads the app with the new update
+      } else {
+        console.log("No update available.");
+      }
+    } catch (error) {
+      console.error("Error checking for updates:", error);
+    }
+  };
   useEffect(() => {
     // logic to revoke user's membership if his membershipEndDate has arrived
     const currentDate = new Date().getTime();
@@ -300,6 +324,7 @@ export default function App() {
   useEffect(() => {
     console.log("constants from expo", Constants.systemFonts);
     recheck();
+    checkForUpdates();
     // checkVersion();
     const fetchData = async () => {
       try {

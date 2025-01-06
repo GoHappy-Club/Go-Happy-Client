@@ -21,7 +21,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 **/.xcode.env.local
-
+*.jks
+go-happy-322816-a15863421b69.json
 # Android/IntelliJ
 #
 build/
