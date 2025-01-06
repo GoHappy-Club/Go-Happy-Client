@@ -26,7 +26,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import GradientText from "../../commonComponents/GradientText";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import BottomSheet from "../CustomBottomSheet/BottomSheet";
 import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
@@ -105,16 +105,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
               colorMapping[selectedPlan?.membershipType]["borderColor"],
           },
         ]}
-        // activeOpacity={0.9}
       >
-        {/* <Animated.View style={animatedTextStyle}>
-          <GradientText
-            text={selectedPlan?.membershipType}
-            colors={colorMapping[selectedPlan?.membershipType]?.gradient}
-            style={styles.footerTitleText}
-          />
-        </Animated.View> */}
-
         <View style={styles.priceContainer}>
           <Text
             style={[
@@ -152,7 +143,6 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
           ))}
         </View>
 
-        {/* {membershipPlans.length > 1 && ( */}
         <View style={styles.durationsContainer}>
           <Text
             style={[
@@ -175,7 +165,6 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
             ))}
           </View>
         </View>
-        {/* )} */}
       </AnimatedLinearGradient>
     </TouchableOpacity>
   );
@@ -189,15 +178,6 @@ const FeatureItem = ({ title, highlight, textColor }) => {
     >
       <Star color={highlight ? "#FFD700" : textColor} size={16} />
       <Text style={[styles.featureTitle, { color: textColor }]}>{title}</Text>
-      {/* <Text
-        style={[
-          styles.featureValue,
-          highlight && styles.highlightedValue,
-          { color: textColor },
-        ]}
-      >
-        {value}
-      </Text> */}
     </Animated.View>
   );
 };
@@ -235,11 +215,31 @@ const SubscriptionPlans = ({ plans }) => {
   const [payButtonLoading, setPayButtonLoading] = useState(false);
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
   const [buttonTitle, setButtonTitle] = useState("");
+  const [renew, setRenew] = useState(false);
 
   const modalRef = useRef();
   const scrollRef = useRef();
 
   const navigation = useNavigation();
+  const route = useRoute();
+  console.log("ROUTE ++>", route.params);
+
+  useEffect(() => {
+    if (route.params && route.params?.renew == true) {
+      setRenew(true);
+      const stDate = new Date(Number(membership.membershipStartDate));
+      const enDate = new Date(Number(membership.membershipEndDate));
+
+      const durationOfMembership = differenceInMonths(enDate, stDate);
+      console.log(durationOfMembership);
+      const idk = plans.filter((plan) => plan.duration == durationOfMembership);
+      if (idk) {
+        console.log("FOUND", idk);
+        setSelectedPlan(idk[0]);
+        setPaymentSharePopUp(true);
+      }
+    }
+  }, [route.params]);
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
@@ -448,6 +448,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
   };
 
   const handleRenewPlan = async (type, plan) => {
+    console.log("CAlled renew");
+    console.log("type=>", type);
+    console.log("plan=>", plan);
+
     //handle renew plan logic
     phonePe(type, plan, "renewal", plan.subscriptionFees);
   };
@@ -583,7 +587,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   loading={payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
-                    if (buttonTitle == "Join now")
+                    if (renew) {
+                      handleRenewPlan("self", selectedPlan);
+                      return;
+                    } else if (buttonTitle == "Join now")
                       handleBuyPlan("self", selectedPlan);
                     else if (buttonTitle == "Upgrade now")
                       handleUpgradePlan("self", selectedPlan);
@@ -599,7 +606,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   loading={shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
-                    if (buttonTitle == "Join now")
+                    if (renew) {
+                      handleRenewPlan("share", selectedPlan);
+                      return;
+                    } else if (buttonTitle == "Join now")
                       handleBuyPlan("share", selectedPlan);
                     else if (buttonTitle == "Upgrade now")
                       handleUpgradePlan("share", selectedPlan);
@@ -609,7 +619,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               </View>
             </View>
           }
-          onDismiss={() => setPaymentSharePopUp(false)}
+          onDismiss={() => {
+            setPaymentSharePopUp(false);
+            setRenew(false);
+          }}
         />
       )}
     </SafeAreaView>

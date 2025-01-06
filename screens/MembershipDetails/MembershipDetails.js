@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -9,35 +9,159 @@ import {
 } from "react-native";
 import {
   Gift,
-  Video,
-  Zap,
-  Star,
   Quote,
+  Video,
+  Crown,
+  Star,
+  Shield,
+  Headphones,
+  Clock,
+  Calendar,
+  Mail,
+  Phone,
+  Users,
+  Zap,
   CircleX,
 } from "lucide-react-native";
 import SubscriptionCard from "../../components/subscription/SubscriptionCard";
 import { wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
+import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
-const privileges = [
-  { id: 1, icon: Gift, label: "Rewards" },
-  { id: 2, icon: Quote, label: "Quotes" },
-  { id: 3, icon: Video, label: "Videos" },
-];
-
-const upgradeOptions = [
-  { id: 1, title: "Upgrade Membership", icon: Zap },
-  { id: 3, title: "Renew Membership", icon: Star },
-  { id: 2, title: "Cancel Membership", icon: CircleX },
-];
+const membershipTiers = {
+  silver: {
+    id: "silver",
+    name: "Silver",
+    color: Colors.black,
+    privileges: [
+      {
+        id: 1,
+        icon: Gift,
+        label: "Basic Rewards",
+      },
+      {
+        id: 2,
+        icon: Quote,
+        label: "Standard Quotes",
+      },
+      {
+        id: 3,
+        icon: Video,
+        label: "Video Library",
+      },
+      {
+        id: 4,
+        icon: Clock,
+        label: "24/7 Support",
+      },
+    ],
+  },
+  gold: {
+    id: "gold",
+    name: "Gold",
+    color: "#FFD700",
+    privileges: [
+      {
+        id: 1,
+        icon: Gift,
+        label: "Enhanced Rewards",
+      },
+      {
+        id: 2,
+        icon: Quote,
+        label: "Premium Quotes",
+      },
+      {
+        id: 3,
+        icon: Video,
+        label: "Premium Content",
+      },
+      {
+        id: 4,
+        icon: Clock,
+        label: "Priority Support",
+      },
+      {
+        id: 5,
+        icon: Star,
+        label: "Special Events",
+      },
+      {
+        id: 6,
+        icon: Calendar,
+        label: "Early Access",
+      },
+    ],
+  },
+  platinum: {
+    id: "platinum",
+    name: "Platinum",
+    color: "#E5E4E2",
+    privileges: [
+      {
+        id: 1,
+        icon: Crown,
+        label: "VIP Rewards",
+      },
+      {
+        id: 2,
+        icon: Quote,
+        label: "Custom Quotes",
+      },
+      {
+        id: 3,
+        icon: Video,
+        label: "Exclusive Content",
+      },
+      {
+        id: 4,
+        icon: Shield,
+        label: "Concierge Support",
+      },
+      {
+        id: 5,
+        icon: Star,
+        label: "VIP Events",
+      },
+      {
+        id: 6,
+        icon: Calendar,
+        label: "First Access",
+      },
+      {
+        id: 7,
+        icon: Phone,
+        label: "Direct Line",
+      },
+      {
+        id: 8,
+        icon: Users,
+        label: "Network Access",
+      },
+    ],
+  },
+};
 
 const PRIVILEGE_ITEM_WIDTH = 112;
-const PRIVILEGES_CONTAINER_WIDTH = privileges.length * PRIVILEGE_ITEM_WIDTH;
 
 export default function MembershipDetails() {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const membership = useSelector((state) => state.membership.membership);
+  console.log(membership);
+
+  const membershipType = membership.membershipType?.toLowerCase();
+
+  const navigation = useNavigation();
+
+  const currentPrivileges =
+    membershipTiers[membershipType]?.privileges ||
+    membershipTiers.silver.privileges;
+  const PRIVILEGES_CONTAINER_WIDTH =
+    currentPrivileges.length * PRIVILEGE_ITEM_WIDTH;
 
   useEffect(() => {
+    scrollX.setValue(0);
     const scrollAnimation = Animated.timing(scrollX, {
       toValue: -PRIVILEGES_CONTAINER_WIDTH,
       duration: 9000,
@@ -48,7 +172,33 @@ export default function MembershipDetails() {
     Animated.loop(scrollAnimation).start();
   }, []);
 
-  const renderPrivileges = () => {
+  const upgradeOptions = useMemo(
+    () => [
+      {
+        id: 1,
+        title: "Upgrade Membership",
+        icon: Zap,
+        onPress: () => navigation.navigate("SubscriptionPlans"),
+      },
+      {
+        id: 3,
+        title: "Renew Membership",
+        icon: Star,
+        onPress: () =>
+          navigation.navigate("SubscriptionPlans", {
+            renew: true,
+          }),
+      },
+      { id: 2, title: "Cancel Membership", icon: CircleX },
+    ],
+    [navigation]
+  );
+
+  const renderPrivileges = (membershipLevel) => {
+    console.log(membershipLevel);
+
+    const privileges = membershipTiers[membershipLevel].privileges;
+
     return (
       <Animated.View
         style={[
@@ -59,10 +209,26 @@ export default function MembershipDetails() {
           },
         ]}
       >
-        {[...privileges, ...privileges,...privileges].map((item, index) => (
-          <View key={`${item.id}-${index}`} style={styles.privilegeItem}>
-            <item.icon color={Colors.black} size={24} />
-            <Text style={styles.privilegeLabel}>{item.label}</Text>
+        {[...privileges, ...privileges, ...privileges].map((item, index) => (
+          <View
+            key={`${item.id}-${index}`}
+            style={[
+              styles.privilegeItem,
+              { borderColor: membershipTiers[membershipLevel].color },
+            ]}
+          >
+            <item.icon
+              color={membershipTiers[membershipLevel].color}
+              size={24}
+            />
+            <Text
+              style={[
+                styles.privilegeLabel,
+                { color: membershipTiers[membershipLevel].color },
+              ]}
+            >
+              {item.label}
+            </Text>
           </View>
         ))}
       </Animated.View>
@@ -80,11 +246,15 @@ export default function MembershipDetails() {
       </View>
 
       <View style={styles.privilegesContainer}>
-        {renderPrivileges()}
+        {renderPrivileges(membershipType)}
       </View>
 
       {upgradeOptions.map((option) => (
-        <TouchableOpacity key={option.id} style={styles.upgradeButton}>
+        <TouchableOpacity
+          key={option.id}
+          style={styles.upgradeButton}
+          onPress={option.onPress}
+        >
           <option.icon
             color={Colors.black}
             size={20}
@@ -123,25 +293,32 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   privilegesContainer: {
-    height: 120,
-    marginTop: 24,
-    overflow: 'hidden',
+    marginVertical: 24,
+    overflow: "hidden",
   },
   privilegesContent: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   privilegeItem: {
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.7)",
     borderRadius: 12,
     padding: 16,
-    width: 100,
+    width: PRIVILEGE_ITEM_WIDTH,
     marginRight: 12,
   },
   privilegeLabel: {
     color: Colors.black,
     marginTop: 8,
     fontSize: 12,
+    fontWeight: "600",
+  },
+  privilegeDescription: {
+    color: Colors.black,
+    fontSize: 10,
+    textAlign: "center",
+    marginTop: 4,
+    opacity: 0.7,
   },
   upgradeButton: {
     flexDirection: "row",
@@ -160,4 +337,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
