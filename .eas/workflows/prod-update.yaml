@@ -1,12 +1,10 @@
-name: Update Production App
+name: Production app update
 
 on:
   push:
-	  branches:
-	    - 'version_upgrade'
+    branches: ['version_upgrade']
+
 jobs:
-  update:
-    type: update
-    params:
-      platform: all
-      channel: production
+  Hello World:
+    steps:
+      - run: eas update --profile production
