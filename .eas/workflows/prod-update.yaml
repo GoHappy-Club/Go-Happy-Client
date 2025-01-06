@@ -3,7 +3,7 @@ name: Update Production App
 on:
   push:
 	  branches:
-	    - 'master'
+	    - 'version_upgrade'
 jobs:
   update:
     type: update
