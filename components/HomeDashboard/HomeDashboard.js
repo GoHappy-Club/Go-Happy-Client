@@ -569,13 +569,14 @@ const HomeDashboard = ({
           style={{
             flexDirection: "row",
             alignItems: "center",
+            gap:3
           }}
         >
           <Text
             style={{
-              fontFamily: "Montserrat-Regular",
+              fontFamily: "Montserrat-SemiBold",
               color: Colors.grey.grey,
-              fontSize: wp(3.5),
+              fontSize: wp(5),
             }}
           >
             {item.costType == "paid" ? item.cost : "FREE"}
@@ -584,8 +585,8 @@ const HomeDashboard = ({
             <FastImage
               source={require("../../images/GoCoins.png")}
               style={{
-                height: 15,
-                width: 15,
+                width: wp(6),
+                aspectRatio:1
               }}
             />
           )}
@@ -594,11 +595,15 @@ const HomeDashboard = ({
       <Button
         disabled={isDisabled(item)}
         title={getTitle(item)}
-        onPress={
-          item.costType == "paid" && getTitle(item) == "Book"
-            ? handleClickBook.bind(this, item)
-            : updateEventBook.bind(this, item)
-        }
+        onPress={() => {
+          navigation.navigate("Session Details", {
+            phoneNumber: profile.phoneNumber,
+            profile: profile,
+            deepId: item.id,
+            onGoBack: () => loadCaller(),
+            alreadyBookedSameDayEvent: checkIsParticipantInSameEvent(item),
+          });
+        }}
         loading={item.loadingButton}
         loadingProps={{ size: "small", color: Colors.black }}
         buttonStyle={{

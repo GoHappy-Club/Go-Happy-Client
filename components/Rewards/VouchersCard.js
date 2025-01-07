@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import Animated from "react-native-reanimated";
+import FastImage from "react-native-fast-image";
 
 const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
   return (
@@ -59,11 +60,28 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
           }}
         />
         <Animated.View style={styles.titleSection}>
-          <Animated.Text style={styles.amount}>
-            {voucher.value != null
-              ? `₹${voucher.value}`
-              : `${voucher.percent}% OFF`}
-          </Animated.Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 3,
+            }}
+          >
+            {(voucher?.value != null) && (
+              <FastImage
+                source={require("../../images/GoCoins.png")}
+                style={{
+                  width: wp(8),
+                  aspectRatio: 1,
+                }}
+              />
+            )}
+            <Animated.Text style={styles.amount}>
+              {voucher?.value != null
+                ? `${voucher?.value}`
+                : `${voucher?.percent}% OFF`}
+            </Animated.Text>
+          </View>
           <Animated.Text style={styles.cardTitle}>
             {voucher.title}
           </Animated.Text>

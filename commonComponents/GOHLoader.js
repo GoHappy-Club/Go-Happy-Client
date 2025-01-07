@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import { ResizeMode, Video } from "expo-av";
+import { hp, wp } from "../helpers/common";
 
 const GOHLoader = () => {
   return (
@@ -9,8 +10,8 @@ const GOHLoader = () => {
       shouldPlay={true}
       style={styles.loaderAnim}
       muted={true}
-      repeat={true}
-      resizeMode={ResizeMode.CONTAIN}
+      isLooping={true}
+      // resizeMode={ResizeMode.CONTAIN}
     />
   );
 };
@@ -29,5 +30,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     opacity: 1,
+    // width:wp(100),
+    // height:hp(100)
   },
 });

@@ -21,6 +21,7 @@ import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native";
+import FastImage from "react-native-fast-image";
 
 const VoucherDetails = () => {
   const route = useRoute();
@@ -112,16 +113,31 @@ const VoucherDetails = () => {
             <View>
               <Animated.Text style={styles.title}>{title}</Animated.Text>
 
-              <Animated.Text style={styles.offer}>
-                {value != null ? `₹${value}` : `${percent}% OFF`}
-              </Animated.Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 3,
+                }}
+              >
+                {value != null && (
+                  <FastImage
+                    source={require("../../images/GoCoins.png")}
+                    style={{
+                      width: wp(8),
+                      aspectRatio: 1,
+                    }}
+                  />
+                )}
+                <Animated.Text style={styles.offer}>
+                  {value != null ? `${value}` : `${percent}% OFF`}
+                </Animated.Text>
+              </View>
             </View>
           </View>
           {show && (
             <ScrollView
               style={styles.scrollContainer}
-              // entering={FadeInDown.duration(300)}
-              // exiting={FadeOutLeft.duration(100)}
               contentContainerStyle={styles.scrollContent}
             >
               <Animated.Text

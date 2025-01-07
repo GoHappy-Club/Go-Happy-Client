@@ -19,6 +19,7 @@ import {
   Calendar,
   CircleHelp,
   Clock,
+  Languages,
   Pen,
   Pencil,
   PenIcon,
@@ -27,8 +28,11 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
+  faCrow,
+  faCrown,
   faHistory,
   faInfoCircle,
+  faLanguage,
   faSignOutAlt,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -238,13 +242,10 @@ const NewProfile = () => {
           Extrapolation.CLAMP
         ),
       }));
-  
-      const containerStyle = [
-        StyleSheet.absoluteFill,
-        containerAnimatedStyle
-      ];
-  
-      if (Platform.OS === 'ios') {
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
             <TouchableOpacity
@@ -261,13 +262,13 @@ const NewProfile = () => {
           </Animated.View>
         );
       }
-  
+
       return (
         <Animated.View
           style={[
             {
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
             containerAnimatedStyle,
           ]}
@@ -441,8 +442,8 @@ const NewProfile = () => {
           style={{
             overflow: "hidden",
             borderRadius: 40,
-            paddingHorizontal: wp(5),
-            paddingVertical: hp(2),
+            paddingHorizontal: wp(6),
+            paddingVertical: hp(3),
           }}
           backgroundStyle={{
             borderRadius: 40,
@@ -450,9 +451,6 @@ const NewProfile = () => {
         >
           <BottomSheetScrollView
             contentContainerStyle={styles.scrollViewContent}
-            style={{
-              borderRadius: 40,
-            }}
           >
             {membership.membershipType == "Free" &&
               (profile.age == null || profile.age >= 50) && (
@@ -558,11 +556,7 @@ const NewProfile = () => {
               style={styles.menuItem}
               onPress={() => navigation.navigate("Languages")}
             >
-              <FontAwesomeIcon
-                icon={faUsers}
-                size={24}
-                color={Colors.primaryText}
-              />
+              <Languages size={24} color={Colors.primaryText} />
               <View style={styles.textContainer}>
                 <Text style={styles.title}>{t("change_language")}</Text>
               </View>
@@ -572,7 +566,7 @@ const NewProfile = () => {
               onPress={() => navigation.navigate("MembershipDetails")}
             >
               <FontAwesomeIcon
-                icon={faUsers}
+                icon={faCrown}
                 size={24}
                 color={Colors.primaryText}
               />
@@ -641,7 +635,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp(10),
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
+    // overflow: "hidden",
   },
   cover: {
     width: wp(35),

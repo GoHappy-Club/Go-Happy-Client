@@ -22,7 +22,7 @@ import Animated, {
 import { BlurView } from "@react-native-community/blur";
 import ReferralsList from "./ReferralsList";
 import { X } from "lucide-react-native";
-import { hp } from "../../helpers/common";
+import { hp, wp } from "../../helpers/common";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -45,13 +45,10 @@ const ReferBottomSheet = ({
           Extrapolation.CLAMP
         ),
       }));
-  
-      const containerStyle = [
-        StyleSheet.absoluteFill,
-        containerAnimatedStyle
-      ];
-  
-      if (Platform.OS === 'ios') {
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
             <TouchableOpacity
@@ -68,13 +65,13 @@ const ReferBottomSheet = ({
           </Animated.View>
         );
       }
-  
+
       return (
         <Animated.View
           style={[
             {
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
             containerAnimatedStyle,
           ]}
@@ -172,10 +169,13 @@ const ReferBottomSheet = ({
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingVertical: 20,
+            alignItems: "center",
+            justifyContent: "center",
           }}
           style={{
             flex: 1,
             backgroundColor: Colors.background,
+            borderRadius: 40,
           }}
         >
           <TouchableOpacity

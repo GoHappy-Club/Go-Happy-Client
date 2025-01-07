@@ -247,7 +247,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
         <View style={styles.titleSection}>
           <Text style={styles.amount}>
             {voucher.value != null
-              ? `₹${voucher.value}`
+              ? `${voucher.value}`
               : `${voucher.percent}% OFF`}
           </Text>
           <Text style={styles.cardTitle}>{voucher.title}</Text>
