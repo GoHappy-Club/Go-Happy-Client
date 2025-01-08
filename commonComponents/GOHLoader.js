@@ -9,9 +9,8 @@ const GOHLoader = () => {
       source={require("../images/logo_splash.mp4")}
       shouldPlay={true}
       style={styles.loaderAnim}
-      muted={true}
+      isMuted={true}
       isLooping={true}
-      // resizeMode={ResizeMode.CONTAIN}
     />
   );
 };

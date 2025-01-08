@@ -561,19 +561,21 @@ const NewProfile = () => {
                 <Text style={styles.title}>{t("change_language")}</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => navigation.navigate("MembershipDetails")}
-            >
-              <FontAwesomeIcon
-                icon={faCrown}
-                size={24}
-                color={Colors.primaryText}
-              />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Membership Status</Text>
-              </View>
-            </TouchableOpacity>
+            {membership.freeTrialActive != true && membership?.membershipType !="Free" && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate("MembershipDetails")}
+              >
+                <FontAwesomeIcon
+                  icon={faCrown}
+                  size={24}
+                  color={Colors.primaryText}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>Membership Status</Text>
+                </View>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity
               style={styles.menuItem}

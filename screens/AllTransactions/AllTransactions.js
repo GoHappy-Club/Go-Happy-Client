@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import TransactionHistory from "../../components/subscription/TransactionHistory";
 import { useSelector } from "react-redux";
@@ -38,9 +38,8 @@ const AllTransactions = () => {
     <>
       {loading && <GOHLoader />}
       {!loading && (
-        <SafeAreaView
-          style={{
-            flex: 1,
+        <ScrollView
+          contentContainerStyle={{
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: Colors.background,
@@ -55,7 +54,7 @@ const AllTransactions = () => {
           >
             <TransactionHistory transactions={transactions} />
           </View>
-        </SafeAreaView>
+        </ScrollView>
       )}
     </>
   );

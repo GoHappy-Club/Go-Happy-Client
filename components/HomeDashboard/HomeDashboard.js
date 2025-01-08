@@ -440,24 +440,25 @@ const HomeDashboard = ({
             alignItems: "center",
           }}
         >
-          <FastImage
-            source={{ uri: item.expertImage }}
+          <View
             style={{
-              width: wp(6),
-              aspectRatio: 1,
-              borderRadius: wp(50),
-            }}
-            resizeMode={FastImage.resizeMode.center}
-          />
-          <Text
-            style={{
-              fontFamily: "Montserrat-SemiBold",
-              textAlign: "center",
-              fontSize: 12,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
             }}
           >
-            {item.expertName}
-          </Text>
+            <Star size={16} color={"gold"} fill={"gold"} />
+            <Text
+              style={{
+                fontFamily: "Montserrat-SemiBold",
+                fontSize: wp(4),
+              }}
+            >
+              {ratings && ratings[item.subCategory] != undefined
+                ? ratings[item.subCategory]?.toFixed(1) + "/5"
+                : "-/5"}
+            </Text>
+          </View>
         </View>
         <View
           style={{
@@ -530,20 +531,27 @@ const HomeDashboard = ({
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 5,
+              gap: 3,
             }}
           >
-            <Star size={16} color={"gold"} fill={"gold"} />
             <Text
               style={{
                 fontFamily: "Montserrat-SemiBold",
-                fontSize: wp(4),
+                color: Colors.grey.grey,
+                fontSize: wp(5),
               }}
             >
-              {ratings && ratings[item.subCategory] != undefined
-                ? ratings[item.subCategory]?.toFixed(1) + "/5"
-                : "-/5"}
+              {item.costType == "paid" ? item.cost : "FREE"}
             </Text>
+            {item.costType == "paid" && (
+              <FastImage
+                source={require("../../images/GoCoins.png")}
+                style={{
+                  width: wp(6),
+                  aspectRatio: 1,
+                }}
+              />
+            )}
           </View>
         </View>
         <Text
@@ -564,32 +572,31 @@ const HomeDashboard = ({
         >
           Seats Left : {item.seatsLeft}
         </Text>
-
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            gap:3
+            gap: 5,
           }}
         >
+          <FastImage
+            source={{ uri: item.expertImage }}
+            style={{
+              width: wp(6),
+              aspectRatio: 1,
+              borderRadius: wp(50),
+            }}
+            resizeMode={FastImage.resizeMode.center}
+          />
           <Text
             style={{
               fontFamily: "Montserrat-SemiBold",
-              color: Colors.grey.grey,
-              fontSize: wp(5),
+              textAlign: "center",
+              fontSize: wp(3),
             }}
           >
-            {item.costType == "paid" ? item.cost : "FREE"}
+            {item.expertName}
           </Text>
-          {item.costType == "paid" && (
-            <FastImage
-              source={require("../../images/GoCoins.png")}
-              style={{
-                width: wp(6),
-                aspectRatio:1
-              }}
-            />
-          )}
         </View>
       </View>
       <Button

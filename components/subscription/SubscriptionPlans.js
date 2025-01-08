@@ -30,6 +30,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import BottomSheet from "../CustomBottomSheet/BottomSheet";
 import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
+import Toast from "react-native-simple-toast";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -231,9 +232,14 @@ const SubscriptionPlans = ({ plans }) => {
       const enDate = new Date(Number(membership.membershipEndDate));
 
       const durationOfMembership = differenceInMonths(enDate, stDate);
-      const idk = plans.filter((plan) => plan.duration == durationOfMembership);
-      if (idk) {
-        setSelectedPlan(idk[0]);
+      const planFound = plans
+        .filter((plan) => plan.duration == durationOfMembership)
+        .filter((plan) => plan.membershipType == membership.membershipType);
+      console.log("PLAN FOUND", planFound);
+      if (!planFound || planFound?.length < 1) {
+        Toast.show("Membership not active anymore", Toast.LONG);
+      } else if (planFound) {
+        setSelectedPlan(planFound[0]);
         setPaymentSharePopUp(true);
       }
     }

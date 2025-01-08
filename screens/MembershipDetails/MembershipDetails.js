@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -26,8 +26,10 @@ import {
 import SubscriptionCard from "../../components/subscription/SubscriptionCard";
 import { wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import CancellationBottomSheet from "../../commonComponents/CancellationAlert";
+import { setMembership } from "../../redux/actions/counts";
 
 const membershipTiers = {
   silver: {
@@ -144,11 +146,21 @@ const membershipTiers = {
 };
 
 const PRIVILEGE_ITEM_WIDTH = 112;
+const cancellationReasons = [
+  "Too expensive",
+  "Not using it enough",
+  "Found a better alternative",
+  "Technical issues",
+  "Other",
+];
 
 export default function MembershipDetails() {
   const scrollX = useRef(new Animated.Value(0)).current;
   const membership = useSelector((state) => state.membership.membership);
-  console.log(membership);
+  const profile = useSelector((state) => state.profile.profile);
+  const dispatch = useDispatch();
+
+  const bottomSheetModalRef = useRef(null);
 
   const membershipType = membership.membershipType?.toLowerCase();
 
@@ -189,15 +201,49 @@ export default function MembershipDetails() {
             renew: true,
           }),
       },
-      { id: 2, title: "Cancel Membership", icon: CircleX },
+      {
+        id: 2,
+        title: "Cancel Membership",
+        icon: CircleX,
+        onPress: () => openBottomSheet(),
+      },
     ],
     [navigation]
   );
 
+  const openBottomSheet = () => {
+    bottomSheetModalRef.current?.present();
+  };
+
+  const closeBottomSheet = () => {
+    bottomSheetModalRef.current?.dismiss();
+  };
+
+  const handleConfirm = async (reason) => {
+    try {
+      const response = await axios.post(`${SERVER_URL}/membership/cancel`, {
+        phoneNumber: profile.phoneNumber,
+        reason: reason,
+      });
+      console.log("Response", response.data);
+      const newMembership = {
+        membershipType: response.data?.membershipType,
+        id: response.data?.id,
+        membershipStartDate: response.data?.membershipStartDate,
+        membershipEndDate: response.data?.membershipEndDate,
+        coins: response.data?.coins,
+      };
+      dispatch(setMembership({ ...newMembership }));
+      navigation.navigate("GoHappy Club")
+    } catch (error) {
+      console.log("Error in cancelling =>", error);
+    }
+  };
+
   const renderPrivileges = (membershipLevel) => {
     console.log(membershipLevel);
 
-    const privileges = membershipTiers[membershipLevel].privileges;
+    const privileges = membershipTiers[membershipLevel]?.privileges || [];
 
     return (
       <Animated.View
@@ -236,34 +282,42 @@ export default function MembershipDetails() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.subscriptionContainer}>
-        <SubscriptionCard />
-      </View>
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.subscriptionContainer}>
+          <SubscriptionCard />
+        </View>
 
-      <View style={styles.privilegeTitle}>
-        <Text style={styles.headerTitle}>Privileges :</Text>
-      </View>
+        <View style={styles.privilegeTitle}>
+          <Text style={styles.headerTitle}>Privileges :</Text>
+        </View>
 
-      <View style={styles.privilegesContainer}>
-        {renderPrivileges(membershipType)}
-      </View>
+        <View style={styles.privilegesContainer}>
+          {renderPrivileges(membershipType)}
+        </View>
 
-      {upgradeOptions.map((option) => (
-        <TouchableOpacity
-          key={option.id}
-          style={styles.upgradeButton}
-          onPress={option.onPress}
-        >
-          <option.icon
-            color={Colors.black}
-            size={20}
-            style={styles.upgradeIcon}
-          />
-          <Text style={styles.upgradeText}>{option.title}</Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+        {upgradeOptions?.map((option) => (
+          <TouchableOpacity
+            key={option.id}
+            style={styles.upgradeButton}
+            onPress={option.onPress}
+          >
+            <option.icon
+              color={Colors.black}
+              size={20}
+              style={styles.upgradeIcon}
+            />
+            <Text style={styles.upgradeText}>{option.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <CancellationBottomSheet
+        modalRef={bottomSheetModalRef}
+        closeModal={closeBottomSheet}
+        onConfirm={handleConfirm}
+        reasons={cancellationReasons}
+      />
+    </>
   );
 }
 
