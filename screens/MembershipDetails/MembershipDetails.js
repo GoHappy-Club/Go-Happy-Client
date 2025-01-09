@@ -30,6 +30,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import CancellationBottomSheet from "../../commonComponents/CancellationAlert";
 import { setMembership } from "../../redux/actions/counts";
+import { format } from "date-fns";
+import { formatDate } from "../../components/Rewards/Rewards";
 
 const membershipTiers = {
   silver: {
@@ -159,6 +161,7 @@ export default function MembershipDetails() {
   const membership = useSelector((state) => state.membership.membership);
   const profile = useSelector((state) => state.profile.profile);
   const dispatch = useDispatch();
+  console.log(membership);
 
   const bottomSheetModalRef = useRef(null);
 
@@ -234,7 +237,7 @@ export default function MembershipDetails() {
         coins: response.data?.coins,
       };
       dispatch(setMembership({ ...newMembership }));
-      navigation.navigate("GoHappy Club")
+      navigation.navigate("GoHappy Club");
     } catch (error) {
       console.log("Error in cancelling =>", error);
     }
@@ -243,7 +246,9 @@ export default function MembershipDetails() {
   const renderPrivileges = (membershipLevel) => {
     console.log(membershipLevel);
 
-    const privileges = membershipTiers[membershipLevel]?.privileges || [];
+    const privileges =
+      membershipTiers[membershipLevel]?.privileges ||
+      membershipTiers["gold"]?.privileges;
 
     return (
       <Animated.View
@@ -260,17 +265,17 @@ export default function MembershipDetails() {
             key={`${item.id}-${index}`}
             style={[
               styles.privilegeItem,
-              { borderColor: membershipTiers[membershipLevel].color },
+              { borderColor: membershipTiers[membershipLevel]?.color },
             ]}
           >
             <item.icon
-              color={membershipTiers[membershipLevel].color}
+              color={membershipTiers[membershipLevel]?.color}
               size={24}
             />
             <Text
               style={[
                 styles.privilegeLabel,
-                { color: membershipTiers[membershipLevel].color },
+                { color: membershipTiers[membershipLevel]?.color },
               ]}
             >
               {item.label}
@@ -287,29 +292,59 @@ export default function MembershipDetails() {
         <View style={styles.subscriptionContainer}>
           <SubscriptionCard />
         </View>
+        {(membership?.cancellationReason != null ||
+          membership?.cancellationReason != "") &&
+          membership?.membershipType == "Free" && (
+            <View style={styles.cancelContainer}>
+              <Text style={styles.cancelLabel}>Last cancelled on:</Text>
+              <Text style={styles.cancelValue}>
+                {formatDate(membership?.cancellationDate)}
+              </Text>
+              <Text style={styles.cancelLabel}>Cancelled because:</Text>
+              <Text style={styles.cancelValue}>
+                {membership?.cancellationReason || "Reason not provided"}
+              </Text>
+            </View>
+          )}
 
         <View style={styles.privilegeTitle}>
-          <Text style={styles.headerTitle}>Privileges :</Text>
+          <Text style={styles.headerTitle}>
+            {(membership?.cancellationReason != null ||
+              membership?.cancellationReason != "") &&
+            membership?.membershipType == "Free"
+              ? "Missing these privileges"
+              : "Privileges"}
+          </Text>
         </View>
 
         <View style={styles.privilegesContainer}>
           {renderPrivileges(membershipType)}
         </View>
 
-        {upgradeOptions?.map((option) => (
+        {membership?.membershipType != "Free" && !membership?.freeTrialActive &&
+          upgradeOptions?.map((option) => (
+            <TouchableOpacity
+              key={option.id}
+              style={styles.upgradeButton}
+              onPress={option.onPress}
+            >
+              <option.icon
+                color={Colors.black}
+                size={20}
+                style={styles.upgradeIcon}
+              />
+              <Text style={styles.upgradeText}>{option.title}</Text>
+            </TouchableOpacity>
+          ))}
+        {membership?.membershipType == "Free" || membership?.freeTrialActive && (
           <TouchableOpacity
-            key={option.id}
             style={styles.upgradeButton}
-            onPress={option.onPress}
+            onPress={() => navigation.navigate("SubscriptionPlans")}
           >
-            <option.icon
-              color={Colors.black}
-              size={20}
-              style={styles.upgradeIcon}
-            />
-            <Text style={styles.upgradeText}>{option.title}</Text>
+            <Zap color={Colors.black} size={20} style={styles.upgradeIcon} />
+            <Text style={styles.upgradeText}>Join Membership</Text>
           </TouchableOpacity>
-        ))}
+        )}
       </ScrollView>
       <CancellationBottomSheet
         modalRef={bottomSheetModalRef}
@@ -389,5 +424,19 @@ const styles = StyleSheet.create({
   upgradeText: {
     color: Colors.black,
     fontSize: 16,
+  },
+  cancelContainer: {
+    padding: 16,
+  },
+  cancelLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
+  },
+  cancelValue: {
+    fontSize: 16,
+    color: "#555",
+    marginBottom: 12,
   },
 });

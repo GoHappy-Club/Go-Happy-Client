@@ -114,6 +114,8 @@ class LoginScreen extends Component {
     vouchers,
     freeTrialUsed,
     freeTrialActive,
+    cancellationReason,
+    cancellationDate
   }) {
     let { membership, actions } = this.props;
 
@@ -126,6 +128,8 @@ class LoginScreen extends Component {
       vouchers: vouchers,
       freeTrialUsed: freeTrialUsed,
       freeTrialActive: freeTrialActive,
+      cancellationReason: cancellationReason,
+      cancellationDate: cancellationDate
     };
     actions.setMembership({ ...membership });
   }
@@ -462,6 +466,14 @@ class LoginScreen extends Component {
                 "freeTrialActive",
                 String(response.data?.freeTrialActive)
               );
+              AsyncStorage.setItem(
+                "cancellationReason",
+                String(response.data?.cancellationReason)
+              );
+              AsyncStorage.setItem(
+                "cancellationDate",
+                String(response.data?.cancellationDate)
+              );
 
               this.setProfile(
                 response.data.name,
@@ -510,6 +522,8 @@ class LoginScreen extends Component {
                 coins: response.data.coins,
                 freeTrialUsed: response.data?.freeTrialUsed,
                 freeTrialActive: response.data?.freeTrialActive,
+                cancellationReason:response.data?.cancellationReason,
+                cancellationDate:response.data?.cancellationDate
               });
             })
             .catch((error) => {

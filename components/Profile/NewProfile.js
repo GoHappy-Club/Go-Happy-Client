@@ -46,7 +46,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BlurView } from "@react-native-community/blur";
-import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
 
 const NewProfile = () => {
@@ -561,7 +560,7 @@ const NewProfile = () => {
                 <Text style={styles.title}>{t("change_language")}</Text>
               </View>
             </TouchableOpacity>
-            {membership.freeTrialActive != true && membership?.membershipType !="Free" && (
+            {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && ( */}
               <TouchableOpacity
                 style={styles.menuItem}
                 onPress={() => navigation.navigate("MembershipDetails")}
@@ -575,7 +574,7 @@ const NewProfile = () => {
                   <Text style={styles.title}>Membership Status</Text>
                 </View>
               </TouchableOpacity>
-            )}
+            {/* )} */}
 
             <TouchableOpacity
               style={styles.menuItem}

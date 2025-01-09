@@ -1,6 +1,6 @@
 import { Crown } from "lucide-react-native";
-import React from "react";
-import { Image, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { View, Text, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { useSelector } from "react-redux";
@@ -38,6 +38,13 @@ const SubscriptionCard = () => {
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
 
+  const [showBlur, setShowBlur] = useState(true);
+
+  useEffect(() => {
+    return () => {
+      setShowBlur(false);
+    };
+  }, []);
   const loadDate = (time) => {
     return format(fromUnixTime(time / 1000), "MM/yy");
   };
@@ -46,12 +53,11 @@ const SubscriptionCard = () => {
     return (
       <>
         <LinearGradient
-          colors={COLORS_MAPPING['Silver']["gradient"]}
+          colors={COLORS_MAPPING["Silver"]["gradient"]}
           style={[
             styles.card,
             {
-              borderColor:
-                COLORS_MAPPING['Silver']["borderColor"],
+              borderColor: COLORS_MAPPING["Silver"]["borderColor"],
             },
           ]}
           start={{ x: 0, y: 0 }}
@@ -68,12 +74,9 @@ const SubscriptionCard = () => {
                 style={[
                   styles.name,
                   {
-                    color:
-                      COLORS_MAPPING['Silver']["textColor"],
+                    color: COLORS_MAPPING["Silver"]["textColor"],
                     textShadowColor:
-                      COLORS_MAPPING['Silver'][
-                        "textShadowColor"
-                      ],
+                      COLORS_MAPPING["Silver"]["textShadowColor"],
                   },
                 ]}
               >
@@ -83,12 +86,9 @@ const SubscriptionCard = () => {
                 style={[
                   styles.expiry,
                   {
-                    color:
-                      COLORS_MAPPING['Silver']["textColor"],
+                    color: COLORS_MAPPING["Silver"]["textColor"],
                     textShadowColor:
-                      COLORS_MAPPING['Silver'][
-                        "textShadowColor"
-                      ],
+                      COLORS_MAPPING["Silver"]["textShadowColor"],
                   },
                 ]}
               >
@@ -97,7 +97,7 @@ const SubscriptionCard = () => {
             </View>
           </View>
           <FastImage
-            source={COLORS_MAPPING['Silver']["logo"]}
+            source={COLORS_MAPPING["Silver"]["logo"]}
             style={{
               width: wp(20),
               height: wp(8),
@@ -111,9 +111,8 @@ const SubscriptionCard = () => {
             style={[
               styles.membershipType,
               {
-                color: COLORS_MAPPING['Silver']["textColor"],
-                textShadowColor:
-                  COLORS_MAPPING['Silver']["textShadowColor"],
+                color: COLORS_MAPPING["Silver"]["textColor"],
+                textShadowColor: COLORS_MAPPING["Silver"]["textShadowColor"],
               },
             ]}
           >
@@ -123,9 +122,8 @@ const SubscriptionCard = () => {
             style={[
               styles.membershipText,
               {
-                color: COLORS_MAPPING['Silver']["textColor"],
-                textShadowColor:
-                  COLORS_MAPPING['Silver']["textShadowColor"],
+                color: COLORS_MAPPING["Silver"]["textColor"],
+                textShadowColor: COLORS_MAPPING["Silver"]["textShadowColor"],
               },
             ]}
           >
@@ -139,16 +137,20 @@ const SubscriptionCard = () => {
             }}
           />
         </LinearGradient>
+        {showBlur && (
           <BlurView
             blurAmount={8}
             blurType="light"
             style={{
-              position:"absolute",
+              position: "absolute",
               width: wp(100),
               height: hp(23),
               borderRadius: 10,
+              overflow: Platform.OS === "android" ? "hidden" : "visible",
             }}
+            overlayColor="transparent"
           />
+        )}
       </>
     );
   }
@@ -166,6 +168,19 @@ const SubscriptionCard = () => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
+      {membership.freeTrialActive && (
+        <Text
+          style={[
+            styles.watermark,
+            {
+              color: COLORS_MAPPING[membership?.membershipType]["textColor"],
+            },
+          ]}
+        >
+          FREE TRIAL
+        </Text>
+      )}
+
       <View style={styles.nameContainer}>
         <View
           style={{
@@ -304,6 +319,19 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Light",
     marginLeft: wp(0.5),
     color: "white",
+  },
+  watermark: {
+    position: "absolute",
+    width: "100%",
+    textAlign: "center",
+    fontSize: wp(10),
+    fontFamily: "Poppins-Regular",
+    opacity: 0.2,
+    // transform: [{ rotate: "-20deg" }],
+    alignSelf: "center",
+    top: "35%",
+    textTransform: "uppercase",
+    letterSpacing: 4,
   },
 });
 
