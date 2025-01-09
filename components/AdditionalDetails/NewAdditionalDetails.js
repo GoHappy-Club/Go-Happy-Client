@@ -76,6 +76,9 @@ const NewAdditionalDetails = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
+  
   const pending = () => {
     if (
       state.phoneNumber == null ||
@@ -88,9 +91,14 @@ const NewAdditionalDetails = ({ route }) => {
     return false;
   };
 
-  if (pending() == false) {
-    navigation.replace("GoHappy Club");
-  }
+  useEffect(() => {
+    if (!initialCheckDone) {
+      if (!pending() && route.params?.isNewUser !== true) {
+        navigation.replace("GoHappy Club");
+      }
+      setInitialCheckDone(true);
+    }
+  }, [initialCheckDone]);
 
 
 
