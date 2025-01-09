@@ -585,6 +585,8 @@ const HomeDashboard = ({
               width: wp(6),
               aspectRatio: 1,
               borderRadius: wp(50),
+              borderWidth:0.5,
+              borderColor:Colors.black
             }}
             resizeMode={FastImage.resizeMode.center}
           />
