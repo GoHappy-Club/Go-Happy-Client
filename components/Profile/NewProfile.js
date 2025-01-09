@@ -128,7 +128,7 @@ const NewProfile = () => {
 
   const signout = async () => {
     try {
-      await firebase.auth().signOut();
+      // await firebase.auth().signOut();
       await AsyncStorage.clear();
       navigation.reset({
         index: 0,

@@ -16,9 +16,6 @@ import {
 import AwesomeAlert from "react-native-awesome-alerts";
 import PhoneInput from "react-native-phone-number-input";
 import analytics from "@react-native-firebase/analytics";
-
-import Video from "react-native-video";
-
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
@@ -66,6 +63,7 @@ class LoginScreen extends Component {
       copiedText: "",
       fcmToken: "",
       unformattedNumber: null,
+      otpSent: false,
     };
     this.getCurrentUserInfo();
     console.log("here");
@@ -224,7 +222,7 @@ class LoginScreen extends Component {
   handlePhoneNumberInput = (text) => {
     this.setState({ phoneNumber: text });
   };
-  handleSendCode = (resend) => {
+  handleSendCode = async (resend) => {
     // Request to send OTP
     if (resend) {
       this.setState({ loadingResendButton: true });
@@ -233,41 +231,34 @@ class LoginScreen extends Component {
     }
     crashlytics().log(JSON.stringify(this.state));
     if (this.validatePhoneNumber()) {
-      firebase
-        .auth()
-        .signInWithPhoneNumber(this.state.phoneNumber)
-        .then((confirmResult) => {
-          this.setState({ confirmResult });
-          firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-              this.setState({ userId: user.uid });
-              try {
-                this._backendSignIn(
-                  user.uid,
-                  user.displayName,
-                  "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-                  user.phoneNumber
-                );
-              } catch (error) {}
-            }
-          });
-          if (resend) {
-            this.setState({ loadingResendButton: false });
-          } else {
-            this.setState({ loadingButton: false });
-          }
-        })
-        .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
+      try {
+        const response = await axios.post(`${SERVER_URL}/auth/init`, {
+          phone: this.state.phoneNumber,
+        });
+        console.log("SEND OTP=>", response.data);
+        if (response.data.success == true) {
+          this.setState({ otpSent: true });
+        } else {
           alert(
             'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
           );
-          if (resend) {
-            this.setState({ loadingResendButton: false });
-          } else {
-            this.setState({ loadingButton: false });
-          }
-        });
+        }
+        if (resend) {
+          this.setState({ loadingResendButton: false });
+        } else {
+          this.setState({ loadingButton: false });
+        }
+      } catch (error) {
+        crashlytics().recordError(JSON.stringify(error));
+        alert(
+          'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
+        );
+        if (resend) {
+          this.setState({ loadingResendButton: false });
+        } else {
+          this.setState({ loadingButton: false });
+        }
+      }
     } else {
       if (resend) {
         this.setState({ loadingResendButton: false });
@@ -288,7 +279,7 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = (vcode) => {
+  handleVerifyCode = async (vcode) => {
     const { confirmResult, verificationCode } = this.state;
     let code = vcode;
     if (code == null) {
@@ -301,27 +292,26 @@ class LoginScreen extends Component {
       this.setState({ showAlert: true });
       return;
     }
-
-    confirmResult
-      .confirm(code)
-      .then((user) => {
-        this.setState({ userId: user.user.uid });
-        try {
-          this._backendSignIn(
-            user.user.uid,
-            user.user.displayName,
-            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-            user.user.phoneNumber
-          );
-        } catch (error) {
-          console.log("Error in handleVerify==>", error);
-        }
-        //   this.setState({ loadingButton:false });
-      })
-      .catch((error) => {
-        crashlytics().recordError(JSON.stringify(error));
-        this.setState({ loadingVerifyButton: false, showAlert: true });
+    try {
+      const response = await axios.post(`${SERVER_URL}/auth/verify`, {
+        phone: this.state.phoneNumber,
+        otp: code,
       });
+      console.log("Data in verify", response.data);
+      if (response.data.success == true) {
+        this._backendSignIn(
+          response.data.user.uid,
+          response.data.user.name,
+          "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
+          response.data.user.phone
+        );
+      } else if (response.data.success == false) {
+        this.setState({ loadingVerifyButton: false, showAlert: true });
+      }
+    } catch (error) {
+      crashlytics().recordError(JSON.stringify(error));
+      this.setState({ loadingVerifyButton: false, showAlert: true });
+    }
   };
 
   handleInputChange = (text) => {
@@ -387,16 +377,14 @@ class LoginScreen extends Component {
           const token = await AsyncStorage.getItem("token");
           const phoneNumber = await AsyncStorage.getItem("phoneNumber");
           const dob = await AsyncStorage.getItem("dob");
-          const sessionsAttended = await AsyncStorage.getItem(
-            "sessionsAttended"
-          );
+          const sessionsAttended =
+            await AsyncStorage.getItem("sessionsAttended");
           // const dob = await AsyncStorage.getItem("dob");
           const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
           const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
           const city = await AsyncStorage.getItem("city");
-          const emergencyContact = await AsyncStorage.getItem(
-            "emergencyContact"
-          );
+          const emergencyContact =
+            await AsyncStorage.getItem("emergencyContact");
           const age = await AsyncStorage.getItem("age");
 
           //retreive membership object to save separately in redux
@@ -405,9 +393,8 @@ class LoginScreen extends Component {
           const membershipStartDate = await AsyncStorage.getItem(
             "membershipStartDate"
           );
-          const membershipEndDate = await AsyncStorage.getItem(
-            "membershipEndDate"
-          );
+          const membershipEndDate =
+            await AsyncStorage.getItem("membershipEndDate");
           const coins = await AsyncStorage.getItem("coins");
           const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
           const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
@@ -758,7 +745,7 @@ class LoginScreen extends Component {
           >
             LOGIN or SIGN UP
           </Text>
-          {!this.state.confirmResult && (
+          {!this.state.otpSent && (
             <View style={styles.page}>
               <PhoneInput
                 style={styles.textInput}
@@ -907,7 +894,7 @@ class LoginScreen extends Component {
             </View>
           )}
 
-          {this.state.confirmResult && (
+          {this.state.otpSent && (
             <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
           )}
         </KeyboardAvoidingView>
