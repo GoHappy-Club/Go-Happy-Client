@@ -61,7 +61,7 @@ const NewAdditionalDetails = ({ route }) => {
     emergencyContact: route.params?.emergencyContact,
     dob: route.params?.dob
       ? route.params?.dob
-      : getFormattedDate(dayjs().subtract(49, "years")),
+      : getFormattedDate(dayjs().subtract(50, "years")),
     city: route.params?.city,
     age: route.params?.age,
     showAlert: false,

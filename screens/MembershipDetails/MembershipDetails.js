@@ -292,7 +292,7 @@ export default function MembershipDetails() {
         <View style={styles.subscriptionContainer}>
           <SubscriptionCard />
         </View>
-        {(membership?.cancellationReason != null ||
+        {(membership?.cancellationReason != null &&
           membership?.cancellationReason != "") &&
           membership?.membershipType == "Free" && (
             <View style={styles.cancelContainer}>

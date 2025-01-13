@@ -65,7 +65,7 @@ const NewProfile = () => {
     whatsappLink: "",
     showBackdrop: false,
   });
-
+  
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();

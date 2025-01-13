@@ -32,6 +32,10 @@ import RNOtpVerify from "react-native-otp-verify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
+import axiosOg from "axios";
+import { PASSWORD, USER_ID } from "../../config/tokens.js";
+
+const GUPSHUP_BASE_URL = "https://enterprise.smsgupshup.com/GatewayAPI/rest";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -113,7 +117,7 @@ class LoginScreen extends Component {
     freeTrialUsed,
     freeTrialActive,
     cancellationReason,
-    cancellationDate
+    cancellationDate,
   }) {
     let { membership, actions } = this.props;
 
@@ -127,7 +131,7 @@ class LoginScreen extends Component {
       freeTrialUsed: freeTrialUsed,
       freeTrialActive: freeTrialActive,
       cancellationReason: cancellationReason,
-      cancellationDate: cancellationDate
+      cancellationDate: cancellationDate,
     };
     actions.setMembership({ ...membership });
   }
@@ -137,7 +141,6 @@ class LoginScreen extends Component {
     email,
     phoneNumber,
     profileImage,
-    token,
     sessionsAttended,
     dateOfJoining,
     selfInviteCode,
@@ -153,7 +156,6 @@ class LoginScreen extends Component {
       email: email,
       phoneNumber: phoneNumber,
       profileImage: profileImage,
-      token: token,
       sessionsAttended: sessionsAttended,
       // dob: dob,
       dateOfJoining: dateOfJoining,
@@ -232,12 +234,29 @@ class LoginScreen extends Component {
     crashlytics().log(JSON.stringify(this.state));
     if (this.validatePhoneNumber()) {
       try {
-        const response = await axios.post(`${SERVER_URL}/auth/init`, {
-          phone: this.state.phoneNumber,
+        const messageTemplate =
+          "Dear User,\n\n" +
+          "Your OTP for login to GoHappy Club is %code%. This code is valid for 30 minutes. Please do not share this OTP.\n\n" +
+          "Regards,\nGoHappy Club Team";
+        const response = await axiosOg.get(GUPSHUP_BASE_URL, {
+          params: {
+            userid: USER_ID,
+            password: PASSWORD,
+            method: "TWO_FACTOR_AUTH",
+            v: "1.1",
+            phone_no: this.state.phoneNumber,
+            format: "text",
+            otpCodeLength: "6",
+            otpCodeType: "NUMERIC",
+            msg: messageTemplate,
+          },
         });
-        console.log("SEND OTP=>", response.data);
-        if (response.data.success == true) {
+        if (response.data.includes("success")) {
           this.setState({ otpSent: true });
+        } else if (response.data.includes("308")) {
+          alert(
+            "You are re-trying too early, please wait for few minutes and then try to login."
+          );
         } else {
           alert(
             'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
@@ -249,6 +268,7 @@ class LoginScreen extends Component {
           this.setState({ loadingButton: false });
         }
       } catch (error) {
+        console.log("error in sending otp=>", error);
         crashlytics().recordError(JSON.stringify(error));
         alert(
           'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
@@ -293,23 +313,25 @@ class LoginScreen extends Component {
       return;
     }
     try {
-      const response = await axios.post(`${SERVER_URL}/auth/verify`, {
-        phone: this.state.phoneNumber,
-        otp: code,
+      const response = await axiosOg.get(GUPSHUP_BASE_URL, {
+        params: {
+          userid: USER_ID,
+          password: PASSWORD,
+          method: "TWO_FACTOR_AUTH",
+          v: "1.1",
+          phone_no: this.state.phoneNumber,
+          otp_code: code,
+        },
       });
-      console.log("Data in verify", response.data);
-      if (response.data.success == true) {
+      if (response.data.includes("success")) {
         this._backendSignIn(
-          response.data.user.uid,
-          response.data.user.name,
-          "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-          response.data.user.phone
+          this.state.phoneNumber
         );
-      } else if (response.data.success == false) {
+      } else {
         this.setState({ loadingVerifyButton: false, showAlert: true });
       }
     } catch (error) {
-      crashlytics().recordError(JSON.stringify(error));
+      console.error("Error verifying OTP:", error.message);
       this.setState({ loadingVerifyButton: false, showAlert: true });
     }
   };
@@ -403,14 +425,14 @@ class LoginScreen extends Component {
             email,
             phoneNumber,
             profileImage,
-            token,
             sessionsAttended,
             dateOfJoining,
             selfInviteCode,
             city,
             emergencyContact,
             fcmToken,
-            age
+            age,
+            dob
           );
           this.setMembership({
             membershipType: membershipType,
@@ -467,7 +489,6 @@ class LoginScreen extends Component {
                 response.data.email,
                 response.data.phone,
                 response.data.profileImage,
-                response.data.token,
                 response.data.sessionsAttended,
                 response.data.dateOfJoining,
                 response.data.selfInviteCode,
@@ -509,8 +530,8 @@ class LoginScreen extends Component {
                 coins: response.data.coins,
                 freeTrialUsed: response.data?.freeTrialUsed,
                 freeTrialActive: response.data?.freeTrialActive,
-                cancellationReason:response.data?.cancellationReason,
-                cancellationDate:response.data?.cancellationDate
+                cancellationReason: response.data?.cancellationReason,
+                cancellationDate: response.data?.cancellationDate,
               });
             })
             .catch((error) => {
@@ -535,24 +556,17 @@ class LoginScreen extends Component {
       this.setState({ loader: false });
     } catch (error) {}
   };
-  _backendSignIn(token, name, profileImage, phone) {
+  _backendSignIn(phone) {
     if (this.state.reachedBackendSignIn == false) {
       this.setState({ reachedBackendSignIn: true });
     } else {
       return;
     }
-    if (name == null) {
-      name = "";
-    }
     var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {
-        token: token,
-        name: name,
-        profileImage: profileImage,
         phone: phone.substr(1),
         referralId: this.state.referralCode,
-        source: this.state.source,
         fcmToken: this.state.fcmToken,
       })
       .then(async (response) => {
@@ -562,7 +576,6 @@ class LoginScreen extends Component {
             response.data.email,
             response.data.phone,
             response.data.profileImage,
-            token,
             response.data.sessionsAttended,
             response.data.dateOfJoining,
             response.data.selfInviteCode,
@@ -603,7 +616,7 @@ class LoginScreen extends Component {
           if (response.data.profileImage != null) {
             AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
-          AsyncStorage.setItem("token", token);
+          AsyncStorage.setItem("token", response.data.id);
           AsyncStorage.setItem(
             "sessionsAttended",
             response.data.sessionsAttended

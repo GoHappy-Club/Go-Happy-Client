@@ -63,7 +63,7 @@ const EditProfile = () => {
     whatsappLink: "",
     dob: profile.dob
       ? profile.dob
-      : getFormattedDate(dayjs().subtract(49, "years")),
+      : getFormattedDate(dayjs().subtract(50, "years")),
     city: profile.city,
     showAlert: false,
     alertMessage: "",
