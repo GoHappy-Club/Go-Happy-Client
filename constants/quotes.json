@@ -2,41 +2,183 @@
   "quotes": [
     {
       "id": 1,
-      "hindi": "आत्मविश्वास को परिवर्तित करें",
-      "english": "Believe in yourself."
+      "hindi": "सबसे जरूरी बात है अपनी जिंदगी का मजा लेना - खुश रहना। यही सब कुछ है।",
+      "english": "The most important thing is to enjoy your life - to be happy. I's all that matters."
     },
-    { "id": 2, "hindi": "कोशिश के बीज हो", "english": "Be the light of hope." },
-    { "id": 3, "hindi": "कार्य किजिए।", "english": "Keep working hard." },
+    {
+      "id": 2,
+      "hindi": "आपके अलावा कुछ भी आपको खुशी नहीं दे सकता।",
+      "english": "Nothing can bring you happiness but yourself."
+    },
+    {
+      "id": 3,
+      "hindi": "कड़ी मेहनत करते रहें।",
+      "english": "Keep working hard."
+    },
     {
       "id": 4,
-      "hindi": "चीन्तन को प्रमुख देखें",
-      "english": "Welcome challenges."
+      "hindi": "कभी भी किसी ऐसी चीज पर पछतावा न करें जिसने आपको मुस्कुराया।",
+      "english": "Never regret anything that made you smile."
     },
     {
       "id": 5,
-      "hindi": "उम्मीद की चीन्तन को प्रोज्ज्वित करें",
+      "hindi": "जीवन की सुंदरता की सराहना करें।",
       "english": "Appreciate the beauty of life."
     },
     {
       "id": 6,
-      "hindi": "कमजोरी की सुरक्षा करें",
-      "english": "Empower kindness."
+      "hindi": "अपने आस-पास अभी भी बची हुई सभी सुंदरता के बारे में सोचें और खुश रहें।",
+      "english": "Think of all the beauty still left around you and be happy."
     },
-    { "id": 7, "hindi": "प्राक्त को मेरा करें", "english": "Spread love." },
+    {
+      "id": 7,
+      "hindi": "ख़ुशी तब मिलेगी जब आप जो सोचते हैं, जो कहते हैं और जो करते हैं, सामंजस्य में हों।",
+      "english": "Happiness is when what you think, what you say, and what you do are in harmony."
+    },
     {
       "id": 8,
-      "hindi": "हर पल नई शुरुआता के साथ चींपी कीजें",
-      "english": "Start every day with a positive thought."
+      "hindi": "खुशी एक लक्ष्य नहीं है ... यह अच्छी तरह से जीवन जीने का एक उप-उत्पाद है।",
+      "english": "Happiness isn't a goal… it's a by-product of a life well lived.Start every day with a positive thought."
     },
     {
       "id": 9,
-      "hindi": "अपने स्वप्न पर विश्वास करें",
-      "english": "Have faith in yourself."
+      "hindi": "खुशी लहरों में आती है। यह हमेशा वापस आ जाएगा।",
+      "english": "Happiness comes in waves. It'll always come back."
     },
     {
       "id": 10,
-      "hindi": "होंसली की खोज को चुनें",
-      "english": "Choose the joy of simplicity."
+      "hindi": "केवल एक चीज जो आपको खुश करेगी वह है आप जो हैं उससे खुश रहना।",
+      "english": "The only thing that will make you happy is being happy with who you are."
+    },
+    {
+      "id": 11,
+      "hindi": "जीवन बेहतर होता है जब आप थोड़ा रोते हैं, बहुत हंसते हैं, और आपको जो कुछ भी मिला है उसके लिए आभारी हैं।",
+      "english": "Life is better when you cry a little, laugh a lot, and are thankful for everything you've got."
+    },
+    {
+      "id": 12,
+      "hindi": "सभी दिनों में सबसे अधिक बर्बाद हंसी के बिना एक है।",
+      "english": "The most wasted of all days is one without laughter."
+    },
+    {
+      "id": 13,
+      "hindi": "जब आप हंस रहे होते हैं तो जीवन बेहतर होता है।",
+      "english": "Life is better when you're laughing."
+    },
+    {
+      "id": 14,
+      "hindi": "कठिनाइयाँ अक्सर साधारण लोगों को एक असाधारण नियति के लिए तैयार करती हैं।",
+      "english": "Hardships often prepare ordinary people for an extraordinary destiny."
+    },
+    {
+      "id": 15,
+      "hindi": "आपने अपने सबसे बुरे दिनों में से 100% को पार कर लिया है।",
+      "english": "You've survived 100% of your worst days."
+    },
+    {
+      "id": 16,
+      "hindi": "यदि आप किसी को बिना मुस्कान के देखें, तो उन्हें अपनी मुस्कान में से एक दें।",
+      "english": "If you see someone without a smile, give them one of yours."
+    },
+    {
+      "id": 17,
+      "hindi": "जो लोग सोचते हैं कि गिलास आधा खाली है या भरा हुआ, वे असली बात को समझ नहीं पाते। गिलास को फिर से भरा जा सकता है।",
+      "english": "People who wonder whether the glass is half empty or full miss the point. The glass is refillable."
+    },
+    {
+      "id": 18,
+      "hindi": "अगर आए, तो आने दो। अगर रहे, तो रहने दो। अगर जाए, तो जाने दो।",
+      "english": "If it comes, let it come. If it stays, let it stay. If it goes, let it go."
+    },
+    {
+      "id": 19,
+      "hindi": "खुशी खोने का एक निश्चित तरीका, मैंने पाया, इसे बाकी सब कुछ की कीमत पर चाहते हैं।",
+      "english": "A sure way to lose happiness, I found, is to want it at the expense of everything else."
+    },
+    {
+      "id": 20,
+      "hindi": "आपको खुश रहने के लिए बहुत सारे लोगों की ज़रूरत नहीं है, बस कुछ वास्तविक लोग जो आपकी सराहना करते हैं कि आप कौन हैं ।",
+      "english": "You don't need too many people to be happy, just a few real ones who appreciate you for who you are."
+    },
+    {
+      "id": 21,
+      "hindi": "अतीत कितना भी कठिन क्यों न हो, आप हमेशा फिर से शुरू कर सकते हैं।",
+      "english": "No matter how hard the past, you can always begin again."
+    },
+    {
+      "id": 22,
+      "hindi": "अपने घावों को ज्ञान में बदल दें",
+      "english": "Turn your wounds into wisdom"
+    },
+    {
+      "id": 23,
+      "hindi": "खुश रहने की कुंजी यह जानना है कि आपके पास यह चुनने की शक्ति है कि क्या स्वीकार करना है और क्या जाने देना है।",
+      "english": "The key to being happy is knowing you have the power to choose what to accept and what to let go."
+    },
+    {
+      "id": 24,
+      "hindi": "सबसे अच्छा बदला यह है कि इसकी तलाश न करने के लिए पर्याप्त आत्म मूल्य हो।",
+      "english": "The best revenge is to have enough self worth not to seek it."
+    },
+    {
+      "id": 25,
+      "hindi": "खुशी स्वास्थ्य का उच्चतम रूप है।",
+      "english": "Happiness is the highest form of health."
+    },
+    {
+      "id": 26,
+      "hindi": "आपका जीवन आपका नहीं है यदि आप हमेशा परवाह करते हैं कि दूसरे आपके बारे में क्या सोचते हैं।",
+      "english": "Your life isn't yours if you always care what others think of you."
+    },
+    {
+      "id": 27,
+      "hindi": "इस पल के लिए खुश हो जाओ। यह क्षण आपका जीवन है।",
+      "english": "Be happy for this moment. This moment is your life."
+    },
+    {
+      "id": 28,
+      "hindi": "खुशी मन की एक अवस्था है। यह आपके चीजों को देखने के तरीके के अनुसार है।",
+      "english": "Happiness is a state of mind. It's just according to the way you look at things."
+    },
+    {
+      "id": 29,
+      "hindi": "असली खुशी काफी सस्ती है, फिर भी हम इसके लिए कितना महंगा भुगतान करते हैं वह नकली है।",
+      "english": "Real happiness is cheap enough, yet how dearly we pay for it is counterfeit."
+    },
+    {
+      "id": 30,
+      "hindi": "आपके पास जो कुछ भी है उसके लिए आभारी होना आपको सच्ची खुशी की ओर ले जाता है",
+      "english": "Being grateful for all that you have leads you towards true happiness"
+    },
+    {
+      "id": 31,
+      "hindi": "हंसी सबसे अच्छी दवा है। लेकिन अगर आप बिना किसी कारण के हंस रहे हैं, तो आपको दवा की जरूरत है।",
+      "english": "Laughter is the best medicine. But if you're laughing without any reason, you need medicine."
+    },
+    {
+      "id": 32,
+      "hindi": "खुशी एक दिशा है, जगह नहीं।",
+      "english": "Happiness is a direction, not a place."
+    },
+    {
+      "id": 33,
+      "hindi": "खुश रहने के लिए मौजूद हैं, प्रभावित करने के लिए नहीं।",
+      "english": "Exist to be happy, not to impress."
+    },
+    {
+      "id": 34,
+      "hindi": "जब आप अच्छे पर ध्यान केंद्रित करते हैं, तो अच्छा बेहतर हो जाता है।",
+      "english": "When you focus on the good, the good gets better."
+    },
+    {
+      "id": 35,
+      "hindi": "खुशी कोई ऐसी चीज नहीं है जो पहले से बनाई गई हो। यह आपके अपने कार्यों से आता है।",
+      "english": "Happiness is not something ready made. It comes from your own actions."
+    },
+    {
+      "id": 36,
+      "hindi": "आपके लिए सबसे अच्छा काम करने के लिए कभी भी दोषी महसूस न करें।",
+      "english": "Never feel guilty for doing what's best for you."
     }
   ]
 }
