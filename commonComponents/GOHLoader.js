@@ -11,6 +11,7 @@ const GOHLoader = () => {
       style={styles.loaderAnim}
       isMuted={true}
       isLooping={true}
+      resizeMode={ResizeMode.CONTAIN}
     />
   );
 };
