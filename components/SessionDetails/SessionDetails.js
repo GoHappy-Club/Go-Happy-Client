@@ -145,6 +145,11 @@ const SessionDetails = ({
   const isDisabled = () => {
     const title = getTitle();
     if (
+      title == "Cancel Your Booking" &&
+      event?.type?.toLowerCase() == "workshop"
+    )
+      return true;
+    if (
       title == "Seats Full" ||
       (title == "Cancel Your Booking" &&
         event.costType == "paid" &&
@@ -181,6 +186,9 @@ const SessionDetails = ({
     }
     if (event.seatsLeft == 0) {
       return "Seats Full";
+    }
+    if (event?.type?.toLowerCase() == "workshop") {
+      return `Book with Rs.${event.cost}`;
     }
     if (event.costType == "paid")
       return `Book with ${event.cost - getDiscountValue()} ${
@@ -835,7 +843,11 @@ const SessionDetails = ({
                     getTitle().startsWith("Book")
                   ) {
                     if (event?.type?.toLowerCase() == "workshop") {
-                      // paid workshop flow
+                      setState((prev) => ({
+                        ...prev,
+                        paymentSharePopUp: true,
+                      }));
+                      return;
                     }
                     if (!isBookingAllowed()) return;
                     sessionActionL();

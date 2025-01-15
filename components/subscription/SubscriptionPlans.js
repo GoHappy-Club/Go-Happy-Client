@@ -309,19 +309,20 @@ const SubscriptionPlans = ({ plans }) => {
   };
 
   const isDisabled = () => {
-    const stDate = new Date(Number(membership.membershipStartDate));
-    const enDate = new Date(Number(membership.membershipEndDate));
+    // const stDate = new Date(Number(membership.membershipStartDate));
+    // const enDate = new Date(Number(membership.membershipEndDate));
 
-    const durationOfMembership = differenceInMonths(enDate, stDate);
+    // const durationOfMembership = differenceInMonths(enDate, stDate);
 
-    if (
-      membership?.membershipType == selectedPlan?.membershipType &&
-      durationOfMembership == selectedPlan.duration
-    )
+    // if (
+    //   membership?.membershipType == selectedPlan?.membershipType &&
+    //   durationOfMembership == selectedPlan.duration
+    // )
       return true;
   };
 
   const getTitle = () => {
+    return "Coming soon";
     if (membership.membershipType == "Free") {
       return "Join now";
     }
