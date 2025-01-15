@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform
+  Platform,
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -47,13 +47,10 @@ const VoucherBottomSheet = ({
           Extrapolation.CLAMP
         ),
       }));
-  
-      const containerStyle = [
-        StyleSheet.absoluteFill,
-        containerAnimatedStyle
-      ];
-  
-      if (Platform.OS === 'ios') {
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
             <TouchableOpacity
@@ -70,13 +67,13 @@ const VoucherBottomSheet = ({
           </Animated.View>
         );
       }
-  
+
       return (
         <Animated.View
           style={[
             {
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
             containerAnimatedStyle,
           ]}
@@ -164,7 +161,16 @@ const VoucherBottomSheet = ({
                   ))}
                   {vouchers?.length < 1 && (
                     <View style={styles.loadingContainer}>
-                      <Text>Sorry, You don't have any vouchers.</Text>
+                      <Text
+                        style={{
+                          color: Colors.greyishText,
+                          fontSize: wp(4),
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        }}
+                      >
+                        Sorry, You don't have any vouchers.
+                      </Text>
                     </View>
                   )}
                 </>
@@ -217,8 +223,8 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
           {voucher.status == "ACTIVE"
             ? ""
             : voucher.status == "REDEEMED"
-            ? "REDEEMED"
-            : "EXPIRED"}
+              ? "REDEEMED"
+              : "EXPIRED"}
         </Text>
       </View>
       <View
@@ -228,8 +234,8 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
             backgroundColor: isSelected
               ? Colors.primary
               : voucher.status == "ACTIVE"
-              ? "white"
-              : Colors.bottomNavigation,
+                ? "white"
+                : Colors.bottomNavigation,
             borderColor: isSelected ? Colors.white : "#e0e0e0",
             borderWidth: isSelected ? 2 : 1,
           },

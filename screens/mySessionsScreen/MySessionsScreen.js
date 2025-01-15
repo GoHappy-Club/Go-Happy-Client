@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MySessions from "../../components/MySessions";
 import { Colors } from "../../assets/colors/color";
@@ -59,7 +59,16 @@ export default class MySessionsScreen extends Component {
   }
   render() {
     if (this.state.loading == true) {
-      return <GOHLoader />;
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      );
     }
     const navigation = this.props.navigation;
     const title = "Login";

@@ -24,6 +24,7 @@ import toUnicodeVariant from "../toUnicodeVariant.js";
 
 import { Colors } from "../../assets/colors/color.js";
 import ReferBottomSheet from "./ReferBottomSheet.js";
+import { withTranslation } from "react-i18next";
 class Refer extends Component {
   constructor(props) {
     super(props);
@@ -192,14 +193,12 @@ class Refer extends Component {
   }
   render() {
     const { referralLink } = this.state;
+    const { t } = this.props;
     return (
       <View style={{ backgroundColor: Colors.background }}>
         <ScrollView>
-          <Text style={styles.title}>Refer & Win</Text>
-          <Text style={styles.subtitle}>
-            Members who will introduce atleast seven people (50+ of age) to join
-            our GoHappy Club will get exciting gifts delivered at their homes!!
-          </Text>
+          <Text style={styles.title}>{t("refer_win")}</Text>
+          <Text style={styles.subtitle}>{t("refer_text")}</Text>
           <FastImage
             resizeMode="cover"
             style={{
@@ -225,15 +224,12 @@ class Refer extends Component {
                   fontWeight: "bold",
                 }}
               >
-                Copy
+                {t("copy")}
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.messageBox}>
-            <Text style={styles.messageText}>
-              Share with your friends via WhatsApp/Facebook personally and in
-              groups by clicking on the "Refer Now" button below.
-            </Text>
+            <Text style={styles.messageText}>{t("refer_msg")}</Text>
 
             <View
               style={{ display: "flex", flexDirection: "row", margin: "3%" }}
@@ -301,7 +297,9 @@ class Refer extends Component {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.rulesButtonText}>Rules & Regulations</Text>
+              <Text style={styles.rulesButtonText}>
+                {t("rules_regulation")}
+              </Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -316,9 +314,7 @@ class Refer extends Component {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.rulesButtonText}>
-                Click Here to See Your Referral Status
-              </Text>
+              <Text style={styles.rulesButtonText}>{t("referral_status")}</Text>
             </View>
           </TouchableOpacity>
           <FastImage
@@ -505,4 +501,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Refer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTranslation()(Refer));

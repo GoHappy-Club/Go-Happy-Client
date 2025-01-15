@@ -3,55 +3,86 @@ import React, { useEffect, useState } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 
-export const FreeTrialContent = ({ cta }) => {
+export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
   return (
     <View style={styles.container}>
-      {/* <AnimatedText /> */}
-      <View style={{
-        gap:wp(7)
-      }}>
-        <Text
-          style={{
-            fontSize: wp(10),
-            fontWeight:"bold",
-            textAlign:"center",
-            marginTop:wp(2),
-            fontFamily:"Poppings-Regular"
-          }}
-        >
-          Limited Offer
-        </Text>
-        <View style={styles.benefitsContainer}>
-          <Text style={styles.benefitsTitle}>Enjoy these benefits:</Text>
-          <View style={styles.benefitsList}>
-            <View style={styles.benefitItem}>
-              <Text style={styles.benefitIcon}>✨</Text>
-              <Text style={styles.benefitText}>Exclusive discounts</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <Text style={styles.benefitIcon}>✨</Text>
-              <Text style={styles.benefitText}>Premium features</Text>
-            </View>
-            <View style={styles.benefitItem}>
-              <Text style={styles.benefitIcon}>✨</Text>
-              <Text style={styles.benefitText}>Personal membership card</Text>
-            </View>
-            {/* <View style={styles.benefitItem}>
+      {!freeTrialActivated && (
+        <>
+          <View
+            style={{
+              gap: wp(7),
+            }}
+          >
+            <Text
+              style={{
+                fontSize: wp(10),
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: wp(2),
+                fontFamily: "Poppings-Regular",
+              }}
+            >
+              Limited Offer
+            </Text>
+            <View style={styles.benefitsContainer}>
+              <Text style={styles.benefitsTitle}>Enjoy these benefits:</Text>
+              <View style={styles.benefitsList}>
+                <View style={styles.benefitItem}>
+                  <Text style={styles.benefitIcon}>✨</Text>
+                  <Text style={styles.benefitText}>Exclusive discounts</Text>
+                </View>
+                <View style={styles.benefitItem}>
+                  <Text style={styles.benefitIcon}>✨</Text>
+                  <Text style={styles.benefitText}>Premium features</Text>
+                </View>
+                <View style={styles.benefitItem}>
+                  <Text style={styles.benefitIcon}>✨</Text>
+                  <Text style={styles.benefitText}>
+                    Personal membership card
+                  </Text>
+                </View>
+                {/* <View style={styles.benefitItem}>
               <Text style={styles.benefitIcon}>✨</Text>
               <Text style={styles.benefitText}></Text>
             </View> */}
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
 
-      <View style={styles.ctaContainer}>
-        <TouchableOpacity style={styles.ctaButton} onPress={cta}>
-          <Text style={styles.ctaButtonText}>Start Free Trial</Text>
-        </TouchableOpacity>
-        <Text style={styles.ctaDescription}>
-          No credit card needed • Cancel anytime
-        </Text>
-      </View>
+          <View style={styles.ctaContainer}>
+            <TouchableOpacity style={styles.ctaButton} onPress={cta}>
+              <Text style={styles.ctaButtonText}>Start Free Trial</Text>
+            </TouchableOpacity>
+            <Text style={styles.ctaDescription}>
+              No credit card needed • Cancel anytime
+            </Text>
+          </View>
+        </>
+      )}
+      {freeTrialActivated && (
+        <>
+          <View
+            style={{
+              gap: wp(7),
+              justifyContent: "center",
+              alignItems: "center",
+              height:"100%",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: wp(5),
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: wp(2),
+                fontFamily: "Poppings-Regular",
+              }}
+            >
+              Welcome to GoHappy Club. You have activated your free trial.
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -88,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    justifyContent:"space-between"
+    justifyContent: "space-between",
   },
   animatedTextContainer: {
     marginTop: hp(4),

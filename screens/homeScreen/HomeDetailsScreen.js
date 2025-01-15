@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import PushNotification from "react-native-push-notification";
 import Video from "react-native-video";
-import { Linking, StyleSheet } from "react-native";
+import { Linking, StyleSheet, View } from "react-native";
 import SessionDetails from "../../components/SessionDetails/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from "../../services/events/EventService";
@@ -10,6 +10,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import GOHLoader from "../../commonComponents/GOHLoader";
 import { getDiscountValue } from "../../helpers/transactions";
+import { Colors } from "../../assets/colors/color";
 
 class HomeDetailsScreen extends Component {
   constructor(props) {
@@ -191,7 +192,16 @@ class HomeDetailsScreen extends Component {
 
   render() {
     if (this.state.loader == true) {
-      return <GOHLoader />;
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      );
     }
     const navigation = this.props.navigation;
     return (

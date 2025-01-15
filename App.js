@@ -1,3 +1,4 @@
+import "./i18n.js";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
@@ -70,9 +71,9 @@ import NewAdditionalDetails from "./components/AdditionalDetails/NewAdditionalDe
 import Quotes from "./components/Quotes/Quotes.js";
 import PushNotification from "react-native-push-notification";
 import Reels from "./components/Reels/Reels.js";
-import "./i18n.js";
 import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
+import BackButton from "./commonComponents/BackButton.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -640,13 +641,7 @@ export default function App() {
                       headerBackTitle: "back",
                       // headerBackground: Colors.background,
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("GoHappy Club")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       // headerShadowVisible: true,
                     })}
@@ -662,13 +657,7 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("GoHappy Club")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -697,13 +686,11 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("MyProfile")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          navigateTo={"MyProfile"}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -719,13 +706,11 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("MyProfile")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          navigateTo={"MyProfile"}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -741,13 +726,11 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("OverviewScreen")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          navigateTo={"OverviewScreen"}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -762,13 +745,11 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("Trips")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          navigateTo={"Trips"}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -799,29 +780,7 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        // <TouchableOpacity
-                        //   style={styles.newBackButton}
-                        //   onPress={() =>
-                        //     navigation.canGoBack()
-                        //       ? navigation.goBack()
-                        //       : navigation.navigate("GoHappy Club")
-                        //   }
-                        // >
-                        //   <ChevronLeft size={wp(10)} color={Colors.black} />
-                        //   <Text style={styles.newBackText}>Back</Text>
-                        // </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() =>
-                            navigation.canGoBack()
-                              ? navigation.goBack()
-                              : navigation.navigate("GoHappy Club")
-                          }
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                       animation: "fade_from_bottom",
@@ -833,15 +792,9 @@ export default function App() {
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
-                      headerBackTitle: "back",
+                      // headerBackTitle: "back",
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.navigate("GoHappy Club")}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -856,13 +809,11 @@ export default function App() {
                         backgroundColor: Colors.grey.f0,
                       },
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -893,13 +844,11 @@ export default function App() {
                         backgroundColor: Colors.background,
                       },
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -912,13 +861,11 @@ export default function App() {
                       headerBackTitle: "back",
                       headerTransparent: true,
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -931,13 +878,11 @@ export default function App() {
                       headerBackTitle: "back",
                       headerTransparent: true,
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -1035,13 +980,11 @@ export default function App() {
                         backgroundColor: Colors.background,
                       },
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                       animation: "ios_from_right",
@@ -1057,13 +1000,11 @@ export default function App() {
                         backgroundColor: Colors.background,
                       },
                       headerLeft: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <Text style={styles.backText}>back</Text>
-                        </TouchableOpacity>
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
                       ),
                       headerShadowVisible: false,
                       animation: "ios_from_right",
@@ -1075,7 +1016,21 @@ export default function App() {
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
       ) : (
-        <GOHLoader />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: Colors.background,
+            }}
+          >
+            <GOHLoader />
+          </View>
+        </View>
       )}
       {isConnected == false && <ErrorScreen recheck={recheck} />}
       <Toast />

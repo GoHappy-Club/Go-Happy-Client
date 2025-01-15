@@ -107,7 +107,7 @@ class OverviewScreen extends Component {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log(`Error in getOverviewData OverviewScreen ${error}`)
+      crashlytics().log(`Error in getOverviewData OverviewScreen ${error}`);
       // throw new Error("Error getting order ID");
     }
   }
@@ -173,9 +173,6 @@ class OverviewScreen extends Component {
               <Feed videos={this.state.videos} />
               <PromotionSection navigation={this.props.navigation} />
             </ScrollView>
-            {this.props.profile.age == null || this.props.profile.age >= 50 ? (
-              <WhatsAppFAB />
-            ) : null}
           </View>
         </>
       );
@@ -183,7 +180,14 @@ class OverviewScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
         // </ScrollView>
       );
     }

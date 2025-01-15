@@ -24,8 +24,13 @@ import { FreeTrialContent } from "./BottomSheetContents";
 
 const { width, height } = Dimensions.get("window");
 
-
-const BottomSheet = ({ modalRef, closeModal, type,cta }) => {
+const BottomSheet = ({
+  modalRef,
+  closeModal,
+  type,
+  cta,
+  freeTrialActivated,
+}) => {
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
       const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -36,13 +41,10 @@ const BottomSheet = ({ modalRef, closeModal, type,cta }) => {
           Extrapolation.CLAMP
         ),
       }));
-  
-      const containerStyle = [
-        StyleSheet.absoluteFill,
-        containerAnimatedStyle
-      ];
-  
-      if (Platform.OS === 'ios') {
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
             <TouchableOpacity
@@ -59,13 +61,13 @@ const BottomSheet = ({ modalRef, closeModal, type,cta }) => {
           </Animated.View>
         );
       }
-  
+
       return (
         <Animated.View
           style={[
             {
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
             containerAnimatedStyle,
           ]}
@@ -98,8 +100,10 @@ const BottomSheet = ({ modalRef, closeModal, type,cta }) => {
         }
       }}
     >
-      <BottomSheetView style={{ flex: 1, justifyContent: "space-between" }}>
-        {type == "FreeTrial" && <FreeTrialContent cta={cta} />}
+      <BottomSheetView style={{ flex: 1, justifyContent: "center" }}>
+        {type == "FreeTrial" && (
+          <FreeTrialContent cta={cta} freeTrialActivated={freeTrialActivated} />
+        )}
       </BottomSheetView>
     </BottomSheetModal>
   );

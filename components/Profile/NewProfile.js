@@ -65,7 +65,7 @@ const NewProfile = () => {
     whatsappLink: "",
     showBackdrop: false,
   });
-  
+
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
@@ -157,7 +157,7 @@ const NewProfile = () => {
       (now.getTime() - Number(dateOfJoining)) / (1000 * 3600 * 24)
     );
 
-    const dayString = isNaN(days) || days <= 1 ? "day" : "days";
+    const dayString = isNaN(days) || days <= 1 ? t("day") : t("days");
     return `${days} ${dayString}`;
   };
 
@@ -319,7 +319,7 @@ const NewProfile = () => {
               }}
               onPress={() => navigation.goBack()}
             >
-              <Text>back</Text>
+              <Text>{t("back")}</Text>
             </TouchableOpacity>
             {(profile.age == null || profile.age >= 50) && (
               <Pressable
@@ -561,19 +561,19 @@ const NewProfile = () => {
               </View>
             </TouchableOpacity>
             {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && ( */}
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={() => navigation.navigate("MembershipDetails")}
-              >
-                <FontAwesomeIcon
-                  icon={faCrown}
-                  size={24}
-                  color={Colors.primaryText}
-                />
-                <View style={styles.textContainer}>
-                  <Text style={styles.title}>Membership Status</Text>
-                </View>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("MembershipDetails")}
+            >
+              <FontAwesomeIcon
+                icon={faCrown}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("membership_status")}</Text>
+              </View>
+            </TouchableOpacity>
             {/* )} */}
 
             <TouchableOpacity

@@ -81,7 +81,6 @@ class MySessions extends Component {
           <Text
             h3
             style={{
-              marginTop: "20%",
               alignSelf: "center",
               textAlign: "center",
               justifyContent: "center",
@@ -247,7 +246,7 @@ class MySessions extends Component {
       >
         {this.props.ongoingEvents.length == 0 &&
           this.props.upcomingEvents.length == 0 &&
-          this.props.expiredEvents.length == 0 &&
+          this.props.expiredEvents.length != 0 &&
           this.sorry()}
 
         {this.props.expiredEvents.length > 0 && (

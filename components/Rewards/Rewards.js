@@ -46,7 +46,6 @@ export const formatDate = (date) => {
   return finalTime;
 };
 
-
 const Vouchers = ({ vouchers, navigation }) => (
   <View
     style={{
@@ -189,7 +188,14 @@ const Rewards = ({ rewards, vouchers, loading }) => {
                 styles={styles}
               />
             ) : (
-              <GOHLoader />
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: Colors.background,
+                }}
+              >
+                <GOHLoader />
+              </View>
             )}
           </TabView.Item>
           <TabView.Item style={{ width: "100%", height: "100%" }}>

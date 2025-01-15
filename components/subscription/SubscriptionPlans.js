@@ -36,7 +36,7 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const colorMapping = {
   Silver: {
-    gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
+    gradient: ["#A9A9A9", "#C0C0C0", "#808080"],
     borderColor: "#C0C0C0",
     textColor: "black",
   },
@@ -318,7 +318,7 @@ const SubscriptionPlans = ({ plans }) => {
     //   membership?.membershipType == selectedPlan?.membershipType &&
     //   durationOfMembership == selectedPlan.duration
     // )
-      return true;
+    return true;
   };
 
   const getTitle = () => {
@@ -558,13 +558,16 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={[
                   styles.footerButtonText,
                   {
-                    color: isDisabled() ? Colors.black : Colors.white,
+                    color: isDisabled() ? Colors.grey.countdown : Colors.white,
                   },
                 ]}
               >
                 {getTitle()}
               </Text>
-              <MoveRight size={24} color={Colors.black} />
+              <MoveRight
+                size={24}
+                color={isDisabled() ? Colors.grey.countdown : Colors.black}
+              />
             </View>
           </Pressable>
         </View>

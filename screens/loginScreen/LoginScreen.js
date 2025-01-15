@@ -324,9 +324,7 @@ class LoginScreen extends Component {
         },
       });
       if (response.data.includes("success")) {
-        this._backendSignIn(
-          this.state.phoneNumber
-        );
+        this._backendSignIn(this.state.phoneNumber);
       } else {
         this.setState({ loadingVerifyButton: false, showAlert: true });
       }
@@ -721,7 +719,16 @@ class LoginScreen extends Component {
   }
   render() {
     if (this.state.loader == true) {
-      return <GOHLoader />;
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      );
     }
     return (
       <SafeAreaView style={styles.container}>

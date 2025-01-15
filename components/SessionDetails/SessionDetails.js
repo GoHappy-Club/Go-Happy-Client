@@ -35,6 +35,9 @@ import { Colors } from "../../assets/colors/color.js";
 import { hp, wp } from "../../helpers/common.js";
 import { storeCompletedSession } from "../../services/Startup.js";
 import VoucherBottomSheet from "../Rewards/VoucherBottomSheet.js";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import phonepe_payments from "../PhonePe/Payments.js";
+import tambola from "tambola";
 
 const SessionDetails = ({
   route,
@@ -73,6 +76,9 @@ const SessionDetails = ({
     vouchers: [],
     voucherLoading: false,
     selectedVoucher: null,
+    payButtonLoading: false,
+    shareButtonLoading: false,
+    paymentSharePopUp: false,
   });
 
   const modalRef = useRef();
@@ -94,6 +100,88 @@ const SessionDetails = ({
   const retrieveData = async () => {
     const name = await AsyncStorage.getItem("name");
     setState((prevState) => ({ ...prevState, name }));
+  };
+
+  const phonePeWrapper = async (type, item) => {
+    const _callback = (id) => {
+      setState((prev) => ({ ...prev, success: true, loadingButton: false }));
+
+      if (id === "") {
+        route.params.onGoBack();
+        navigation.navigate("GoHappy Club");
+      } else {
+        sessionActionL();
+        setState((prev) => ({
+          ...prev,
+          showPaymentAlert: true,
+          clickPopup: false,
+          payButtonLoading: false,
+          paymentSharePopUp: false,
+        }));
+      }
+    };
+    const _errorHandler = () => {
+      setState((prev) => ({
+        ...prev,
+        paymentAlertMessage: phonepe_payments.PaymentError(),
+        paymentAlertTitle: "Oops!",
+        clickPopup: false,
+        payButtonLoading: false,
+        showPaymentAlert: true,
+        paymentSharePopUp: false,
+      }));
+    };
+    if (type == "share") {
+      setState((prev) => ({ ...prev, shareButtonLoading: true }));
+      const tambolaTicket = tambola.generateTicket();
+      phonepe_payments
+        .phonePeShare(
+          profile.phoneNumber,
+          item.cost,
+          _errorHandler,
+          "workshop",
+          item.id,
+          tambolaTicket
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(
+  state.name,
+  "italic"
+)} is requesting a payment of ₹${toUnicodeVariant(
+            String(item.cost),
+            "bold"
+          )} for ${toUnicodeVariant(item.eventName, "bold")}.
+Please make the payment using the link below:
+${link}
+${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              setState((prev) => ({
+                ...prev,
+                shareButtonLoading: false,
+                clickPopup: false,
+                showPaymentAlert: false,
+                paymentSharePopUp: false,
+              }));
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      setState((prev) => ({ ...prev, payButtonLoading: true }));
+      phonepe_payments.phonePe(
+        profile.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler,
+        "workshop"
+      );
+    }
   };
 
   const extractMeetingNumber = (url) => {
@@ -231,12 +319,6 @@ const SessionDetails = ({
       .catch((errorMsg) => {
         console.log("error in sharing", errorMsg);
       });
-  };
-  const checkTambola = () => {
-    if (event.eventName.toLowerCase().contains("tambola")) {
-      return true;
-    }
-    return false;
   };
   const sessionActionL = async () => {
     crashlytics().log(
@@ -881,6 +963,52 @@ const SessionDetails = ({
             }}
           />
         </Modal>
+      )}
+      {state.paymentSharePopUp && (
+        <AwesomeAlert
+          show={state.paymentSharePopUp}
+          showProgress={false}
+          closeOnTouchOutside={
+            state.payButtonLoading || state.shareButtonLoading ? false : true
+          }
+          customView={
+            <View style={styles.AAcontainer}>
+              <Text style={styles.AAtitle}>Payment Confirmation</Text>
+              <Text style={styles.AAmessage}>
+                Would you like to pay this yourself or share the payment link
+                with a family member?
+              </Text>
+              <View style={styles.AAbuttonContainer}>
+                <Button
+                  outline
+                  title={"Pay Now"}
+                  loading={state.payButtonLoading}
+                  buttonStyle={[styles.AApayButton, styles.AAbutton]}
+                  onPress={() => {
+                    phonePeWrapper("self", item);
+                  }}
+                  disabled={state.payButtonLoading}
+                  loadingStyle={{
+                    color: Colors.black,
+                  }}
+                />
+                <Button
+                  outline
+                  title={"Share"}
+                  loading={state.shareButtonLoading}
+                  buttonStyle={[styles.AAshareButton, styles.AAbutton]}
+                  onPress={() => {
+                    phonePeWrapper("share", item);
+                  }}
+                  disabled={state.shareButtonLoading}
+                />
+              </View>
+            </View>
+          }
+          onDismiss={() => {
+            setState((prev) => ({ ...prev, paymentSharePopUp: false }));
+          }}
+        />
       )}
       {state.showAlert && (
         <AwesomeAlert

@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import LottieView from "lottie-react-native";
+import LottieView from 'lottie-react-native';
 
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
