@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   SafeAreaView,
+  Alert,
 } from "react-native";
 //import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -87,6 +88,8 @@ class LoginScreen extends Component {
         }
         this.setState({ referralCode: url.url.split("=")[1] });
       });
+
+      RNOtpVerify.getHash().then((hash)=>Alert.alert("Hash is",hash[0]))
 
     RNOtpVerify.getOtp()
       .then((p) => {
