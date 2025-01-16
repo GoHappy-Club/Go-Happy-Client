@@ -41,8 +41,7 @@ const RNRedux = () => {
       Alert.alert("result checkupdate", result);
       console.log("result in checkForUpdate:", result);
     } catch (e) {
-      Alert.alert("error checkupdate", e);
-      console.log("error in checkforupdate:", e);
+      console.log("error in checkforupdate:", e?.message);
     }
   }
   useEffect(() => {
