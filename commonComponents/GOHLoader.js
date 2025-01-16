@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     opacity: 1,
-    // width:wp(100),
-    // height:hp(100)
+    height:hp(100),
+    width:wp(100)
   },
 });

@@ -1,5 +1,5 @@
 import "./i18n.js";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Linking,
@@ -10,7 +10,6 @@ import {
   Platform,
   PermissionsAndroid,
   useWindowDimensions,
-  Image,
 } from "react-native";
 import * as Updates from "expo-updates";
 
@@ -21,19 +20,16 @@ import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
   createNavigationContainerRef,
   NavigationContainer,
-  usePreventRemoveContext,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen/LoginScreen";
 import BottomNavigator from "./components/navigators/BottomNavigator";
 import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
-import AdditionalDetails from "./components/AdditionalDetails/AdditionalDetails";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
-// import PushNotification from "react-native-push-notification";
 import DeviceInfo from "react-native-device-info";
 import firebase from "@react-native-firebase/app";
 import { useSelector, useDispatch } from "react-redux";
@@ -323,7 +319,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    console.log("constants from expo", Constants.systemFonts);
     recheck();
     checkForUpdates();
     // checkVersion();
@@ -516,11 +511,6 @@ export default function App() {
       crashlytics().log(`Error in checkVersionHelper : ${error}`);
       // throw new Error("Error getting order ID");
     }
-  };
-
-  const checkVersion = async () => {
-    var needUpdate = await checkVersionHelper();
-    setUpdateRequired(needUpdate);
   };
 
   const linking = {
