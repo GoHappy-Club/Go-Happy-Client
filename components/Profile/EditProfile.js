@@ -11,9 +11,7 @@ import { SafeAreaView } from "react-native";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Camera,
-} from "lucide-react-native";
+import { Camera } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImagePicker from "react-native-image-crop-picker";
@@ -22,7 +20,7 @@ import { TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
 import { useTranslation } from "react-i18next";
@@ -67,7 +65,7 @@ const EditProfile = () => {
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const handleSelectImage = async () => {
     try {
@@ -137,7 +135,7 @@ const EditProfile = () => {
         emergencyContact: state.emergencyContact,
         city: state.city,
         dob: state.dob,
-        age:state.age
+        age: state.age,
       });
       dispatch(
         setProfile({
@@ -147,7 +145,7 @@ const EditProfile = () => {
           name: state.name,
           city: state.city,
           dob: state.dob,
-          age:state.age
+          age: state.age,
         })
       );
       AsyncStorage.setItem("email", state.email);
@@ -235,13 +233,19 @@ const EditProfile = () => {
         </Pressable>
         {updated && (
           <LottieView
-            source={require("../../assets/lottie/correct.lottie")}
+            source={require("../../assets/lottie/correct.json")}
             autoPlay
             style={{
               width: wp(50),
-              height: hp(50)
+              height: hp(50),
+              zIndex: 1000,
+              position: "absolute",
+              padding: wp(25),
+              left: wp(25),
+              top: hp(25),
             }}
             speed={0.5}
+            loop
           />
         )}
         <StatusBar barStyle="dark-content" />

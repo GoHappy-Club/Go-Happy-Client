@@ -71,7 +71,6 @@ class LoginScreen extends Component {
       otpSent: false,
     };
     this.getCurrentUserInfo();
-    console.log("here");
   }
   componentDidMount() {
     dynamicLinks().onLink((url) => {
@@ -88,8 +87,6 @@ class LoginScreen extends Component {
         }
         this.setState({ referralCode: url.url.split("=")[1] });
       });
-
-      RNOtpVerify.getHash().then((hash)=>Alert.alert("Hash is",hash[0]))
 
     RNOtpVerify.getOtp()
       .then((p) => {

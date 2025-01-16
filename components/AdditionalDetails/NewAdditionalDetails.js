@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
@@ -76,9 +76,8 @@ const NewAdditionalDetails = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-
   const [initialCheckDone, setInitialCheckDone] = useState(false);
-  
+
   const pending = () => {
     if (
       state.phoneNumber == null ||
@@ -91,16 +90,12 @@ const NewAdditionalDetails = ({ route }) => {
     return false;
   };
 
-  useEffect(() => {
-    if (!initialCheckDone) {
-      if (!pending() && route.params?.isNewUser !== true) {
-        navigation.replace("GoHappy Club");
-      }
-      setInitialCheckDone(true);
+  useLayoutEffect(() => {
+    if (!pending() && route.params?.isNewUser !== true) {
+      navigation.replace("GoHappy Club");
     }
-  }, [initialCheckDone]);
-
-
+    setInitialCheckDone(true);
+  }, []);
 
   const handleSelectImage = async () => {
     try {
@@ -241,6 +236,10 @@ const NewAdditionalDetails = ({ route }) => {
       crashlytics().log(`Error in updateUser NewAdditionalDetails ${error}`);
     }
   };
+
+  if (!initialCheckDone) {
+    return null;
+  }
 
   return (
     <>
