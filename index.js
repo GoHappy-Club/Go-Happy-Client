@@ -26,7 +26,10 @@ import { generateZoomSignature } from "./helpers/generateZoomSignature";
 import ErrorBoundary from "react-native-error-boundary";
 import crashlytics from "@react-native-firebase/crashlytics";
 import Fallback from "./commonComponents/Fallback";
-import {startUpdateFlow, UpdateFlow} from '@gurukumparan/react-native-android-inapp-updates';
+import {
+  startUpdateFlow,
+  UpdateFlow,
+} from "@gurukumparan/react-native-android-inapp-updates";
 
 const errorHandler = (error, stackTrace) => {
   crashlytics().log(
@@ -38,7 +41,6 @@ const RNRedux = () => {
   async function checkForUpdate() {
     try {
       const result = await startUpdateFlow(UpdateFlow.FLEXIBLE);
-      Alert.alert("result checkupdate", result);
       console.log("result in checkForUpdate:", result);
     } catch (e) {
       console.log("error in checkforupdate:", e?.message);

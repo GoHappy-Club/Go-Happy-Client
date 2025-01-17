@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
+import LottieView from "lottie-react-native";
 
 export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
   return (
@@ -61,12 +62,48 @@ export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
       )}
       {freeTrialActivated && (
         <>
+          <LottieView
+            source={require("../../assets/lottie/free_trial.json")}
+            autoPlay
+            style={{
+              width: wp(100),
+              height: hp(50),
+              zIndex: 1000,
+              position: "absolute",
+              left:25
+            }}
+            loop
+          />
+          <LottieView
+            source={require("../../assets/lottie/free_trial.json")}
+            autoPlay
+            style={{
+              width: wp(100),
+              height: hp(50),
+              zIndex: 1000,
+              position: "absolute",
+              right:50
+            }}
+            loop
+          />
+          <LottieView
+            source={require("../../assets/lottie/free_trial.json")}
+            autoPlay
+            style={{
+              width: wp(100),
+              height: hp(50),
+              zIndex: 1000,
+              position: "absolute",
+              right:25
+            }}
+            loop
+          />
           <View
             style={{
               gap: wp(7),
               justifyContent: "center",
               alignItems: "center",
-              height:"100%",
+              height: "100%",
             }}
           >
             <Text

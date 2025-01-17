@@ -223,7 +223,7 @@ const NewAdditionalDetails = ({ route }) => {
       AsyncStorage.setItem("age", state.age);
       setState((prevState) => ({ ...prevState, loading: false }));
       AsyncStorage.setItem("showTour", "true");
-      navigation.navigate("GoHappy Club");
+      navigation.replace("GoHappy Club");
       await analytics().logEvent("signup_click", {
         phoneNumber: response.data.phone,
         email: response.data.email,

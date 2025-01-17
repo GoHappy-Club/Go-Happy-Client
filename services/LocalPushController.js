@@ -71,29 +71,15 @@ export const scheduleWaterReminders = () => {
 
       hours.forEach((hour) => {
         const notificationTime = getNextTimeForHour(hour);
-
-        const isDuplicate = notifications.some((n) => {
-          const scheduledDate = new Date(n.date);
-          return (
-            scheduledDate.getHours() === notificationTime.getHours() &&
-            scheduledDate.getMinutes() === notificationTime.getMinutes()
-          );
-        });
-
-        if (!isDuplicate) {
           PushNotification.localNotificationSchedule({
             autoCancel: true,
             date: notificationTime,
             title: "Time to Hydrate!",
             message: "Drink a glass of water to stay healthy and hydrated.",
             channelId: "Water Reminders",
-            vibrate: true,
             vibration: 400,
-            playSound: true,
-            soundName: "default",
           });
           console.log(`Water reminder scheduled for ${notificationTime}`);
-        }
       });
     }
   });
@@ -124,29 +110,15 @@ export const scheduleMedicineReminders = () => {
 
       medicineTimes.forEach(({ hours, minutes }) => {
         const notificationTime = getNextMedicineTimeForHour(hours, minutes);
-
-        const isDuplicate = notifications.some((n) => {
-          const scheduledDate = new Date(n.date);
-          return (
-            scheduledDate.getHours() === notificationTime.getHours() &&
-            scheduledDate.getMinutes() === notificationTime.getMinutes()
-          );
-        });
-
-        if (!isDuplicate) {
           PushNotification.localNotificationSchedule({
             autoCancel: true,
             date: notificationTime,
             channelId: "Medicine Reminders",
             title: "Medicine Reminder",
             message: "Time to take your medicine.",
-            vibrate: true,
             vibration: 400,
-            playSound: true,
-            soundName: "default",
           });
           console.log(`Medicine reminder scheduled for ${notificationTime}`);
-        }
       });
     }
   });

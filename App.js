@@ -12,9 +12,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import * as Updates from "expo-updates";
-
-import Constants from "expo-constants";
-
 import FastImage from "react-native-fast-image";
 import { setProfile, setMembership } from "./redux/actions/counts.js";
 import {
@@ -119,8 +116,8 @@ PushNotification.configure({
 PushNotification.createChannel(
   {
     channelId: "Quote",
-    channelName: "My channel",
-    channelDescription: "A channel to categorise your notifications",
+    channelName: "Quote channel",
+    channelDescription: "Categorise Quote notifications",
     playSound: true,
     soundName: "default",
     importance: 4,
@@ -131,8 +128,8 @@ PushNotification.createChannel(
 PushNotification.createChannel(
   {
     channelId: "Water Reminders",
-    channelName: "My channel",
-    channelDescription: "A channel to categorise your notifications",
+    channelName: "Water Reminders Channel",
+    channelDescription: "Categorise Water reminder notifications",
     playSound: true,
     soundName: "default",
     importance: 4,
@@ -143,8 +140,8 @@ PushNotification.createChannel(
 PushNotification.createChannel(
   {
     channelId: "Medicine Reminders",
-    channelName: "My channel",
-    channelDescription: "A channel to categorise your notifications",
+    channelName: "Medicine Reminders Channel",
+    channelDescription: "Categorise medicine reminder notifications",
     playSound: true,
     soundName: "default",
     importance: 4,

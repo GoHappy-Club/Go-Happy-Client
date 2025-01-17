@@ -92,7 +92,7 @@ const Header = () => {
     getRandomQuote();
     scheduleWaterReminders();
     scheduleMedicineReminders();
-  });
+  }, []);
 
   useEffect(() => {
     const getFestival = async () => {
@@ -336,8 +336,9 @@ const Header = () => {
           setFreeTrialActivated(true);
           const timeout = setTimeout(() => {
             closeGeneralModal();
+            setFreeTrialActivated(false);
             clearTimeout(timeout);
-          }, 2000);
+          }, 4200);
         }}
       />
       <SessionRatingSheet
