@@ -5,13 +5,15 @@ import { Image, SafeAreaView, ScrollView, View } from "react-native";
 import { Text } from "react-native-elements";
 import { hp, wp } from "../helpers/common";
 import { Colors } from "../assets/colors/color";
+import { useTranslation, withTranslation } from "react-i18next";
 
-export default class About extends Component {
+class About extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
+    const { t } = this.props;
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView
@@ -48,7 +50,7 @@ export default class About extends Component {
                   fontWeight: "bold",
                 }}
               >
-                About Us
+                {t("about_us")}
               </Text>
               <FastImage
                 source={require("../images/about.jpeg")}
@@ -67,8 +69,7 @@ export default class About extends Component {
                 width: wp(90),
               }}
             >
-              GoHappy Club is an initiative with a vision to make the happiest
-              community of senior citizens.
+              {t("about_us_text")}
             </Text>
             <Text
               style={{
@@ -77,9 +78,7 @@ export default class About extends Component {
                 marginVertical: 5,
               }}
             >
-              Our mission is to make senior citizens productive and engaged in
-              their second innings of the lives. We empower them through Live
-              Sessions in three different categories:
+              {t("about_mission")}
             </Text>
             <View
               style={{
@@ -97,8 +96,8 @@ export default class About extends Component {
                   width: wp(90),
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>1. Fun:</Text> Tambola,
-                Antakshari, Quizzes
+                <Text style={{ fontWeight: "bold" }}>1. {t("fun")}:</Text>{" "}
+                {t("fun_text")}
               </Text>
               <Text
                 style={{
@@ -109,8 +108,8 @@ export default class About extends Component {
                   width: wp(90),
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>2. Learning:</Text> Mobile
-                Learning, Singing, Health, Art & Craft.
+                <Text style={{ fontWeight: "bold" }}>2. {t("learning")}:</Text>{" "}
+                {t("learning_text")}
               </Text>
               <Text
                 style={{
@@ -120,9 +119,8 @@ export default class About extends Component {
                   paddingRight: "5%",
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>3. Fitness:</Text> Diet,
-                Yoga, Dance, Mental Health and many more to help them find joy
-                and happiness in this modern & technological era.
+                <Text style={{ fontWeight: "bold" }}>3. {t("fitness")}:</Text>{" "}
+                {t("fitness_text")}
               </Text>
             </View>
             <View
@@ -144,7 +142,7 @@ export default class About extends Component {
                   color: Colors.pink.aboutText,
                 }}
               >
-                India Ka Sabse Khush Parivar
+                {t("khush_parivar")}
               </Text>
             </View>
           </View>
@@ -153,3 +151,5 @@ export default class About extends Component {
     );
   }
 }
+
+export default withTranslation()(About);

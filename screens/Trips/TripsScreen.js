@@ -47,7 +47,7 @@ class TripsScreen extends Component {
         });
       }
     } catch (error) {
-      crashlytics().log(`Error in getPastTripsData ${error}`)
+      crashlytics().log(`Error in getPastTripsData ${error}`);
       this.error = true;
       // throw new Error("Error getting order ID");
     }
@@ -64,7 +64,7 @@ class TripsScreen extends Component {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log(`Error in getUpcomingTripsData ${error}`)
+      crashlytics().log(`Error in getUpcomingTripsData ${error}`);
       // throw new Error("Error getting order ID");
     }
   }
@@ -139,7 +139,14 @@ class TripsScreen extends Component {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
         // </ScrollView>
       );
     }

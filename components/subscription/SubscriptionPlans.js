@@ -36,7 +36,7 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
 const colorMapping = {
   Silver: {
-    gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
+    gradient: ["#A9A9A9", "#C0C0C0", "#808080"],
     borderColor: "#C0C0C0",
     textColor: "black",
   },
@@ -309,19 +309,20 @@ const SubscriptionPlans = ({ plans }) => {
   };
 
   const isDisabled = () => {
-    const stDate = new Date(Number(membership.membershipStartDate));
-    const enDate = new Date(Number(membership.membershipEndDate));
+    // const stDate = new Date(Number(membership.membershipStartDate));
+    // const enDate = new Date(Number(membership.membershipEndDate));
 
-    const durationOfMembership = differenceInMonths(enDate, stDate);
+    // const durationOfMembership = differenceInMonths(enDate, stDate);
 
-    if (
-      membership?.membershipType == selectedPlan?.membershipType &&
-      durationOfMembership == selectedPlan.duration
-    )
-      return true;
+    // if (
+    //   membership?.membershipType == selectedPlan?.membershipType &&
+    //   durationOfMembership == selectedPlan.duration
+    // )
+    return true;
   };
 
   const getTitle = () => {
+    return "Coming soon";
     if (membership.membershipType == "Free") {
       return "Join now";
     }
@@ -557,13 +558,16 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={[
                   styles.footerButtonText,
                   {
-                    color: isDisabled() ? Colors.black : Colors.white,
+                    color: isDisabled() ? Colors.grey.countdown : Colors.white,
                   },
                 ]}
               >
                 {getTitle()}
               </Text>
-              <MoveRight size={24} color={Colors.black} />
+              <MoveRight
+                size={24}
+                color={isDisabled() ? Colors.grey.countdown : Colors.black}
+              />
             </View>
           </Pressable>
         </View>

@@ -3066,6 +3066,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gurukumparan/react-native-android-inapp-updates@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@gurukumparan/react-native-android-inapp-updates@npm:2.0.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/2f307dc7eacd405c2e8b7100ea35467d3f2e1652384636093d560307b77008928e6c147c7e04e2edeeea5a2c35d8cc6046065d3e56e9e6cfa34307c2d52320e5
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -5246,6 +5256,7 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": "npm:6.7.2"
     "@fortawesome/react-native-fontawesome": "npm:0.3.2"
     "@gorhom/bottom-sheet": "npm:^4.6.1"
+    "@gurukumparan/react-native-android-inapp-updates": "npm:^2.0.2"
     "@react-native-async-storage/async-storage": "npm:^2.1.0"
     "@react-native-clipboard/clipboard": "npm:^1.15.0"
     "@react-native-community/blur": "npm:^4.4.1"
@@ -5286,7 +5297,7 @@ __metadata:
     jsrsasign: "npm:^11.1.0"
     lodash: "npm:^4.17.21"
     lodash.debounce: "npm:^4.0.8"
-    lottie-react-native: "npm:^7.1.0"
+    lottie-react-native: "npm:6.7.0"
     lucide-react-native: "npm:^0.469.0"
     prettier: "npm:3.4.2"
     react: "npm:18.3.1"
@@ -10857,20 +10868,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-react-native@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "lottie-react-native@npm:7.1.0"
+"lottie-react-native@npm:6.7.0":
+  version: 6.7.0
+  resolution: "lottie-react-native@npm:6.7.0"
   peerDependencies:
-    "@lottiefiles/dotlottie-react": ^0.6.5
+    "@dotlottie/react-player": ^1.6.1
+    "@lottiefiles/react-lottie-player": ^3.5.3
     react: "*"
     react-native: ">=0.46"
     react-native-windows: ">=0.63.x"
   peerDependenciesMeta:
-    "@lottiefiles/dotlottie-react":
+    "@dotlottie/react-player":
+      optional: true
+    "@lottiefiles/react-lottie-player":
       optional: true
     react-native-windows:
       optional: true
-  checksum: 10c0/0e224d5ebaaa71fe4313cfa0ac3fab25e0779b0fcbb58dd490821e73426dcd59af1a990a6b52b25e6d9dc18e1a129279bfdc44809112bc21c6b3c59ad443097d
+  checksum: 10c0/a1df65252eb349414550a405b4fbb09e567404c123e98668701fcc325b38157e3f31a84c0563b1a4426417080b2ce5b901b1032910a3db695db96ffaf41030d6
   languageName: node
   linkType: hard
 

@@ -24,7 +24,9 @@ const WalletScreen = () => {
         setTransactions(response.data);
         setLoading(false);
       } catch (error) {
-        crashlytics().log(`Error in getRecentTransactions WalletScreen ${error}`)
+        crashlytics().log(
+          `Error in getRecentTransactions WalletScreen ${error}`
+        );
         setLoading(false);
         console.log("Error in getting transaction ==>", error);
       }
@@ -40,7 +42,16 @@ const WalletScreen = () => {
         alignItems: "center",
       }}
     >
-      {loading && <GOHLoader />}
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      )}
       {!loading && <Wallet transactions={transactions} />}
     </SafeAreaView>
   );

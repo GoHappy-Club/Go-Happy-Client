@@ -9,7 +9,6 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import LottieView from "lottie-react-native";
 import { hp, wp } from "../../helpers/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "react-native-linear-gradient";
@@ -80,15 +79,20 @@ const Quotes = () => {
           options={{ format: "png", quality: 0.9 }}
           style={styles.quoteContainer}
         >
-          {showUserData && (
-            <View style={styles.userInfo}>
-              <Image
-                source={{ uri: profile.profileImage }}
-                style={styles.userPhoto}
-              />
-              <Text style={styles.userName}>{profile.name}</Text>
-            </View>
-          )}
+          <View
+            style={[
+              styles.userInfo,
+              {
+                // display: showUserData ? "flex" : "none",
+              },
+            ]}
+          >
+            <Image
+              source={{ uri: profile.profileImage }}
+              style={[styles.userPhoto]}
+            />
+            <Text style={styles.userName}>{profile.name}</Text>
+          </View>
           <Animated.View
             style={[
               {
@@ -243,7 +247,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "90%",
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#4A125991",
     borderRadius: 20,
     padding: wp(8),
     shadowColor: "#000",
@@ -298,10 +302,12 @@ const styles = StyleSheet.create({
     color: Colors.black,
   },
   userInfo: {
-    position: "absolute",
-    top: 25,
-    left: 25,
+    // position: "absolute",
+    // top: 25,
+    // left: 25,
+    width:"100%",
     flexDirection: "row",
+    justifyContent:"flex-start",
     alignItems: "center",
   },
   userPhoto: {

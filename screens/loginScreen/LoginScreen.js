@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   SafeAreaView,
+  Alert,
 } from "react-native";
 //import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -87,6 +88,8 @@ class LoginScreen extends Component {
         }
         this.setState({ referralCode: url.url.split("=")[1] });
       });
+
+      RNOtpVerify.getHash().then((hash)=>Alert.alert("Hash is",hash[0]))
 
     RNOtpVerify.getOtp()
       .then((p) => {
@@ -324,9 +327,7 @@ class LoginScreen extends Component {
         },
       });
       if (response.data.includes("success")) {
-        this._backendSignIn(
-          this.state.phoneNumber
-        );
+        this._backendSignIn(this.state.phoneNumber);
       } else {
         this.setState({ loadingVerifyButton: false, showAlert: true });
       }
@@ -721,7 +722,16 @@ class LoginScreen extends Component {
   }
   render() {
     if (this.state.loader == true) {
-      return <GOHLoader />;
+      return (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      );
     }
     return (
       <SafeAreaView style={styles.container}>

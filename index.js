@@ -3,6 +3,7 @@
  */
 
 import {
+  Alert,
   AppRegistry,
   StatusBar,
   Text,
@@ -22,10 +23,10 @@ import { Colors } from "./assets/colors/color";
 import firebase from "@react-native-firebase/app";
 // import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
 import { generateZoomSignature } from "./helpers/generateZoomSignature";
-// const my_store = store();
 import ErrorBoundary from "react-native-error-boundary";
 import crashlytics from "@react-native-firebase/crashlytics";
 import Fallback from "./commonComponents/Fallback";
+import {startUpdateFlow, UpdateFlow} from '@gurukumparan/react-native-android-inapp-updates';
 
 const errorHandler = (error, stackTrace) => {
   crashlytics().log(
@@ -34,6 +35,18 @@ const errorHandler = (error, stackTrace) => {
 };
 
 const RNRedux = () => {
+  async function checkForUpdate() {
+    try {
+      const result = await startUpdateFlow(UpdateFlow.FLEXIBLE);
+      Alert.alert("result checkupdate", result);
+      console.log("result in checkForUpdate:", result);
+    } catch (e) {
+      console.log("error in checkforupdate:", e?.message);
+    }
+  }
+  useEffect(() => {
+    checkForUpdate();
+  }, []);
   return (
     <ErrorBoundary onError={errorHandler} FallbackComponent={Fallback}>
       <CopilotProvider

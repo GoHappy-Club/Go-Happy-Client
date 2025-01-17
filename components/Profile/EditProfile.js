@@ -1,14 +1,9 @@
 import {
-  Image,
-  KeyboardAvoidingView,
-  Linking,
   Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useState } from "react";
@@ -17,11 +12,7 @@ import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Award,
-  Calendar,
   Camera,
-  CircleHelp,
-  Clock,
 } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,11 +22,10 @@ import { TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
-import AutocompleteCityInput from "../Autocomplete";
-import Toast from "react-native-simple-toast";
-import LottieView from "lottie-react-native";
+import LottieView from 'lottie-react-native';
 import AwesomeAlert from "react-native-awesome-alerts";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -77,6 +67,7 @@ const EditProfile = () => {
   const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   const handleSelectImage = async () => {
     try {
@@ -237,7 +228,7 @@ const EditProfile = () => {
                 setState((prev) => ({ ...prev, dob: finalDate, age: age }));
                 setOpen(false);
               }}
-              maxDate={dayjs().subtract(49, "years")}
+              maxDate={dayjs().subtract(50, "years")}
               selectedItemColor={Colors.primary}
             />
           </View>
@@ -248,12 +239,7 @@ const EditProfile = () => {
             autoPlay
             style={{
               width: wp(50),
-              height: hp(50),
-              zIndex: 1000,
-              position: "absolute",
-              padding: wp(25),
-              left: wp(25),
-              top: hp(25),
+              height: hp(50)
             }}
             speed={0.5}
           />
@@ -285,7 +271,7 @@ const EditProfile = () => {
             }}
             onPress={() => navigation.goBack()}
           >
-            <Text>back</Text>
+            <Text>{t("back")}</Text>
           </TouchableOpacity>
         </View>
         <ScrollView

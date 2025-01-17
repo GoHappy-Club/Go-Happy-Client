@@ -54,6 +54,7 @@ const Header = () => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [freeTrialActivated, setFreeTrialActivated] = useState(false);
 
   const modalRef = useRef();
   const ratingModalRef = useRef();
@@ -328,10 +329,15 @@ const Header = () => {
         closeModal={() => closeGeneralModal()}
         modalRef={modalRef}
         type={modalType}
+        freeTrialActivated={freeTrialActivated}
         cta={async () => {
           const membership = await activateFreeTrial(profile);
           updateUser({ ...membership, freeTrialActive: true });
-          closeGeneralModal();
+          setFreeTrialActivated(true);
+          const timeout = setTimeout(() => {
+            closeGeneralModal();
+            clearTimeout(timeout);
+          }, 2000);
         }}
       />
       <SessionRatingSheet

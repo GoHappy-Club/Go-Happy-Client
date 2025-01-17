@@ -48,15 +48,6 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
     }
   });
 };
-const getNext9AM = () => {
-  const now = new Date();
-  const next9AM = new Date();
-  next9AM.setHours(9, 0, 0, 0);
-  if (now > next9AM) {
-    next9AM.setDate(next9AM.getDate() + 1);
-  }
-  return next9AM;
-};
 
 const getNextTimeForHour = (hour) => {
   const now = new Date();
@@ -81,9 +72,13 @@ export const scheduleWaterReminders = () => {
       hours.forEach((hour) => {
         const notificationTime = getNextTimeForHour(hour);
 
-        const isDuplicate = notifications.some(
-          (n) => new Date(n.date).getTime() === notificationTime.getTime()
-        );
+        const isDuplicate = notifications.some((n) => {
+          const scheduledDate = new Date(n.date);
+          return (
+            scheduledDate.getHours() === notificationTime.getHours() &&
+            scheduledDate.getMinutes() === notificationTime.getMinutes()
+          );
+        });
 
         if (!isDuplicate) {
           PushNotification.localNotificationSchedule({
@@ -130,9 +125,13 @@ export const scheduleMedicineReminders = () => {
       medicineTimes.forEach(({ hours, minutes }) => {
         const notificationTime = getNextMedicineTimeForHour(hours, minutes);
 
-        const isDuplicate = notifications.some(
-          (n) => new Date(n.date).getTime() === notificationTime.getTime()
-        );
+        const isDuplicate = notifications.some((n) => {
+          const scheduledDate = new Date(n.date);
+          return (
+            scheduledDate.getHours() === notificationTime.getHours() &&
+            scheduledDate.getMinutes() === notificationTime.getMinutes()
+          );
+        });
 
         if (!isDuplicate) {
           PushNotification.localNotificationSchedule({

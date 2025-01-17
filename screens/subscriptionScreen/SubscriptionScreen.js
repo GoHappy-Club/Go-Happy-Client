@@ -31,7 +31,7 @@ const SubscriptionScreen = () => {
       setPlans(plansToShow);
       setLoading(false);
     } catch (error) {
-      crashlytics().log(`Error in getPlans SubscriptionScreen ${error}`)
+      crashlytics().log(`Error in getPlans SubscriptionScreen ${error}`);
       setLoading(false);
       console.log("Error in fetching plans", error);
     }
@@ -48,7 +48,16 @@ const SubscriptionScreen = () => {
         backgroundColor: Colors.background,
       }}
     >
-      {loading && <GOHLoader />}
+      {loading && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
+      )}
       {!loading && <SubscriptionPlans plans={plans} />}
     </SafeAreaView>
   );

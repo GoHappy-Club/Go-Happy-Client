@@ -106,6 +106,10 @@ const HomeDashboard = ({
 
   const joinMeeting = async (item) => {
     try {
+      if(__DEV__){
+        Linking.openURL(item?.meetingLink);
+        return;
+      }
       await zoom.joinMeeting({
         userName: profile.name + String(profile.phoneNumber),
         meetingNumber: extractMeetingNumber(item?.meetingLink),
@@ -113,7 +117,6 @@ const HomeDashboard = ({
       });
     } catch (e) {
       console.log("Error in join", e);
-      Alert.alert("Error in join", "" + e);
     }
   };
 
@@ -146,7 +149,6 @@ const HomeDashboard = ({
     const tempDate = getTime(parsedSelect);
     parsedSelect.setHours(23, 59, 0, 0);
     const midnightDate = getTime(parsedSelect);
-    console.log(tempDate, midnightDate);
 
     setState((prevState) => ({
       ...prevState,

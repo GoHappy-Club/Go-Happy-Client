@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { wp } from "../../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 

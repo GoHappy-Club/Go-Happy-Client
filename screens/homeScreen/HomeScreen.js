@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
+import { View } from "react-native";
+import { Colors } from "../../assets/colors/color.js";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -79,30 +81,37 @@ class HomeScreen extends Component {
             registerStep={this.props.registerStep}
             copilotEvents={this.props.copilotEvents}
           />
-          {this.props.profile.age == null || this.props.profile.age > 50 ? (
-            <WhatsAppFAB />
-          ) : null}
         </>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <GOHLoader />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
         // </ScrollView>
       );
     }
   }
-  loadEvents(selectedDate,midnightDate) {
+  loadEvents(selectedDate, midnightDate) {
     this.setState({ childLoader: true });
     this.setState({ events: [] });
     var url = SERVER_URL + "/event/getEventsByDate";
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
+    if(midnightDate == undefined || midnightDate ==null){
+      midnightDate = new Date().setHours(23,59,0,0);
+    }
 
     axios
-      .post(url, { date: selectedDate,midnightDate })
+      .post(url, { date: selectedDate, midnightDate })
       .then((response) => {
         if (response.data) {
           for (var i = 0; i < response.data.events.length; i++) {
@@ -124,7 +133,7 @@ class HomeScreen extends Component {
       });
   }
 
-  bookEvent(item, phoneNumber, selectedDate,playSound) {
+  bookEvent(item, phoneNumber, selectedDate, playSound) {
     let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
     if (phoneNumber == "" || phoneNumber == undefined) {
       phoneNumber = this.state.phoneNumber;

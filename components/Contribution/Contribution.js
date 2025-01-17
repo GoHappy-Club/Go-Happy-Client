@@ -25,6 +25,7 @@ import tambola from "tambola";
 import { Colors } from "../../assets/colors/color.js";
 import PhonePePaymentSDK from "react-native-phonepe-pg";
 import { getPayload } from "../../services/PhonePe/PaymentServices.js";
+import { withTranslation } from "react-i18next";
 
 class Contribution extends Component {
   constructor(props) {
@@ -214,6 +215,7 @@ The Link will Expire in 20 Minutes.`;
     // Do something with the selected amount
   }
   render() {
+    const { t } = this.props;
     if (this.state.loader == true) {
       // return (<ActivityIndicator size='large' color="#0A1045" style={{flex: 1,justifyContent: "center",flexDirection: "row",justifyContent: "space-around",padding: 10}}/>);
       return (
@@ -223,8 +225,6 @@ The Link will Expire in 20 Minutes.`;
         />
       );
     }
-    const navigation = this.props.navigation;
-    const title = "Login";
     return (
       <View
         style={{
@@ -243,7 +243,7 @@ The Link will Expire in 20 Minutes.`;
           }}
         >
           <Text h3 style={{ fontWeight: "bold", marginTop: "10%" }}>
-            Contribute & Support Us
+            {t("contribute_support")}
           </Text>
           <View style={{ flex: 1, flexDirection: "row", marginTop: "5%" }}>
             <FastImage
@@ -258,7 +258,7 @@ The Link will Expire in 20 Minutes.`;
                 fontSize: 16,
               }}
             >
-              Secured Payments
+              {t("secured_payments")}
             </Text>
           </View>
 
@@ -325,7 +325,7 @@ The Link will Expire in 20 Minutes.`;
                 width: Dimensions.get("window").width * 0.9,
               }}
             >
-              Yeh Shagun GoHappy Family ke Naam
+              {t("shagun")}
             </Text>
             <Text
               style={{
@@ -340,20 +340,20 @@ The Link will Expire in 20 Minutes.`;
                 lineHeight: 22,
               }}
             >
-              <Text style={{ fontWeight: "bold" }}>Why contribute?</Text>
+              <Text style={{ fontWeight: "bold" }}>{t("why_contribute")}</Text>
               <Text>
                 {"\n"}
-                It will help us make your life more vibrant and make you Go more
-                Happy, as contributions from GoHappy Club members is the only
-                source of revenue to fund experts, interns & infrastructure.{" "}
+                {t("contribution_text")}
               </Text>
               {/* <Text style={{fontWeight:'bold'}}>{'\n'}How? </Text> */}
               {/* <Text>{'\n'}By funding experts, interns & infrastructure and let your contagious smile reach more  senior citizens. </Text> */}
               <Text style={{ fontWeight: "bold" }}>
-                {"\n"}How much to contribute?
+                {"\n"}
+                {t("how_much_contribute")}
               </Text>
               <Text>
-                {"\n"}Financial support of any size help fund our mission.
+                {"\n"}
+                {t("how_much_contribute_text")}
               </Text>
               {/* <Text style={{ fontWeight: "bold" }}>
                 {"\n"}Compulsary to contribute?
@@ -381,7 +381,7 @@ The Link will Expire in 20 Minutes.`;
               }}
             >
               <View>
-                <Text style={styles.optionList}>Click To Pay</Text>
+                <Text style={styles.optionList}>{t("click_to_pay")}</Text>
               </View>
             </TouchableOpacity>
             {this.state.clickPopup && (
@@ -615,4 +615,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Contribution);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTranslation()(Contribution));
