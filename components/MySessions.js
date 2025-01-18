@@ -20,6 +20,7 @@ import { format, fromUnixTime } from "date-fns";
 import { Colors } from "../assets/colors/color";
 import { connect } from "react-redux";
 import { hp, wp } from "../helpers/common";
+import FastImage from "react-native-fast-image";
 
 class MySessions extends Component {
   constructor(props) {
@@ -199,14 +200,15 @@ class MySessions extends Component {
               }}
             >
               <View style={{ flex: 1, flexDirection: "row" }}>
-                <Avatar.Image
+                <FastImage
                   source={
                     // {
                     require("../images/profile_image.jpeg")
                     // uri: this.state.profileImage
                     // }
                   }
-                  size={30}
+                  style={{ width: 30, height: 30, borderRadius: 20 }}
+                  resizeMode="cover"
                 />
                 <Title
                   style={{

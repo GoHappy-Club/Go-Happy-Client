@@ -20,6 +20,7 @@ import { MaterialIndicator } from "react-native-indicators";
 import { debounce } from "lodash";
 import { Avatar, Title } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FastImage from "react-native-fast-image";
 
 const { width, height } = Dimensions.get("window");
 
@@ -52,7 +53,7 @@ const Item = ({ item, onPress }) => {
             alignItems: "center",
           }}
         >
-          <Avatar.Image
+          <FastImage
             source={
               item.expertImage
                 ? {
@@ -60,7 +61,8 @@ const Item = ({ item, onPress }) => {
                   }
                 : require("../../images/profile_image.jpeg")
             }
-            size={30}
+            style={{ width: 30, height: 30, borderRadius: 20 }}
+            resizeMode="cover"
           />
           <Title style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}>
             {trimContent(item.expertName, 17)}
@@ -165,7 +167,7 @@ const SearchBar = () => {
     } catch (error) {
       console.log(error);
       setError(true);
-      crashlytics().log(`Error in searching events ${error}`)
+      crashlytics().log(`Error in searching events ${error}`);
     } finally {
       setLoading(false);
     }

@@ -38,6 +38,7 @@ import VoucherBottomSheet from "../Rewards/VoucherBottomSheet.js";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import phonepe_payments from "../PhonePe/Payments.js";
 import tambola from "tambola";
+import FastImage from "react-native-fast-image";
 
 const SessionDetails = ({
   route,
@@ -748,7 +749,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             }}
           >
             <View style={{ flex: 1, flexDirection: "row" }}>
-              <Avatar.Image
+              <FastImage
                 source={
                   item.expertImage
                     ? {
@@ -756,7 +757,8 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                       }
                     : require("../../images/profile_image.jpeg")
                 }
-                size={30}
+                style={{ width: 30, height: 30, borderRadius: 20 }}
+                resizeMode="cover"
               />
               <Title
                 style={{
