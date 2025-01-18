@@ -4,27 +4,22 @@
     "appVersionSource": "local"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
+    "dev": {
       "distribution": "internal",
-      "channel": "development"
-    },
-    "preview": {
-      "distribution": "internal",
-      "channel": "preview",
+      "channel": "dev",
       "env": {
         "ANDROID_SDK_ROOT": "/Users/rakshitsharma/Library/Android/sdk"
       }
     },
-    "production": {
+    "main": {
       "android": {
         "buildType": "app-bundle"
       },
       "ios": {},
-      "channel": "production"
+      "channel": "main"
     }
   },
   "submit": {
-    "production": {}
+    "main": {}
   }
 }
