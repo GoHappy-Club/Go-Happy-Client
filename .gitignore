@@ -35,6 +35,7 @@ local.properties
 *.keystore
 !debug.keystore
 
+config/tokens.js
 # node.js
 #
 node_modules/
