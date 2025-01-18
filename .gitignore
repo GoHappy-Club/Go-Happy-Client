@@ -28,12 +28,11 @@ go-happy-322816-a15863421b69.json
 build/
 .idea
 .gradle
-local.properties
+
 *.iml
 *.hprof
 .cxx/
-*.keystore
-!debug.keystore
+
 
 config/tokens.js
 # node.js
