@@ -34,7 +34,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
 import axiosOg from "axios";
-import { PASSWORD, USER_ID } from "../../config/tokens.js";
+import { GS_PASSWORD, GS_USER_ID } from "../../config/tokens.js";
 
 const GUPSHUP_BASE_URL = "https://enterprise.smsgupshup.com/GatewayAPI/rest";
 class LoginScreen extends Component {
@@ -240,8 +240,8 @@ class LoginScreen extends Component {
           "Regards,\nGoHappy Club Team";
         const response = await axiosOg.get(GUPSHUP_BASE_URL, {
           params: {
-            userid: USER_ID,
-            password: PASSWORD,
+            userid: GS_USER_ID,
+            password: GS_PASSWORD,
             method: "TWO_FACTOR_AUTH",
             v: "1.1",
             phone_no: this.state.phoneNumber,
@@ -315,8 +315,8 @@ class LoginScreen extends Component {
     try {
       const response = await axiosOg.get(GUPSHUP_BASE_URL, {
         params: {
-          userid: USER_ID,
-          password: PASSWORD,
+          userid: GS_USER_ID,
+          password: GS_PASSWORD,
           method: "TWO_FACTOR_AUTH",
           v: "1.1",
           phone_no: this.state.phoneNumber,
