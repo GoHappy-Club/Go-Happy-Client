@@ -1,13 +1,5 @@
 import React, { Component } from "react";
 import {
-  Card,
-  CardAction,
-  CardButton,
-  CardContent,
-  CardImage,
-  CardTitle,
-} from "react-native-cards";
-import {
   Dimensions,
   Image,
   KeyboardAvoidingView,

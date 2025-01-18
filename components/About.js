@@ -1,101 +1,155 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, View } from "react-native";
 
-import { Text } from 'react-native-elements';
+import { Text } from "react-native-elements";
+import { hp, wp } from "../helpers/common";
+import { Colors } from "../assets/colors/color";
+import { useTranslation, withTranslation } from "react-i18next";
 
-export default class About extends Component {
+class About extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
+    const { t } = this.props;
     return (
-      <View
-        style={{
-          backgroundColor: 'white',
-          flex: 1,
-          alignItems: 'center',
-        }}
-      >
-        <View style={{ marginTop: '10%' }}>
-          <Text
-            style={{
-              fontSize: 30,
-              textAlign: 'center',
-              marginBottom: '8%',
-              fontWeight: 'bold',
-            }}
-          >
-            About Us
-          </Text>
-          <Text style={{ fontSize: 18, paddingLeft: '5%', paddingRight: '5%' }}>
-            GoHappy Club is an initiative with a vision to make the happiest
-            community of senior citizens.
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              paddingTop: '5%',
-              paddingLeft: '5%',
-              paddingRight: '5%',
-            }}
-          >
-            Our mission is to make senior citizens productive and engaged in
-            their second innings of the lives. We empower them through Live
-            Sessions in three different categories:
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              paddingLeft: '5%',
-              paddingRight: '5%',
-              marginBottom: 5,
-              marginTop: 5,
-            }}
-          >
-            <Text style={{ fontWeight: 'bold' }}>1. Fun:</Text> Tambola,
-            Antakshari, Quizzes
-          </Text>
-          <Text
-            style={{
-              fontSize: 18,
-              paddingLeft: '5%',
-              paddingRight: '5%',
-              marginBottom: 5,
-            }}
-          >
-            <Text style={{ fontWeight: 'bold' }}>2. Learning:</Text> Mobile
-            Learning, Singing, Health, Art & Craft.
-          </Text>
-          <Text style={{ fontSize: 18, paddingLeft: '5%', paddingRight: '5%' }}>
-            <Text style={{ fontWeight: 'bold' }}>3. Fitness:</Text> Diet, Yoga,
-            Dance, Mental Health and many more to help them find joy and
-            happiness in this modern & technological era.
-          </Text>
-
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
+        <ScrollView
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          style={{
+            flex: 1,
+          }}
+        >
           <View
             style={{
-              justifyContent: 'center', //Centered horizontally
-              alignItems: 'center', //Centered vertically
-              flex: 1,
+              // marginTop: "3%",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text
+            <View
               style={{
-                fontSize: 24,
-                paddingLeft: '5%',
-                paddingRight: '5%',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                alignSelf: 'center',
+                width: wp(100),
+                borderRadius: 10,
+                padding: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: wp(3),
               }}
             >
-              India Ka Sabse Khush Parivar
+              <Text
+                style={{
+                  fontSize: 30,
+                  textAlign: "center",
+                  marginBottom: "8%",
+                  fontWeight: "bold",
+                }}
+              >
+                {t("about_us")}
+              </Text>
+              <FastImage
+                source={require("../images/about.jpeg")}
+                style={{
+                  width: wp(95),
+                  height: 300,
+                }}
+                resizeMode="contain"
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: wp(5),
+                fontWeight: "bold",
+                color: Colors.pink.aboutText,
+                width: wp(90),
+              }}
+            >
+              {t("about_us_text")}
             </Text>
+            <Text
+              style={{
+                fontSize: wp(4),
+                width: wp(90),
+                marginVertical: 5,
+              }}
+            >
+              {t("about_mission")}
+            </Text>
+            <View
+              style={{
+                justifyContent: "center",
+                width: wp(100),
+                paddingLeft: wp(5),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingLeft: "5%",
+                  paddingRight: "5%",
+                  marginBottom: 5,
+                  width: wp(90),
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>1. {t("fun")}:</Text>{" "}
+                {t("fun_text")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingLeft: "5%",
+                  paddingRight: "5%",
+                  marginBottom: 5,
+                  width: wp(90),
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>2. {t("learning")}:</Text>{" "}
+                {t("learning_text")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  paddingLeft: "5%",
+                  width: wp(90),
+                  paddingRight: "5%",
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>3. {t("fitness")}:</Text>{" "}
+                {t("fitness_text")}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center", //Centered horizontally
+                alignItems: "center", //Centered vertically
+                flex: 1,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Montserrat-Light",
+                  fontSize: 24,
+                  paddingLeft: "5%",
+                  paddingRight: "5%",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  alignSelf: "center",
+                  color: Colors.pink.aboutText,
+                }}
+              >
+                {t("khush_parivar")}
+              </Text>
+            </View>
           </View>
-        </View>
-      </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
+
+export default withTranslation()(About);

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">GoHappy Club</string>
+  <string name="app_name">GoHappy Club</string>
+  <string name="expo_runtime_version">1.0.1</string>
 </resources>

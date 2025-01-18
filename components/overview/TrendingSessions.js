@@ -16,6 +16,7 @@ import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
 import { format, fromUnixTime } from "date-fns";
 import { Colors } from "../../assets/colors/color.js";
+import { withTranslation } from "react-i18next";
 
 const data = [
   {
@@ -94,19 +95,23 @@ class TrendingSessions extends Component {
       }
     >
       <View style={styles.container}>
-        <Image source={{ uri: item.value.coverImage }} style={styles.image} />
+        <FastImage
+          source={{ uri: item.value.coverImage }}
+          style={styles.image}
+        />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
             {this.trimContent(item.value.eventName, 13)}
           </Text>
           <Text style={styles.subText}>
-            {this.loadDate(item.value.eventDate)}
+            {this.loadDate(item.value.startTime)}
           </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
   render() {
+    const {t} = this.props;
     return (
       <>
         {this.props.trendingSessions == null && (
@@ -127,7 +132,7 @@ class TrendingSessions extends Component {
             <View style={styles.mainContainer}>
               <View style={styles.headingContainer}>
                 <View style={styles.line} />
-                <Text style={styles.headingText}>Trending Sessions</Text>
+                <Text style={styles.headingText}>{t("trending_sessions")}</Text>
                 <View style={styles.line} />
               </View>
               <View style={styles.scrollContainer}>
@@ -212,4 +217,4 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(TrendingSessions);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(TrendingSessions));

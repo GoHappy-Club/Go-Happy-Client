@@ -14,6 +14,7 @@ import { Colors } from "../../assets/colors/color";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
+import { withTranslation } from "react-i18next";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
@@ -27,13 +28,17 @@ class PromotionSection extends Component {
   }
 
   render() {
+    const { t } = this.props;
     const data = [
       {
         id: 1,
         title: "Refer Banner",
         image:
           "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
-        to: this.props.profile.age ==null || this.props.profile.age >= 50 ? "Refer" : "OverviewScreen",
+        to:
+          this.props.profile.age == null || this.props.profile.age >= 50
+            ? "Refer"
+            : "OverviewScreen",
         text: "Invite friends to join and benefit! Click here to refer and earn rewards.",
       },
       {
@@ -50,7 +55,7 @@ class PromotionSection extends Component {
       <View style={styles.mainContainer}>
         <View style={styles.headingContainer}>
           <View style={styles.line} />
-          <Text style={styles.headingText}>Help Us Grow</Text>
+          <Text style={styles.headingText}>{t("help_us_grow")}</Text>
           <View style={styles.line} />
         </View>
         <View style={styles.cardsContainer}>
@@ -58,7 +63,7 @@ class PromotionSection extends Component {
             return (
               <CopilotStep
                 name={item.title}
-                order={index + 5}
+                order={index + 8}
                 text={item.text}
                 key={index}
               >
@@ -69,7 +74,7 @@ class PromotionSection extends Component {
                   }}
                 >
                   {/* <View style={styles.card}> */}
-                  <Image
+                  <FastImage
                     source={{ uri: item.image }}
                     resizeMode="contain"
                     style={styles.image}
@@ -128,6 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },
@@ -141,4 +147,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(PromotionSection);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTranslation()(PromotionSection));

@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  StyleSheet,
+  Pressable,
+  Animated,
+} from "react-native";
 import debounce from "lodash.debounce";
-import { OLA_API_KEY } from "@env";
+import { hp, wp } from "../helpers/common";
 
 const uuidv4 = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -11,16 +19,22 @@ const uuidv4 = () => {
   });
 };
 
-const AutocompleteCityInput = ({ input, setInput }) => {
+const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, setSelectedFromDropdown }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [correlationId] = useState(uuidv4());
+  const [isSelected, setIsSelected] = useState(false);
+  const [dropdownHeight] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    setIsSelected(true);
+  }, []);
 
   const fetchSuggestions = useCallback(
     async (text) => {
       try {
         const requestId = uuidv4();
         const response = await fetch(
-          `https://api.olamaps.io/places/v1/autocomplete?input=${text}&api_key=${OLA_API_KEY}`,
+          `https://api.olamaps.io/places/v1/autocomplete?input=${text}&api_key=98HE0vBmKMbRFO9jhasJqFd1rEWZfiFIUjqe09mN`,
           {
             headers: {
               "X-Request-Id": requestId,
@@ -39,13 +53,22 @@ const AutocompleteCityInput = ({ input, setInput }) => {
                 )
             )
           );
+          if (text && !cities.includes(text.toLowerCase())) {
+            cities.push(`${text.toLowerCase()}...`);
+          }
           setSuggestions(cities);
+
+          Animated.timing(dropdownHeight, {
+            toValue: Math.min(cities.length * 40, 160),
+            duration: 200,
+            useNativeDriver: false,
+          }).start();
         }
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       }
     },
-    [correlationId]
+    [correlationId, dropdownHeight]
   );
 
   const debouncedFetchSuggestions = useCallback(
@@ -54,76 +77,119 @@ const AutocompleteCityInput = ({ input, setInput }) => {
   );
 
   useEffect(() => {
-    if (input?.length > 2) {
+    if (input?.length > 1 && !isSelected) {
       debouncedFetchSuggestions(input);
     } else {
       setSuggestions([]);
+      Animated.timing(dropdownHeight, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
     }
     return () => {
       debouncedFetchSuggestions.cancel();
     };
-  }, [input, debouncedFetchSuggestions]);
+  }, [input, debouncedFetchSuggestions, isSelected]);
 
   const handleInputChange = (text) => {
     setInput(text);
+    setIsSelected(false);
+    setSelectedFromDropdown(false);
+  };
+
+  const handleSelection = (item) => {
+    setInput((item.charAt(0).toUpperCase() + item.slice(1)).replace("...", ""));
+    setIsSelected(true);
+    setSelectedFromDropdown(true);
+    setSuggestions([]);
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter city name"
-        value={input}
-        onChangeText={handleInputChange}
-      />
-      <FlatList
-        data={suggestions}
-        renderItem={({ item }) => (
-          <Text
-            style={styles.suggestion}
-            onPress={() => {
-              setInput(item);
-              setSuggestions([]);
-            }}
-          >
-            {item}
-          </Text>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputWrapper}>
+        <Animated.View
+          style={[
+            styles.suggestionsContainer,
+            { height: dropdownHeight },
+          ]}
+        >
+          <FlatList
+            data={suggestions}
+            renderItem={({ item }) => (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.suggestion,
+                  { backgroundColor: pressed ? "#E8E8E8" : "#FFF5E9" },
+                ]}
+                onPress={() => handleSelection(item)}
+              >
+                <Text style={styles.suggestionText}>{item}</Text>
+              </Pressable>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={true}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+          />
+        </Animated.View>
+        <TextInput
+          style={styles.input}
+          value={input}
+          onChangeText={handleInputChange}
+          placeholder={"Enter your city here"}
+          placeholderTextColor="#666"
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fffaf1",
+    marginBottom: 20,
+    width: wp(90),
+  },
+  label: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 4,
+  },
+  inputWrapper: {
+    position: "relative",
   },
   input: {
-    fontSize: 18,
-    color: "black",
-    marginTop: "5%",
-    alignSelf: "center",
-    backgroundColor: "white",
-    paddingLeft: 15,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
-    width: "70%",
+    fontSize: wp(5.5),
+    fontFamily: "Montserrat-Regular",
+    borderBottomWidth: 2,
+    borderBottomColor: "#ccc",
+    paddingVertical: 8,
+    color: "#000",
+  },
+  suggestionsContainer: {
+    position: "absolute",
+    bottom: "100%",
+    left: 0,
+    right: 0,
+    backgroundColor: "#FFF5E9",
+    borderColor: "#DDD",
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    overflow: "hidden",
+    zIndex: 1,
   },
   suggestion: {
-    fontSize: 18,
-    color: "black",
-    alignSelf: "center",
-    backgroundColor: "white",
-    paddingLeft: 15,
-    borderColor: "black",
-    borderWidth: 1,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    width: "70%",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+  },
+  suggestionText: {
+    fontSize: 16,
+    color: "#000",
   },
 });
 
 export default AutocompleteCityInput;
+

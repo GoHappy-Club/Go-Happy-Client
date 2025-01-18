@@ -17,8 +17,7 @@ const WhatsAppFAB = () => {
 
   useEffect(() => {
     handlePress();
-  }, [])
-  
+  }, []);
 
   const handlePress = async () => {
     var url = SERVER_URL + "/properties/list";
@@ -40,6 +39,7 @@ const WhatsAppFAB = () => {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log("Error in getting properties list",error);
     }
   };
 
@@ -47,15 +47,15 @@ const WhatsAppFAB = () => {
     <View style={styles.container}>
       <CopilotStep
         name="whatsapp"
-        order={7}
+        order={10}
         text="Click here to join our WhatsApp Group."
       >
         <Walkthroughable>
-          <TouchableOpacity onPress={()=>Linking.openURL(link)}>
+          <TouchableOpacity onPress={() => Linking.openURL(link)}>
             <FAB
               style={styles.fab}
               icon={() => (
-                <Image
+                <FastImage
                   source={require("../images/whatsapp.png")}
                   style={styles.logo}
                 />

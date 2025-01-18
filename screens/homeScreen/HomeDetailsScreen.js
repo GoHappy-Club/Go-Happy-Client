@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import PushNotification from "react-native-push-notification";
+// import PushNotification from "react-native-push-notification";
 import Video from "react-native-video";
-import { Linking, StyleSheet } from "react-native";
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
-import SessionDetails from "../../components/SessionDetails";
+import { Linking, StyleSheet, View } from "react-native";
+import SessionDetails from "../../components/SessionDetails/SessionDetails";
 import tambola from "tambola";
 import { getEvent } from "../../services/events/EventService";
+import { setMembership, setProfile } from "../../redux/actions/counts";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import GOHLoader from "../../commonComponents/GOHLoader";
+import { getDiscountValue } from "../../helpers/transactions";
+import { Colors } from "../../assets/colors/color";
 
-export default class HomeDetailsScreen extends Component {
+class HomeDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
       event: null,
       loader: true,
+      resulatantCost: 0,
     };
     this._retrieveData();
     if (this.props.route.params.deepId) {
@@ -44,9 +50,13 @@ export default class HomeDetailsScreen extends Component {
   getEventDetails(id) {
     // this.setState({event:null})
     this.state.loader = true;
-    getEvent(id)
+    getEvent(id, this.state.phoneNumber)
       .then((response) => {
-        this.setState({ event: response.data.event, loader: false });
+        this.setState({
+          event: response.data.event,
+          loader: false,
+          resulatantCost: response.data.event.cost,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -54,7 +64,7 @@ export default class HomeDetailsScreen extends Component {
       });
   }
 
-  sessionAction(par, _callback) {
+  sessionAction(par, voucher = null) {
     var type = this.props.route.params.type;
     var phoneNumber = this.state.phoneNumber;
     if (type == null) {
@@ -100,6 +110,16 @@ export default class HomeDetailsScreen extends Component {
         })
         .then((response) => {
           if (response.data) {
+            //refund coins to user's membership
+            let { membership, actions } = this.props;
+            if (
+              (membership?.freeTrialActive != null ||
+                membership?.freeTrialActive != undefined) &&
+              membership.freeTrialActive != true
+            ) {
+              membership.coins = membership.coins + this.state.event.cost;
+              actions.setMembership({ ...membership });
+            }
             if (this.props.route.params.onGoBack) {
               this.props.route.params.onGoBack();
               return;
@@ -123,15 +143,34 @@ export default class HomeDetailsScreen extends Component {
       var url = SERVER_URL + "/event/bookEvent";
       var id = this.state.event.id;
       axios
-        .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
+        .post(url, {
+          id: id,
+          phoneNumber: phoneNumber,
+          tambolaTicket: ticket,
+          voucherId: voucher?.voucherId,
+        })
         .then((response) => {
-          if (response.data) {           
+          if (response.data) {
             if (response.data == "SUCCESS") {
+              console.log(voucher);
+
+              // deduct coins from user's membership data in redux
+              let { membership, actions } = this.props;
+              if (
+                (membership?.freeTrialActive != null ||
+                  membership?.freeTrialActive != undefined) &&
+                membership.freeTrialActive != true
+              ) {
+                membership.coins =
+                  membership.coins -
+                  (this.state.event.cost -
+                    getDiscountValue(voucher, this.state.event));
+                actions.setMembership({ ...membership });
+              }
               if (this.props.route.params.onGoBack) {
                 this.props.route.params.onGoBack();
                 return;
               }
-              
               if (this.props.navigation.canGoBack()) {
                 this.props.navigation.goBack();
                 return;
@@ -139,10 +178,6 @@ export default class HomeDetailsScreen extends Component {
                 this.props.navigation.replace("GoHappy Club");
                 return;
               }
-              // _callback();
-              return response.data;
-
-              // item.seatsLeft = item.seatsLeft - 1
             }
           }
         })
@@ -158,24 +193,14 @@ export default class HomeDetailsScreen extends Component {
   render() {
     if (this.state.loader == true) {
       return (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
+        <View
           style={{
-            position: "absolute",
-            top: 0,
             flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
+            backgroundColor: Colors.background,
           }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        >
+          <GOHLoader />
+        </View>
       );
     }
     const navigation = this.props.navigation;
@@ -191,6 +216,7 @@ export default class HomeDetailsScreen extends Component {
           alreadyBookedSameDayEvent={
             this.props.route.params.alreadyBookedSameDayEvent
           }
+          setResultantCost={(cost) => this.setState({ resulatantCost: cost })}
         />
       )
     );
@@ -198,3 +224,15 @@ export default class HomeDetailsScreen extends Component {
 }
 
 const styles = StyleSheet.create({});
+
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+  membership: state.membership.membership,
+});
+
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(ActionCreators, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeDetailsScreen);

@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 14.2.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "dev": {
+      "distribution": "internal",
+      "channel": "dev",
+      "env": {
+        "ANDROID_SDK_ROOT": "/Users/rakshitsharma/Library/Android/sdk"
+      }
+    },
+    "main": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {},
+      "channel": "main"
+    }
+  },
+  "submit": {
+    "main": {}
+  }
+}

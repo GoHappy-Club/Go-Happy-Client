@@ -15,6 +15,7 @@ import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
 import Trip from "../../components/trips/Trip.js";
 import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
 
 class TripDetailsScreen extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class TripDetailsScreen extends Component {
       details: null,
       error: true,
       index: 0,
+      vouchers:[]
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     // alert(JSON.stringify(props));
@@ -31,7 +33,7 @@ class TripDetailsScreen extends Component {
 
   async getTripDetails() {
     var url =
-      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim();
+      SERVER_URL + "/trips/getDetails/" + this.props.route.params.id.trim() + "?phone="+this.props.profile.phoneNumber;
     //console.log(url);
     try {
       const response = await axios.get(url);
@@ -39,9 +41,11 @@ class TripDetailsScreen extends Component {
         this.setState({
           details: response.data.details,
           error: false,
+          vouchers: response.data.vouchers,
         });
       }
     } catch (error) {
+      crashlytics().log(`Error in getTripDetails ${error} ${url}`)
       this.error = true;
       // throw new Error("Error getting order ID");
     }
@@ -53,29 +57,12 @@ class TripDetailsScreen extends Component {
 
   render() {
     if (this.state.error == false) {
-      return <Trip details={this.state.details} />;
+      return <Trip details={this.state.details} vouchers={this.state.vouchers} />;
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
-          style={{
-            position: "absolute",
-            top: 0,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
-          }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        <GOHLoader/>
         // </ScrollView>
       );
     }

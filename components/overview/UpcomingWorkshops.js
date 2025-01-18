@@ -16,6 +16,7 @@ import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import { format, fromUnixTime } from "date-fns";
 import { Colors } from "../../assets/colors/color.js";
+import { useTranslation, withTranslation } from "react-i18next";
 
 const data = [
   {
@@ -94,7 +95,7 @@ class UpcomingWorkshops extends Component {
       }
     >
       <View style={styles.container}>
-        <Image source={{ uri: item.coverImage }} style={styles.image} />
+        <FastImage source={{ uri: item.coverImage }} style={styles.image} />
         <View style={styles.subContainer}>
           <Text style={styles.text}>
             {this.trimContent(item.eventName, 20)}
@@ -105,6 +106,7 @@ class UpcomingWorkshops extends Component {
     </TouchableOpacity>
   );
   render() {
+    const {t} = this.props;
     return (
       <>
         {this.props.upcomingWorkshops == null && (
@@ -125,7 +127,7 @@ class UpcomingWorkshops extends Component {
             <View style={styles.mainContainer}>
               <View style={styles.headingContainer}>
                 <View style={styles.line} />
-                <Text style={styles.headingText}>Upcoming Workshops</Text>
+                <Text style={styles.headingText}>{t("upcoming_workshops")}</Text>
                 <View style={styles.line} />
               </View>
               <FlatList
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   headingText: {
+    color: Colors.primaryText,
     marginHorizontal: 10,
     fontWeight: "bold",
   },
@@ -207,4 +210,4 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(UpcomingWorkshops);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(UpcomingWorkshops));

@@ -19,6 +19,7 @@ import OverviewScreen from "../../screens/overview/OverviewScreen";
 import { useCopilot } from "react-native-copilot";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../assets/colors/color";
+import { useTranslation } from "react-i18next";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -26,6 +27,7 @@ export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
   const navigation = useNavigation();
   const { start } = useCopilot();
+  const {t} = useTranslation();
 
   return (
     <Tab.Navigator
@@ -40,7 +42,7 @@ export default function BottomNavigator() {
         elevation: 64,
         borderTopLeftRadius: 21,
         borderTopRightRadius: 21,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.bottomNavigation,
         padding: 10,
         zIndex: 10000,
       }}
@@ -52,7 +54,7 @@ export default function BottomNavigator() {
           <OverviewScreen propProfile={profile} {...props} start={start} />
         )}
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: t("home"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
@@ -68,13 +70,9 @@ export default function BottomNavigator() {
       />
       <Tab.Screen
         name="HomeScreen"
-        // component={HomeScreen}
-        // children={(props) => (
-        //   <MySessionsScreen propProfile={profile} {...props} />
-        //
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         options={{
-          tabBarLabel: "Sessions",
+          tabBarLabel: t("sessions"),
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon
               icon={faClipboardList}
@@ -84,36 +82,13 @@ export default function BottomNavigator() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="MySessions"
-        children={(props) => (
-          <MySessionsScreen propProfile={profile} {...props} />
-        )}
-        options={{
-          tabBarLabel: "Sessions",
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faClipboardList}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      /> */}
-      {/* <Tab.Screen name="ReferScreen" component={ReferScreen}
-      options={{
-        tabBarLabel: 'Refer & Earn',
-        tabBarIcon: ({ color }) => (
-          <FontAwesomeIcon icon={ faProjectDiagram } color={ '#2f2f31' } size={25} />
-       ),
-      }} /> */}
       <Tab.Screen
         name="MembershipScreen"
         children={(props) => (
           <MembershipScreen propProfile={profile} {...props} />
         )}
         options={{
-          tabBarLabel: "Support",
+          tabBarLabel: t("support"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
@@ -132,7 +107,7 @@ export default function BottomNavigator() {
           name="Refer"
           children={(props) => <ReferScreen propProfile={profile} {...props} />}
           options={{
-            tabBarLabel: "Refer",
+            tabBarLabel: t("refer"),
             elevation: 0, // remove shadow on Android
             shadowOpacity: 0,
             tabBarIcon: ({ color }) => (
@@ -145,24 +120,6 @@ export default function BottomNavigator() {
           }}
         />
       ) : null}
-      <Tab.Screen
-        name="MyProfile"
-        children={(props) => (
-          <MyProfileScreen propProfile={profile} {...props} />
-        )}
-        options={{
-          tabBarLabel: "Profile",
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faChild}
-              color={Colors.greyishText}
-              size={25}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }

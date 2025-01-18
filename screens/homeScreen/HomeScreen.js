@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 //import axios from "axios";
-import HomeDashboard from "../../components/HomeDashboard.js";
+import HomeDashboard from "../../components/HomeDashboard/HomeDashboard.js";
 import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-// var tambola = require('tambola-generator');
+
 import tambola from "tambola";
 import Video from "react-native-video";
 import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
+import { View } from "react-native";
+import { Colors } from "../../assets/colors/color.js";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +23,7 @@ class HomeScreen extends Component {
       events: [],
       error: true,
       whatsappLink: "",
+      ratings: [],
     };
     crashlytics().log(JSON.stringify(props.propProfile));
     this._retrieveData();
@@ -67,6 +71,7 @@ class HomeScreen extends Component {
         <>
           <HomeDashboard
             events={this.state.events}
+            ratings={this.state.ratings}
             childLoader={this.state.childLoader}
             bookEvent={this.bookEvent.bind(this)}
             loadEvents={this.loadEvents.bind(this)}
@@ -76,53 +81,46 @@ class HomeScreen extends Component {
             registerStep={this.props.registerStep}
             copilotEvents={this.props.copilotEvents}
           />
-          {this.props.profile.age != null || this.props.profile.age >= 50 ? (
-            <WhatsAppFAB />
-          ) : null}
         </>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
+        <View
           style={{
-            position: "absolute",
-            top: 0,
             flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
+            backgroundColor: Colors.background,
           }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        >
+          <GOHLoader />
+        </View>
         // </ScrollView>
       );
     }
   }
-  loadEvents(selectedDate) {
+  loadEvents(selectedDate, midnightDate) {
     this.setState({ childLoader: true });
     this.setState({ events: [] });
     var url = SERVER_URL + "/event/getEventsByDate";
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
+    if(midnightDate == undefined || midnightDate ==null){
+      midnightDate = new Date().setHours(23,59,0,0);
+    }
 
     axios
-      .post(url, { date: selectedDate })
+      .post(url, { date: selectedDate, midnightDate })
       .then((response) => {
         if (response.data) {
           for (var i = 0; i < response.data.events.length; i++) {
             response.data.events[i].loadingButton = false;
           }
-          this.setState({ events: response.data.events });
+          this.setState({
+            events: response.data.events,
+            ratings: response.data.ratings,
+          });
           this.setState({ error: false });
           this.setState({ childLoader: false });
         }
@@ -135,14 +133,14 @@ class HomeScreen extends Component {
       });
   }
 
-  bookEvent(item, phoneNumber, selectedDate) {
+  bookEvent(item, phoneNumber, selectedDate, playSound) {
     let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
     if (phoneNumber == "" || phoneNumber == undefined) {
       phoneNumber = this.state.phoneNumber;
     }
-    //console.log('phone is', phoneNumber)
     var id = item.id;
     var url = SERVER_URL + "/event/bookEvent";
+    let { membership, actions } = this.props;
 
     axios
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
@@ -159,6 +157,17 @@ class HomeScreen extends Component {
                 break;
               }
             }
+
+            // deduct coins from user's membership data in redux
+            if (
+              (membership?.freeTrialActive != null ||
+                membership?.freeTrialActive != undefined) &&
+              membership.freeTrialActive != true
+            ) {
+              membership.coins = membership.coins - item.cost;
+              actions.setMembership({ ...membership });
+            }
+            playSound();
             this.loadEvents(selectedDate);
             // _callback();
             // item.seatsLeft = item.seatsLeft - 1;
@@ -169,7 +178,6 @@ class HomeScreen extends Component {
       })
       .catch((error) => {
         this.error = true;
-        //console.log('error is ',error, id, phoneNumber )
         return false;
       });
   }
@@ -181,8 +189,9 @@ class HomeScreen extends Component {
 const mapStateToProps = (state) => ({
   count: state.count.count,
   profile: state.profile.profile,
+  membership: state.membership.membership,
 });
-const ActionCreators = Object.assign({}, { setProfile });
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });

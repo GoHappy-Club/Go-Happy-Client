@@ -10,11 +10,13 @@ import {
   ActivityIndicator,
   Image,
   ImageBackground,
+  SafeAreaView,
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
 import TripsList from "../../components/trips/TripsList.js";
 import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
 
 class TripsScreen extends Component {
   constructor(props) {
@@ -45,6 +47,7 @@ class TripsScreen extends Component {
         });
       }
     } catch (error) {
+      crashlytics().log(`Error in getPastTripsData ${error}`);
       this.error = true;
       // throw new Error("Error getting order ID");
     }
@@ -61,6 +64,7 @@ class TripsScreen extends Component {
       }
     } catch (error) {
       this.error = true;
+      crashlytics().log(`Error in getUpcomingTripsData ${error}`);
       // throw new Error("Error getting order ID");
     }
   }
@@ -73,7 +77,7 @@ class TripsScreen extends Component {
   render() {
     if (this.state.error == true) {
       return (
-        <View style={styles.mainContainer}>
+        <SafeAreaView style={styles.mainContainer}>
           {/* <Text>My Trips</Text> */}
 
           <ImageBackground
@@ -92,13 +96,22 @@ class TripsScreen extends Component {
             onChange={(index) => {
               this.setState({ index: index });
             }}
+            style={{ backgroundColor: Colors.background }}
             dense
+            indicatorStyle={{
+              backgroundColor: Colors.black, // Change the indicator color to green
+            }}
+            titleStyle={{
+              color: Colors.black, // Set color of both active and inactive tab labels to green
+            }}
           >
             <Tab.Item>Upcoming</Tab.Item>
             <Tab.Item>Past</Tab.Item>
           </Tab>
           <TabView
-            containerStyle={{ height: "100%" }}
+            containerStyle={{
+              height: "100%",
+            }}
             value={this.state.index}
             onChange={(index) => {
               this.setState({ index: index });
@@ -120,30 +133,20 @@ class TripsScreen extends Component {
             </TabView.Item>
           </TabView>
           {/* </ScrollView> */}
-        </View>
+        </SafeAreaView>
       );
     } else {
       // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
         // <ScrollView style={{ backgroundColor: Colors.white }}>
-        <Video
-          source={require("../../images/logo_splash.mp4")}
+        <View
           style={{
-            position: "absolute",
-            top: 0,
             flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
+            backgroundColor: Colors.background,
           }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        >
+          <GOHLoader />
+        </View>
         // </ScrollView>
       );
     }
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
   },
   textContainer: {
     padding: 16,
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   coverImage: {
-    marginTop: "-3%",
+    // marginTop: "-3%",
     width: "100%",
     flex: 0.5,
   },

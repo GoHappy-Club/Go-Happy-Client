@@ -10,21 +10,20 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
+  SafeAreaView,
+  Alert,
 } from "react-native";
 //import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
 import PhoneInput from "react-native-phone-number-input";
 import analytics from "@react-native-firebase/analytics";
-
-import Video from "react-native-video";
-
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 import { Button } from "react-native-elements";
 import { BottomSheet, ListItem } from "react-native-elements";
 
 import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
 import LinearGradient from "react-native-linear-gradient";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
@@ -33,6 +32,11 @@ import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 import RNOtpVerify from "react-native-otp-verify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
+import axiosOg from "axios";
+import { GS_PASSWORD, GS_USER_ID } from "../../config/tokens.js";
+
+const GUPSHUP_BASE_URL = "https://enterprise.smsgupshup.com/GatewayAPI/rest";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +68,7 @@ class LoginScreen extends Component {
       copiedText: "",
       fcmToken: "",
       unformattedNumber: null,
+      otpSent: false,
     };
     this.getCurrentUserInfo();
   }
@@ -102,21 +107,48 @@ class LoginScreen extends Component {
     }
   };
 
+  setMembership({
+    membershipType,
+    id,
+    membershipStartDate,
+    membershipEndDate,
+    coins,
+    vouchers,
+    freeTrialUsed,
+    freeTrialActive,
+    cancellationReason,
+    cancellationDate,
+  }) {
+    let { membership, actions } = this.props;
+
+    membership = {
+      membershipType: membershipType,
+      id: id,
+      membershipStartDate: membershipStartDate,
+      membershipEndDate: membershipEndDate,
+      coins: coins,
+      vouchers: vouchers,
+      freeTrialUsed: freeTrialUsed,
+      freeTrialActive: freeTrialActive,
+      cancellationReason: cancellationReason,
+      cancellationDate: cancellationDate,
+    };
+    actions.setMembership({ ...membership });
+  }
+
   setProfile(
     name,
     email,
     phoneNumber,
     profileImage,
-    token,
-    plan,
     sessionsAttended,
-    // dob,
     dateOfJoining,
     selfInviteCode,
     city,
     emergencyContact,
     fcmToken,
-    age
+    age,
+    dob
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -124,8 +156,6 @@ class LoginScreen extends Component {
       email: email,
       phoneNumber: phoneNumber,
       profileImage: profileImage,
-      token: token,
-      membership: plan,
       sessionsAttended: sessionsAttended,
       // dob: dob,
       dateOfJoining: dateOfJoining,
@@ -134,6 +164,7 @@ class LoginScreen extends Component {
       emergencyContact: emergencyContact,
       fcmToken: fcmToken,
       age: age,
+      dob: dob,
     };
     actions.setProfile(profile);
   }
@@ -193,7 +224,7 @@ class LoginScreen extends Component {
   handlePhoneNumberInput = (text) => {
     this.setState({ phoneNumber: text });
   };
-  handleSendCode = (resend) => {
+  handleSendCode = async (resend) => {
     // Request to send OTP
     if (resend) {
       this.setState({ loadingResendButton: true });
@@ -202,41 +233,52 @@ class LoginScreen extends Component {
     }
     crashlytics().log(JSON.stringify(this.state));
     if (this.validatePhoneNumber()) {
-      firebase
-        .auth()
-        .signInWithPhoneNumber(this.state.phoneNumber)
-        .then((confirmResult) => {
-          this.setState({ confirmResult });
-          firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-              this.setState({ userId: user.uid });
-              try {
-                this._backendSignIn(
-                  user.uid,
-                  user.displayName,
-                  "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-                  user.phoneNumber
-                );
-              } catch (error) {}
-            }
-          });
-          if (resend) {
-            this.setState({ loadingResendButton: false });
-          } else {
-            this.setState({ loadingButton: false });
-          }
-        })
-        .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
+      try {
+        const messageTemplate =
+          "Dear User,\n\n" +
+          "Your OTP for login to GoHappy Club is %code%. This code is valid for 30 minutes. Please do not share this OTP.\n\n" +
+          "Regards,\nGoHappy Club Team";
+        const response = await axiosOg.get(GUPSHUP_BASE_URL, {
+          params: {
+            userid: GS_USER_ID,
+            password: GS_PASSWORD,
+            method: "TWO_FACTOR_AUTH",
+            v: "1.1",
+            phone_no: this.state.phoneNumber,
+            format: "text",
+            otpCodeLength: "6",
+            otpCodeType: "NUMERIC",
+            msg: messageTemplate,
+          },
+        });
+        if (response.data.includes("success")) {
+          this.setState({ otpSent: true });
+        } else if (response.data.includes("308")) {
+          alert(
+            "You are re-trying too early, please wait for few minutes and then try to login."
+          );
+        } else {
           alert(
             'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
           );
-          if (resend) {
-            this.setState({ loadingResendButton: false });
-          } else {
-            this.setState({ loadingButton: false });
-          }
-        });
+        }
+        if (resend) {
+          this.setState({ loadingResendButton: false });
+        } else {
+          this.setState({ loadingButton: false });
+        }
+      } catch (error) {
+        console.log("error in sending otp=>", error);
+        crashlytics().recordError(JSON.stringify(error));
+        alert(
+          'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
+        );
+        if (resend) {
+          this.setState({ loadingResendButton: false });
+        } else {
+          this.setState({ loadingButton: false });
+        }
+      }
     } else {
       if (resend) {
         this.setState({ loadingResendButton: false });
@@ -257,7 +299,7 @@ class LoginScreen extends Component {
     const resend = true;
     this.handleSendCode(resend);
   };
-  handleVerifyCode = (vcode) => {
+  handleVerifyCode = async (vcode) => {
     const { confirmResult, verificationCode } = this.state;
     let code = vcode;
     if (code == null) {
@@ -270,27 +312,26 @@ class LoginScreen extends Component {
       this.setState({ showAlert: true });
       return;
     }
-
-    confirmResult
-      .confirm(code)
-      .then((user) => {
-        this.setState({ userId: user.user.uid });
-        try {
-          this._backendSignIn(
-            user.user.uid,
-            user.user.displayName,
-            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
-            user.user.phoneNumber
-          );
-        } catch (error) {
-          console.log("Error in handleVerify==>", error);
-        }
-        //   this.setState({ loadingButton:false });
-      })
-      .catch((error) => {
-        crashlytics().recordError(JSON.stringify(error));
-        this.setState({ loadingVerifyButton: false, showAlert: true });
+    try {
+      const response = await axiosOg.get(GUPSHUP_BASE_URL, {
+        params: {
+          userid: GS_USER_ID,
+          password: GS_PASSWORD,
+          method: "TWO_FACTOR_AUTH",
+          v: "1.1",
+          phone_no: this.state.phoneNumber,
+          otp_code: code,
+        },
       });
+      if (response.data.includes("success")) {
+        this._backendSignIn(this.state.phoneNumber);
+      } else {
+        this.setState({ loadingVerifyButton: false, showAlert: true });
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error.message);
+      this.setState({ loadingVerifyButton: false, showAlert: true });
+    }
   };
 
   handleInputChange = (text) => {
@@ -348,93 +389,213 @@ class LoginScreen extends Component {
       const fcmToken = await firebase.messaging().getToken();
       AsyncStorage.setItem("fcmToken", fcmToken);
       this.setState({ fcmToken: fcmToken });
-      if (token1 != null) {
-        const name = await AsyncStorage.getItem("name");
-        const email = await AsyncStorage.getItem("email");
-        const profileImage = await AsyncStorage.getItem("profileImage");
-        const token = await AsyncStorage.getItem("token");
-        const membership = await AsyncStorage.getItem("membership");
-        const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-        const sessionsAttended = await AsyncStorage.getItem("sessionsAttended");
-        // const dob = await AsyncStorage.getItem("dob");
-        const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
-        const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
-        const city = await AsyncStorage.getItem("city");
-        const emergencyContact = await AsyncStorage.getItem("emergencyContact");
-        const age = await AsyncStorage.getItem("age");
+      try {
+        if (token1 != null) {
+          const name = await AsyncStorage.getItem("name");
+          const email = await AsyncStorage.getItem("email");
+          const profileImage = await AsyncStorage.getItem("profileImage");
+          const token = await AsyncStorage.getItem("token");
+          const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+          const dob = await AsyncStorage.getItem("dob");
+          const sessionsAttended =
+            await AsyncStorage.getItem("sessionsAttended");
+          // const dob = await AsyncStorage.getItem("dob");
+          const dateOfJoining = await AsyncStorage.getItem("dateOfJoining");
+          const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+          const city = await AsyncStorage.getItem("city");
+          const emergencyContact =
+            await AsyncStorage.getItem("emergencyContact");
+          const age = await AsyncStorage.getItem("age");
 
-        this.setProfile(
-          name,
-          email,
-          phoneNumber,
-          profileImage,
-          token,
-          membership,
-          sessionsAttended,
-          // dob,
-          dateOfJoining,
-          selfInviteCode,
-          city,
-          emergencyContact,
-          fcmToken,
-          age
-        );
-        axios
-          .post(SERVER_URL + "/user/update", {
-            fcmToken: fcmToken,
-            phone: phoneNumber,
-          })
-          .then((response) => {})
-          .catch((error) => {
-            console.log(error);
+          //retreive membership object to save separately in redux
+          const membershipType = await AsyncStorage.getItem("membershipType");
+          const id = await AsyncStorage.getItem("membershipId");
+          const membershipStartDate = await AsyncStorage.getItem(
+            "membershipStartDate"
+          );
+          const membershipEndDate =
+            await AsyncStorage.getItem("membershipEndDate");
+          const coins = await AsyncStorage.getItem("coins");
+          const freeTrialUsed = await AsyncStorage.getItem("freeTrialUsed");
+          const freeTrialActive = await AsyncStorage.getItem("freeTrialActive");
+          this.setProfile(
+            name,
+            email,
+            phoneNumber,
+            profileImage,
+            sessionsAttended,
+            dateOfJoining,
+            selfInviteCode,
+            city,
+            emergencyContact,
+            fcmToken,
+            age,
+            dob
+          );
+          this.setMembership({
+            membershipType: membershipType,
+            id: id,
+            membershipStartDate: membershipStartDate,
+            membershipEndDate: membershipEndDate,
+            coins: coins,
+            freeTrialUsed: freeTrialUsed,
+            freeTrialActive: freeTrialActive,
           });
-        // this.props.navigation.replace('GoHappy Club');
-        // this.setState({loader:false});
-        this.props.navigation.replace("Additional Details", {
-          navigation: this.props.navigation,
-          email: email,
-          phoneNumber: phoneNumber,
-          name: name,
-          // dob: dob,
-          dateOfJoining: dateOfJoining,
-          city: city,
-          emergencyContact: emergencyContact,
-        });
-        return;
-        // }
+
+          axios
+            .post(SERVER_URL + "/user/update", {
+              fcmToken: fcmToken,
+              phone: phoneNumber,
+            })
+            .then((response) => {
+              AsyncStorage.setItem(
+                "freeTrialActive",
+                String(response.data.freeTrialActive)
+              );
+              AsyncStorage.setItem(
+                "membershipType",
+                response.data.membershipType
+              );
+              AsyncStorage.setItem(
+                "membershipStartDate",
+                String(response.data?.membershipStartDate)
+              );
+              AsyncStorage.setItem(
+                "membershipEndDate",
+                String(response.data?.membershipEndDate)
+              );
+              AsyncStorage.setItem("coins", String(response.data?.coins));
+              AsyncStorage.setItem(
+                "freeTrialUsed",
+                String(response.data?.freeTrialUsed)
+              );
+              AsyncStorage.setItem(
+                "freeTrialActive",
+                String(response.data?.freeTrialActive)
+              );
+              AsyncStorage.setItem(
+                "cancellationReason",
+                String(response.data?.cancellationReason)
+              );
+              AsyncStorage.setItem(
+                "cancellationDate",
+                String(response.data?.cancellationDate)
+              );
+
+              this.setProfile(
+                response.data.name,
+                response.data.email,
+                response.data.phone,
+                response.data.profileImage,
+                response.data.sessionsAttended,
+                response.data.dateOfJoining,
+                response.data.selfInviteCode,
+                response.data.city,
+                response.data.emergencyContact,
+                response.data.fcmToken,
+                response.data.age,
+                response.data.dob
+              );
+
+              AsyncStorage.setItem("email", response.data.email);
+              AsyncStorage.setItem("phone", response.data.phone);
+              AsyncStorage.setItem("profileImage", response.data.profileImage);
+              AsyncStorage.setItem(
+                "sessionsAttended",
+                response.data.sessionsAttended
+              );
+              AsyncStorage.setItem(
+                "dateOfJoining",
+                response.data.dateOfJoining
+              );
+              AsyncStorage.setItem(
+                "selfInviteCode",
+                response.data.selfInviteCode
+              );
+              AsyncStorage.setItem("city", response.data.city);
+              AsyncStorage.setItem(
+                "emergencyContact",
+                response.data.emergencyContact
+              );
+              AsyncStorage.setItem("fcmToken", response.data.fcmToken);
+              AsyncStorage.setItem("age", response.data.age);
+              AsyncStorage.setItem("dob", response.data.dob);
+              this.setMembership({
+                membershipType: response.data.membershipType,
+                id: response.data.id,
+                membershipStartDate: response.data?.membershipStartDate,
+                membershipEndDate: response.data?.membershipEndDate,
+                coins: response.data.coins,
+                freeTrialUsed: response.data?.freeTrialUsed,
+                freeTrialActive: response.data?.freeTrialActive,
+                cancellationReason: response.data?.cancellationReason,
+                cancellationDate: response.data?.cancellationDate,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          this.props.navigation.replace("Additional Details", {
+            navigation: this.props.navigation,
+            email: email,
+            phoneNumber: phoneNumber,
+            name: name,
+            dateOfJoining: dateOfJoining,
+            city: city,
+            emergencyContact: emergencyContact,
+            profileImage: profileImage,
+            dob: dob,
+          });
+          return;
+        }
+      } catch (error) {
+        console.log(error);
       }
       this.setState({ loader: false });
     } catch (error) {}
   };
-  _backendSignIn(token, name, profileImage, phone) {
+  _backendSignIn(phone) {
     if (this.state.reachedBackendSignIn == false) {
       this.setState({ reachedBackendSignIn: true });
     } else {
       return;
     }
-    if (name == null) {
-      name = "";
-    }
-    this.setState({ loadingVerifyButton: true });
     var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {
-        token: token,
-        name: name,
-        profileImage: profileImage,
         phone: phone.substr(1),
         referralId: this.state.referralCode,
-        source: this.state.source,
         fcmToken: this.state.fcmToken,
       })
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
-          // this.setState({fullName: userInfo.fullName});
+          this.setProfile(
+            response.data.name,
+            response.data.email,
+            response.data.phone,
+            response.data.profileImage,
+            response.data.sessionsAttended,
+            response.data.dateOfJoining,
+            response.data.selfInviteCode,
+            response.data.city,
+            response.data.emergencyContact,
+            this.state.fcmToken,
+            response.data.age,
+            response.data.dob
+          );
+          this.setMembership({
+            membershipType: response.data.membershipType,
+            id: response.data.id,
+            membershipStartDate: response.data.membershipStartDate,
+            membershipEndDate: response.data.membershipEndDate,
+            coins: response.data.coins,
+            vouchers: response.data?.vouchers,
+            freeTrialUsed: response.data?.freeTrialUsed,
+            freeTrialActive: response.data?.freeTrialActive,
+          });
           if (response.data.phone != null) {
             AsyncStorage.setItem("phoneNumber", response.data.phone);
           }
-          // AsyncStorage.setItem('fullName',response.data.fullName);
-
           if (response.data.name != null) {
             AsyncStorage.setItem("name", response.data.name);
           }
@@ -453,32 +614,39 @@ class LoginScreen extends Component {
           if (response.data.profileImage != null) {
             AsyncStorage.setItem("profileImage", response.data.profileImage);
           }
-          AsyncStorage.setItem("token", token);
-          AsyncStorage.setItem("membership", response.data.membership);
+          AsyncStorage.setItem("token", response.data.id);
           AsyncStorage.setItem(
             "sessionsAttended",
             response.data.sessionsAttended
           );
-          // AsyncStorage.setItem("dob", response.data.dob);
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
           AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
           AsyncStorage.setItem("age", response.data.age);
-          this.setProfile(
-            response.data.name,
-            response.data.email,
-            response.data.phone,
-            response.data.profileImage,
-            token,
-            response.data.membership,
-            response.data.sessionsAttended,
-            // response.data.dob,
-            response.data.dateOfJoining,
-            response.data.selfInviteCode,
-            response.data.city,
-            response.data.emergencyContact,
-            this.state.fcmToken,
-            response.data.age
+          AsyncStorage.setItem("dob", response.data.dob);
+
+          // store membership details in async storage
+          AsyncStorage.setItem("membershipType", response.data.membershipType);
+          AsyncStorage.setItem("membershipId", response.data.id);
+          if (response.data.membershipStartDate != null)
+            AsyncStorage.setItem(
+              "membershipStartDate",
+              response.data.membershipStartDate
+            );
+          if (response.data.membershipEndDate != null)
+            AsyncStorage.setItem(
+              "membershipEndDate",
+              response.data.membershipEndDate
+            );
+          AsyncStorage.setItem("coins", String(response.data.coins));
+          AsyncStorage.setItem(
+            "freeTrialUsed",
+            String(response.data?.freeTrialUsed)
           );
+          AsyncStorage.setItem(
+            "freeTrialActive",
+            String(response.data?.freeTrialActive)
+          );
+
           this.setState({
             name: response.data.name,
             email: response.data.email,
@@ -496,7 +664,7 @@ class LoginScreen extends Component {
               state: this.state.state,
               city: response.data.city,
               emergencyContact: response.data.emergencyContact,
-              // dob: response.data.dob,
+              dob: response.data.dob,
               dateOfJoining: response.data.dateOfJoining,
             });
             return;
@@ -512,7 +680,11 @@ class LoginScreen extends Component {
             this.setState({ loader: false });
           }
         } else if (response.data == "ERROR") {
-          this.setState({ showAlert: true, loader: false,loadingVerifyButton:false });
+          this.setState({
+            showAlert: true,
+            loader: false,
+            loadingVerifyButton: false,
+          });
         }
         this.setState({ loadingVerifyButton: false });
       })
@@ -548,29 +720,18 @@ class LoginScreen extends Component {
   render() {
     if (this.state.loader == true) {
       return (
-        <Video
-          source={require("../../images/logo_splash.mp4")}
+        <View
           style={{
-            position: "absolute",
-            backgroundColor: Colors.white,
-            top: 0,
             flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 1,
+            backgroundColor: Colors.background,
           }}
-          muted={true}
-          repeat={true}
-          resizeMode="cover"
-        />
+        >
+          <GOHLoader />
+        </View>
       );
     }
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={{ width: "40%", marginLeft: "auto" }}>
           <Button
             style={{ marginLeft: "auto" }}
@@ -588,7 +749,7 @@ class LoginScreen extends Component {
           behavior="position"
           keyboardVerticalOffset={height / 10}
         >
-          <Image
+          <FastImage
             resizeMode="contain"
             style={styles.logo}
             source={require("../../images/logo.png")}
@@ -604,7 +765,7 @@ class LoginScreen extends Component {
           >
             LOGIN or SIGN UP
           </Text>
-          {!this.state.confirmResult && (
+          {!this.state.otpSent && (
             <View style={styles.page}>
               <PhoneInput
                 style={styles.textInput}
@@ -753,7 +914,7 @@ class LoginScreen extends Component {
             </View>
           )}
 
-          {this.state.confirmResult && (
+          {this.state.otpSent && (
             <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
           )}
         </KeyboardAvoidingView>
@@ -778,7 +939,7 @@ class LoginScreen extends Component {
             this.setState({ showAlert: false });
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -980,7 +1141,7 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-const ActionCreators = Object.assign({}, { setProfile });
+const ActionCreators = Object.assign({}, { setProfile, setMembership });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });

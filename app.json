@@ -1,4 +1,16 @@
 {
   "name": "GoHappyClient",
-  "displayName": "GoHappy Club"
+  "displayName": "GoHappy Club",
+  "extra": {
+    "eas": {
+      "projectId": "6743982c-12c8-4ffb-bb31-0d53a3febd77"
+    }
+  },
+  "owner": "gohappyclub",
+  "runtimeVersion": "1.0.1",
+  "updates": {
+    "url": "https://u.expo.dev/6743982c-12c8-4ffb-bb31-0d53a3febd77"
+  },
+  "android": {},
+  "ios": {}
 }

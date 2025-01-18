@@ -1,0 +1,10 @@
+name: Production app update
+
+on:
+  push:
+    branches: ['version_upgrade']
+
+jobs:
+  Hello World:
+    steps:
+      - run: eas update --profile production
