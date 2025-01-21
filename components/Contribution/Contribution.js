@@ -402,8 +402,7 @@ The Link will Expire in 20 Minutes.`;
                   <View style={styles.AAcontainer}>
                     <Text style={styles.AAtitle}>Payment Confirmation</Text>
                     <Text style={styles.AAmessage}>
-                      Would you like to pay this yourself or share the payment
-                      link with a family member?
+                    Click below to pay.
                     </Text>
                     <View style={styles.AAbuttonContainer}>
                       <Button
@@ -416,7 +415,7 @@ The Link will Expire in 20 Minutes.`;
                         }}
                         disabled={this.state.payButtonLoading}
                       />
-                      <Button
+                      {/* <Button
                         outline
                         title={"Share"}
                         loading={this.state.shareButtonLoading}
@@ -425,7 +424,7 @@ The Link will Expire in 20 Minutes.`;
                           this.phonePeWrapper("share", this.state.itemToBuy);
                         }}
                         disabled={this.state.shareButtonLoading}
-                      />
+                      /> */}
                     </View>
                   </View>
                 }

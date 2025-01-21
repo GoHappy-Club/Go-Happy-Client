@@ -6,3 +6,20 @@
         - index.js :- uncomment the zoom sdk provider code and it's import
         - android/app/build.gradle - uncomment lines 151 and 152 (include mobile rtc and flex box one)
     - For development build comment the above lines of codes
+
+# Tokens file 
+
+    ``` js
+            // put zoom generated credentials here
+            export const ZoomKey = ''
+
+            export const ZoomSecret = ''
+
+            // put app's jwt token here
+            export const JWT_TOKEN = ""
+
+            //gupshup userid
+            export const USER_ID=""
+            //gupshup password
+            export const PASSWORD=""
+    ```
