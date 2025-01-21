@@ -977,8 +977,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
             <View style={styles.AAcontainer}>
               <Text style={styles.AAtitle}>Payment Confirmation</Text>
               <Text style={styles.AAmessage}>
-                Would you like to pay this yourself or share the payment link
-                with a family member?
+              Click below to pay.
               </Text>
               <View style={styles.AAbuttonContainer}>
                 <Button
@@ -994,7 +993,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     color: Colors.black,
                   }}
                 />
-                <Button
+                {/* <Button
                   outline
                   title={"Share"}
                   loading={state.shareButtonLoading}
@@ -1003,7 +1002,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     phonePeWrapper("share", item);
                   }}
                   disabled={state.shareButtonLoading}
-                />
+                /> */}
               </View>
             </View>
           }
