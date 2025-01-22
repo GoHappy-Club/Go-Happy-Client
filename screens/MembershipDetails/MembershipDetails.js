@@ -161,7 +161,6 @@ export default function MembershipDetails() {
   const membership = useSelector((state) => state.membership.membership);
   const profile = useSelector((state) => state.profile.profile);
   const dispatch = useDispatch();
-  console.log(membership);
 
   const bottomSheetModalRef = useRef(null);
 
@@ -243,8 +242,6 @@ export default function MembershipDetails() {
   };
 
   const renderPrivileges = (membershipLevel) => {
-    console.log(membershipLevel);
-
     const privileges =
       membershipTiers[membershipLevel]?.privileges ||
       membershipTiers["gold"]?.privileges;
