@@ -61,9 +61,8 @@ const getNextTimeForHour = (hour) => {
 
 export const scheduleWaterReminders = () => {
   PushNotification.getScheduledLocalNotifications((notifications) => {
-    const waterReminderExists = notifications.some(
-      (notif) =>
-        notif.message === "Drink a glass of water to stay healthy and hydrated."
+    const waterReminderExists = notifications.some((notif) =>
+      notif.title.toLowerCase().includes("Time to Hydrate!".toLowerCase())
     );
 
     if (!waterReminderExists) {
@@ -71,15 +70,15 @@ export const scheduleWaterReminders = () => {
 
       hours.forEach((hour) => {
         const notificationTime = getNextTimeForHour(hour);
-          PushNotification.localNotificationSchedule({
-            autoCancel: true,
-            date: notificationTime,
-            title: "Time to Hydrate!",
-            message: "Drink a glass of water to stay healthy and hydrated.",
-            channelId: "Water Reminders",
-            vibration: 400,
-          });
-          console.log(`Water reminder scheduled for ${notificationTime}`);
+        PushNotification.localNotificationSchedule({
+          autoCancel: true,
+          date: notificationTime,
+          title: "Time to Hydrate!",
+          message: "Drink a glass of water to stay healthy and hydrated.",
+          channelId: "Water Reminders",
+          vibration: 400,
+        });
+        console.log(`Water reminder scheduled for ${notificationTime}`);
       });
     }
   });
@@ -97,8 +96,8 @@ const getNextMedicineTimeForHour = (hours, minutes) => {
 
 export const scheduleMedicineReminders = () => {
   PushNotification.getScheduledLocalNotifications((notifications) => {
-    const medicineReminderExists = notifications.some(
-      (notif) => notif.message === "Time to take your medicine."
+    const medicineReminderExists = notifications.some((notif) =>
+      notif.title.toLowerCase().includes("Medicine Reminder".toLowerCase())
     );
 
     if (!medicineReminderExists) {
@@ -110,15 +109,15 @@ export const scheduleMedicineReminders = () => {
 
       medicineTimes.forEach(({ hours, minutes }) => {
         const notificationTime = getNextMedicineTimeForHour(hours, minutes);
-          PushNotification.localNotificationSchedule({
-            autoCancel: true,
-            date: notificationTime,
-            channelId: "Medicine Reminders",
-            title: "Medicine Reminder",
-            message: "Time to take your medicine.",
-            vibration: 400,
-          });
-          console.log(`Medicine reminder scheduled for ${notificationTime}`);
+        PushNotification.localNotificationSchedule({
+          autoCancel: true,
+          date: notificationTime,
+          channelId: "Medicine Reminders",
+          title: "Medicine Reminder",
+          message: "Time to take your medicine.",
+          vibration: 400,
+        });
+        console.log(`Medicine reminder scheduled for ${notificationTime}`);
       });
     }
   });
