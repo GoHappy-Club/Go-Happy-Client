@@ -73,6 +73,7 @@
     "react-native-linear-gradient": "^2.8.3",
     "react-native-otp-verify": "^1.1.8",
     "react-native-paper": "4.12.4",
+    "react-native-paytring": "file:./SDKs/Paytring",
     "react-native-phone-number-input": "2.1.0",
     "react-native-phonepe-pg": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-mobile-react-native-sdk/releases/v2/react-native-phonepe-pg.tgz",
     "react-native-progress": "^5.0.0",
@@ -122,5 +123,8 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "yarn@4.5.3",
+  "resolutions": {
+    "react-native-webview": "13.12.5"
+  }
 }
