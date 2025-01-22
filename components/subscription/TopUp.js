@@ -129,6 +129,45 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     }
   };
 
+  const paytringWrapper = async (amount, type) => {
+    const data = {
+      phone: profile.phoneNumber,
+      amount: amount,
+      email:
+        profile.email != null || profile.email != ""
+          ? profile.email
+          : "void@paytring.com",
+      cname: profile.name,
+      type: type,
+      coinsToGive: coins,
+    };
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/paytring/createOrder`,
+        data
+      );
+      const orderData = response.data;
+
+      navigation.navigate("PaytringView", {
+        callback: () => {
+          navigation.navigate("PaymentSuccessful", {
+            type: "normal",
+            navigateTo: "WalletScreen",
+          });
+        },
+        error_handler: () => {
+          navigation.navigate("PaymentFailed", {
+            type: "normal",
+            navigateTo: "TopUpScreen",
+          });
+        },
+        order_id: orderData?.order_id,
+      });
+    } catch (error) {
+      crashlytics().log(`Error in paytringWrapper TopUp.js ${error}`);
+    }
+  };
+
   const validateAmount = () => {
     if (coins.length == 0) {
       setError(true);
@@ -396,7 +435,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   loading={payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
-                    phonePe("self", amount, "topUp");
+                    paytringWrapper(amount, "topUp");
                   }}
                   disabled={payButtonLoading}
                 />
