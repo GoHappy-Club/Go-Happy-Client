@@ -216,7 +216,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               }}
             >
               <FastImage
-                source={require("../../images/GoCoins.png")}
+                source={require("../../images/coins.png")}
                 style={{
                   height: 40,
                   width: 40,
@@ -255,7 +255,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/GoCoins.png")}
+                  source={require("../../images/coins.png")}
                   style={{
                     height: 20,
                     width: 20,
@@ -271,7 +271,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/GoCoins.png")}
+                  source={require("../../images/coins.png")}
                   style={{
                     height: 20,
                     width: 20,
@@ -287,7 +287,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/GoCoins.png")}
+                  source={require("../../images/coins.png")}
                   style={{
                     height: 20,
                     width: 20,
@@ -303,7 +303,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/GoCoins.png")}
+                  source={require("../../images/coins.png")}
                   style={{
                     height: 20,
                     width: 20,

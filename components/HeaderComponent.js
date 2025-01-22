@@ -419,7 +419,7 @@ const Header = () => {
             onPress={() => navigation.navigate("WalletScreen")}
           >
             <Animated.Image
-              source={require("../images/GoCoins.png")}
+              source={require("../images/coins.png")}
               style={{
                 height: 25,
                 width: 25,

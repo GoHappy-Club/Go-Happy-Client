@@ -10,7 +10,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import LottieView from 'lottie-react-native';
+import LottieView from "lottie-react-native";
+import FastImage from "react-native-fast-image";
 
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ const PaymentSuccessful = () => {
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
-    }, 3000);
+    }, 8000);
 
     timingRef.current = setInterval(() => {
       setTimer((prev) => prev - 1);
@@ -42,21 +43,19 @@ const PaymentSuccessful = () => {
     return (
       <View style={styles.container}>
         <LottieView
-          source={require("../../assets/lottie/correct.lottie")}
+          source={require("../../assets/lottie/correct.json")}
           autoPlay
           loop
           style={{
             width: wp(100),
             height: hp(30),
-            // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
-            zIndex: 1000,
-            position: "absolute",
           }}
           speed={0.5}
         />
         <FastImage
           source={require("../../images/hurray.png")}
           style={styles.image}
+          resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.textWrapper}>
           <Text style={styles.plainText}>
@@ -101,21 +100,19 @@ const PaymentSuccessful = () => {
   return (
     <View style={styles.container}>
       <LottieView
-        source={require("../../assets/lottie/correct.lottie")}
+        source={require("../../assets/lottie/correct.json")}
         autoPlay
         loop
         style={{
           width: wp(100),
           height: hp(30),
-          // transform: [{ scale: 5.2 }, { rotate: "90deg" }],
-          zIndex: 1000,
-          position: "absolute",
         }}
         speed={0.5}
       />
       <FastImage
         source={require("../../images/hurray.png")}
         style={styles.image}
+        resizeMode={FastImage.resizeMode.contain}
       />
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
@@ -157,8 +154,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: wp(80),
-    resizeMode: "contain",
+    width: wp(60),
   },
   textWrapper: {
     marginBottom: wp(5),

@@ -122,7 +122,7 @@ const VoucherDetails = () => {
               >
                 {value != null && (
                   <FastImage
-                    source={require("../../images/GoCoins.png")}
+                    source={require("../../images/coins.png")}
                     style={{
                       width: wp(8),
                       aspectRatio: 1,
