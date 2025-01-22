@@ -67,9 +67,9 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
               gap: 3,
             }}
           >
-            {(voucher?.value != null) && (
+            {voucher?.value != null && (
               <FastImage
-                source={require("../../images/GoCoins.png")}
+                source={require("../../images/coins.png")}
                 style={{
                   width: wp(8),
                   aspectRatio: 1,

@@ -547,7 +547,7 @@ const HomeDashboard = ({
             </Text>
             {item.costType == "paid" && (
               <FastImage
-                source={require("../../images/GoCoins.png")}
+                source={require("../../images/coins.png")}
                 style={{
                   width: wp(6),
                   aspectRatio: 1,

@@ -51,7 +51,7 @@ const Wallet = ({ transactions }) => {
               </Text>
             </View>
             <Image
-              source={require("../../images/GoCoins.png")}
+              source={require("../../images/coins.png")}
               style={styles.coinImage}
             />
           </View>
@@ -74,7 +74,7 @@ const Wallet = ({ transactions }) => {
           >
             <View style={styles.buttonContent}>
               <Image
-                source={require("../../images/GoCoins.png")}
+                source={require("../../images/coins.png")}
                 style={styles.buttonImage}
               />
               <Text style={styles.buttonText}>Add More Happy Coins</Text>

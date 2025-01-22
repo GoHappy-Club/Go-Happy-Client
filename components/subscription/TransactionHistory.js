@@ -45,7 +45,7 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
             {isCredit ? "+" : "-"} {item.amount}{" "}
           </Text>
           <FastImage
-            source={require("../../images/GoCoins.png")}
+            source={require("../../images/coins.png")}
             style={{
               height: 18,
               width: 18,

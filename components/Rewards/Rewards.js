@@ -141,7 +141,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
         <View style={styles.totalRewards}>
           <Text style={styles.rewardsAmount}>
             <FastImage
-              source={require("../../images/GoCoins.png")}
+              source={require("../../images/coins.png")}
               style={{
                 height: 70,
                 width: 70,
