@@ -33,10 +33,8 @@ import RNOtpVerify from "react-native-otp-verify";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
-import axiosOg from "axios";
-import { GS_PASSWORD, GS_USER_ID } from "../../config/tokens.js";
+import OTPAuthWrapper from "../../services/Authentication/OTPAuthWrapper.js";
 
-const GUPSHUP_BASE_URL = "https://enterprise.smsgupshup.com/GatewayAPI/rest";
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
@@ -69,7 +67,12 @@ class LoginScreen extends Component {
       fcmToken: "",
       unformattedNumber: null,
       otpSent: false,
+      resend: false,
+      allowResend: false,
+      secondsRemaining: 59,
+      isRunning: false,
     };
+    this.interval = null;
     this.getCurrentUserInfo();
   }
   componentDidMount() {
@@ -96,8 +99,36 @@ class LoginScreen extends Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.interval);
     RNOtpVerify.removeListener();
   }
+
+  startTimer = () => {
+    if (this.state.isRunning) return;
+
+    this.setState({ isRunning: true });
+
+    this.interval = setInterval(() => {
+      this.setState(
+        (prevState) => ({
+          secondsRemaining: prevState.secondsRemaining - 1,
+        }),
+        () => {
+          if (this.state.secondsRemaining <= 0) {
+            clearInterval(this.interval);
+            this.setState({ isRunning: false, allowResend: true });
+          }
+        }
+      );
+    }, 1000);
+  };
+
+  resetTimer = () => {
+    clearInterval(this.interval);
+    this.setState({ secondsRemaining: 59, isRunning: false }, () => {
+      this.startTimer();
+    });
+  };
 
   otpHandler = (message) => {
     const otpList = message.match(/\b\d{6}\b/);
@@ -225,113 +256,192 @@ class LoginScreen extends Component {
     this.setState({ phoneNumber: text });
   };
   handleSendCode = async (resend) => {
-    // Request to send OTP
-    if (resend) {
-      this.setState({ loadingResendButton: true });
-    } else {
-      this.setState({ loadingButton: true });
-    }
+    this.setState({
+      loadingButton: true,
+      loadingResendButton: resend,
+    });
+
     crashlytics().log(JSON.stringify(this.state));
-    if (this.validatePhoneNumber()) {
-      try {
-        const messageTemplate =
-          "Dear User,\n\n" +
-          "Your OTP for login to GoHappy Club is %code%. This code is valid for 30 minutes. Please do not share this OTP.\n\n" +
-          "Regards,\nGoHappy Club Team";
-        const response = await axiosOg.get(GUPSHUP_BASE_URL, {
-          params: {
-            userid: GS_USER_ID,
-            password: GS_PASSWORD,
-            method: "TWO_FACTOR_AUTH",
-            v: "1.1",
-            phone_no: this.state.phoneNumber,
-            format: "text",
-            otpCodeLength: "6",
-            otpCodeType: "NUMERIC",
-            msg: messageTemplate,
-          },
-        });
-        if (response.data.includes("success")) {
-          this.setState({ otpSent: true });
-        } else if (response.data.includes("308")) {
-          alert(
-            "You are re-trying too early, please wait for few minutes and then try to login."
-          );
-        } else {
-          alert(
-            'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
-          );
-        }
-        if (resend) {
-          this.setState({ loadingResendButton: false });
-        } else {
-          this.setState({ loadingButton: false });
-        }
-      } catch (error) {
-        console.log("error in sending otp=>", error);
-        crashlytics().recordError(JSON.stringify(error));
-        alert(
-          'There was some issue with the login, please close and open the app again and try. If you still face issues then click the "Contact Us" button.'
-        );
-        if (resend) {
-          this.setState({ loadingResendButton: false });
-        } else {
-          this.setState({ loadingButton: false });
-        }
-      }
-    } else {
+
+    if (!this.validatePhoneNumber()) {
+      this.setState({ loadingButton: false, loadingResendButton: false });
+      return;
+    }
+
+    try {
       if (resend) {
-        this.setState({ loadingResendButton: false });
+        await this.sendFirebaseOtp(resend);
       } else {
-        this.setState({ loadingButton: false });
+        await this.sendGupshupOtp();
       }
+    } catch (error) {
+      this.handleOtpError(error, resend);
     }
   };
+
+  sendFirebaseOtp = async (resend) => {
+    try {
+      console.log("in sendfirebaseotp");
+      const confirmResult = await OTPAuthWrapper.FirebaseWrapper.sendOtp(
+        this.state.phoneNumber
+      );
+      this.setState(
+        {
+          confirmResult,
+          otpSent: true,
+          loadingButton: false,
+          loadingResendButton: false,
+        },
+        () => this.startTimer()
+      );
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.setState({ userId: user.uid });
+          if (this.state.reachedBackendSignIn == false) {
+            this.setState({ reachedBackendSignIn: true }, () => {
+              console.log("Calling bsign fromm AUTHSTATE");
+              this._backendSignIn(
+                user.phoneNumber,
+                "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
+              );
+            });
+          } else {
+            return;
+          }
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  sendGupshupOtp = async () => {
+    const response = await OTPAuthWrapper.GupshupWrapper.sendOtp(
+      this.state.phoneNumber
+    );
+
+    if (response.data.includes("success")) {
+      this.setState({ otpSent: true }, () => this.startTimer());
+    } else if (response.data.includes("308")) {
+      alert(
+        "You are re-trying too early, please wait a few minutes and try again."
+      );
+    } else {
+      this.resendOtp();
+      return;
+      // this.sendFirebaseOtp(true);
+      // this.showGenericError();
+    }
+
+    this.setState({ loadingButton: false, loadingResendButton: false });
+  };
+
+  handleOtpError = (error, resend) => {
+    console.error("Error in OTP process:", error);
+    crashlytics().recordError(JSON.stringify(error));
+    this.showGenericError();
+    this.setState({ loadingVerifyButton: false, loadingButton: false });
+  };
+
+  showGenericError = () => {
+    alert(
+      'There was an issue with the login. Please restart the app and try again. If the issue persists, click the "Contact Us" button.'
+    );
+  };
+
+  handleVerifyCode = async (vcode) => {
+    const { confirmResult, verificationCode, resend } = this.state;
+    const code = vcode || verificationCode;
+
+    if (!this.isValidOtpCode(code)) {
+      this.setState({ showAlert: true });
+      return;
+    }
+
+    this.setState({ loadingVerifyButton: true });
+
+    try {
+      if (resend) {
+        await this.verifyFirebaseOtp(confirmResult, code);
+      } else {
+        await this.verifyGupshupOtp(code);
+      }
+    } catch (error) {
+      this.handleVerifyError(error);
+    }
+  };
+
+  verifyFirebaseOtp = async (confirmResult, code) => {
+    try {
+      const user = await OTPAuthWrapper.FirebaseWrapper.verifyOtp(
+        confirmResult,
+        code
+      );
+      if (this.state.reachedBackendSignIn == false) {
+        this.setState({ reachedBackendSignIn: true }, () => {
+          console.log("Calling bsign fromm VERIFYFB");
+          this._backendSignIn(
+            this.state.phoneNumber,
+            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
+          );
+        });
+      } else {
+        return;
+      }
+    } catch (error) {
+      this.setState({ loadingVerifyButton: false });
+      throw error;
+    }
+  };
+
+  verifyGupshupOtp = async (code) => {
+    const response = await OTPAuthWrapper.GupshupWrapper.verifyOtp(
+      code,
+      this.state.phoneNumber
+    );
+
+    if (response.data.includes("success")) {
+      if (this.state.reachedBackendSignIn == false) {
+        this.setState({ reachedBackendSignIn: true }, () => {
+          console.log("Calling bsign fromm GUPSHUP");
+          this._backendSignIn(
+            this.state.phoneNumber,
+            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
+          );
+        });
+      } else {
+        return;
+      }
+    } else {
+      throw new Error("OTP verification failed");
+    }
+
+    this.setState({ loadingVerifyButton: false });
+  };
+
+  isValidOtpCode = (code) => {
+    return code && code.length === 6;
+  };
+
+  handleVerifyError = (error) => {
+    console.error("Error verifying OTP:", error.message);
+    this.setState({ loadingVerifyButton: false, showAlert: true });
+  };
+
   changePhoneNumber = () => {
-    // this.loadingButton=true;
     this.setState({
+      otpSent: false,
       confirmResult: null,
       verificationCode: "",
       phoneNumber: null,
     });
   };
+
   resendOtp = () => {
     const resend = true;
+    this.setState({ resend });
+    this.resetTimer();
     this.handleSendCode(resend);
-  };
-  handleVerifyCode = async (vcode) => {
-    const { confirmResult, verificationCode } = this.state;
-    let code = vcode;
-    if (code == null) {
-      code = verificationCode;
-    }
-    // Request for OTP verification
-    if (code.length == 6) {
-      this.setState({ loadingVerifyButton: true });
-    } else {
-      this.setState({ showAlert: true });
-      return;
-    }
-    try {
-      const response = await axiosOg.get(GUPSHUP_BASE_URL, {
-        params: {
-          userid: GS_USER_ID,
-          password: GS_PASSWORD,
-          method: "TWO_FACTOR_AUTH",
-          v: "1.1",
-          phone_no: this.state.phoneNumber,
-          otp_code: code,
-        },
-      });
-      if (response.data.includes("success")) {
-        this._backendSignIn(this.state.phoneNumber);
-      } else {
-        this.setState({ loadingVerifyButton: false, showAlert: true });
-      }
-    } catch (error) {
-      console.error("Error verifying OTP:", error.message);
-      this.setState({ loadingVerifyButton: false, showAlert: true });
-    }
   };
 
   handleInputChange = (text) => {
@@ -370,7 +480,12 @@ class LoginScreen extends Component {
         />
         <Button
           type="clear"
-          title="Resend OTP"
+          title={
+            this.state.allowResend
+              ? "Resend OTP"
+              : `Resend OTP in ${this.state.secondsRemaining}`
+          }
+          disabled={!this.state.allowResend}
           loading={this.state.loadingResendButton}
           onPress={this.resendOtp.bind(this)}
         />
@@ -554,18 +669,15 @@ class LoginScreen extends Component {
       this.setState({ loader: false });
     } catch (error) {}
   };
-  _backendSignIn(phone) {
-    if (this.state.reachedBackendSignIn == false) {
-      this.setState({ reachedBackendSignIn: true });
-    } else {
-      return;
-    }
+
+  _backendSignIn(phone, profileImage) {
     var url = SERVER_URL + "/auth/login";
     axios
       .post(url, {
         phone: phone.substr(1),
         referralId: this.state.referralCode,
         fcmToken: this.state.fcmToken,
+        profileImage: profileImage,
       })
       .then(async (response) => {
         if (response.data && response.data != "ERROR") {
@@ -778,7 +890,6 @@ class LoginScreen extends Component {
                   this.setState({ unformattedNumber: phone });
                 }}
                 withDarkTheme
-                maxLength={10}
                 withShadow
                 autoFocus
               />
