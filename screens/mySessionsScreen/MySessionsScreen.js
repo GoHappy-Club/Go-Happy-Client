@@ -36,7 +36,7 @@ export default class MySessionsScreen extends Component {
    * @param {string} phoneNumber - The phone number of the user.
    * @param {function} _callback - A callback function to be executed after the data is loaded.
    */
-  loadMySessions(phoneNumber, _callback) {
+  loadMySessions(phoneNumber) {
     phoneNumber = this.state.phoneNumber;
     var url = SERVER_URL + "/event/mySessions";
     this.setState({ loading: true });
@@ -47,7 +47,7 @@ export default class MySessionsScreen extends Component {
           this.setState({ expiredEvents: response.data.expiredEvents });
           this.setState({ error: false });
 
-          _callback();
+          // _callback();
         }
         this.setState({ loading: false });
       })
