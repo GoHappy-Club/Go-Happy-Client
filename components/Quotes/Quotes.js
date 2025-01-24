@@ -83,7 +83,7 @@ const Quotes = () => {
             style={[
               styles.userInfo,
               {
-                // display: showUserData ? "flex" : "none",
+                display: showUserData ? "flex" : "none",
               },
             ]}
           >
@@ -258,7 +258,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
-    minHeight: hp(75),
+    minHeight:"auto",
+    maxHeight: hp(75),
   },
   decorativeLine: {
     width: wp(20),
