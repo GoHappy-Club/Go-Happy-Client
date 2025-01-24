@@ -214,7 +214,6 @@ export const Itinerary = ({ details, vouchers }) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>{section.title}</Text>
         <FontAwesomeIcon
-          style={{ marginHorizontal: "auto", marginLeft: "auto" }}
           icon={faArrowAltCircleDown}
           size={20}
           color={Colors.black}
@@ -256,6 +255,7 @@ export const Itinerary = ({ details, vouchers }) => {
           renderHeader={_renderHeader}
           renderContent={_renderContent}
           onChange={_updateSections}
+          underlayColor={Colors.background}
         />
       </ScrollView>
       {item && (
@@ -291,6 +291,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginBottom: "5%",
+    justifyContent: "space-between",
   },
   headerText: {
     // fontWeight: "bold",
