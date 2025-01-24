@@ -11,6 +11,7 @@ import { bindActionCreators } from "redux";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
 import { View } from "react-native";
 import { Colors } from "../../assets/colors/color.js";
+import { fromUnixTime } from "date-fns";
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -106,8 +107,10 @@ class HomeScreen extends Component {
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
-    if(midnightDate == undefined || midnightDate ==null){
-      midnightDate = new Date().setHours(23,59,0,0);
+    if (midnightDate == undefined || midnightDate == null) {
+      const dt = fromUnixTime(selectedDate / 1000);
+      dt.setHours(23, 59, 0, 0);
+      midnightDate = dt.getTime();
     }
 
     axios
