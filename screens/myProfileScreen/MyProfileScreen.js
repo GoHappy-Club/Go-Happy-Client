@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import MyProfile from "../../components/Profile/Profile";
 import { Colors } from "../../assets/colors/color";
-import NewProfile from "../../components/Profile/NewProfile";
+import Profile from "../../components/Profile/Profile";
 
 const MyProfileScreen = () => {
   const [loader, setLoader] = useState(false);
@@ -17,7 +17,7 @@ const MyProfileScreen = () => {
     );
   }
 
-  return <NewProfile />;
+  return <Profile />;
 };
 
 export default MyProfileScreen;

@@ -1,29 +1,54 @@
-import React, { useState, useEffect, useCallback } from "react";
 import {
-  Dimensions,
   Image,
   Linking,
-  ScrollView,
+  Platform,
+  Pressable,
+  StatusBar,
   StyleSheet,
-  TouchableOpacity,
+  Text,
   View,
 } from "react-native";
-import { FAB, PaperProvider } from "react-native-paper";
-
-import { Text } from "react-native-elements";
-
-import firebase from "@react-native-firebase/app";
-import "@react-native-firebase/auth";
-import { useSelector, useDispatch } from "react-redux";
-import { changeCount, setProfile } from "../../redux/actions/counts.js";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { SafeAreaView } from "react-native";
+import { Colors } from "../../assets/colors/color";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { hp, wp } from "../../helpers/common";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Award,
+  Calendar,
+  CircleHelp,
+  Clock,
+  Languages,
+  Pen,
+  Pencil,
+  PenIcon,
+} from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
-import ImagePicker from "react-native-image-crop-picker";
+import {
+  faCrow,
+  faCrown,
+  faHistory,
+  faInfoCircle,
+  faLanguage,
+  faSignOutAlt,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { Colors } from "../../assets/colors/color.js";
+import { firebase } from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FastImage from "react-native-fast-image";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { BlurView } from "@react-native-community/blur";
+import { useTranslation } from "react-i18next";
 
-const MyProfile = ({ navigation }) => {
+const Profile = () => {
   const [state, setState] = useState({
     phoneNumber: "",
     password: "",
@@ -38,12 +63,15 @@ const MyProfile = ({ navigation }) => {
     image: null,
     logoutPopup: false,
     whatsappLink: "",
+    showBackdrop: false,
   });
 
   const profile = useSelector((state) => state.profile.profile);
-  const membership = useSelector((state) => state?.membership?.membership);
-
+  const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const ref = useRef();
+  const { t } = useTranslation();
 
   const retrieveData = useCallback(async () => {
     try {
@@ -98,40 +126,13 @@ const MyProfile = ({ navigation }) => {
     return unsubscribe;
   }, [navigation, retrieveData, openWhatsApp]);
 
-  const handleSelectImage = async () => {
-    try {
-      const options = {
-        width: 350,
-        height: 400,
-        cropping: true,
-        includeBase64: true,
-        freeStyleCropEnabled: true,
-      };
-      ImagePicker.openPicker(options)
-        .then((image) => {
-          const base64Image = `data:${image.mime};base64,${image.data}`;
-          var url = SERVER_URL + "/user/updateProfileImage";
-          axios
-            .post(url, {
-              phoneNumber: profile.phoneNumber,
-              profileImage: base64Image,
-            })
-            .then(() => {
-              dispatch(setProfile({ ...profile, profileImage: base64Image }));
-              setState((prevState) => ({ ...prevState, image: base64Image }));
-              AsyncStorage.setItem("profileImage", base64Image);
-            })
-            .catch((error) => {});
-        })
-        .catch((error) => {});
-    } catch (error) {
-      console.log("Error in handleSelectImage:", error);
-    }
-  };
-
   const signout = async () => {
     try {
-      await firebase.auth().signOut();
+      await firebase
+        .auth()
+        .signOut()
+        .then(() => {})
+        .catch(() => console.log("It's ok"));
       await AsyncStorage.clear();
       navigation.reset({
         index: 0,
@@ -142,113 +143,461 @@ const MyProfile = ({ navigation }) => {
     }
   };
 
-  const now = new Date();
-  const days = Math.ceil(
-    (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
+  const formatName = (name) => {
+    const names = name.split(" ");
+    const formattedName = names
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+
+    return formattedName;
+  };
+
+  const formatPhoneNumber = (phoneNumber) =>
+    `+${phoneNumber.slice(0, -10)} ${phoneNumber.slice(-10)}`;
+
+  const formatDuration = (dateOfJoining) => {
+    const now = new Date();
+    const days = Math.ceil(
+      (now.getTime() - Number(dateOfJoining)) / (1000 * 3600 * 24)
+    );
+
+    const dayString = isNaN(days) || days <= 1 ? t("day") : t("days");
+    return `${days} ${dayString}`;
+  };
+
+  const showRedDot = () => {
+    if (
+      profile.email == "" ||
+      profile.email == null ||
+      profile.email == undefined
+    ) {
+      return true;
+    } else if (
+      profile.phoneNumber == "" ||
+      profile.phoneNumber == null ||
+      profile.phoneNumber == undefined
+    ) {
+      return true;
+    } else if (
+      profile.profileImage == "" ||
+      profile.profileImage == null ||
+      profile.profileImage == undefined
+    ) {
+      return true;
+    } else if (
+      profile.age == "" ||
+      profile.age == null ||
+      profile.age == undefined
+    ) {
+      return true;
+    } else if (
+      profile.emergencyContact == "" ||
+      profile.emergencyContact == null ||
+      profile.emergencyContact == undefined
+    ) {
+      return true;
+    } else if (
+      profile.city == "" ||
+      profile.city == null ||
+      profile.city == undefined
+    ) {
+      return true;
+    } else if (
+      profile.dob == "" ||
+      profile.dob == null ||
+      profile.dob == undefined
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const data = [
+    {
+      key: t("sessions_attended"),
+      value: profile.sessionsAttended,
+      icon: <Calendar size={32} color={Colors.background} />,
+    },
+    {
+      key: t("membership"),
+      value: membership.membershipType,
+      icon: <Award size={32} color={Colors.background} />,
+    },
+    {
+      key: t("member_since"),
+      value: formatDuration(profile.dateOfJoining),
+      icon: <Clock size={32} color={Colors.background} />,
+    },
+  ];
+
+  const closeModal = () => {
+    ref.current?.snapToIndex(0);
+    setState((prev) => ({ ...prev, showBackdrop: false }));
+  };
+
+  const renderBackdrop = useCallback(
+    ({ animatedIndex }) => {
+      const containerAnimatedStyle = useAnimatedStyle(() => ({
+        opacity: interpolate(
+          animatedIndex.value,
+          [-1, 0],
+          [0, 1],
+          Extrapolation.CLAMP
+        ),
+      }));
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
+        return (
+          <Animated.View style={containerStyle}>
+            <TouchableOpacity
+              style={StyleSheet.absoluteFill}
+              onPress={closeModal}
+              activeOpacity={1}
+            >
+              <BlurView
+                style={StyleSheet.absoluteFill}
+                blurAmount={1}
+                blurType="regular"
+              />
+            </TouchableOpacity>
+          </Animated.View>
+        );
+      }
+
+      return (
+        <Animated.View
+          style={[
+            {
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+            },
+            containerAnimatedStyle,
+          ]}
+        >
+          <TouchableOpacity
+            style={StyleSheet.absoluteFill}
+            onPress={closeModal}
+            activeOpacity={1}
+          />
+        </Animated.View>
+      );
+    },
+    [closeModal]
   );
 
-  const dayString = isNaN(days) || days <= 1 ? "day" : "days";
+  const snapPoints = React.useMemo(() => ["42%", "70%"], []);
 
-  if (state.loader) {
-    return (
-      <MaterialIndicator
-        color={Colors.white}
-        style={{ backgroundColor: Colors.materialIndicatorColor }}
-      />
-    );
-  }
-
+  const handleSheetChanges = useCallback((index) => {
+    if (index == 1) setState((prev) => ({ ...prev, showBackdrop: true }));
+    if (index == 0) setState((prev) => ({ ...prev, showBackdrop: false }));
+  }, []);
   return (
-    <View style={{ backgroundColor: Colors.white, flex: 1 }}>
-      <ScrollView
-        style={{ backgroundColor: Colors.white, height: "100%" }}
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {/* Profile header */}
-        <View style={styles.profileHeader}>
-          <View style={styles.coverContainer}>
+    <>
+      <SafeAreaView style={styles.mainContainer}>
+        <View style={styles.container}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+              marginBottom: hp(2.5),
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                padding: 4,
+                backgroundColor: Colors.white,
+                borderRadius: 4,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                shadowColor: Colors.black,
+                elevation: 10,
+                shadowOffset: { height: 2 },
+                shadowOpacity: 0.3,
+                position: "relative",
+                top: 15,
+                left: 15,
+              }}
+              onPress={() => navigation.goBack()}
+            >
+              <Text>{t("back")}</Text>
+            </TouchableOpacity>
+            {(profile.age == null || profile.age >= 50) && (
+              <Pressable
+                style={{
+                  position: "relative",
+                  top: 10,
+                  right: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+                onPress={() => Linking.openURL(state.whatsappLink)}
+              >
+                <CircleHelp size={22} color={"black"} />
+                <Text
+                  style={{
+                    fontFamily: "NunitoSans-Regular",
+                    fontSize: wp(4),
+                  }}
+                >
+                  {t("help")}
+                </Text>
+              </Pressable>
+            )}
+          </View>
+          <View style={styles.basicDetailsContainer}>
             <FastImage
               style={styles.cover}
               resizeMode="cover"
               source={{
-                uri: state.image || profile.profileImage,
+                uri: profile.profileImage,
               }}
             />
-          </View>
-          <View style={styles.nameContainer}>
-            <Text h3 style={styles.nameText}>
-              {profile.name}
-            </Text>
-          </View>
-        </View>
-
-        {/* Stats card */}
-        <View style={styles.statsCard}>
-          <View style={[styles.statItem, styles.borderRight]}>
-            <Text style={styles.cardText}>Sessions Attended</Text>
-            <Text style={[styles.cardText, styles.boldText]}>
-              {profile.sessionsAttended}
-            </Text>
-          </View>
-          <View style={[styles.statItem, styles.borderRight]}>
-            <Text style={styles.cardText}>Membership</Text>
-            <Text style={[styles.cardText, styles.boldText]}>
-              {(membership && membership.membershipType) || "Free"}
-            </Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.cardText}>Member Since</Text>
-            <Text style={[styles.cardText, styles.boldText]}>
-              {days} {dayString}
-            </Text>
-          </View>
-        </View>
-
-        {/* Menu options */}
-        <View style={styles.menuContainer}>
-          <TouchableOpacity style={styles.menuItem} onPress={handleSelectImage}>
-            <Text style={styles.optionList}>Update Profile Picture</Text>
-          </TouchableOpacity>
-
-          {(profile.age == null || profile.age >= 50) && (
-            <>
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={() => navigation.navigate("PastSessions")}
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <Text style={styles.profileName}>{formatName(profile.name)}</Text>
+              <Text style={styles.phoneNumber}>
+                {formatPhoneNumber(profile.phoneNumber)}
+              </Text>
+              <Pressable
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 5,
+                  marginTop: 10,
+                  borderRadius: 5,
+                  padding: 6,
+                  backgroundColor: Colors.primary,
+                  alignSelf: "flex-start",
+                }}
+                onPress={() => navigation.navigate("EditProfile")}
               >
-                <Text style={styles.optionList}>Check Past Sessions</Text>
-              </TouchableOpacity>
+                <Text
+                  style={{
+                    color: Colors.white,
+                  }}
+                >
+                  {t("edit")}
+                </Text>
+                <Pencil size={18} color={Colors.beige} />
+
+                {showRedDot() && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: -4,
+                      right: -4,
+                      backgroundColor: Colors.red,
+                      borderRadius: 10,
+                      width: 10,
+                      height: 10,
+                      zIndex: 1,
+                      borderWidth: 1,
+                      borderColor: Colors.background,
+                    }}
+                  />
+                )}
+              </Pressable>
+            </View>
+          </View>
+          <View style={styles.dashedBorder} />
+          <View style={styles.achievmentsContainer}>
+            {data.map((item) => (
+              <View style={styles.achievmentItem} key={item.key}>
+                <View
+                  style={{
+                    backgroundColor: Colors.primary,
+                    padding: 15,
+                    borderRadius: 300,
+                  }}
+                >
+                  {item.icon}
+                </View>
+                <View
+                  style={{
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                >
+                  <Text style={styles.achievmentValue}>{item.value}</Text>
+                  <Text style={styles.achievmentKey}>{item.key}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+        <BottomSheet
+          ref={ref}
+          index={0}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          enablePanDownToClose={false}
+          enableDismissOnClose={true}
+          handleStyle={{ display: "none" }}
+          backdropComponent={state.showBackdrop ? renderBackdrop : null}
+          style={{
+            overflow: "hidden",
+            borderRadius: 40,
+            paddingHorizontal: wp(6),
+            paddingVertical: hp(3),
+          }}
+          backgroundStyle={{
+            borderRadius: 40,
+          }}
+        >
+          <BottomSheetScrollView
+            contentContainerStyle={styles.scrollViewContent}
+          >
+            {membership.membershipType == "Free" &&
+              (profile.age == null || profile.age >= 50) && (
+                <View
+                  style={{
+                    backgroundColor: Colors.beige,
+                    width: "100%",
+                    paddingHorizontal: 10,
+                    paddingVertical: 20,
+                    borderRadius: 20,
+                    elevation: 4,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: wp(5),
+                  }}
+                >
+                  <View>
+                    <FastImage
+                      style={{
+                        width: wp(25),
+                        height: wp(12),
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                      source={require("../../images/darkWordLogo.png")}
+                    />
+                    <Text
+                      style={{
+                        fontFamily: "NunitoSans-SemiBold",
+                        fontSize: wp(3),
+                      }}
+                    >
+                      Join our exclusive membership
+                    </Text>
+                  </View>
+                  <Pressable
+                    style={{
+                      backgroundColor: Colors.primary,
+                      padding: 10,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                    onPress={() => navigation.navigate("SubscriptionPlans")}
+                  >
+                    <Text
+                      style={{
+                        color: Colors.white,
+                        fontFamily: "NunitoSans-SemiBold",
+                      }}
+                    >
+                      Join now
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                console.log("Clicked");
+                navigation.navigate("PastSessions");
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faHistory}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("check_past_sessions")}</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("About GoHappy Club")}
+            >
+              <FontAwesomeIcon
+                icon={faInfoCircle}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("about_goHappy")}</Text>
+              </View>
+            </TouchableOpacity>
+
+            {(profile.age == null || profile.age >= 50) && (
               <TouchableOpacity
                 style={styles.menuItem}
                 onPress={() => Linking.openURL(state.whatsappLink)}
               >
-                <Text style={styles.optionList}>Join Whatsapp Group</Text>
+                <FontAwesomeIcon
+                  icon={faUsers}
+                  size={24}
+                  color={Colors.primaryText}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>{t("join_whatsapp")}</Text>
+                </View>
               </TouchableOpacity>
-            </>
-          )}
+            )}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("Languages")}
+            >
+              <Languages size={24} color={Colors.primaryText} />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("change_language")}</Text>
+              </View>
+            </TouchableOpacity>
+            {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && ( */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("MembershipDetails")}
+            >
+              <FontAwesomeIcon
+                icon={faCrown}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("membership_status")}</Text>
+              </View>
+            </TouchableOpacity>
+            {/* )} */}
 
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => navigation.navigate("About GoHappy Club")}
-          >
-            <Text style={styles.optionList}>About GoHappy Club</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.menuItem, styles.borderBottom]}
-            onPress={() =>
-              setState((prevState) => ({ ...prevState, logoutPopup: true }))
-            }
-          >
-            <Text style={styles.optionList}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      {/* Logout confirmation popup */}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() =>
+                setState((prevState) => ({ ...prevState, logoutPopup: true }))
+              }
+            >
+              <FontAwesomeIcon
+                icon={faSignOutAlt}
+                size={24}
+                color={Colors.primaryText}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{t("logout")}</Text>
+              </View>
+            </TouchableOpacity>
+          </BottomSheetScrollView>
+        </BottomSheet>
+      </SafeAreaView>
       <AwesomeAlert
         show={state.logoutPopup}
         showProgress={false}
@@ -270,106 +619,103 @@ const MyProfile = ({ navigation }) => {
           signout();
         }}
       />
-
-      {/* WhatsApp FAB */}
-      {(profile.age == null || profile.age > 50) && (
-        <FAB
-          style={styles.fab}
-          icon={({ size, color }) => (
-            <FontAwesomeIcon icon={faComment} color={Colors.white} size={25} />
-          )}
-          onPress={() => Linking.openURL(state.whatsappLink)}
-        />
-      )}
-    </View>
+    </>
   );
 };
 
+export default Profile;
+
 const styles = StyleSheet.create({
-  profileHeader: {
-    backgroundColor: Colors.white,
-    shadowColor: Colors.black,
-    shadowOffset: { height: 2 },
-    shadowOpacity: 0.3,
-    width: "100%",
-    height: Dimensions.get("window").height / 3,
-    justifyContent: "center",
+  mainContainer: {
+    flex: 1,
   },
-  coverContainer: {
-    overflow: "hidden",
+  container: {
+    height: hp(65),
+    backgroundColor: Colors.beige,
+    justifyContent: "start",
+    alignItems: "center",
+    paddingBottom: hp(5),
   },
-  cover: {
-    width: "100%",
-    height: "130%",
-  },
-  nameContainer: {
-    position: "absolute",
-    top: 0,
-    paddingLeft: 20,
-    height: "180%",
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
-  nameText: {
-    overflow: "hidden",
-    backgroundColor: "rgba(41,191,194,0.9)",
-    padding: 4,
-    color: Colors.white,
-    borderRadius: 10,
-  },
-  statsCard: {
-    backgroundColor: Colors.primary,
-    shadowColor: Colors.black,
-    shadowOffset: { height: 2 },
-    shadowOpacity: 0.3,
-    borderRadius: 10,
-    width: Dimensions.get("window").width * 0.9,
-    height: 80,
-    marginTop: "2%",
-    flexDirection: "row",
-  },
-  statItem: {
-    width: "33%",
-    height: "100%",
+  scrollViewContent: {
+    paddingBottom: hp(10),
     justifyContent: "center",
     alignItems: "center",
+    // overflow: "hidden",
   },
-  borderRight: {
-    borderRightWidth: 1,
-    borderColor: "#E0E0E0",
+  cover: {
+    width: wp(35),
+    aspectRatio: 1,
+    borderRadius: wp(25),
   },
-  cardText: {
-    textAlign: "center",
-    marginTop: 10,
-    color: Colors.white,
+  basicDetailsContainer: {
+    width: "100%",
+    paddingHorizontal: wp(10),
+    flexDirection: "row",
+    justifyContent: "start",
+    alignItems: "center",
+    gap: wp(8),
   },
-  boldText: {
-    fontWeight: "bold",
+  profileName: {
+    fontSize: wp(6),
+    fontFamily: "Montserrat-SemiBold",
   },
-  menuContainer: {
-    width: Dimensions.get("window").width * 0.9,
-    marginTop: 20,
+  phoneNumber: {
+    fontSize: wp(3),
+    fontFamily: "Montserrat-SemiBold",
+    letterSpacing: 0.8,
+  },
+  dashedBorder: {
+    height: 1,
+    width: "90%",
+    borderColor: "black",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    marginTop: hp(4),
+    marginBottom: hp(2),
+  },
+  achievmentsContainer: {
+    width: "100%",
+    // marginTop: hp(2),
+    marginBottom: hp(4),
+    paddingHorizontal: wp(1),
+    // paddingVertical: hp(2),
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  achievmentItem: {
+    alignSelf: "flex-start",
+    padding: wp(4),
+    borderRadius: 20,
+    alignItems: "center",
+    gap: wp(2),
+    minWidth: wp(30),
+  },
+  achievmentValue: {
+    color: Colors.primaryText,
+    fontSize: wp(5),
+    fontFamily: "Montserrat-SemiBold",
+  },
+  achievmentKey: {
+    fontSize: wp(3),
+    fontFamily: "Montserrat-Regular",
+    color: Colors.primaryText,
+    maxWidth: wp(25),
   },
   menuItem: {
-    width: "100%",
-    borderTopWidth: 1,
-    borderColor: "#E0E0E0",
-  },
-  borderBottom: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 15,
     borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    width: "100%",
   },
-  optionList: {
+  textContainer: {
+    marginLeft: 16,
+  },
+  title: {
     fontSize: 16,
-    padding: 10,
-    color: Colors.grey.optionList,
-  },
-  fab: {
-    backgroundColor: Colors.primary,
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    bottom: 0,
+    fontWeight: "600",
+    color: Colors.primaryText,
   },
 });
-
-export default MyProfile;

@@ -57,10 +57,10 @@ import RewardsScreen from "./screens/RewardsScreen/RewardsScreen.js";
 import VoucherDetails from "./components/Rewards/VoucherDetails.js";
 import VoucherScratch from "./components/Rewards/VoucherScratch.js";
 import FestiveWish from "./components/Festivals/FestiveWish.js";
-import NewProfile from "./components/Profile/NewProfile.js";
+import Profile from "./components/Profile/Profile.js";
 import EditProfile from "./components/Profile/EditProfile.js";
 import GOHLoader from "./commonComponents/GOHLoader.js";
-import NewAdditionalDetails from "./components/AdditionalDetails/NewAdditionalDetails.js";
+import AdditionalDetails from "./components/AdditionalDetails/AdditionalDetails.js";
 import Quotes from "./components/Quotes/Quotes.js";
 import PushNotification from "react-native-push-notification";
 import Reels from "./components/Reels/Reels.js";
@@ -653,7 +653,7 @@ export default function App() {
                     name="Additional Details"
                     // component={AdditionalDetails}
                     children={(props) => (
-                      <NewAdditionalDetails {...props} propProfile={profile} />
+                      <AdditionalDetails {...props} propProfile={profile} />
                     )}
                     options={{
                       headerLeft: () => <View />,
@@ -744,7 +744,7 @@ export default function App() {
                   <Stack.Screen
                     name="MyProfile"
                     children={(props) => (
-                      <NewProfile {...props} propProfile={profile} />
+                      <Profile {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
                       headerShown: false,
@@ -792,9 +792,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerStyle: {
-                        backgroundColor: Colors.grey.f0,
-                      },
+                      headerTransparent:true,
                       headerLeft: () => (
                         <BackButton
                           styles={styles}
