@@ -59,6 +59,7 @@
     "react-native-autocomplete-input": "^5.5.2",
     "react-native-awesome-alerts": "2.0.0",
     "react-native-collapsible": "^1.6.2",
+    "react-native-config": "^1.5.3",
     "react-native-copilot": "^3.3.3",
     "react-native-device-info": "^14.0.2",
     "react-native-dotenv": "^3.4.11",

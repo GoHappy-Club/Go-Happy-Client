@@ -1,12 +1,12 @@
 import axios from "axios";
 // import { JWT_TOKEN } from "@env";
-import {JWT_TOKEN} from "./tokens";
+import Config from "react-native-config";
 const customAxios = axios.create();
 
-if (JWT_TOKEN && JWT_TOKEN.length > 0) {
+if (Config.JWT_TOKEN && Config.JWT_TOKEN.length > 0) {
   customAxios.interceptors.request.use(
     (config) => {
-      config.headers["Authorization"] = `Bearer ${JWT_TOKEN}`;
+      config.headers["Authorization"] = `Bearer ${Config.JWT_TOKEN}`;
 
       return config;
     },

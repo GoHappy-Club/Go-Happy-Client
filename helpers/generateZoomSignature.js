@@ -1,13 +1,15 @@
+import { KJUR } from "jsrsasign";
+import Config from "react-native-config";
 
-import {KJUR} from 'jsrsasign'
-// import {ZoomKey,ZoomSecret} from "@env"
-import { ZoomKey,ZoomSecret } from '../config/tokens'
-
-export function generateZoomSignature(key=ZoomKey, secret=ZoomSecret, meetingNumber=0, role=0) {
-
-  const iat = Math.round(new Date().getTime() / 1000) - 30
-  const exp = iat + 60 * 60 * 2
-  const oHeader = { alg: 'HS256', typ: 'JWT' }
+export function generateZoomSignature(
+  key = Config.ZoomKey,
+  secret = Config.ZoomSecret,
+  meetingNumber = 0,
+  role = 0
+) {
+  const iat = Math.round(new Date().getTime() / 1000) - 30;
+  const exp = iat + 60 * 60 * 2;
+  const oHeader = { alg: "HS256", typ: "JWT" };
 
   const oPayload = {
     sdkKey: key,
@@ -16,11 +18,11 @@ export function generateZoomSignature(key=ZoomKey, secret=ZoomSecret, meetingNum
     role: role,
     iat: iat,
     exp: exp,
-    tokenExp: exp
-  }
+    tokenExp: exp,
+  };
 
-  const sHeader = JSON.stringify(oHeader)
-  const sPayload = JSON.stringify(oPayload)
-  const sdkJWT = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, secret)
-  return sdkJWT
+  const sHeader = JSON.stringify(oHeader);
+  const sPayload = JSON.stringify(oPayload);
+  const sdkJWT = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, secret);
+  return sdkJWT;
 }
