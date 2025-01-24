@@ -343,21 +343,30 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   shadowOffset: { height: 2 },
                   shadowOpacity: 0.3,
                   borderRadius: 10,
-                  height: 100,
                   margin: 30,
                   justifyContent: "center",
                   alignItems: "center",
+                  padding: wp(2),
                 }}
                 onPress={() => planSelected(plan, index)}
               >
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
-                  <Text style={{ fontSize: 30, color: plan.textColor }}>
+                  <Text
+                    style={{
+                      color: plan.textColor,
+                      fontSize: wp(4),
+                      fontFamily: "Montserrat-Regular",
+                      textAlign: "center",
+                    }}
+                  >
+                    {plan.title}
+                  </Text>
+                  <Text style={{ fontSize: wp(7), color: plan.textColor }}>
                     ₹{plan.coins - plan.coins * (plan.discountPercentage / 100)}
                   </Text>
-                  <Text style={{ color: plan.textColor }}>{plan.title}</Text>
-                  <Text style={{ color: plan.textColor }}>
+                  <Text style={{ color: Colors.green,fontWeight:"bold" }}>
                     {plan.coins} coins
                   </Text>
                 </View>
@@ -379,9 +388,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           customView={
             <View style={styles.AAcontainer}>
               <Text style={styles.AAtitle}>Payment Confirmation</Text>
-              <Text style={styles.AAmessage}>
-                Click below to pay.
-              </Text>
+              <Text style={styles.AAmessage}>Click below to pay.</Text>
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
@@ -419,7 +426,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: wp(5),
-    backgroundColor: Colors.grey.f0,
+    backgroundColor: Colors.background,
     alignItems: "center",
     justifyContent: "center",
   },

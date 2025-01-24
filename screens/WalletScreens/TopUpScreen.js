@@ -43,15 +43,25 @@ const TopUpScreen = () => {
   return (
     <>
       {loading && (
-        <GOHLoader/>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <GOHLoader />
+        </View>
       )}
-      {!loading && <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <WalletTopUp packages={packages} />
-      </View>}
+      {!loading && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+          }}
+        >
+          <WalletTopUp packages={packages} />
+        </View>
+      )}
       {nonMemberPopUp && (
         <AwesomeAlert
           show={nonMemberPopUp}
