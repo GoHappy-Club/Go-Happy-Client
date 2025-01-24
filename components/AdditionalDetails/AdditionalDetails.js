@@ -1,89 +1,103 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
-
-import AwesomeAlert from "react-native-awesome-alerts";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { Button } from "react-native-elements";
-import analytics from "@react-native-firebase/analytics";
-import LinearGradient from "react-native-linear-gradient";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Linking,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { SafeAreaView } from "react-native";
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Award,
+  Calendar,
+  Camera,
+  CircleHelp,
+  Clock,
+} from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AutocompleteCityInput from "../Autocomplete.js";
-import { Colors } from "../../assets/colors/color.js";
+import ImagePicker from "react-native-image-crop-picker";
+import { setProfile } from "../../redux/actions/counts";
+import { TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
-import ImagePicker from "react-native-image-crop-picker";
-import { hp, wp } from "../../helpers/common.js";
-class AdditionalDetails extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: props.route.params.email,
-      name: props.route.params.name,
-      state: props.route.params.state,
-      city: props.route.params.city,
-      phoneNumber: props.route.params.phoneNumber,
-      emergencyContact: props.route.params.emergencyContact,
-      loadingButton: false,
-      date: new Date(),
-      open: false,
-      uiDate: "",
-      showAlert: false,
-      alertMessage: "",
-      // dob: props.route.params.dob,
-      age: props.route.params.age,
-    };
+import { Button } from "react-native-elements";
+import AutocompleteCityInput from "../Autocomplete";
+import AwesomeAlert from "react-native-awesome-alerts";
+import UserDetailsForm from "../../commonComponents/UserDetailsForm";
 
-    if (this.pending() == false) {
-      this.props.route.params.navigation.replace("GoHappy Club");
-    }
-    // this.pending();
-  }
-  pending() {
+const AdditionalDetails = ({ route }) => {
+  const parseDate = (date) => {
+    const splittedDate = date?.split("-");
+    const day = splittedDate[0];
+    const month = splittedDate[1];
+    const year = splittedDate[2];
+    const d = new Date(year, month - 1, day);
+    const finalDate = dayjs(d);
+    return finalDate;
+  };
+
+  const getFormattedDate = (dayjsObject) => {
+    const finalDate = `${dayjsObject.get("date")}-${
+      dayjsObject.get("month") + 1
+    }-${dayjsObject.get("year")}`;
+    return finalDate;
+  };
+
+  const profile = useSelector((state) => state.profile.profile);
+
+  const [state, setState] = useState({
+    name: route.params?.name,
+    email: route.params?.email,
+    emergencyContact: route.params?.emergencyContact,
+    dob: route.params?.dob
+      ? route.params?.dob
+      : getFormattedDate(dayjs().subtract(50, "years")),
+    city: route.params?.city,
+    age: route.params?.age,
+    showAlert: false,
+    alertMessage: "",
+    phoneNumber: route.params?.phoneNumber,
+    selectedFromDropdown: false,
+  });
+
+  const [updated, setUpdated] = useState(false);
+  const [open, setOpen] = useState(false);
+  const membership = useSelector((state) => state.membership.membership);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
+
+  const pending = () => {
     if (
-      this.state.phoneNumber == null ||
-      this.state.phoneNumber.length == 0 ||
-      this.state.name == null ||
-      this.state.name.length == 0
+      state.phoneNumber == null ||
+      state.phoneNumber.length == 0 ||
+      state.name == null ||
+      state.name.length == 0
     ) {
       return true;
     }
     return false;
-  }
-  componentDidMount() {
-    // this.getCurrentUserInfo();
-  }
-  setProfile(
-    name,
-    age,
-    profileImage,
-    sessionsAttended,
-    selfInviteCode,
-    city,
-    emergencyContact
-  ) {
-    let { profile, actions } = this.props;
+  };
 
-    profile = {
-      selfInviteCode: selfInviteCode,
-      // dob: profile.dob,
-      dateOfJoining: profile.dateOfJoining,
-      age: age,
-      name: name,
-      email: profile.email,
-      phoneNumber: profile.phoneNumber,
-      token: profile.token,
-      profileImage: profileImage,
-      sessionsAttended: sessionsAttended,
-      city: city,
-      emergencyContact: emergencyContact,
-    };
+  useLayoutEffect(() => {
+    if (!pending() && route.params?.isNewUser !== true) {
+      navigation.replace("GoHappy Club");
+    }
+    setInitialCheckDone(true);
+  }, []);
 
-    actions.setProfile(profile);
-  }
-
-  handleSelectImage = async () => {
+  const handleSelectImage = async () => {
     try {
       const options = {
         width: 350,
@@ -98,14 +112,12 @@ class AdditionalDetails extends Component {
           var url = SERVER_URL + "/user/updateProfileImage";
           axios
             .post(url, {
-              phoneNumber: this.props.profile.phoneNumber,
+              phoneNumber: profile.phoneNumber,
               profileImage: base64Image,
             })
             .then(() => {
-              let { profile, actions } = this.props;
-              const newProfile = { ...profile, profileImage: base64Image };
-              actions.setProfile(newProfile);
-              this.setState({ ...prevState, image: base64Image });
+              dispatch(setProfile({ ...profile, profileImage: base64Image }));
+              setState((prevState) => ({ ...prevState, image: base64Image }));
               AsyncStorage.setItem("profileImage", base64Image);
             })
             .catch((error) => {});
@@ -116,271 +128,240 @@ class AdditionalDetails extends Component {
     }
   };
 
-  updateDetails() {
+  const validateMail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(state.email);
+  };
+
+  const validateEmergencyContact = () => {
+    const mobileRegex = /^[0-9]{10}$/;
+    return mobileRegex.test(state.emergencyContact);
+  };
+
+  const updateUser = async () => {
     if (
-      this.state.name == null ||
-      this.state.name == "" ||
-      this.state.age == null ||
-      this.state.age == ""
+      state.name == null ||
+      state.name == "" ||
+      state.age == null ||
+      state.age == "" ||
+      state.city == null ||
+      state.city == "" ||
+      state.dob == null ||
+      state.dob == ""
     ) {
-      this.setState({
-        showAlert: true.valueOf,
+      setState((prev) => ({
+        ...prev,
+        showAlert: true,
         alertMessage: "Mandatory details are missing",
-      });
+      }));
 
       return;
     }
-    if (this.state.age < 16) {
-      this.setState({
+    if (state.age < 16) {
+      setState((prev) => ({
+        ...prev,
         showAlert: true,
         alertMessage: "Sorry, you must be atleast 16 years old to log in.",
-      });
+      }));
       return;
     }
-    this.setState({ loadingButton: true });
-    var url = SERVER_URL + "/user/update";
-    axios
-      .post(url, {
-        email: this.state.email,
-        name: this.state.name,
-        state: this.state.state,
-        city: this.state.city,
-        phone: this.state.phoneNumber,
-        emergencyContact: this.state.emergencyContact,
-        // dob: this.state.date,
-        age: this.state.age,
-      })
-      .then(async (response) => {
-        if (response.data && response.data != "ERROR") {
-          // this.setState({fullName: userInfo.fullName});
-          if (response.data.phone != null) {
-            AsyncStorage.setItem("phoneNumber", response.data.phone);
-          }
-          // AsyncStorage.setItem('fullName',response.data.fullName);
-          if (response.data.name != null) {
-            AsyncStorage.setItem("name", response.data.name);
-          }
-          if (response.data.email != null) {
-            AsyncStorage.setItem("email", response.data.email);
-          }
-          if (response.data.profileImage != null) {
-            AsyncStorage.setItem("profileImage", response.data.profileImage);
-          }
-          if (response.data.age != null) {
-            AsyncStorage.setItem("age", response.data.age);
-          }
-          if (response.data.token != null) {
-            AsyncStorage.setItem("token", response.data.token);
-          }
-          // this.state.navigation.navigate('DrawerNavigator');
-          this.setProfile(
-            response.data.name,
-            response.data.age,
-            response.data.profileImage,
-            response.data.sessionsAttended,
-            response.data.selfInviteCode,
-            response.data.city,
-            response.data.emergencyContact
-          );
-          this.setState({ loader: true });
-
-          // this.props.route.params.navigation.replace("Intro");
-          AsyncStorage.setItem("showTour", "true");
-          this.props.navigation.navigate("GoHappy Club");
-          this.setState({ loader: false });
-          await analytics().logEvent("signup_click", {
-            phoneNumber: response.data.user.phoneNumber,
-            email: response.data.user.email,
-            age: response.data.user.age,
-            name: response.data.user.name,
-          });
-        } else if (response.data == "ERROR") {
-          this.setState({ showAlert: true, loader: false });
-        }
-        this.setState({ loadingButton: false });
-      })
-      .catch((error) => {
-        this.setState({ loadingButton: false });
+    if (!validateMail()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid Email",
+        alertMessage: "Please enter a valid email address\n eg:-name@gmail.com",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!validateEmergencyContact()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid emergency contact",
+        alertMessage: "Please enter a valid emergency contact number.",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!state.selectedFromDropdown) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid city",
+        alertMessage: "Please select a city from the dropdown only.",
+        showAlert: true,
+      }));
+      return;
+    }
+    try {
+      setState((prevState) => ({ ...prevState, loading: true }));
+      const response = await axios.post(`${SERVER_URL}/user/update`, {
+        name: state.name,
+        email: state.email,
+        emergencyContact: state.emergencyContact,
+        phone: profile.phoneNumber,
+        city: state.city,
+        dob: state.dob,
+        age: state.age,
       });
+      dispatch(
+        setProfile({
+          ...profile,
+          name: state.name,
+          email: state.email,
+          emergencyContact: state.emergencyContact,
+          city: state.city,
+          dob: state.dob,
+          age: state.age,
+        })
+      );
+      AsyncStorage.setItem("phoneNumber", response.data.phone);
+      AsyncStorage.setItem("name", state.name);
+      AsyncStorage.setItem("email", state.email);
+      AsyncStorage.setItem("emergencyContact", state.emergencyContact);
+      AsyncStorage.setItem("city", state.city);
+      AsyncStorage.setItem("dob", state.dob);
+      AsyncStorage.setItem("age", state.age);
+      setState((prevState) => ({ ...prevState, loading: false }));
+      AsyncStorage.setItem("showTour", "true");
+      navigation.replace("GoHappy Club");
+      await analytics().logEvent("signup_click", {
+        phoneNumber: response.data.phone,
+        email: response.data.email,
+        age: response.data.age,
+        name: response.data.name,
+      });
+    } catch (error) {
+      setState((prevState) => ({ ...prevState, loading: false }));
+      console.log("Error in updateUser:", error);
+      crashlytics().log(`Error in updateUser AdditionalDetails ${error}`);
+    }
+  };
+
+  if (!initialCheckDone) {
+    return null;
   }
 
-  render() {
-    var open = this.state.open;
-    return (
-      <>
-        <SafeAreaView style={styles.mainContainer}>
-          <Pressable
+  return (
+    <>
+      <SafeAreaView style={styles.mainContainer}>
+        <Pressable
+          style={{
+            display: open ? "flex" : "none",
+            position: "absolute",
+            backgroundColor: "#000000a0",
+            height: hp(100),
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000000,
+            width: wp(100),
+          }}
+          onPress={() => setOpen(false)}
+        >
+          <View
             style={{
-              display: open ? "flex" : "none",
-              position: "absolute",
-              backgroundColor: "#000000a0",
-              height: hp(100),
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000000,
-              width: wp(100),
+              backgroundColor: "white",
+              zIndex: 10000,
+              width: wp(90),
+              borderRadius: 10,
+              padding: 20,
             }}
-            onPress={() => setOpen(false)}
           >
-            <View
-              style={{
-                backgroundColor: "white",
-                zIndex: 10000,
-                width: wp(90),
-                borderRadius: 10,
-                padding: 20,
+            <DateTimePicker
+              timePicker={false}
+              date={parseDate(state.dob)}
+              onChange={({ date }) => {
+                const finalDate = `${String(date.get("date")).padStart(
+                  2,
+                  "0"
+                )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
+                  "year"
+                )}`;
+                const d = parseDate(finalDate).toDate();
+                const millis = new Date().getTime() - d.getTime();
+                const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
+                setState((prev) => ({ ...prev, dob: finalDate, age: age }));
+                setOpen(false);
               }}
-            >
-              <DateTimePicker
-                timePicker={false}
-                date={parseDate(state.dob)}
-                onChange={({ date }) => {
-                  const finalDate = `${String(date.get("date")).padStart(
-                    2,
-                    "0"
-                  )}-${String(date.get("month") + 1).padStart(
-                    2,
-                    "0"
-                  )}-${date.get("year")}`;
+              maxDate={dayjs().subtract(49, "year")}
+              selectedItemColor={Colors.primary}
+            />
+          </View>
+        </Pressable>
+        <StatusBar barStyle="dark-content" />
 
-                  setState((prev) => ({ ...prev, dob: finalDate }));
+        <ScrollView
+          contentContainerStyle={styles.container}
+          showsVerticalScrollIndicator={false}
+          keyboardDismissMode="interactive"
+        >
+          <View style={styles.basicDetailsContainer}>
+            <View style={styles.coverContainer}>
+              <FastImage
+                style={styles.cover}
+                resizeMode="cover"
+                source={{
+                  uri: profile.profileImage,
                 }}
-                maxDate={dayjs().subtract(49, "year")}
-                selectedItemColor={Colors.primary}
               />
-            </View>
-          </Pressable>
-          <StatusBar barStyle="dark-content" />
-          <ScrollView
-            contentContainerStyle={styles.container}
-            showsVerticalScrollIndicator={false}
-            keyboardDismissMode="interactive"
-          >
-            <View style={styles.basicDetailsContainer}>
-              <View style={styles.coverContainer}>
-                <FastImage
-                  style={styles.cover}
-                  resizeMode="cover"
-                  source={{
-                    uri: profile.profileImage,
-                  }}
-                />
-                <Pressable
-                  style={styles.cameraContainer}
-                  onPress={handleSelectImage}
-                >
-                  <View
-                    style={{
-                      backgroundColor: "#00000080",
-                      padding: 8,
-                      borderRadius: 300,
-                    }}
-                  >
-                    <Camera size={24} color={"#666"} fill={"white"} />
-                  </View>
-                </Pressable>
-              </View>
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Name : </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Name"
-                value={this.state.name}
-                onChangeText={(text) => this.setState({ name: text })}
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Age : </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Age"
-                value={this.state.age}
-                onChangeText={(text) => this.setState({ age: text })}
-              />
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email : </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={this.state.email}
-                onChangeText={(text) => this.setState({ email: text })}
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Emergency Contact : </Text>
-              <TextInput
-                style={styles.input}
-                value={this.state.emergencyContact}
-                placeholder="Emergency Contact"
-                maxLength={10}
-                keyboardType="phone-pad"
-                onChangeText={(text) =>
-                  this.setState({ emergencyContact: text })
-                }
-              />
-            </View>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Date of Birth : </Text>
               <Pressable
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  borderBottomWidth: 2,
-                  borderBottomColor: "#ccc",
-                }}
-                onPress={() => this.setState({ open: true })}
+                style={styles.cameraContainer}
+                onPress={handleSelectImage}
               >
-                <Text style={[styles.input, { borderBottomWidth: 0 }]}>
-                  {this.state.dob}
-                </Text>
-                <Calendar size={24} color={"black"} />
+                <View
+                  style={{
+                    backgroundColor: "#00000080",
+                    padding: 8,
+                    borderRadius: 300,
+                  }}
+                >
+                  <Camera size={24} color={"#666"} fill={"white"} />
+                </View>
               </Pressable>
             </View>
-            <AutocompleteCityInput
-              label={"City : "}
-              input={this.state.city}
-              setInput={(city) => setState({ city: city })}
-            />
-          </ScrollView>
-          <Button
-            outline
-            title={"Save"}
-            loading={state.loading}
-            buttonStyle={styles.button}
-            onPress={this.updateDetails.bind(this)}
-            disabled={state.loading}
+          </View>
+          <UserDetailsForm
+            state={state}
+            setState={setState}
+            setOpen={setOpen}
+            setUpdated={setUpdated}
+            styles={styles}
           />
-        </SafeAreaView>
-        {this.state.showAlert && (
-          <AwesomeAlert
-            show={this.state.showAlert}
-            showProgress={false}
-            title="Error!"
-            message={this.state.alertMessage}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={true}
-            showConfirmButton={true}
-            confirmText="Try Again"
-            confirmButtonColor={Colors.deepskyblue}
-            onConfirmPressed={() => {
-              this.setState({
-                showAlert: false,
-                alertMessage: "",
-              });
-            }}
-          />
-        )}
-      </>
-    );
-  }
-}
+        </ScrollView>
+        <Button
+          outline
+          title={"Save"}
+          loading={state.loading}
+          buttonStyle={styles.button}
+          onPress={updateUser}
+          disabled={state.loading}
+          loadingProps={{ color: Colors.black }}
+        />
+      </SafeAreaView>
+      {state.showAlert && (
+        <AwesomeAlert
+          show={state.showAlert}
+          showProgress={false}
+          title="Error!"
+          message={state.alertMessage}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showConfirmButton={true}
+          confirmText="Try Again"
+          confirmButtonColor={Colors.deepskyblue}
+          onConfirmPressed={() => {
+            setState((prev) => ({
+              ...prev,
+              showAlert: false,
+              alertMessage: "",
+            }));
+          }}
+        />
+      )}
+    </>
+  );
+};
+
+export default AdditionalDetails;
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -390,7 +371,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",
     paddingHorizontal: wp(5),
-    paddingTop: hp(7),
+    paddingTop: hp(5),
   },
   cover: {
     width: wp(50),
@@ -463,12 +444,3 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
 });
-const mapStateToProps = (state) => ({
-  profile: state.profile.profile,
-});
-
-const ActionCreators = Object.assign({}, { setProfile });
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(ActionCreators, dispatch),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(AdditionalDetails);
