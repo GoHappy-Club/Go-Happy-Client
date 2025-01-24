@@ -292,8 +292,8 @@ export default function MembershipDetails() {
         <View style={styles.subscriptionContainer}>
           <SubscriptionCard />
         </View>
-        {(membership?.cancellationReason != null &&
-          membership?.cancellationReason != "") &&
+        {membership?.cancellationReason != null &&
+          membership?.cancellationReason != "" &&
           membership?.membershipType == "Free" && (
             <View style={styles.cancelContainer}>
               <Text style={styles.cancelLabel}>Last cancelled on:</Text>
@@ -321,7 +321,8 @@ export default function MembershipDetails() {
           {renderPrivileges(membershipType)}
         </View>
 
-        {membership?.membershipType != "Free" && !membership?.freeTrialActive &&
+        {membership?.membershipType != "Free" &&
+          !membership?.freeTrialActive &&
           upgradeOptions?.map((option) => (
             <TouchableOpacity
               key={option.id}
@@ -336,7 +337,8 @@ export default function MembershipDetails() {
               <Text style={styles.upgradeText}>{option.title}</Text>
             </TouchableOpacity>
           ))}
-        {membership?.membershipType == "Free" || membership?.freeTrialActive && (
+        {(membership?.membershipType == "Free" ||
+          membership?.freeTrialActive) && (
           <TouchableOpacity
             style={styles.upgradeButton}
             onPress={() => navigation.navigate("SubscriptionPlans")}
