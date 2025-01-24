@@ -248,7 +248,7 @@ class MySessions extends Component {
       >
         {this.props.ongoingEvents.length == 0 &&
           this.props.upcomingEvents.length == 0 &&
-          this.props.expiredEvents.length != 0 &&
+          this.props.expiredEvents.length == 0 &&
           this.sorry()}
 
         {this.props.expiredEvents.length > 0 && (
