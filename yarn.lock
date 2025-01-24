@@ -5306,6 +5306,7 @@ __metadata:
     react-native-autocomplete-input: "npm:^5.5.2"
     react-native-awesome-alerts: "npm:2.0.0"
     react-native-collapsible: "npm:^1.6.2"
+    react-native-config: "npm:^1.5.3"
     react-native-copilot: "npm:^3.3.3"
     react-native-device-info: "npm:^14.0.2"
     react-native-dotenv: "npm:^3.4.11"
@@ -12788,6 +12789,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/883066df85d11960a038661a684dba15000d685ff01628cf2a3c35ec9e80b6ba690ea13062ef0332e979219119cf9cf14a2bd5ea9e4ace750c3e5baa05d774d1
+  languageName: node
+  linkType: hard
+
+"react-native-config@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "react-native-config@npm:1.5.3"
+  peerDependencies:
+    react-native-windows: ">=0.61"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 10c0/98e4659191881a72bf756efa469debe90b84ba5f366489dbdebabd45b4f9ec5b05f116db5bdf181c5c688b759c5bc60365b675ff7446b10216056cef15b5ce3b
   languageName: node
   linkType: hard
 
