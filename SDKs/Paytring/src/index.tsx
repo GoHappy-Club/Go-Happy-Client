@@ -59,7 +59,10 @@ export default function Paytring({
   }, []);
 
   const messageHandler = (event: WebViewMessageEvent) => {
+    console.log(event);
+    console.log(event.nativeEvent);
     const message = event.nativeEvent.data;
+    console.log(message);
     if (message === 'payment.success') {
       success?.();
       setOrderId('');
@@ -67,6 +70,10 @@ export default function Paytring({
       failure?.();
       setOrderId('');
     } else if (message === 'payment.close') {
+      failure?.();
+      setOrderId('');
+    } else {
+      failure?.();
       setOrderId('');
     }
   };
@@ -112,11 +119,8 @@ export default function Paytring({
         injectedJavaScript={`
           window.addEventListener('message', (e) => {
             console.log(e.data);
-            if (e.data.eventname === 'Transaction_Status' && e.data.data === 'success') {
-                window.ReactNativeWebView.postMessage("payment.success");
-            }
-            if (e.data.eventname === 'Transaction_Status' && e.data.data === 'failed') {
-                window.ReactNativeWebView.postMessage("payment.failed");
+            if (e.data.eventname === 'Transaction_Status') {
+                window.ReactNativeWebView.postMessage("payment." + e.data.data);
             }
           });
         `}
