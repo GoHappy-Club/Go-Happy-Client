@@ -26,6 +26,7 @@ export default class RestService {
     );
     const { status, ...rest } = (await createdOrder.json()) as any;
     if (status) {
+      console.log(rest);
       return rest;
     } else {
       return undefined;
