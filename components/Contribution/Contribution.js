@@ -229,6 +229,7 @@ The Link will Expire in 20 Minutes.`;
       cname: this.props.profile.name,
       type: "contribution",
     };
+    this.setState({ payButtonLoading: true });
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
@@ -250,7 +251,9 @@ The Link will Expire in 20 Minutes.`;
         },
         order_id: orderData?.order_id,
       });
+      this.setState({ payButtonLoading: false, showPaymentAlert: false });
     } catch (error) {
+      this.setState({ payButtonLoading: false, showPaymentAlert: false });
       console.log("Error in fetching order id : ", error);
       crashlytics().log(`Error in paytringWrapper Contribution.js ${error}`);
     }
