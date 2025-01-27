@@ -141,6 +141,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       type: type,
       coinsToGive: coins,
     };
+    setPayButtonLoading(true);
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
@@ -163,7 +164,11 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         },
         order_id: orderData?.order_id,
       });
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
     } catch (error) {
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
       crashlytics().log(`Error in paytringWrapper TopUp.js ${error}`);
     }
   };
@@ -405,7 +410,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   <Text style={{ fontSize: wp(7), color: plan.textColor }}>
                     ₹{plan.coins - plan.coins * (plan.discountPercentage / 100)}
                   </Text>
-                  <Text style={{ color: Colors.green,fontWeight:"bold" }}>
+                  <Text style={{ color: Colors.green, fontWeight: "bold" }}>
                     {plan.coins} coins
                   </Text>
                 </View>
