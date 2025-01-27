@@ -83,13 +83,14 @@ export default function Paytring({
       try {
         if (canGoBack) {
           webview.current.goBack();
-        } else {
-          setOrderId('');
         }
+        failure?.();
+        setOrderId('');
+        return true;
       } catch (e) {
         setOrderId('');
       }
-      return true; // Prevent the default back button behavior
+      return true;
     }
     return false;
   });

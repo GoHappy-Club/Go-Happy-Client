@@ -316,7 +316,7 @@ const SubscriptionPlans = ({ plans }) => {
       membership?.membershipType == selectedPlan?.membershipType &&
       durationOfMembership == selectedPlan.duration
     )
-    return true;
+      return true;
   };
 
   const getTitle = () => {
@@ -324,75 +324,6 @@ const SubscriptionPlans = ({ plans }) => {
       return "Join now";
     }
     return "Upgrade now";
-  };
-
-  const phonePe = async (type, plan, paymentType, amount) => {
-    const _callback = () => {
-      setPayButtonLoading(false);
-      setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentSuccessful", {
-        type: "",
-        navigateTo: "",
-      });
-    };
-
-    const _errorHandler = () => {
-      setPayButtonLoading(false);
-      setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentFailed", {
-        type: "",
-        navigateTo: "",
-      });
-    };
-
-    if (type == "share") {
-      setShareButtonLoading(true);
-      phonepe_payments
-        .phonePeShare(
-          profile.phoneNumber,
-          amount,
-          _errorHandler,
-          paymentType,
-          null,
-          null,
-          plan.id
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(plan.subscriptionFees),"bold")} for GoHappy Club Membership.
-Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
-    `;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            });
-        });
-    } else {
-      setPayButtonLoading(true);
-      phonepe_payments.phonePe(
-        profile.phoneNumber,
-        amount,
-        _callback,
-        _errorHandler,
-        paymentType,
-        null,
-        null,
-        plan.id
-      );
-    }
   };
 
   const paytringWrapper = async (type, plan, amount) => {
@@ -407,6 +338,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       type: type,
       planId: plan?.id,
     };
+    setPayButtonLoading(true);
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
@@ -429,7 +361,11 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
         },
         order_id: orderData?.order_id,
       });
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
     } catch (error) {
+      setPayButtonLoading(false);
+      setPaymentSharePopUp(false);
       crashlytics().log(
         `Error in paytringWrapper SubscriptionPlans.js ${error}`
       );
