@@ -1,5 +1,5 @@
 import axiosOg from "axios";
-import { GS_PASSWORD, GS_USER_ID } from "../../config/tokens";
+import Config from "react-native-config";
 import firebase from "@react-native-firebase/app";
 import "@react-native-firebase/auth";
 
@@ -15,8 +15,8 @@ const OTPAuthWrapper = {
 
       return axiosOg.get(GUPSHUP_BASE_URL, {
         params: {
-          userid: GS_USER_ID,
-          password: GS_PASSWORD,
+          userid: Config.GS_USER_ID,
+          password: Config.GS_PASSWORD,
           method: "TWO_FACTOR_AUTH",
           v: "1.1",
           phone_no: phoneNumber,
@@ -32,8 +32,8 @@ const OTPAuthWrapper = {
       // Implementation for OTP verification
       return axiosOg.get(GUPSHUP_BASE_URL, {
         params: {
-          userid: GS_USER_ID,
-          password: GS_PASSWORD,
+          userid: Config.GS_USER_ID,
+          password: Config.GS_PASSWORD,
           method: "TWO_FACTOR_AUTH",
           v: "1.1",
           phone_no: phoneNumber,
