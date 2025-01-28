@@ -71,6 +71,7 @@ class LoginScreen extends Component {
       allowResend: false,
       secondsRemaining: 59,
       isRunning: false,
+      phoneNumberErrorConfirmText: null,
     };
     this.interval = null;
     this.getCurrentUserInfo();
@@ -801,6 +802,16 @@ class LoginScreen extends Component {
         this.setState({ loadingVerifyButton: false });
       })
       .catch((error) => {
+        if (error?.status == 403) {
+          this.setState({
+            phoneNumberError:
+              "Sorry, you are not allowed to login. Please contact support for more information.",
+            showPhoneNumberError: true,
+            phoneNumberErrorConfirmText: "Okay",
+            loadingVerifyButton: false,
+          });
+          return;
+        }
         this.setState({ loadingVerifyButton: false });
         console.log("Error in backendSignin", error);
       });
@@ -1000,28 +1011,10 @@ class LoginScreen extends Component {
               >
                 <Text
                   style={{ color: Colors.blue.login, fontSize: 14 }}
-                  // loading={this.state.loadingResendButton}
                 >
                   Trouble logging in? Contact Us
                 </Text>
               </TouchableOpacity>
-              {/* <View> */}
-              {/* <Text>Facing any difficulty?</Text> */}
-              {/* </View> */}
-              <AwesomeAlert
-                show={this.state.showPhoneNumberError}
-                showProgress={false}
-                title="Error"
-                message={this.state.phoneNumberError}
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={true}
-                showConfirmButton={true}
-                confirmButtonColor={Colors.primary}
-                confirmText="Try Again"
-                onConfirmPressed={() => {
-                  this.setState({ showPhoneNumberError: false });
-                }}
-              />
             </View>
           )}
 
@@ -1029,13 +1022,24 @@ class LoginScreen extends Component {
             <View style={styles.page}>{this.renderConfirmationCodeView()}</View>
           )}
         </KeyboardAvoidingView>
-
-        {/* <ImageBackground
-          resizeMode="contain"
-          style={styles.cover}
-          source={require("../../images/login_bg.png")}
+        <AwesomeAlert
+          show={this.state.showPhoneNumberError}
+          showProgress={false}
+          title="Error"
+          message={this.state.phoneNumberError}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showConfirmButton={true}
+          confirmButtonColor={Colors.primary}
+          confirmText={
+            this.state.phoneNumberErrorConfirmText
+              ? this.state.phoneNumberErrorConfirmText
+              : "Try Again"
+          }
+          onConfirmPressed={() => {
+            this.setState({ showPhoneNumberError: false });
+          }}
         />
-        <Text style={{fontSize:20,color:'black',alignSelf:'center'}}>India ka Sabse Khush Pariwar</Text> */}
         <AwesomeAlert
           show={this.state.showAlert}
           showProgress={false}
