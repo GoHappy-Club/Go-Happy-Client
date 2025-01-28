@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
+  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -26,7 +27,6 @@ import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
 import { format, fromUnixTime } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CountdownTimer from "../../commonComponents/countdown.js";
-import { useZoom } from "../../helpers/zoomUtils.js";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -86,7 +86,6 @@ const SessionDetails = ({
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
-  const zoom = useZoom();
 
   useEffect(() => {
     retrieveData();
@@ -198,11 +197,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
 
   const joinMeeting = async () => {
     try {
-      await zoom.joinMeeting({
-        userName: profile.name,
-        meetingNumber: extractMeetingNumber(event.meetingLink),
-        password: "12345",
-      });
+      Linking.openURL(event.meetingLink);
     } catch (e) {
       console.log(e);
       Alert.alert("" + e);
