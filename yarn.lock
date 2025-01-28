@@ -5309,7 +5309,6 @@ __metadata:
     react-native-config: "npm:^1.5.3"
     react-native-copilot: "npm:^3.3.3"
     react-native-device-info: "npm:^14.0.2"
-    react-native-dotenv: "npm:^3.4.11"
     react-native-elements: "npm:3.4.3"
     react-native-error-boundary: "npm:^1.2.7"
     react-native-fast-image: "npm:^8.6.3"
@@ -12844,17 +12843,6 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: 10c0/ac1704cfccd563714ebe7f3abf076af2d26caca6a5bd4789edb1ea67b1d7ce2036924663a7a185d4f99b1730de96b7e69e36b363828b19159081109a8dc588c8
-  languageName: node
-  linkType: hard
-
-"react-native-dotenv@npm:^3.4.11":
-  version: 3.4.11
-  resolution: "react-native-dotenv@npm:3.4.11"
-  dependencies:
-    dotenv: "npm:^16.4.5"
-  peerDependencies:
-    "@babel/runtime": ^7.20.6
-  checksum: 10c0/9ed4a37fb59030706d17a1cc49d05af9d8fc57dcb2ef97e122b844f3ab6f6331ebc089afac559fe5bddf37806aa282b4118005f1b27aae5e37fdc3fc8bd7625c
   languageName: node
   linkType: hard
 
