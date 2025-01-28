@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.white,
+    position:"absolute"
   },
   icon: {
     color: Colors.black,
