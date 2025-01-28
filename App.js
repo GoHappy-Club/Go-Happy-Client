@@ -67,6 +67,7 @@ import Reels from "./components/Reels/Reels.js";
 import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 import BackButton from "./commonComponents/BackButton.js";
+import Jitsi from "./screens/Jitsi.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -792,7 +793,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:true,
+                      headerTransparent: true,
                       headerLeft: () => (
                         <BackButton
                           styles={styles}
@@ -991,6 +992,17 @@ export default function App() {
                           back={true}
                         />
                       ),
+                      headerShadowVisible: false,
+                      animation: "ios_from_right",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Jitsi"
+                    children={(props) => <Jitsi />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerTransparent: true,
+                      headerBackVisible: false,
                       headerShadowVisible: false,
                       animation: "ios_from_right",
                     })}

@@ -13,12 +13,15 @@ import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { Button } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
 const Walkthroughable = walkthroughable(View);
 
 export default function Sections(props) {
   const { width: windowWidth } = useWindowDimensions();
   const { t } = useTranslation();
+  const navigation = useNavigation();
 
   const profile = useSelector((state) => state.profile.profile);
   const minItemWidth = 85;
@@ -88,6 +91,12 @@ export default function Sections(props) {
       </View>
 
       <View style={[styles.gridContainer, { padding: horizontalPadding }]}>
+        <Button
+          title="Jitsi"
+          onPress={() => navigation.navigate("Jitsi")}
+          style={{ backgroundColor: Colors.primary }}
+          titleStyle={{ color: Colors.black }}
+        />
         {data1.map((item, index) => (
           <CopilotStep
             key={index}
