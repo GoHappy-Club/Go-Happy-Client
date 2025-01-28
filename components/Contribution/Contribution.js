@@ -236,6 +236,7 @@ The Link will Expire in 20 Minutes.`;
         data
       );
       const orderData = response.data;
+      this.setState({ payButtonLoading: false, showPaymentAlert: false });
       this.props.navigation.navigate("PaytringView", {
         callback: () => {
           this.props.navigation.replace("PaymentSuccessful", {
@@ -251,7 +252,6 @@ The Link will Expire in 20 Minutes.`;
         },
         order_id: orderData?.order_id,
       });
-      this.setState({ payButtonLoading: false, showPaymentAlert: false });
     } catch (error) {
       this.setState({ payButtonLoading: false, showPaymentAlert: false });
       console.log("Error in fetching order id : ", error);
