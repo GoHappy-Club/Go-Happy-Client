@@ -33,9 +33,6 @@ import { storeCompletedSession } from "../../services/Startup.js";
 import { Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
-import { useZoom } from "../../helpers/zoomUtils.js";
-// import CalendarStrip from "react-native-calendar-strip";
-import dayjs from "dayjs";
 import Sound from "react-native-sound";
 import CustomCalendarStrip from "../../commonComponents/CalendarStrip.js";
 const HomeDashboard = ({
@@ -50,7 +47,6 @@ const HomeDashboard = ({
   const membership = useSelector((state) => state.membership.membership);
 
   const dispatch = useDispatch();
-  const zoom = useZoom();
 
   const [state, setState] = useState({
     loader: false,
@@ -106,15 +102,7 @@ const HomeDashboard = ({
 
   const joinMeeting = async (item) => {
     try {
-      if(__DEV__){
-        Linking.openURL(item?.meetingLink);
-        return;
-      }
-      await zoom.joinMeeting({
-        userName: profile.name + String(profile.phoneNumber),
-        meetingNumber: extractMeetingNumber(item?.meetingLink),
-        password: "12345",
-      });
+      Linking.openURL(item?.meetingLink);
     } catch (e) {
       console.log("Error in join", e);
     }
@@ -587,8 +575,8 @@ const HomeDashboard = ({
               width: wp(6),
               aspectRatio: 1,
               borderRadius: wp(50),
-              borderWidth:0.5,
-              borderColor:Colors.black
+              borderWidth: 0.5,
+              borderColor: Colors.black,
             }}
             resizeMode={FastImage.resizeMode.center}
           />
