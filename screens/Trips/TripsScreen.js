@@ -11,12 +11,20 @@ import {
   Image,
   ImageBackground,
   SafeAreaView,
+  TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
 import TripsList from "../../components/trips/TripsList.js";
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
+import Carousel from "react-native-snap-carousel";
+import FastImage from "react-native-fast-image";
+
+const SLIDER_WIDTH = Dimensions.get("window").width;
+const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
+const ITEM_WIDTH = SLIDER_WIDTH;
 
 class TripsScreen extends Component {
   constructor(props) {
@@ -32,10 +40,24 @@ class TripsScreen extends Component {
       index: 0,
       pastTrips: [],
       upcomingTrips: [],
+      tripImages: [],
     };
     crashlytics().log(JSON.stringify(props.propProfile));
+    this._carousel = null;
     // alert(JSON.stringify(props));
   }
+
+  getProperties = async () => {
+    try {
+      const response = await axios.get(SERVER_URL + "/properties/list");
+      const properties = response.data.properties[0];
+      this.setState({ topBannerImages: properties?.tripImages });
+      console.log("Properties", properties.tripImages);
+    } catch (error) {
+      crashlytics().log(`Error in getProperties ${error}`);
+      console.log("Error in getProperties", error);
+    }
+  };
 
   async getPastTripsData() {
     var url = SERVER_URL + "/trips/past";
@@ -49,7 +71,6 @@ class TripsScreen extends Component {
     } catch (error) {
       crashlytics().log(`Error in getPastTripsData ${error}`);
       this.error = true;
-      // throw new Error("Error getting order ID");
     }
   }
 
@@ -72,25 +93,68 @@ class TripsScreen extends Component {
   componentWillMount() {
     this.getPastTripsData();
     this.getUpcomingTripsData();
+    this.getProperties();
   }
+  CarouselCardItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity key={index}>
+        <FastImage
+          source={{ uri: item }}
+          style={styles.image}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   render() {
     if (this.state.error == true) {
       return (
         <SafeAreaView style={styles.mainContainer}>
-          {/* <Text>My Trips</Text> */}
-
-          <ImageBackground
-            source={{
-              uri: "https://storage.googleapis.com/gohappy-main-bucket/Assets/trip_cover.jpeg",
-            }}
-            style={styles.coverImage}
-            resizeMode="cover"
-          >
-            <View style={styles.textContainer}>
-              <Text style={styles.coverTitle}>TRIPS</Text>
-            </View>
-          </ImageBackground>
+          {this.state.topBannerImages &&
+            (this.state.topBannerImages?.length <= 1 ? (
+              <ImageBackground
+                source={{
+                  uri: this.state.topBannerImages[0],
+                }}
+                style={styles.coverImage}
+                resizeMode="cover"
+              >
+                <View style={styles.textContainer}>
+                  <Text style={styles.coverTitle}>TRIPS</Text>
+                </View>
+              </ImageBackground>
+            ) : (
+              <SafeAreaView style={styles.outsideContainer}>
+                <Carousel
+                  layout="default"
+                  autoplay={true}
+                  data={this.state.topBannerImages}
+                  renderItem={this.CarouselCardItem}
+                  sliderWidth={SLIDER_WIDTH}
+                  sliderHeight={SLIDER_HEIGHT}
+                  itemWidth={ITEM_WIDTH}
+                  inactiveSlideShift={0}
+                  useScrollView={true}
+                  ref={(c) => {
+                    this._carousel = c;
+                  }}
+                  autoplayDelay={10}
+                  autoplayInterval={1500}
+                />
+                <View
+                  style={[
+                    styles.textContainer,
+                    {
+                      position: "absolute",
+                      bottom: 0,
+                    },
+                  ]}
+                >
+                  <Text style={styles.coverTitle}>TRIPS</Text>
+                </View>
+              </SafeAreaView>
+            ))}
           <Tab
             value={this.state.index}
             onChange={(index) => {
@@ -132,13 +196,10 @@ class TripsScreen extends Component {
               />
             </TabView.Item>
           </TabView>
-          {/* </ScrollView> */}
         </SafeAreaView>
       );
     } else {
-      // return (<MaterialIndicator color='black' style={{backgroundColor:"#00afb9"}}/>)
       return (
-        // <ScrollView style={{ backgroundColor: Colors.white }}>
         <View
           style={{
             flex: 1,
@@ -147,13 +208,16 @@ class TripsScreen extends Component {
         >
           <GOHLoader />
         </View>
-        // </ScrollView>
       );
     }
   }
 }
 
 const styles = StyleSheet.create({
+  outsideContainer: {
+    width: "auto",
+    elevation: 20,
+  },
   mainContainer: {
     flex: 1,
     flexDirection: "column",
@@ -182,6 +246,11 @@ const styles = StyleSheet.create({
     // marginTop: "-3%",
     width: "100%",
     flex: 0.5,
+  },
+  image: {
+    width: ITEM_WIDTH + 10,
+    height: SLIDER_HEIGHT,
+    borderRadius: 2,
   },
 });
 
