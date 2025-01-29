@@ -8,6 +8,7 @@ import {
   Pressable,
   ActivityIndicator,
   Linking,
+  SafeAreaView,
 } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import FastImage from "react-native-fast-image";
@@ -89,7 +90,7 @@ const ReelsPage = () => {
     }
 
     return (
-      <View style={styles.videoContainer}>
+      <SafeAreaView style={styles.videoContainer}>
         <Pressable
           style={styles.videoWrapper}
           onPress={() => {
@@ -266,7 +267,7 @@ const ReelsPage = () => {
             </Pressable>
           </View>
         )}
-      </View>
+      </SafeAreaView>
     );
   };
 
