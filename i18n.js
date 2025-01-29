@@ -10,7 +10,7 @@ const deviceLanguage =
     : NativeModules.I18nManager.localeIdentifier;
 
 const defaultLanguage = "en";
-const supportedLanguages = ["en", "hi"];
+const supportedLanguages = ["en", "hi", "mrthi", "pnjbi", "gjrti"];
 
 const getLanguageToUse = async () => {
   try {
@@ -39,6 +39,15 @@ getLanguageToUse().then((languageToUse) => {
       },
       hi: {
         translation: require("./locales/hi/translation.json"),
+      },
+      mrthi: {
+        translation: require("./locales/mrthi/translation.json"),
+      },
+      pnjbi: {
+        translation: require("./locales/pnjbi/translation.json"),
+      },
+      gjrti: {
+        translation: require("./locales/gjrti/translation.json"),
       },
     },
     interpolation: {
