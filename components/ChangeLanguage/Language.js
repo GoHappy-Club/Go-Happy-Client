@@ -16,6 +16,9 @@ const { width } = Dimensions.get("window");
 const languages = [
   { name: "English", code: "en" },
   { name: "Hindi", code: "hi" },
+  { name: "Marathi", code: "mrthi" },
+  { name: "Punjabi", code: "pnjbi" },
+  { name: "Gujarati", code: "gjrti" },
 ];
 
 const Language = () => {
@@ -24,8 +27,6 @@ const Language = () => {
   useEffect(() => {
     const getLanguage = async () => {
       const lang = await AsyncStorage.getItem("@lang");
-      console.log("Lang, ", lang);
-      
       if (lang) {
         setSelectedLanguage(lang);
       }

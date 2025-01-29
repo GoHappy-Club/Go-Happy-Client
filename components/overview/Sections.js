@@ -83,7 +83,7 @@ export default function Sections(props) {
     <View style={styles.mainContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.line} />
-        <Text style={styles.headingText}>Explore</Text>
+        <Text style={styles.headingText}>{t("explore")}</Text>
         <View style={styles.line} />
       </View>
 
