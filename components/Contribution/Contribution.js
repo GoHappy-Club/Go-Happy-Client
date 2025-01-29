@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   Dimensions,
-  Image,
+  Platform,
   ScrollView,
   Share,
   StyleSheet,
@@ -10,21 +10,14 @@ import {
   View,
 } from "react-native";
 import phonepe_payments from "../PhonePe/Payments.js";
-
 import { Button, Text } from "react-native-elements";
-
 import Video, { ResizeMode } from "expo-av";
-
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
-import { Linking } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import toUnicodeVariant from "../toUnicodeVariant.js";
-import tambola from "tambola";
 import { Colors } from "../../assets/colors/color.js";
-import PhonePePaymentSDK from "react-native-phonepe-pg";
-import { getPayload } from "../../services/PhonePe/PaymentServices.js";
 import { withTranslation } from "react-i18next";
 
 class Contribution extends Component {
@@ -95,6 +88,16 @@ class Contribution extends Component {
     };
     this._retrieveData();
   }
+  iosPaymentHandler = async () => {
+    const message = `Hello, I would like to make a contribution payment to you app. Please guide me how can I do that.`;
+    Share.share({
+      message: message,
+    })
+      .then((result) => {})
+      .catch((errorMsg) => {
+        console.log("error in sharing", errorMsg);
+      });
+  };
   async phonePeWrapper(type) {
     var _this = this;
     const _callback = (id) => {
@@ -377,7 +380,9 @@ The Link will Expire in 20 Minutes.`;
                 styles.checkoutButtonEnabled
               }
               onPress={() => {
-                this.setState({ clickPopup: true });
+                Platform.OS === "ios"
+                  ? this.iosPaymentHandler()
+                  : this.setState({ clickPopup: true });
               }}
             >
               <View>
@@ -401,9 +406,7 @@ The Link will Expire in 20 Minutes.`;
                 customView={
                   <View style={styles.AAcontainer}>
                     <Text style={styles.AAtitle}>Payment Confirmation</Text>
-                    <Text style={styles.AAmessage}>
-                    Click below to pay.
-                    </Text>
+                    <Text style={styles.AAmessage}>Click below to pay.</Text>
                     <View style={styles.AAbuttonContainer}>
                       <Button
                         outline
