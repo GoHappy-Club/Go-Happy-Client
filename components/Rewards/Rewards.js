@@ -139,7 +139,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
         }}
       >
         <View style={styles.totalRewards}>
-          <Text style={styles.rewardsAmount}>
+          <View style={styles.topContent}>
             <FastImage
               source={require("../../images/coins.png")}
               style={{
@@ -147,8 +147,8 @@ const Rewards = ({ rewards, vouchers, loading }) => {
                 width: 70,
               }}
             />
-            {amount}
-          </Text>
+            <Text style={styles.rewardsAmount}>{amount}</Text>
+          </View>
           <Text style={styles.rewardsLabel}>Earned in Rewards</Text>
         </View>
         <Tab
@@ -220,6 +220,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
+  },
+  topContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(2),
   },
   rewardsAmount: {
     fontSize: wp(15),
