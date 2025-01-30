@@ -64,6 +64,7 @@ const Profile = () => {
     logoutPopup: false,
     whatsappLink: "",
     showBackdrop: false,
+    whatsappHelpLink: "",
   });
 
   const profile = useSelector((state) => state.profile.profile);
@@ -96,6 +97,11 @@ const Profile = () => {
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0) {
+          const whatsappHelpLink = properties.whatsappHelpLink;
+          setState((prevState) => ({
+            ...prevState,
+            whatsappHelpLink,
+          }));
           const now = new Date();
           const days = Math.ceil(
             (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
@@ -335,7 +341,7 @@ const Profile = () => {
                   alignItems: "center",
                   gap: 5,
                 }}
-                onPress={() => Linking.openURL(state.whatsappLink)}
+                onPress={() => Linking.openURL(state.whatsappHelpLink)}
               >
                 <CircleHelp size={22} color={"black"} />
                 <Text
