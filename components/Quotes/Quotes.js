@@ -233,15 +233,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: StatusBar.currentHeight * 2.5,
-  },
-  backgroundAnimation: {
-    width: wp(100),
-    height: hp(100),
-    transform: [{ scale: 5.2 }, { rotate: "90deg" }],
-    zIndex: -1000,
-    position: "absolute",
-    opacity: 0.6,
+    paddingTop: StatusBar.currentHeight,
+    paddingBottom: StatusBar.currentHeight * 2.5,
   },
   quoteContainer: {
     alignItems: "center",
@@ -259,7 +252,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 8,
     minHeight:"auto",
-    maxHeight: hp(75),
   },
   decorativeLine: {
     width: wp(20),
