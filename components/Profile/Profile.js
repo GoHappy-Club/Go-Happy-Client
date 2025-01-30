@@ -97,7 +97,7 @@ const Profile = () => {
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0) {
-          const whatsappHelpLink = properties.whatsappHelpLink;
+          const whatsappHelpLink = properties[0].whatsappHelpLink;
           setState((prevState) => ({
             ...prevState,
             whatsappHelpLink,
