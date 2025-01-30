@@ -12,6 +12,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		4174E5102D49C09D006945F6 /* booked.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4174E50F2D49C09D006945F6 /* booked.mp3 */; };
+		4174E5112D49C09D006945F6 /* booked.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4174E50F2D49C09D006945F6 /* booked.mp3 */; };
 		41DBCE572CEA3CB1003925D8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 41DBCE562CEA3CB1003925D8 /* GoogleService-Info.plist */; };
 		41DBCE582CEA3CB1003925D8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 41DBCE562CEA3CB1003925D8 /* GoogleService-Info.plist */; };
 		41DBCE5C2CEA54A2003925D8 /* Pods_GoHappyClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E869B9D16BD6ED1828072E3B /* Pods_GoHappyClient.framework */; };
@@ -42,6 +44,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GoHappyClient/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GoHappyClient/main.m; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-GoHappyClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoHappyClient.debug.xcconfig"; path = "Target Support Files/Pods-GoHappyClient/Pods-GoHappyClient.debug.xcconfig"; sourceTree = "<group>"; };
+		4174E50F2D49C09D006945F6 /* booked.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = booked.mp3; sourceTree = "<group>"; };
 		41DBCE562CEA3CB1003925D8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		41DBCE5F2CEC5781003925D8 /* GoHappyClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GoHappyClient.entitlements; path = GoHappyClient/GoHappyClient.entitlements; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-GoHappyClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoHappyClient.release.xcconfig"; path = "Target Support Files/Pods-GoHappyClient/Pods-GoHappyClient.release.xcconfig"; sourceTree = "<group>"; };
@@ -145,6 +148,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				4174E50F2D49C09D006945F6 /* booked.mp3 */,
 				41DBCE562CEA3CB1003925D8 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* GoHappyClient */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -277,6 +281,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4174E5112D49C09D006945F6 /* booked.mp3 in Resources */,
 				41DBCE572CEA3CB1003925D8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4174E5102D49C09D006945F6 /* booked.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				41DBCE582CEA3CB1003925D8 /* GoogleService-Info.plist in Resources */,

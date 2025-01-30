@@ -792,7 +792,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                      headerTransparent:true,
+                      headerTransparent: true,
                       headerLeft: () => (
                         <BackButton
                           styles={styles}
