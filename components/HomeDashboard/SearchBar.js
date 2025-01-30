@@ -405,9 +405,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   searchInput: {
-    flex: 1,
-    // height: 40,
     fontSize: 16,
+    width: "90%",
     padding: width * 0.01,
   },
   closeButton: {
