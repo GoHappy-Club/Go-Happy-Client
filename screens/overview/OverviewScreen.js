@@ -133,6 +133,7 @@ class OverviewScreen extends Component {
 
   componentWillMount() {
     this.getOverviewData();
+    this.getProperties();
   }
   render() {
     if (this.state.error == true) {
