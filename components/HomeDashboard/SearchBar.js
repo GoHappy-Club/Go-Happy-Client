@@ -346,7 +346,7 @@ const SearchBar = () => {
         !loading &&
         events &&
         Object.keys(events).length == 0 &&
-        searchText != "" && (
+        searchText?.length > 1 && (
           <View
             style={{
               flex: 1,
