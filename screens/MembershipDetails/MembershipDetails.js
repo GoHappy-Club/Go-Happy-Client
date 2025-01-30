@@ -52,7 +52,7 @@ const membershipTiers = {
       {
         id: 3,
         icon: Video,
-        label: "Video Library",
+        label: "Session Recordings",
       },
       {
         id: 4,
