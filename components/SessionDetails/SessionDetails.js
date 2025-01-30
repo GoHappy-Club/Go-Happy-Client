@@ -545,6 +545,17 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     }
   };
 
+  const iosPaymentHandler = async () => {
+    const message = `Hello, I would like book a seat for the session ${toUnicodeVariant(event.eventName, "bold")}, Please tell me how to proceed.`;
+    Share.share({
+      message: message,
+    })
+      .then((result) => {})
+      .catch((errorMsg) => {
+        console.log("error in sharing", errorMsg);
+      });
+  };
+
   const item = event;
   const tambolaHtml = tambolaParsing(item);
   return (
@@ -922,6 +933,10 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     getTitle().startsWith("Book")
                   ) {
                     if (event?.type?.toLowerCase() == "workshop") {
+                      if (Platform.OS === "ios") {
+                        iosPaymentHandler();
+                        return;
+                      }
                       setState((prev) => ({
                         ...prev,
                         paymentSharePopUp: true,
