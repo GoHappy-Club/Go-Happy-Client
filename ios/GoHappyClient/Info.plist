@@ -49,6 +49,7 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>gohappyclub</string>
 		<string>ppemerchantsdkv1</string>
 		<string>ppemerchantsdkv2</string>
 		<string>ppemerchantsdkv3</string>
