@@ -20,6 +20,9 @@ import FastImage from "react-native-fast-image";
 import Share from "react-native-share";
 import { Share2 } from "lucide-react-native";
 import { useSelector } from "react-redux";
+import firebase from "@react-native-firebase/app";
+import toUnicodeVariant from "../toUnicodeVariant";
+import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
 
 const Quotes = () => {
   const [quote, setQuote] = useState({});
@@ -42,6 +45,27 @@ const Quotes = () => {
     getTodaysQuote();
   }, []);
 
+  const generateReferralLink = async () => {
+    const selfInviteCode = profile.selfInviteCode;
+    const link1 = await firebase.dynamicLinks().buildShortLink(
+      {
+        link: FirebaseDynamicLinksProps().link + selfInviteCode,
+        domainUriPrefix: FirebaseDynamicLinksProps().domainUriPrefix,
+        android: {
+          packageName: FirebaseDynamicLinksProps().androidPackageName,
+          fallbackUrl: FirebaseDynamicLinksProps().androidFallBackUrl,
+        },
+        ios: {
+          bundleId: "com.gohappyclient",
+          fallbackUrl:
+            "https://play.google.com/store/apps/details?id=com.gohappyclient",
+        },
+      },
+      firebase.dynamicLinks.ShortLinkType.SHORT
+    );
+    return link1;
+  };
+
   const shareQuoteOnWhatsApp = async () => {
     setShowUserData(true);
     try {
@@ -54,11 +78,23 @@ const Quotes = () => {
       const filePath = `${
         RNFS.TemporaryDirectoryPath
       }/${new Date().getTime()}_daily_quote.png`;
+      const referralLink = await generateReferralLink();
 
       await RNFS.writeFile(filePath, base64Data, "base64");
       await Share.open({
         title: "Daily Quote",
-        message: "Check out today's quote!",
+        message:
+          "Check out today's quote!\n\n " +
+          "Come and join my happy family, " +
+          toUnicodeVariant("GoHappy Club", "italic") +
+          " and attend " +
+          toUnicodeVariant("Free sessions", "bold") +
+          " on " +
+          toUnicodeVariant("Fitness, Learning and Fun", "bold") +
+          ", carefully designed for the 50+ with a dedicated team to treat you with uttermost love and respect. \n\n" +
+          toUnicodeVariant("Click on the link below ", "bold italic") +
+          "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
+          referralLink,
         url: `file://${filePath}`,
       });
     } catch (error) {
@@ -298,9 +334,9 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // top: 25,
     // left: 25,
-    width:"100%",
+    width: "100%",
     flexDirection: "row",
-    justifyContent:"flex-start",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   userPhoto: {
