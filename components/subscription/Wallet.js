@@ -16,12 +16,15 @@ import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import TransactionHistory from "./TransactionHistory";
+import { useTranslation } from "react-i18next";
 
 const Wallet = ({ transactions }) => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
 
   const membership = useSelector((state) => state.membership.membership);
   const navigation = useNavigation();
+
+    const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -35,7 +38,7 @@ const Wallet = ({ transactions }) => {
         <View style={styles.coinsContainer}>
           <View style={styles.innerContainer}>
             <View style={{ justifyContent: "center" }}>
-              <Text style={styles.titleText}>Happy Coins</Text>
+              <Text style={styles.titleText}>{t("happy_coins")}</Text>
               <Text
                 style={[
                   styles.coinsText,
@@ -77,7 +80,7 @@ const Wallet = ({ transactions }) => {
                 source={require("../../images/coins.png")}
                 style={styles.buttonImage}
               />
-              <Text style={styles.buttonText}>Add More Happy Coins</Text>
+              <Text style={styles.buttonText}>{t("add_happy_coins")}</Text>
             </View>
           </Pressable>
         </View>

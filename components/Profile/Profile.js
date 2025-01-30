@@ -486,7 +486,7 @@ const Profile = () => {
                         fontSize: wp(3),
                       }}
                     >
-                      Join our exclusive membership
+                      {t("join_our_exclusive_membership")}
                     </Text>
                   </View>
                   <Pressable
@@ -504,7 +504,7 @@ const Profile = () => {
                         fontFamily: "NunitoSans-SemiBold",
                       }}
                     >
-                      Join now
+                      {t("join_now")}
                     </Text>
                   </Pressable>
                 </View>

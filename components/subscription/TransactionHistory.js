@@ -11,9 +11,12 @@ import {
 import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const TransactionHistory = ({ transactions, seeAll = false }) => {
   const navigation = useNavigation();
+
+  const { t } = useTranslation();
 
   const loadDate = (timestamp) => {
     const dt = fromUnixTime(timestamp / 1000);
@@ -58,7 +61,7 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Recent Transactions</Text>
+      <Text style={styles.header}>{t("recent_transactions")}</Text>
       <View style={styles.separator} />
       {transactions.length === 0 && (
         <Text style={{ textAlign: "center", marginTop: 16 }}>
@@ -78,7 +81,7 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
           style={styles.seeAllButton}
           onPress={() => navigation.navigate("AllTransactions")}
         >
-          <Text style={styles.seeAllText}>See All</Text>
+          <Text style={styles.seeAllText}>{t("see_all")}</Text>
         </TouchableOpacity>
       )}
     </View>
