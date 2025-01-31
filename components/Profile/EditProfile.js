@@ -1,4 +1,6 @@
 import {
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StatusBar,
@@ -278,56 +280,63 @@ const EditProfile = () => {
             <Text>{t("back")}</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView
-          contentContainerStyle={styles.container}
-          showsVerticalScrollIndicator={false}
-          keyboardDismissMode="interactive"
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "position"}
+          style={{ flex: 1 }}
         >
-          <View style={styles.basicDetailsContainer}>
-            <View style={styles.coverContainer}>
-              <FastImage
-                style={styles.cover}
-                resizeMode="cover"
-                source={{
-                  uri: profile.profileImage,
-                }}
-              />
-              <Pressable
-                style={styles.cameraContainer}
-                onPress={handleSelectImage}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#00000080",
-                    padding: 8,
-                    borderRadius: 300,
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardDismissMode="interactive"
+          >
+            <View style={styles.basicDetailsContainer}>
+              <View style={styles.coverContainer}>
+                <FastImage
+                  style={styles.cover}
+                  resizeMode="cover"
+                  source={{
+                    uri: profile.profileImage,
                   }}
+                />
+                <Pressable
+                  style={styles.cameraContainer}
+                  onPress={handleSelectImage}
                 >
-                  <Camera size={24} color={"#666"} fill={"white"} />
-                </View>
-              </Pressable>
+                  <View
+                    style={{
+                      backgroundColor: "#00000080",
+                      padding: 8,
+                      borderRadius: 300,
+                    }}
+                  >
+                    <Camera size={24} color={"#666"} fill={"white"} />
+                  </View>
+                </Pressable>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.profileName}>
+                  {formatName(profile.name)}
+                </Text>
+                <Text style={styles.phoneNumber}>
+                  {formatPhoneNumber(profile.phoneNumber)}
+                </Text>
+              </View>
             </View>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={styles.profileName}>{formatName(profile.name)}</Text>
-              <Text style={styles.phoneNumber}>
-                {formatPhoneNumber(profile.phoneNumber)}
-              </Text>
-            </View>
-          </View>
 
-          <UserDetailsForm
-            state={state}
-            setState={setState}
-            setOpen={setOpen}
-            setUpdated={setUpdated}
-            styles={styles}
-          />
-        </ScrollView>
+            <UserDetailsForm
+              state={state}
+              setState={setState}
+              setOpen={setOpen}
+              setUpdated={setUpdated}
+              styles={styles}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
         <Button
           outline
           title={"Save"}
