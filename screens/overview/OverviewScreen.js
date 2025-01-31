@@ -63,6 +63,19 @@ class OverviewScreen extends Component {
     if (this._unsubscribeFocus) this._unsubscribeFocus();
     if (this._unsubscribeBlur) this._unsubscribeBlur();
   }
+  scrollDown() {
+    setTimeout(() => {
+      if (this.scrollViewRef.current) {
+        this.scrollViewRef.current.scrollTo({ y: 200, animated: true });
+
+        setTimeout(() => {
+          if (this.scrollViewRef.current) {
+            this.scrollViewRef.current.scrollTo({ y: 0, animated: true });
+          }
+        }, 250);
+      }
+    }, 150);
+  }
 
   onFocus = () => {
     this.setupTimer();
@@ -103,6 +116,7 @@ class OverviewScreen extends Component {
           posters: response.data.posters,
           videos: response.data.videos,
         });
+        this.scrollDown();
         this.setupTimer();
       }
     } catch (error) {
