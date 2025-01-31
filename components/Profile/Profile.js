@@ -250,7 +250,10 @@ const Profile = () => {
 
       if (Platform.OS === "ios") {
         return (
-          <Animated.View style={containerStyle}>
+          <Animated.View
+            style={containerStyle}
+            pointerEvents={state.showBackdrop ? "auto" : "none"}
+          >
             <TouchableOpacity
               style={StyleSheet.absoluteFill}
               onPress={closeModal}
@@ -275,6 +278,7 @@ const Profile = () => {
             },
             containerAnimatedStyle,
           ]}
+          pointerEvents={state.showBackdrop ? "auto" : "none"}
         >
           <TouchableOpacity
             style={StyleSheet.absoluteFill}
