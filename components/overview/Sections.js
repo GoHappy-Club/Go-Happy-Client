@@ -41,22 +41,10 @@ export default function Sections(props) {
       text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
-      title: t("contribute"),
-      imgUrl: require("../../images/contribute.png"),
-      link: "MembershipScreen",
-      text: "Help us make a difference! Click here to learn how you can contribute.",
-    },
-    {
       title: t("trips"),
       imgUrl: require("../../images/trips.png"),
       link: "Trips",
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
-    },
-    {
-      title: t("rewards"),
-      imgUrl: require("../../images/rewards.png"),
-      link: "Rewards",
-      text: "See your earned rewards here.",
     },
     {
       title: t("reels"),
@@ -69,6 +57,24 @@ export default function Sections(props) {
       imgUrl: require("../../images/quotes.png"),
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
+    },
+    {
+      title: t("rewards"),
+      imgUrl: require("../../images/rewards.png"),
+      link: "Rewards",
+      text: "See your earned rewards here.",
+    },
+    {
+      title: t("refer_win"),
+      imgUrl: require("../../images/refer_win.png"),
+      link: "Refer",
+      text: "Share the app with your friends and relatives and win rewards.",
+    },
+    {
+      title: t("contribute"),
+      imgUrl: require("../../images/contribute.png"),
+      link: "MembershipScreen",
+      text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
       title: t("get_help"),
