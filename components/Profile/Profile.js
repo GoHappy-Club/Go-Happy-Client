@@ -246,7 +246,7 @@ const Profile = () => {
       const containerAnimatedStyle = useAnimatedStyle(() => ({
         opacity: interpolate(
           animatedIndex.value,
-          [-1, 0],
+          [0, 1],
           [0, 1],
           Extrapolation.CLAMP
         ),
@@ -447,7 +447,8 @@ const Profile = () => {
           enablePanDownToClose={false}
           enableDismissOnClose={true}
           handleStyle={{ display: "none" }}
-          backdropComponent={state.showBackdrop ? renderBackdrop : null}
+          backdropComponent={renderBackdrop}
+          // backdropComponent={state.showBackdrop ? renderBackdrop : null}
           style={{
             overflow: "hidden",
             borderRadius: 40,
@@ -623,6 +624,9 @@ const Profile = () => {
         onCancelPressed={() => {
           setState((prevState) => ({ ...prevState, logoutPopup: false }));
           signout();
+        }}
+        onDismiss={() => {
+          setState((prevState) => ({ ...prevState, logoutPopup: false }));
         }}
       />
     </>
