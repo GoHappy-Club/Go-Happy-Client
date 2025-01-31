@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
@@ -13,6 +12,7 @@ import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { hp } from "../../helpers/common";
 
 const Walkthroughable = walkthroughable(View);
 
@@ -21,17 +21,8 @@ export default function Sections(props) {
   const { t } = useTranslation();
 
   const profile = useSelector((state) => state.profile.profile);
-  const minItemWidth = 85;
   const spacing = 12;
-  const horizontalPadding = 12;
-
-  const numColumns = Math.floor(
-    (windowWidth - horizontalPadding * 2 + spacing) / (minItemWidth + spacing)
-  );
-
-  const itemWidth =
-    (windowWidth - horizontalPadding * 2 - spacing * (numColumns - 1)) /
-    numColumns;
+  const itemWidth = (windowWidth - spacing * 4) / 3; // Ensuring 3 items per row
 
   const data1 = [
     {
@@ -93,7 +84,7 @@ export default function Sections(props) {
         <View style={styles.line} />
       </View>
 
-      <View style={[styles.gridContainer, { padding: horizontalPadding }]}>
+      <View style={styles.gridContainer}>
         {data1.map((item, index) => (
           <CopilotStep
             key={index}
@@ -104,7 +95,7 @@ export default function Sections(props) {
             <Walkthroughable>
               <TouchableOpacity
                 disabled={
-                  item.title == "Rewards" && profile.age && profile.age < 50
+                  item.title === "Rewards" && profile.age && profile.age < 50
                 }
                 onPress={() => {
                   if (item.type === "external") {
@@ -117,17 +108,13 @@ export default function Sections(props) {
                   styles.gridItem,
                   {
                     width: itemWidth,
-                    marginRight: (index + 1) % numColumns ? spacing : 0,
-                    marginBottom: spacing,
-                  },
-                  {
-                    backgroundColor:
-                      item.title == "Rewards" && profile.age && profile.age < 50
-                        ? Colors.grey.lightgrey
-                        : Colors.beige,
+                    marginRight: (index + 1) % 3 ? spacing : 0,
                   },
                 ]}
               >
+                <Text style={styles.text} numberOfLines={2}>
+                  {item.title}
+                </Text>
                 <FastImage
                   source={item.imgUrl}
                   style={[
@@ -141,11 +128,8 @@ export default function Sections(props) {
                           : 1,
                     },
                   ]}
-                  resizeMode="cover"
+                  resizeMode={FastImage.resizeMode.contain}
                 />
-                <Text style={styles.text} numberOfLines={2}>
-                  {item.title}
-                </Text>
               </TouchableOpacity>
             </Walkthroughable>
           </CopilotStep>
@@ -180,6 +164,9 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "flex-start", // Ensure items start from left
+    alignItems: "center", // Align items properly
+    paddingHorizontal: 12,
   },
   gridItem: {
     aspectRatio: 1,
@@ -187,7 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 8,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -196,16 +183,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    marginBottom: 12,
   },
   image: {
-    width: "60%",
-    height: "60%",
-    marginBottom: 8,
+    position: "absolute",
+    width: "100%",
+    height: "70%",
+    bottom: 0,
   },
   text: {
     color: Colors.primaryText,
     textAlign: "center",
-    fontSize: 12,
+    fontSize: hp(1.6),
     fontWeight: "500",
+    fontFamily: "Montserrat-SemiBold",
   },
 });
