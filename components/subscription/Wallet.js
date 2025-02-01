@@ -59,7 +59,7 @@ const Wallet = ({ transactions }) => {
             />
           </View>
 
-          <Pressable
+          {/* <Pressable
             style={({ pressed }) => [
               styles.button,
               { opacity: pressed ? 0.8 : 1 },
@@ -82,7 +82,7 @@ const Wallet = ({ transactions }) => {
               />
               <Text style={styles.buttonText}>{t("add_happy_coins")}</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
         <View style={styles.transactionHistoryContainer}>
           <TransactionHistory transactions={transactions} seeAll={true} />
