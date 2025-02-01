@@ -146,7 +146,6 @@ class OverviewScreen extends Component {
   }
 
   componentWillMount() {
-    this.getOverviewData();
     this.getProperties();
   }
   render() {
