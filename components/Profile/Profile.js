@@ -576,7 +576,7 @@ const Profile = () => {
               </View>
             </TouchableOpacity>
             {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && ( */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.menuItem}
               onPress={() => navigation.navigate("MembershipDetails")}
             >
@@ -588,7 +588,7 @@ const Profile = () => {
               <View style={styles.textContainer}>
                 <Text style={styles.title}>{t("membership_status")}</Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {/* )} */}
 
             <TouchableOpacity
