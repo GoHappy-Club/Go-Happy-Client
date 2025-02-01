@@ -546,7 +546,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
   };
 
   const iosPaymentHandler = async () => {
-    const message = `Hello, I would like book a seat for the session ${toUnicodeVariant(event.eventName, "bold")}, Please tell me how to proceed.`;
+    const message = `Hello, I would like book a seat for the workshop ${toUnicodeVariant(event.eventName, "bold")}, Please tell me how to proceed.`;
     Share.share({
       message: message,
     })
