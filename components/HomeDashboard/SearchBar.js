@@ -207,6 +207,7 @@ const SearchBar = () => {
       onGoBack: () => comeBack(),
       alreadyBookedSameDayEvent: checkIsParticipantInSameEvent(item),
     });
+    setSearchText("");
   };
 
   const checkIsParticipantInSameEvent = (item) => {
