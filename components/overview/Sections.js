@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     backgroundColor: Colors.beige,
     borderRadius: 12,
-    padding: 8,
+    // padding: 8,
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -184,11 +184,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 12,
+    // paddingTop:8
   },
   image: {
     position: "absolute",
     width: "100%",
-    height: "70%",
+    height: "100%",
     bottom: 0,
   },
   text: {
@@ -197,5 +198,7 @@ const styles = StyleSheet.create({
     fontSize: hp(1.6),
     fontWeight: "500",
     fontFamily: "Montserrat-SemiBold",
+    position: "absolute",
+    top: 8,
   },
 });

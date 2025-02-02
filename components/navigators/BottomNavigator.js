@@ -88,7 +88,7 @@ export default function BottomNavigator() {
           <MembershipScreen propProfile={profile} {...props} />
         )}
         options={{
-          tabBarLabel: t("support"),
+          tabBarLabel: t("contribute"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ color }) => (
