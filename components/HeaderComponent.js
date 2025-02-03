@@ -62,32 +62,69 @@ const Header = () => {
 
   useEffect(() => {
     const getRandomQuote = async () => {
-      const today = new Date().toISOString().split("T")[0];
+      try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayString = today.toISOString().split("T")[0];
 
-      const storedQuoteData = await AsyncStorage.getItem("dailyQuote");
-      if (storedQuoteData) {
-        const parsedData = JSON.parse(storedQuoteData);
-        if (parsedData.date === today) {
-          return parsedData;
+        const storedQuoteData = await AsyncStorage.getItem("dailyQuote");
+        let parsedData = null;
+
+        if (storedQuoteData) {
+          try {
+            parsedData = JSON.parse(storedQuoteData);
+          } catch (e) {
+            console.error("Error parsing stored quote:", e);
+          }
         }
+
+        if (
+          !parsedData ||
+          !parsedData.date ||
+          !parsedData.quote ||
+          parsedData.date !== todayString ||
+          !parsedData.quote.english
+        ) {
+          if (!quotes?.quotes?.length) {
+            throw new Error("Quotes data is not properly loaded");
+          }
+
+          const randomIndex = Math.floor(Math.random() * quotes.quotes.length);
+          const randomQuote = quotes.quotes[randomIndex];
+
+          if (!randomQuote?.english) {
+            throw new Error("Invalid quote structure");
+          }
+
+          parsedData = {
+            date: todayString,
+            quote: randomQuote,
+          };
+
+          await AsyncStorage.setItem("dailyQuote", JSON.stringify(parsedData));
+
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(7, 0, 0, 0);
+
+          await ScheduledNotifcation(
+            "Your Daily Motivation",
+            randomQuote.english,
+            tomorrow
+          );
+        }
+        console.log("ALREADY");
+        return parsedData;
+      } catch (error) {
+        console.error("Error in getRandomQuote:", error);
+        return {
+          date: new Date().toISOString().split("T")[0],
+          quote: {
+            hindi: "कड़ी मेहनत करते रहें।",
+            english: "Keep working hard.",
+          },
+        };
       }
-      const randomIndex = Math.floor(Math.random() * quotes.quotes.length);
-      const randomQuote = quotes.quotes[randomIndex];
-
-      const quoteData = {
-        date: today,
-        quote: randomQuote,
-      };
-
-      await AsyncStorage.setItem("dailyQuote", JSON.stringify(quoteData));
-      const notificationTime = dayjs().add(1, "day").toDate();
-
-      ScheduledNotifcation(
-        "Your Daily Motivation",
-        randomQuote.english,
-        notificationTime
-      );
-      return quoteData;
     };
     getRandomQuote();
     scheduleWaterReminders();
