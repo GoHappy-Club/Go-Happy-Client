@@ -20,7 +20,7 @@ import { Colors } from "../../assets/colors/color";
 const screenWidth = Dimensions.get("window").width;
 export default class ReferralsList extends React.Component {
   state = {
-    referralComplete: 7,
+    referralComplete: 3,
     refreshing: false,
   };
   _onRefresh() {
@@ -33,8 +33,8 @@ export default class ReferralsList extends React.Component {
   render() {
     const barHeight = 29;
     const barWidth = Dimensions.get("screen").width * 0.5;
-    const openedChestCount = Math.floor(this.props.numberReferrals / 7);
-    const currentCount = this.props.numberReferrals - openedChestCount * 7;
+    const openedChestCount = Math.floor(this.props.numberReferrals / 3);
+    const currentCount = this.props.numberReferrals - openedChestCount * 3;
     var chestType =
       currentCount < this.state.referralComplete
         ? require("../../images/chest-closed.png")
@@ -69,7 +69,7 @@ export default class ReferralsList extends React.Component {
             height={barHeight}
           />
           {chestOpened}
-          <Text style={styles.label1}>7/7</Text>
+          <Text style={styles.label1}>3/3</Text>
         </View>
       );
     }
@@ -149,7 +149,7 @@ export default class ReferralsList extends React.Component {
               height={barHeight}
             />
             {chest}
-            <Text style={styles.label1}>{currentCount}/7</Text>
+            <Text style={styles.label1}>{currentCount}/3</Text>
           </View>
         </View>
         <View style={{ paddingTop: 10, paddingBottom: 30, flex: 1 }}>
