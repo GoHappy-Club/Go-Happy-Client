@@ -7,6 +7,7 @@ import {
   Text,
   StyleSheet,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../assets/colors/color";
@@ -57,11 +58,17 @@ export default function Feed({ videos }) {
                 onPress={() => handlePlaylistPress(video)}
                 activeOpacity={0.5}
               >
-                <FastImage
-                  resizeMode={FastImage.resizeMode.cover}
+                <ImageBackground
                   source={{ uri: video.thumbnail }}
-                  style={styles.thumbnail}
-                />
+                  style={styles.background}
+                  blurRadius={2}
+                >
+                  <FastImage
+                    resizeMode={FastImage.resizeMode.cover}
+                    source={{ uri: video.thumbnail }}
+                    style={styles.thumbnail}
+                  />
+                </ImageBackground>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -73,8 +80,6 @@ export default function Feed({ videos }) {
 
 const styles = StyleSheet.create({
   skeletonContainer: {
-    // flexDirection: "row",
-    // alignItems: "center",
     borderRadius: 8,
     borderColor: Colors.grey.grey,
     borderWidth: 0.2,
@@ -107,24 +112,30 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   playlistCard: {
-    width: width * 0.4,
+    width: width * 0.5,
+    aspectRatio: 2 / 3,
     margin: 8,
     borderRadius: 12,
     overflow: "hidden",
-    backgroundColor: Colors.white,
+    backgroundColor: "black",
     elevation: 3,
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
+  background: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    resizeMode: "cover",
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.5 }],
+  },
   thumbnail: {
     width: "100%",
-    height: width * 0.4 * 1.5,
-    backgroundColor: Colors.grey.e,
+    height: "35%",
+    borderRadius: 25,
   },
   titleContainer: {
     padding: 8,
