@@ -226,7 +226,10 @@ const Profile = () => {
     },
     {
       key: t("membership"),
-      value: membership.membershipType,
+      value:
+        membership.freeTrialActive == true
+          ? "Happy"
+          : membership.membershipType,
       icon: <Award size={32} color={Colors.background} />,
     },
     {
