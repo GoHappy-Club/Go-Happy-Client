@@ -35,6 +35,7 @@ import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
 import Sound from "react-native-sound";
 import CustomCalendarStrip from "../../commonComponents/CalendarStrip.js";
+import { formatNumberWithSuffix } from "../../commonComponents/helpers.js";
 const HomeDashboard = ({
   events,
   ratings,
@@ -276,6 +277,9 @@ const HomeDashboard = ({
     if (isOngoing && isParticipant) {
       return "Join";
     } else if (isParticipant) {
+      if (item?.eventName?.toLowerCase().includes("tambola")) {
+        return "View Ticket";
+      }
       return "Booked";
     } else if (item.seatsLeft == 0) {
       return "Seats Full";
@@ -498,6 +502,7 @@ const HomeDashboard = ({
           paddingHorizontal: 5,
           gap: 2,
           paddingBottom: 4,
+          width: "100%",
         }}
       >
         <View
@@ -531,7 +536,9 @@ const HomeDashboard = ({
                 fontSize: wp(5),
               }}
             >
-              {item.costType == "paid" ? item.cost : "FREE"}
+              {item.costType == "paid"
+                ? formatNumberWithSuffix(item.cost)
+                : "FREE"}
             </Text>
             {item.costType == "paid" && (
               <FastImage

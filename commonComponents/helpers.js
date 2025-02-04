@@ -59,3 +59,15 @@ export const trimContent = (text, cut) => {
   }
   return text.substring(0, cut) + "...";
 };
+
+export function formatNumberWithSuffix(number) {
+  if (number >= 1e7) {
+    return (number / 1e7)?.toFixed(1) + "Cr";
+  } else if (number >= 1e5) {
+    return (number / 1e5)?.toFixed(1) + "L";
+  } else if (number >= 1e3) {
+    return (number / 1e3)?.toFixed(1) + "K";
+  } else {
+    return number?.toString();
+  }
+}
