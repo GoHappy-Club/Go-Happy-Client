@@ -4441,7 +4441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/native@npm:^6.1.6, @react-navigation/native@npm:^6.1.7":
+"@react-navigation/native@npm:^6.1.6":
   version: 6.1.18
   resolution: "@react-navigation/native@npm:6.1.18"
   dependencies:
@@ -5320,7 +5320,6 @@ __metadata:
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-otp-verify: "npm:^1.1.8"
     react-native-paper: "npm:4.12.4"
-    react-native-paytring: "file:./SDKs/Paytring"
     react-native-phone-number-input: "npm:2.1.0"
     react-native-phonepe-pg: "https://phonepe.mycloudrepo.io/public/repositories/phonepe-mobile-react-native-sdk/releases/v2/react-native-phonepe-pg.tgz"
     react-native-progress: "npm:^5.0.0"
@@ -6788,13 +6787,6 @@ __metadata:
   version: 0.0.2
   resolution: "crypt@npm:0.0.2"
   checksum: 10c0/adbf263441dd801665d5425f044647533f39f4612544071b1471962209d235042fb703c27eea2795c7c53e1dfc242405173003f83cf4f4761a633d11f9653f18
-  languageName: node
-  linkType: hard
-
-"crypto-js@npm:^4.1.1":
-  version: 4.2.0
-  resolution: "crypto-js@npm:4.2.0"
-  checksum: 10c0/8fbdf9d56f47aea0794ab87b0eb9833baf80b01a7c5c1b0edc7faf25f662fb69ab18dc2199e2afcac54670ff0cd9607a9045a3f7a80336cccd18d77a55b9fdf0
   languageName: node
   linkType: hard
 
@@ -13000,20 +12992,6 @@ __metadata:
     react-native: "*"
     react-native-vector-icons: "*"
   checksum: 10c0/8a1a6c170687eaaa1b35bf9cea7d3a60a62be0b356417a08a910e7ce9de1e608766d2d4d92ffeed621d2f68891afa6c297615a8945806dcaba3bfd7d5b3f5214
-  languageName: node
-  linkType: hard
-
-"react-native-paytring@file:./SDKs/Paytring::locator=GoHappyClient%40workspace%3A.":
-  version: 0.1.0
-  resolution: "react-native-paytring@file:./SDKs/Paytring#./SDKs/Paytring::hash=da49e0&locator=GoHappyClient%40workspace%3A."
-  dependencies:
-    "@react-navigation/native": "npm:^6.1.7"
-    crypto-js: "npm:^4.1.1"
-    react-native-webview: "npm:^13.2.3"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/69a5622dda45a123fc20b629f0a762a3ab8d3149c34a9d7e2f3082a0cba46e072d2553179f52417a4e4607b7daa516c7181de9a19a4553620db9669f6ace140e
   languageName: node
   linkType: hard
 
