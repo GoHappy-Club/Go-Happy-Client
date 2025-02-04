@@ -25,7 +25,7 @@ import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/dev/config.json";
+import * as configData from "./config/local_android/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import DeviceInfo from "react-native-device-info";
 import firebase from "@react-native-firebase/app";
