@@ -439,17 +439,12 @@ const Header = () => {
             />
           )}
         </Pressable>
-        <View style={styles.rightWrapper}>
+        {/* <View style={styles.rightWrapper}>
           <TouchableOpacity
             style={styles.upgradeButton}
             onPress={() => navigation.navigate("SubscriptionPlans")}
           >
             <FontAwesomeIcon icon={faCrown} color="#FBC65F" />
-            {/* <GradientText
-              text="Upgrade"
-              style={styles.upgradeText}
-              colors={Colors.headerLinearGradient}
-            /> */}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.credits}
@@ -474,11 +469,10 @@ const Header = () => {
                 },
               ]}
             >
-              {/* show high numbers with K/L */}
               {formatNumberWithSuffix(membership?.coins)}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
