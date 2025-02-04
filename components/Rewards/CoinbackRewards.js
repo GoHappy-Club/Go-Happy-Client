@@ -5,6 +5,7 @@ import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { setMembership } from "../../redux/actions/counts";
 import RewardsCard from "./RewardsCard";
+import { getRandomColor } from "./Rewards";
 
 const CoinbackRewards = ({
   rewards,

@@ -346,6 +346,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
       );
       setSessionAttended(phoneNumber);
       // await Linking.openURL(event.meetingLink);
+      giveRewards();
       joinMeeting();
       return;
     }
