@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   Platform,
   Pressable,
@@ -6,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -17,6 +18,17 @@ const PaymentFailed = () => {
 
   // type -> normal, empty for subscription
   const { type, navigateTo } = route?.params;
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, []);
 
   if (type == "normal")
     return (
