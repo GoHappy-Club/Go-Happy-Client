@@ -25,7 +25,7 @@ import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
 import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
 import About from "./components/About";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/local_android/config.json";
+import * as configData from "./config/dev/config.json";
 import Icon from "react-native-vector-icons/Ionicons";
 import DeviceInfo from "react-native-device-info";
 import firebase from "@react-native-firebase/app";
@@ -68,6 +68,7 @@ import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 import BackButton from "./commonComponents/BackButton.js";
 import PaytringView from "./commonComponents/PaytringView.js";
+import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -804,6 +805,15 @@ export default function App() {
                     })}
                   />
                   <Stack.Screen
+                    name="PaymentProcessing"
+                    children={(props) => <PaymentProcessing />}
+                    options={({ navigation }) => ({
+                      headerShown: false,
+                      animation: "slide_from_right",
+                      gestureEnabled: false,
+                    })}
+                  />
+                  <Stack.Screen
                     name="PaymentFailed"
                     children={(props) => <PaymentFailed />}
                     options={({ navigation }) => ({
@@ -995,6 +1005,7 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "slide_from_bottom",
                       headerBackVisible: false,
+                      gestureEnabled: false,
                     })}
                   />
                 </>
