@@ -114,7 +114,6 @@ const Header = () => {
             tomorrow
           );
         }
-        console.log("ALREADY");
         return parsedData;
       } catch (error) {
         console.error("Error in getRandomQuote:", error);

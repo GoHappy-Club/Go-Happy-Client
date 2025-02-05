@@ -397,8 +397,8 @@ class LoginScreen extends Component {
 
   verifyGupshupOtp = async (code) => {
     const response = await OTPAuthWrapper.GupshupWrapper.verifyOtp(
-      code,
-      this.state.phoneNumber
+      this.state.phoneNumber,
+      code
     );
 
     if (response.data.includes("success")) {
