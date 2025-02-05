@@ -63,6 +63,7 @@ export default function Feed({ videos }) {
                   style={styles.background}
                   blurRadius={2}
                 >
+                  <View style={styles.overlay} />
                   <FastImage
                     resizeMode={FastImage.resizeMode.cover}
                     source={{ uri: video.thumbnail }}
@@ -132,10 +133,18 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     transform: [{ scaleX: 1.2 }, { scaleY: 1.5 }],
   },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "black",
+    opacity: 0.25,
+  },
   thumbnail: {
     width: "100%",
     height: "35%",
-    borderRadius: 25,
   },
   titleContainer: {
     padding: 8,
