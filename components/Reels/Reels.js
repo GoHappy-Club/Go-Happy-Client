@@ -15,7 +15,7 @@ import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Share2 } from "lucide-react-native";
+import { Share2, X } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { Share } from "react-native";
 
@@ -285,22 +285,42 @@ const ReelsPage = () => {
     loading ? <ActivityIndicator size="large" color={Colors.white} /> : null;
 
   return (
-    <FlatList
-      ref={flatListRef}
-      data={videos}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      pagingEnabled
-      snapToInterval={height}
-      snapToAlignment="start"
-      decelerationRate="fast"
-      viewabilityConfig={viewabilityConfig}
-      onViewableItemsChanged={onViewableItemsChanged}
-      onEndReached={fetchVideos}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-    />
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
+      <View style={{
+        position: "absolute",
+        top: 15,
+        right: 15,
+        zIndex: 1000
+      }}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          underlayColor={Colors.white}
+        >
+          <X color="#000" size={24} />
+        </TouchableOpacity>
+      </View>
+      <FlatList
+        ref={flatListRef}
+        data={videos}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        pagingEnabled
+        snapToInterval={height}
+        snapToAlignment="start"
+        decelerationRate="fast"
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
+        onEndReached={fetchVideos}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -365,6 +385,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.black,
     fontWeight: "bold",
+  },
+  backButton: {
+    padding: 4,
+    backgroundColor: Colors.white,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
+    elevation: 10,
+    shadowOffset: { height: 2 },
+    shadowOpacity: 0.3,
   },
 });
 

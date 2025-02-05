@@ -941,18 +941,9 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
-                      headerRight: () => (
-                        <TouchableOpacity
-                          style={styles.backButton}
-                          onPress={() => navigation.goBack()}
-                          underlayColor={Colors.white}
-                        >
-                          <X color="#000" size={24} />
-                        </TouchableOpacity>
-                      ),
+                      headerShown:false,
                       headerShadowVisible: false,
                       animation: "slide_from_right",
-                      headerLeft: () => <View />,
                     })}
                   />
                   <Stack.Screen
