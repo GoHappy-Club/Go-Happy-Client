@@ -53,7 +53,6 @@ class TripsScreen extends Component {
       const response = await axios.get(SERVER_URL + "/properties/list");
       const properties = response.data.properties[0];
       this.setState({ topBannerImages: properties?.tripImages });
-      console.log("Properties", properties.tripImages);
     } catch (error) {
       crashlytics().log(`Error in getProperties ${error}`);
       console.log("Error in getProperties", error);

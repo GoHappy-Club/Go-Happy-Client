@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   Platform,
   Pressable,
@@ -23,6 +24,18 @@ const PaymentSuccessful = () => {
 
   // type -> normal, empty for subscription
   const { type, navigateTo } = route?.params;
+
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     timerRef.current = setTimeout(() => {

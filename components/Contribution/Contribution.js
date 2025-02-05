@@ -429,7 +429,6 @@ The Link will Expire in 20 Minutes.`;
                 Platform.OS === "ios"
                   ? this.iosPaymentHandler()
                   : this.setState({ clickPopup: true });
-                // this.props.navigation.navigate("PaytringView");
               }}
             >
               <View>
