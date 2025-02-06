@@ -55,6 +55,9 @@ export default function BottomNavigator() {
         padding: 10,
         zIndex: 10000,
       }}
+      style={{
+        backgroundColor: Colors.background,
+      }}
       shifting={false}
     >
       <Tab.Screen
