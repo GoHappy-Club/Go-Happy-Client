@@ -5,11 +5,13 @@ import MyProfileScreen from "../../screens/myProfileScreen/MyProfileScreen";
 import ReferScreen from "../../screens/ReferScreen/ReferScreen";
 import React, { Component, useEffect } from "react";
 import {
+  faCalendar,
   faChild,
   faClipboardList,
   faHandshake,
   faHistory,
   faHome,
+  faHouse,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -20,6 +22,13 @@ import { useCopilot } from "react-native-copilot";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../../assets/colors/color";
 import { useTranslation } from "react-i18next";
+import {
+  Calendar,
+  HandHeart,
+  HouseIcon,
+  HousePlug,
+  Trophy,
+} from "lucide-react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -27,7 +36,7 @@ export default function BottomNavigator() {
   const profile = useSelector((state) => state.profile);
   const navigation = useNavigation();
   const { start } = useCopilot();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Tab.Navigator
@@ -57,11 +66,10 @@ export default function BottomNavigator() {
           tabBarLabel: t("home"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faHome}
-              color={Colors.greyishText}
+          tabBarIcon: ({ focused, color }) => (
+            <HouseIcon
               size={25}
+              color={focused ? Colors.black : Colors.grey.grey}
             />
           ),
           tabBarActiveTintColor: "tomato",
@@ -73,11 +81,10 @@ export default function BottomNavigator() {
         children={(props) => <HomeScreen propProfile={profile} {...props} />}
         options={{
           tabBarLabel: t("sessions"),
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faClipboardList}
-              color={Colors.greyishText}
+          tabBarIcon: ({ focused, color }) => (
+            <Calendar
               size={25}
+              color={focused ? Colors.black : Colors.grey.grey}
             />
           ),
         }}
@@ -91,11 +98,10 @@ export default function BottomNavigator() {
           tabBarLabel: t("contribute"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon
-              icon={faHandshake}
-              color={Colors.greyishText}
+          tabBarIcon: ({ focused, color }) => (
+            <HandHeart
               size={25}
+              color={focused ? Colors.black : Colors.grey.grey}
             />
           ),
           tabBarActiveTintColor: "tomato",
@@ -110,11 +116,10 @@ export default function BottomNavigator() {
             tabBarLabel: t("refer"),
             elevation: 0, // remove shadow on Android
             shadowOpacity: 0,
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon
-                icon={faTrophy}
-                color={Colors.greyishText}
+            tabBarIcon: ({ focused, color }) => (
+              <Trophy
                 size={25}
+                color={focused ? Colors.black : Colors.grey.grey}
               />
             ),
           }}
