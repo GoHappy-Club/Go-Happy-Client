@@ -417,6 +417,9 @@ The Link will Expire in 20 Minutes.`;
                           this.phonePeWrapper("self", this.state.itemToBuy);
                         }}
                         disabled={this.state.payButtonLoading}
+                        titleStyle={{
+                          color:Colors.primaryText
+                        }}
                       />
                       {/* <Button
                         outline
@@ -501,7 +504,7 @@ const styles = StyleSheet.create({
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: Colors.white,
+    color: Colors.primaryText,
   },
   checkoutButtonDisabled: {
     opacity: 0.5,
@@ -603,7 +606,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.grey,
   },
   AAbuttonText: {
-    color: "white",
+    color: Colors.primaryText,
     textAlign: "center",
     fontWeight: "bold",
   },

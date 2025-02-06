@@ -228,7 +228,6 @@ export default function MembershipDetails() {
         phoneNumber: profile.phoneNumber,
         reason: reason,
       });
-      console.log("Response", response.data);
       const newMembership = {
         membershipType: response.data?.membershipType,
         id: response.data?.id,

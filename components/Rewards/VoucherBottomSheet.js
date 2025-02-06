@@ -236,7 +236,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
               : voucher.status == "ACTIVE"
                 ? "white"
                 : Colors.bottomNavigation,
-            borderColor: isSelected ? Colors.white : "#e0e0e0",
+            borderColor: isSelected ? Colors.primaryText : "#e0e0e0",
             borderWidth: isSelected ? 2 : 1,
           },
         ]}
@@ -251,19 +251,64 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
         </View>
         <View style={styles.dashedLine} />
         <View style={styles.titleSection}>
-          <Text style={styles.amount}>
-            {voucher.value != null
-              ? `${voucher.value}`
-              : `${voucher.percent}% OFF`}
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 3,
+            }}
+          >
+            {voucher?.value != null && (
+              <FastImage
+                source={require("../../images/coins.png")}
+                style={{
+                  width: wp(8),
+                  aspectRatio: 1,
+                }}
+              />
+            )}
+            <Animated.Text style={styles.amount}>
+              {voucher?.value != null
+                ? `${voucher?.value}`
+                : `${voucher?.percent}% OFF`}
+            </Animated.Text>
+          </View>
           <Text style={styles.cardTitle}>{voucher.title}</Text>
           <Text style={styles.validityText}>
-            Valid until {formatDate(voucher.expiryDate)}
+            {voucher.status == "ACTIVE"
+              ? "Valid until"
+              : `${
+                  voucher?.status?.charAt(0) +
+                  voucher.status.slice(1).toLowerCase()
+                } on`}{" "}
+            {voucher.status == "REDEEMED"
+              ? formatDate(voucher?.redemptionTime)
+              : formatDate(
+                  Math.min(voucher.expiryDate, voucher.parentExpiryDate)
+                )}
           </Text>
         </View>
       </View>
-      <View style={[styles.cutoutLeft, { backgroundColor: Colors.beige }]} />
-      <View style={[styles.cutoutRight, { backgroundColor: Colors.beige }]} />
+      <View
+        style={[
+          styles.cutoutLeft,
+          {
+            backgroundColor: Colors.beige,
+            borderColor: isSelected ? Colors.primaryText : "",
+            borderWidth: isSelected ? 2 : 0,
+          },
+        ]}
+      />
+      <View
+        style={[
+          styles.cutoutRight,
+          {
+            backgroundColor: Colors.beige,
+            borderColor: isSelected ? Colors.primaryText : "",
+            borderWidth: isSelected ? 2 : 0,
+          },
+        ]}
+      />
     </TouchableOpacity>
   );
 };
@@ -309,10 +354,10 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   applyButtonText: {
-    color: "#fff",
     fontSize: wp(4),
     fontWeight: "bold",
     fontFamily: "NunitoSans-Bold",
+    color:Colors.primaryText
   },
   voucherCard: {
     width: "90%",

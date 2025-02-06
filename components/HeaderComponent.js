@@ -427,7 +427,7 @@ const Header = () => {
             />
           )}
         </Pressable>
-        {/* <View style={styles.rightWrapper}>
+        <View style={styles.rightWrapper}>
           <TouchableOpacity
             style={styles.upgradeButton}
             onPress={() => navigation.navigate("SubscriptionPlans")}
@@ -460,7 +460,7 @@ const Header = () => {
               {formatNumberWithSuffix(membership?.coins)}
             </Text>
           </TouchableOpacity>
-        </View> */}
+        </View>
       </View>
     </SafeAreaView>
   );

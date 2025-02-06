@@ -841,7 +841,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     >
                       <Text
                         style={{
-                          color: Colors.primary,
+                          color: Colors.primaryText,
                           textDecorationLine: "underline",
                         }}
                       >
@@ -950,6 +950,9 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     sessionActionL();
                     return;
                   }
+                }}
+                titleStyle={{
+                  color:Colors.primaryText
                 }}
               ></Button>
             </SafeAreaView>

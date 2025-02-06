@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: Colors.white,
+    color: Colors.primaryText,
     fontSize: 12,
   },
 });
