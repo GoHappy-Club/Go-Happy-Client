@@ -2,7 +2,6 @@ import { BackHandler, Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import WebView from "react-native-webview";
-import { verifyPayment } from "../helpers/VerifyPayment";
 
 const PaytringView = () => {
   const webview = useRef(null);
@@ -32,7 +31,7 @@ const PaytringView = () => {
 
   const progressHandler = async (nativeEvent) => {
     const url = nativeEvent?.url;
-    if (url.includes("callback")) {
+    if (url.includes("callback") || url.includes("/order/cancellation")) {
       setWebViewOpen(false);
       navigation.navigate("PaymentProcessing", {
         callback: callback,

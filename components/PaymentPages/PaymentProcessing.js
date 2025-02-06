@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, BackHandler } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import Animated, {
   useSharedValue,
@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { verifyPayment } from "../../helpers/VerifyPayment";
 
 const TIMER_DURATION = 60;
@@ -21,11 +21,18 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PaymentProcessing = () => {
   const strokeDashoffset = useSharedValue(0);
   const [countdown, setCountdown] = useState(TIMER_DURATION);
-  const [paymentPending, setPaymentPending] = useState(false);
   const route = useRoute();
   const { callback, error_handler, order_id } = route.params;
+  const navigation = useNavigation();
 
   const timingRef = useRef();
+
+  const handlePending = () => {
+    navigation.navigate("PaymentFailed", {
+      navigateTo: "GoHappy Club",
+      type: "pending",
+    });
+  };
 
   useEffect(() => {
     const verify = async () => {
@@ -33,7 +40,7 @@ const PaymentProcessing = () => {
       if (response?.status === "success") {
         callback?.();
       } else if (response?.status === "pending") {
-        setPaymentPending(true);
+        handlePending();
       } else {
         error_handler?.();
       }
@@ -42,11 +49,24 @@ const PaymentProcessing = () => {
   }, []);
 
   useEffect(() => {
+    const backAction = () => {
+      return true;
+    };
+
+    const handler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => handler.remove();
+  }, []);
+
+  useEffect(() => {
     timingRef.current = setInterval(() => {
       setCountdown((prev) => prev - 1);
     }, 1000);
     if (countdown <= 0) {
-      setPaymentPending(true);
+      handlePending();
       clearInterval(timingRef.current);
     }
 
