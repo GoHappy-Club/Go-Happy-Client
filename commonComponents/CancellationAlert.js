@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey.countdown,
   },
   yesButton: {
-    backgroundColor: Colors.green,
+    backgroundColor: Colors.primary,
   },
   disabledButton: {
     opacity: 0.5,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   yesButtonText: {
-    color: Colors.white,
+    color: Colors.primaryText,
     fontWeight: "bold",
   },
 });

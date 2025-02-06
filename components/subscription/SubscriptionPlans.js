@@ -38,17 +38,17 @@ const colorMapping = {
   Silver: {
     gradient: ["#A9A9A9", "#C0C0C0", "#808080"],
     borderColor: "#C0C0C0",
-    textColor: "black",
+    textColor: Colors.primaryText,
   },
   Gold: {
     gradient: ["#FFD700", "#FDB931", "#A85F05"],
     borderColor: "#A85F05",
-    textColor: "black",
+    textColor: Colors.primaryText,
   },
   Platinum: {
     gradient: ["#304352", "#304352A1", "#304352A1"],
     borderColor: "#304352",
-    textColor: "white",
+    textColor: Colors.primaryText,
   },
 };
 
@@ -558,7 +558,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 style={[
                   styles.footerButtonText,
                   {
-                    color: isDisabled() ? Colors.grey.countdown : Colors.white,
+                    color: isDisabled() ? Colors.grey.countdown : Colors.primaryText,
                   },
                 ]}
               >
@@ -584,9 +584,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           customView={
             <View style={styles.AAcontainer}>
               <Text style={styles.AAtitle}>Payment Confirmation</Text>
-              <Text style={styles.AAmessage}>
-              Click below to pay.
-              </Text>
+              <Text style={styles.AAmessage}>Click below to pay.</Text>
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
@@ -605,6 +603,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   disabled={payButtonLoading}
                   loadingStyle={{
                     color: Colors.black,
+                  }}
+                  titleStyle={{
+                    color:Colors.primaryText
                   }}
                 />
                 {/* <Button
@@ -746,7 +747,7 @@ const styles = StyleSheet.create({
   durationTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#666",
+    // color: "#666",
     marginBottom: 8,
   },
   durationButtons: {
@@ -763,7 +764,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   selectedDurationButtonText: {
-    color: "white",
+    color: Colors.primaryText,
   },
   footerContainer: {
     marginTop: "2%",

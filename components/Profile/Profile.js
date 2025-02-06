@@ -222,7 +222,7 @@ const Profile = () => {
     {
       key: t("sessions_attended"),
       value: profile.sessionsAttended,
-      icon: <Calendar size={32} color={Colors.background} />,
+      icon: <Calendar size={32} color={Colors.primaryText} />,
     },
     {
       key: t("membership"),
@@ -230,12 +230,12 @@ const Profile = () => {
         membership.freeTrialActive == true
           ? "Happy"
           : membership.membershipType,
-      icon: <Award size={32} color={Colors.background} />,
+      icon: <Award size={32} color={Colors.primaryText} />,
     },
     {
       key: t("member_since"),
       value: formatDuration(profile.dateOfJoining),
-      icon: <Clock size={32} color={Colors.background} />,
+      icon: <Clock size={32} color={Colors.primaryText} />,
     },
   ];
 
@@ -394,12 +394,13 @@ const Profile = () => {
               >
                 <Text
                   style={{
-                    color: Colors.white,
+                    color: Colors.primaryText,
+                    fontFamily: "Montserrat-SemiBold",
                   }}
                 >
                   {t("edit")}
                 </Text>
-                <Pencil size={18} color={Colors.beige} />
+                <Pencil size={18} color={Colors.primaryText} />
 
                 {showRedDot() && (
                   <View
@@ -514,7 +515,7 @@ const Profile = () => {
                   >
                     <Text
                       style={{
-                        color: Colors.white,
+                        color: Colors.primaryText,
                         fontFamily: "NunitoSans-SemiBold",
                       }}
                     >
@@ -578,8 +579,8 @@ const Profile = () => {
                 <Text style={styles.title}>{t("change_language")}</Text>
               </View>
             </TouchableOpacity>
-            {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && ( */}
-            {/* <TouchableOpacity
+            {/* {membership.freeTrialActive != true && membership?.membershipType !="Free" && (
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => navigation.navigate("MembershipDetails")}
             >
@@ -591,8 +592,8 @@ const Profile = () => {
               <View style={styles.textContainer}>
                 <Text style={styles.title}>{t("membership_status")}</Text>
               </View>
-            </TouchableOpacity> */}
-            {/* )} */}
+            </TouchableOpacity>
+            )} */}
 
             <TouchableOpacity
               style={styles.menuItem}

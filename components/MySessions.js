@@ -118,7 +118,7 @@ class MySessions extends Component {
                   <Text
                     style={{
                       fontSize: wp(5),
-                      color: Colors.white,
+                      color: Colors.primaryText,
                       paddingHorizontal: wp(1),
                       paddingVertical: wp(1.5),
                     }}
@@ -233,6 +233,9 @@ class MySessions extends Component {
                   buttonStyle={{ backgroundColor: Colors.primary }}
                   onPress={this.videoPlayer.bind(this, item.recordingLink)}
                   loading={item.loadingButton}
+                  titleStyle={{
+                    color:Colors.primaryText
+                  }}
                 />
               )}
             </View>

@@ -622,7 +622,7 @@ const HomeDashboard = ({
           bottom: 10,
         }}
         titleStyle={{
-          color: Colors.white,
+          color: Colors.primaryText,
           fontSize: wp(3.5),
           fontWeight: "bold",
           letterSpacing: 1,
