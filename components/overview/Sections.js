@@ -170,9 +170,8 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     aspectRatio: 1,
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.background,
     borderRadius: 12,
-    // padding: 8,
     alignItems: "center",
     justifyContent: "space-between",
     shadowColor: "#000",
@@ -184,7 +183,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 12,
-    // paddingTop:8
   },
   image: {
     position: "absolute",

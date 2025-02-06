@@ -230,6 +230,9 @@ const EditProfile = () => {
               }}
               maxDate={dayjs().subtract(50, "years")}
               selectedItemColor={Colors.primary}
+              selectedTextStyle={{
+                color:Colors.primaryText
+              }}
             />
           </View>
         </Pressable>
@@ -341,6 +344,11 @@ const EditProfile = () => {
           outline
           title={"Save"}
           loading={state.loading}
+          titleStyle={{
+            color: Colors.primaryText,
+            fontFamily: "Montserrat-SemiBold",
+            fontSize: wp(4),
+          }}
           buttonStyle={styles.button}
           loadingProps={{ color: Colors.black }}
           onPress={updateUser}
@@ -449,5 +457,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     minWidth: 100,
     backgroundColor: Colors.primary,
+    color: Colors.primaryText,
   },
 });

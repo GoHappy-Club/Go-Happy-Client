@@ -121,7 +121,7 @@ export const Itinerary = ({ details, vouchers }) => {
               paddingRight: 10,
               borderRadius: 10,
               fontSize: 26,
-              color: Colors.white,
+              color: Colors.primaryText,
               textAlign: "center",
               marginBottom: "3%",
               fontWeight: "bold",
@@ -270,7 +270,7 @@ export const Itinerary = ({ details, vouchers }) => {
               return Linking.openURL(link);
             }}
           >
-            <Text style={{ color: Colors.white, fontWeight: "bold" }}>
+            <Text style={{ color: Colors.primaryText, fontWeight: "bold" }}>
               Inquire Now
             </Text>
           </Button>

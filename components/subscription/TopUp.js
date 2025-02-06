@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
   optionList: {
     fontSize: 16,
     padding: 10,
-    color: Colors.white,
+    color: Colors.primaryText,
   },
   checkoutButtonDisabled: {
     opacity: 0.5,

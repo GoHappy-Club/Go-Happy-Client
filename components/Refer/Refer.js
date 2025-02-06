@@ -25,6 +25,8 @@ import toUnicodeVariant from "../toUnicodeVariant.js";
 import { Colors } from "../../assets/colors/color.js";
 import ReferBottomSheet from "./ReferBottomSheet.js";
 import { withTranslation } from "react-i18next";
+import { FacebookIcon, InstagramIcon } from "lucide-react-native";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 class Refer extends Component {
   constructor(props) {
     super(props);
@@ -213,14 +215,14 @@ class Refer extends Component {
             <TouchableOpacity
               style={{
                 ...styles.copyButton,
-                backgroundColor: Colors.referPrimary,
+                backgroundColor: Colors.primary,
               }}
-              underlayColor={Colors.referPrimary}
+              underlayColor={Colors.primary}
               onPress={this.copyToClipboard.bind(this)}
             >
               <Text
                 style={{
-                  color: Colors.white,
+                  color: Colors.primaryText,
                   fontWeight: "bold",
                 }}
               >
@@ -232,31 +234,20 @@ class Refer extends Component {
             <Text style={styles.messageText}>{t("refer_msg")}</Text>
 
             <View
-              style={{ display: "flex", flexDirection: "row", margin: "3%" }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                margin: "3%",
+                justifyContent: "space-between",
+                width:"40%"
+              }}
             >
-              <FastImage
-                resizeMode="contain"
-                style={{
-                  width: "15%",
-                  height: 40,
-                }}
-                source={require("../../images/whatsapp.png")}
-              />
-              <FastImage
-                resizeMode="contain"
-                style={{
-                  width: "15%",
-                  height: 40,
-                }}
-                source={require("../../images/facebook.png")}
-              />
-              <FastImage
-                resizeMode="contain"
-                style={{
-                  width: "15%",
-                  height: 40,
-                }}
-                source={require("../../images/instagram.png")}
+              <InstagramIcon size={32} color={Colors.primary} />
+              <FacebookIcon size={32} color={Colors.primary} />
+              <FontAwesomeIcon
+                icon={faWhatsapp}
+                size={32}
+                color={Colors.primary}
               />
             </View>
           </View>
@@ -280,7 +271,7 @@ class Refer extends Component {
               <FontAwesomeIcon
                 icon={faShareAlt}
                 size={20}
-                color={Colors.white}
+                color={Colors.primaryText}
               />
               <Text style={styles.referButtonText}>REFER NOW</Text>
             </View>
@@ -416,7 +407,7 @@ const styles = StyleSheet.create({
   },
   referButtonText: {
     fontWeight: "bold",
-    color: Colors.white,
+    color: Colors.primaryText,
     justifyContent: "center",
     alignSelf: "center",
     marginLeft: "10%",

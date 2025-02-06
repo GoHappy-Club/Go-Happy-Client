@@ -64,7 +64,7 @@ const Item = ({ item, onPress }) => {
             style={{ width: 30, height: 30, borderRadius: 20 }}
             resizeMode="cover"
           />
-          <Title style={{ color: Colors.white, fontSize: 13, paddingLeft: 10 }}>
+          <Title style={{ color: Colors.primaryText, fontSize: 13, paddingLeft: 10 }}>
             {trimContent(item.expertName, 17)}
           </Title>
         </View>
@@ -465,13 +465,13 @@ const styles = StyleSheet.create({
   },
   eventName: {
     fontSize: height * 0.025,
-    color: Colors.white,
+    color: Colors.primaryText,
     letterSpacing: 2,
     fontWeight: "bold",
   },
   startTime: {
     fontSize: height * 0.015,
-    color: Colors.white,
+    color: Colors.primaryText,
     letterSpacing: 2,
   },
 });

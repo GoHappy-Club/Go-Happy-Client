@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   retryText: {
     fontSize: wp(6),
     fontWeight: "bold",
-    color: Colors.white,
+    color: Colors.primaryText,
     fontFamily: Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
   },
 });

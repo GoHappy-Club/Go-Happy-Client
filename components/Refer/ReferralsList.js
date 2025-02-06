@@ -174,14 +174,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    color: Colors.white,
+    color: Colors.primaryText,
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
     marginLeft: 20,
   },
   label1: {
-    color: Colors.white,
+    color: Colors.primaryText,
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 20,

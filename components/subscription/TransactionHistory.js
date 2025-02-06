@@ -150,9 +150,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   seeAllText: {
-    color: Colors.primary,
+    color: Colors.primaryText,
     fontSize: 16,
     fontWeight: "500",
+    textDecorationLine: "underline",
   },
 });
 

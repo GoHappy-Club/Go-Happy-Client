@@ -1012,7 +1012,7 @@ export default function App() {
         <AwesomeAlert
           confirmButtonStyle={{
             backgroundColor: Colors.primary,
-            color: Colors.white,
+            color: Colors.primaryText,
             borderRadius: 5,
           }}
           contentStyle={{
