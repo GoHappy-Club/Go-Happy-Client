@@ -67,6 +67,8 @@ import Reels from "./components/Reels/Reels.js";
 import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 import BackButton from "./commonComponents/BackButton.js";
+import PaytringView from "./commonComponents/PaytringView.js";
+import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -804,6 +806,15 @@ export default function App() {
                     })}
                   />
                   <Stack.Screen
+                    name="PaymentProcessing"
+                    children={(props) => <PaymentProcessing />}
+                    options={({ navigation }) => ({
+                      headerShown: false,
+                      animation: "slide_from_right",
+                      gestureEnabled: false,
+                    })}
+                  />
+                  <Stack.Screen
                     name="PaymentFailed"
                     children={(props) => <PaymentFailed />}
                     options={({ navigation }) => ({
@@ -984,6 +995,18 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                       animation: "ios_from_right",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="PaytringView"
+                    children={(props) => <PaytringView />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerTransparent: true,
+                      headerShadowVisible: false,
+                      animation: "slide_from_bottom",
+                      headerBackVisible: false,
+                      gestureEnabled: false,
                     })}
                   />
                 </>
