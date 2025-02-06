@@ -1,20 +1,36 @@
 import {
   BackHandler,
   Image,
+  Linking,
   Platform,
   Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { ChevronLeft } from "lucide-react-native";
 
 const PaymentFailed = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const [helpLink, setHelpLink] = useState("");
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get(`${SERVER_URL}/properties/list`);
+        const properties = response.data?.properties[0];
+        setHelpLink(properties?.whatsappHelpLink);
+      } catch (error) {}
+    };
+    fetchProperties();
+  }, []);
 
   // type -> normal, empty for subscription
   const { type, navigateTo } = route?.params;
@@ -33,6 +49,17 @@ const PaymentFailed = () => {
   if (type == "normal")
     return (
       <View style={styles.container}>
+        <View style={styles.goBackContainer}>
+          <TouchableOpacity
+            style={styles.goBackTouchable}
+            onPress={() => {
+              navigation.navigate("OverviewScreen");
+            }}
+          >
+            <ChevronLeft size={24} color={Colors.black} />
+            <Text style={styles.goBackText}>Home</Text>
+          </TouchableOpacity>
+        </View>
         <FastImage
           source={require("../../images/paymentError.png")}
           style={styles.image}
@@ -66,9 +93,68 @@ const PaymentFailed = () => {
         </Pressable>
       </View>
     );
+  else if (type == "pending") {
+    return (
+      <View style={styles.container}>
+        <View style={styles.goBackContainer}>
+          <TouchableOpacity
+            style={styles.goBackTouchable}
+            onPress={() => {
+              navigation.navigate("OverviewScreen");
+            }}
+          >
+            <ChevronLeft size={24} color={Colors.black} />
+            <Text style={styles.goBackText}>Home</Text>
+          </TouchableOpacity>
+        </View>
+        <FastImage
+          source={require("../../images/paymentError.png")}
+          style={styles.image}
+        />
+        <Text style={styles.sorryTitle}>Sorry!</Text>
+        <View style={styles.textWrapper}>
+          <Text style={styles.plainText}>
+            We couldn't verify your Payment, it is still in Pending.
+          </Text>
+          <Text style={styles.plainText}>Please contact support.</Text>
+        </View>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? 0.8 : 1,
+            },
+            styles.retryButton,
+          ]}
+          onPress={() => Linking.openURL(helpLink)}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              gap: wp(3),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.retryText}>Help Me</Text>
+          </View>
+        </Pressable>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
+      <View style={styles.goBackContainer}>
+        <TouchableOpacity
+          style={styles.goBackTouchable}
+          onPress={() => {
+            navigation.navigate("OverviewScreen");
+          }}
+        >
+          <ChevronLeft size={24} color={Colors.black} />
+          <Text style={styles.goBackText}>Home</Text>
+        </TouchableOpacity>
+      </View>
       <FastImage
         source={require("../../images/paymentError.png")}
         style={styles.image}
@@ -148,5 +234,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.primaryText,
     fontFamily: Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
+  },
+  goBackContainer: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  goBackTouchable: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  goBackText: {
+    fontSize: wp(4),
+    color: Colors.black,
   },
 });
