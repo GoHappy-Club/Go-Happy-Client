@@ -239,13 +239,13 @@ The Link will Expire in 20 Minutes.`;
       this.setState({ payButtonLoading: false, clickPopup: false });
       this.props.navigation.navigate("PaytringView", {
         callback: () => {
-          this.props.navigation.replace("PaymentSuccessful", {
+          this.props.navigation.navigate("PaymentSuccessful", {
             type: "normal",
             navigateTo: "MembershipScreen",
           });
         },
         error_handler: () => {
-          this.props.navigation.replace("PaymentFailed", {
+          this.props.navigation.navigate("PaymentFailed", {
             type: "normal",
             navigateTo: "MembershipScreen",
           });
