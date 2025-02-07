@@ -67,6 +67,7 @@ import Reels from "./components/Reels/Reels.js";
 import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 import BackButton from "./commonComponents/BackButton.js";
+import Reminders from "./components/Reminders/Reminders.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -983,6 +984,16 @@ export default function App() {
                         />
                       ),
                       headerShadowVisible: false,
+                      animation: "ios_from_right",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="RemindersScreen"
+                    children={(props) => <Reminders />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                     headerShown:false,
                       animation: "ios_from_right",
                     })}
                   />
