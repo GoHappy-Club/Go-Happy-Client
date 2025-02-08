@@ -953,7 +953,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   }
                 }}
                 titleStyle={{
-                  color:Colors.primaryText
+                  color:Colors.black
                 }}
               ></Button>
             </SafeAreaView>
