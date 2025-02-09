@@ -61,7 +61,6 @@ export default function Feed({ videos }) {
                 <ImageBackground
                   source={{ uri: video.thumbnail }}
                   style={styles.background}
-                  blurRadius={2}
                 >
                   <View style={styles.overlay} />
                   <FastImage
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "black",
-    opacity: 0.25,
+    opacity: 0.45,
   },
   thumbnail: {
     width: "100%",
