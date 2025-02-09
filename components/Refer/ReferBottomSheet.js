@@ -23,6 +23,7 @@ import { BlurView } from "@react-native-community/blur";
 import ReferralsList from "./ReferralsList";
 import { X } from "lucide-react-native";
 import { hp, wp } from "../../helpers/common";
+import { useTranslation } from "react-i18next";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -35,6 +36,7 @@ const ReferBottomSheet = ({
   trivialTitle1,
   trivialTitle2,
 }) => {
+  const { t } = useTranslation();
   const renderBackdrop = useCallback(
     ({ animatedIndex }) => {
       const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -140,25 +142,13 @@ const ReferBottomSheet = ({
           >
             <ScrollView contentContainerStyle={styles.container}>
               <Text style={styles.header}>
-                <Text style={styles.bold}>Follow these simple steps:</Text>
+                <Text style={styles.bold}>{t("follow_simple_steps")}</Text>
               </Text>
               <View style={styles.listContainer}>
-                <Text style={styles.listItem}>
-                  1. Share the referral link with your friends who are above 50
-                  years of age.
-                </Text>
-                <Text style={styles.listItem}>
-                  2. Ask them to click on the link, install the GoHappy Club app
-                  and register themselves in the app.
-                </Text>
-                <Text style={styles.listItem}>
-                  3. Once registered, ask them to book and attend any session
-                  they want.
-                </Text>
-                <Text style={styles.listItem}>
-                  4. Receive Thank You Gift from GoHappy Club delivered to your
-                  home once you have seven successful referrals.
-                </Text>
+                <Text style={styles.listItem}> {t("step_1")}</Text>
+                <Text style={styles.listItem}> {t("step_2")}</Text>
+                <Text style={styles.listItem}> {t("step_3")}</Text>
+                <Text style={styles.listItem}> {t("step_4")}</Text>
               </View>
             </ScrollView>
           </View>

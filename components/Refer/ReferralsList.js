@@ -16,9 +16,10 @@ import { BackgroundImage } from "react-native-elements/dist/config";
 // import { ScrollView } from "reac t-native-gesture-handler";
 import * as Progress from "react-native-progress";
 import { Colors } from "../../assets/colors/color";
+import { withTranslation } from "react-i18next";
 
 const screenWidth = Dimensions.get("window").width;
-export default class ReferralsList extends React.Component {
+class ReferralsList extends React.Component {
   state = {
     referralComplete: 3,
     refreshing: false,
@@ -31,6 +32,7 @@ export default class ReferralsList extends React.Component {
     });
   }
   render() {
+    const { t } = this.props;
     const barHeight = 29;
     const barWidth = Dimensions.get("screen").width * 0.5;
     const openedChestCount = Math.floor(this.props.numberReferrals / 3);
@@ -119,7 +121,7 @@ export default class ReferralsList extends React.Component {
     return (
       <SafeAreaView style={{ backgroundColor: Colors.background }}>
         <View style={styles.questContainer}>
-          <Text style={styles.label}>Referral Level</Text>
+          <Text style={styles.label}>{t("referral_level")}</Text>
           {openedChestCount <= 1 && (
             <Text
               style={{
@@ -129,12 +131,12 @@ export default class ReferralsList extends React.Component {
                 color: Colors.white,
               }}
             >
-              ({openedChestCount} level completed)
+              ({openedChestCount} {t("level_completed")})
             </Text>
           )}
           {openedChestCount > 1 && (
             <Text style={{ fontSize: 15, marginLeft: 20, marginBottom: 5 }}>
-              ({openedChestCount} levels completed)
+              ({openedChestCount} {t("levels_completed")})
             </Text>
           )}
           {/*chestComponents*/}
@@ -274,3 +276,5 @@ const styles = StyleSheet.create({
     // borderColor: Colors.grey.grey,
   },
 });
+
+export default withTranslation()(ReferralsList);
