@@ -64,5 +64,13 @@
   "happy_coins": "Happy Coins",
   "recent_transactions": "Recent Transactions",
   "see_all": "See All",
-  "join_our_exclusive_membership": "Join Our Exclusive Membership"
+  "join_our_exclusive_membership": "Join Our Exclusive Membership",
+  "follow_simple_steps": "Follow these simple steps:",
+  "step_1": "1. Share the referral link with your friends who are above 50 years of age.",
+  "step_2": "2. Ask them to click on the link, install the GoHappy Club app and register themselves in the app.",
+  "step_3": "3. Once registered, ask them to book and attend any session they want.",
+  "step_4": "4. Receive Thank You Gift from GoHappy Club delivered to your home once you have seven successful referrals.",
+  "referral_level": "Referral Level",
+  "level_completed": "level completed",
+  "levels_completed":"levels completed"
 }
