@@ -27,8 +27,10 @@ import {
   HandHeart,
   HouseIcon,
   HousePlug,
+  Plane,
   Trophy,
 } from "lucide-react-native";
+import TripsScreen from "../../screens/Trips/TripsScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -92,7 +94,7 @@ export default function BottomNavigator() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="MembershipScreen"
         children={(props) => (
           <MembershipScreen propProfile={profile} {...props} />
@@ -103,6 +105,25 @@ export default function BottomNavigator() {
           shadowOpacity: 0,
           tabBarIcon: ({ focused, color }) => (
             <HandHeart
+              size={25}
+              color={focused ? Colors.black : Colors.grey.grey}
+            />
+          ),
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: Colors.grey.grey,
+        }}
+      /> */}
+      <Tab.Screen
+        name="TripBottom"
+        children={(props) => (
+          <TripsScreen {...props} propProfile={profile} />
+        )}
+        options={{
+          tabBarLabel: t("trips"),
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0,
+          tabBarIcon: ({ focused, color }) => (
+            <Plane
               size={25}
               color={focused ? Colors.black : Colors.grey.grey}
             />

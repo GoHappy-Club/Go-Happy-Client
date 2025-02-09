@@ -64,7 +64,7 @@ export default function Sections(props) {
     {
       title: t("contribute"),
       imgUrl: require("../../images/contribute.png"),
-      link: "MembershipScreen",
+      link: "Contribution Details",
       text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
