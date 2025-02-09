@@ -381,7 +381,7 @@ export default EditProfile;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.background,
   },
   container: {
     // alignItems: "center",
