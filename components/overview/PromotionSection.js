@@ -46,7 +46,7 @@ class PromotionSection extends Component {
         title: "Contribute Banner",
         image:
           "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
-        to: "MembershipScreen",
+        to: "Contribution Details",
         text: "Support our mission! Click here to learn how you can contribute and make an impact.",
       },
     ];

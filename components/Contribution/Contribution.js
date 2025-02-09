@@ -108,7 +108,7 @@ class Contribution extends Component {
       });
       _this.props.navigation.navigate("PaymentSuccessful", {
         type: "normal",
-        navigateTo: "MembershipScreen",
+        navigateTo: "Contribution Details",
       });
     };
     const _errorHandler = () => {
