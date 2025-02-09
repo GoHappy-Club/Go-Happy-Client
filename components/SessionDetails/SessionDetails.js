@@ -80,6 +80,10 @@ const SessionDetails = ({
     payButtonLoading: false,
     shareButtonLoading: false,
     paymentSharePopUp: false,
+    after30: false,
+    showPopUp: false,
+    popUpTitle: "",
+    popUpMessage: "",
   });
 
   const modalRef = useRef();
@@ -226,6 +230,24 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     setState((prevState) => ({ ...prevState, referralLink: link1 }));
   };
 
+  useEffect(() => {
+    checkAfter30();
+  }, []);
+
+  const checkAfter30 = async () => {
+    const sessions = await AsyncStorage.getItem("completedSessions");
+    const result = sessions ? JSON.parse(sessions) : [];
+    const neededItem = result.filter((itemL) => itemL.sessionId == event.id);
+    const hasClickedBefore = neededItem && neededItem.length > 0;
+    const currTime = new Date().getTime();
+    if (
+      !hasClickedBefore &&
+      currTime > Number.parseFloat(event.startTime) + 1 * 60 * 1000
+    ) {
+      setState((prev) => ({ ...prev, after30: true }));
+    }
+  };
+
   const isDisabled = () => {
     const title = getTitle();
     if (
@@ -336,18 +358,29 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
       return;
     }
     if (getTitle() === "Join") {
-      await storeCompletedSession(
-        event.id,
-        event.eventName,
-        event.coverImage,
-        event.subCategory,
-        phoneNumber,
-        event.endTime
-      );
-      setSessionAttended(phoneNumber);
-      // await Linking.openURL(event.meetingLink);
-      joinMeeting();
-      return;
+      if (state.after30) {
+        setState((prev) => ({
+          ...prev,
+          showPopUp: true,
+          popUpMessage:
+            "You cannot join the session as you are joining after more than 30 minutes. Don't worry, you can still see the recording.",
+          popUpTitle: "Sorry!",
+        }));
+        return;
+      } else {
+        await storeCompletedSession(
+          event.id,
+          event.eventName,
+          event.coverImage,
+          event.subCategory,
+          phoneNumber,
+          event.endTime
+        );
+        setSessionAttended(phoneNumber);
+        // await Linking.openURL(event.meetingLink);
+        joinMeeting();
+        return;
+      }
     }
 
     var output = sessionAction("book", state.selectedVoucher);
@@ -1223,6 +1256,34 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           onDismiss={() =>
             setState((prev) => ({ ...prev, lowCoinsPopUp: false }))
           }
+        />
+      )}
+      {state.showPopUp && (
+        <AwesomeAlert
+          show={state.showPopUp}
+          showProgress={false}
+          title={state.popUpTitle}
+          message={state.popUpMessage}
+          messageStyle={{
+            textAlign: "center",
+            fontFamily: "Poppins-Regular",
+            color: Colors.black,
+          }}
+          titleStyle={{
+            fontSize: wp(5),
+            fontFamily: "NunitoSans-SemiBold",
+            color: Colors.red,
+          }}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showConfirmButton={true}
+          showCancelButton={false}
+          confirmText="Okay"
+          confirmButtonColor={Colors.primary}
+          onConfirmPressed={() => {
+            setState((prev) => ({ ...prev, showPopUp: false }));
+          }}
+          onDismiss={() => setState((prev) => ({ ...prev, showPopUp: false }))}
         />
       )}
     </SafeAreaView>
