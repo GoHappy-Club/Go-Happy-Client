@@ -83,7 +83,7 @@ const SessionRatingSheet = ({
           <Animated.View style={containerStyle}>
             <TouchableOpacity
               style={StyleSheet.absoluteFill}
-              onPress={closeModal}
+              // onPress={closeModal}
               activeOpacity={1}
             >
               <BlurView
@@ -108,7 +108,7 @@ const SessionRatingSheet = ({
         >
           <TouchableOpacity
             style={StyleSheet.absoluteFill}
-            onPress={closeModal}
+            // onPress={closeModal}
             activeOpacity={1}
           />
         </Animated.View>
@@ -139,9 +139,9 @@ const SessionRatingSheet = ({
       ref={modalRef}
       index={0}
       snapPoints={["70%"]}
-      enablePanDownToClose={true}
+      enablePanDownToClose={false}
       enableDismissOnClose={true}
-      enableGestureInteraction={true}
+      enableHandlePanningGesture={false}
       handleStyle={{ display: "none" }}
       backgroundStyle={{ borderRadius: 24 }}
       backdropComponent={renderBackdrop}
@@ -158,9 +158,9 @@ const SessionRatingSheet = ({
           style={styles.keyboardAvoidingView}
         >
           <BottomSheetView style={styles.container}>
-            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+            {/* <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
               <X size={24} color="#000" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {submitted ? (
               <View style={styles.thanksContainer}>
                 <Text style={styles.ratingTitle}>
