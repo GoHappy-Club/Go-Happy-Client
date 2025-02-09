@@ -462,9 +462,11 @@ const Profile = () => {
             borderRadius: 40,
             paddingHorizontal: wp(6),
             paddingVertical: hp(3),
+            backgroundColor: Colors.beige,
           }}
           backgroundStyle={{
             borderRadius: 40,
+            backgroundColor: Colors.beige,
           }}
         >
           <BottomSheetScrollView
@@ -649,7 +651,7 @@ const styles = StyleSheet.create({
   },
   container: {
     height: hp(65),
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.white,
     justifyContent: "start",
     alignItems: "center",
     paddingBottom: hp(5),
@@ -658,7 +660,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp(10),
     justifyContent: "center",
     alignItems: "center",
-    // overflow: "hidden",
+    backgroundColor: Colors.beige,
   },
   cover: {
     width: wp(35),
@@ -733,7 +735,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "600",
     color: Colors.primaryText,
+    fontWeight:"400"
   },
 });
