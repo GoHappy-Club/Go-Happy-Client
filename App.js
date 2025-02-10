@@ -68,6 +68,7 @@ import Language from "./components/ChangeLanguage/Language.js";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
 import BackButton from "./commonComponents/BackButton.js";
 import Reminders from "./components/Reminders/Reminders.js";
+import RemindersScreen from "./screens/Reminders/RemindersScreen.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -143,6 +144,18 @@ PushNotification.createChannel(
     channelId: "Medicine Reminders",
     channelName: "Medicine Reminders Channel",
     channelDescription: "Categorise medicine reminder notifications",
+    playSound: true,
+    soundName: "default",
+    importance: 4,
+    vibrate: true,
+  },
+  (created) => crashlytics().log(`createChannel returned '${created}'`)
+);
+PushNotification.createChannel(
+  {
+    channelId: "Reminders",
+    channelName: "Reminders Channel",
+    channelDescription: "Categorise Generic notifications",
     playSound: true,
     soundName: "default",
     importance: 4,
@@ -989,11 +1002,11 @@ export default function App() {
                   />
                   <Stack.Screen
                     name="RemindersScreen"
-                    children={(props) => <Reminders />}
+                    children={(props) => <RemindersScreen />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
-                     headerShown:false,
+                      headerShown: false,
                       animation: "ios_from_right",
                     })}
                   />
