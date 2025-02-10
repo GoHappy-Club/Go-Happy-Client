@@ -122,3 +122,65 @@ export const scheduleMedicineReminders = () => {
     }
   });
 };
+
+const getNextReminderTime = (timeString) => {
+  const [hours, minutes] = timeString.split(":").map(Number);
+  const now = new Date();
+  const nextTime = new Date(now);
+  nextTime.setHours(hours, minutes, 0, 0);
+
+  if (nextTime <= now) {
+    nextTime.setDate(nextTime.getDate() + 1);
+  }
+  return nextTime;
+};
+
+export const scheduleUserReminders = (reminders) => {
+  PushNotification.getScheduledLocalNotifications((notifications) => {
+    reminders.forEach((reminder) => {
+      const existingReminder = notifications.find(
+        (notif) => notif.data?.id === reminder.id
+      );
+
+      if (existingReminder) {
+        const existingFireDate = new Date(existingReminder.date);
+        const newFireDate = getNextReminderTime(reminder.time);
+
+        if (newFireDate > existingFireDate) {
+          PushNotification.localNotificationSchedule({
+            autoCancel: true,
+            date: newFireDate,
+            channelId: "Reminders",
+            title: reminder.title,
+            message: reminder.description || "Reminder",
+            vibration: 400,
+            userInfo: { id: reminder.id },
+          });
+
+          console.log(
+            `Reminder rescheduled for ${reminder.title} at ${newFireDate}`
+          );
+        } else {
+          console.log(
+            `Reminder for ${reminder.title} already scheduled for a later time (${existingFireDate}), skipping.`
+          );
+        }
+      } else {
+        const notificationTime = getNextReminderTime(reminder.time);
+        PushNotification.localNotificationSchedule({
+          autoCancel: true,
+          date: notificationTime,
+          channelId: "Reminders",
+          title: reminder.title,
+          message: reminder.description || "Reminder",
+          vibration: 400,
+          userInfo: { id: reminder.id },
+        });
+
+        console.log(
+          `Reminder scheduled for ${reminder.title} at ${notificationTime}`
+        );
+      }
+    });
+  });
+};

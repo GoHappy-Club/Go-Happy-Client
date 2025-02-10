@@ -3909,6 +3909,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/datetimepicker@npm:8.0.1":
+  version: 8.0.1
+  resolution: "@react-native-community/datetimepicker@npm:8.0.1"
+  dependencies:
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 10c0/3f4597035de551f5bf77374097d0cb1707058cb591db45d18d312eb9e533274aa789380e7698ff1944437793dcf148d484f9d5ce3246c03258f24eb3a75c11e5
+  languageName: node
+  linkType: hard
+
 "@react-native-community/push-notification-ios@npm:^1.11.0":
   version: 1.11.0
   resolution: "@react-native-community/push-notification-ios@npm:1.11.0"
@@ -5260,6 +5276,7 @@ __metadata:
     "@react-native-async-storage/async-storage": "npm:^2.1.0"
     "@react-native-clipboard/clipboard": "npm:^1.15.0"
     "@react-native-community/blur": "npm:^4.4.1"
+    "@react-native-community/datetimepicker": "npm:8.0.1"
     "@react-native-community/push-notification-ios": "npm:^1.11.0"
     "@react-native-firebase/analytics": "npm:21.6.1"
     "@react-native-firebase/app": "npm:21.6.1"

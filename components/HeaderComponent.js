@@ -35,7 +35,7 @@ import dayjs from "dayjs";
 import quotes from "../constants/quotes.json";
 import {
   ScheduledNotifcation,
-  scheduleMedicineReminders,
+  scheduleUserReminders,
   scheduleWaterReminders,
 } from "../services/LocalPushController";
 import { formatNumberWithSuffix } from "../commonComponents/helpers";
@@ -126,9 +126,21 @@ const Header = () => {
         };
       }
     };
+    const fetchAndSetReminders = async () => {
+      try {
+        const response = await axios.get(
+          `${SERVER_URL}/reminders/get?phone=${profile.phoneNumber}`
+        );
+        const reminders = response.data.reminders;
+        scheduleUserReminders(reminders)
+      } catch (error) {
+        console.log("Error in fetchReminders", error);
+        crashlytics.recordError(error);
+      }
+    };
     getRandomQuote();
     scheduleWaterReminders();
-    scheduleMedicineReminders();
+    fetchAndSetReminders();
   }, []);
 
   useEffect(() => {

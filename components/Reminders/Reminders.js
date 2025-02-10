@@ -22,37 +22,27 @@ import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { X } from "lucide-react-native";
+import { Clock, Trash, Trash2, Trash2Icon, X } from "lucide-react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSelector } from "react-redux";
+import { Button } from "react-native-elements";
+import AwesomeAlert from "react-native-awesome-alerts";
 
-const Reminders = () => {
-  const [reminders, setReminders] = useState([
-    {
-      id: "1",
-      title: "Take Medicine",
-      description: "Morning pills",
-      frequency: "Daily at 9:00 AM",
-      cronExpression: "0 9 * * *",
-    },
-    {
-      id: "2",
-      title: "Walk Exercise",
-      description: "Morning walk",
-      frequency: "Every Monday and Wednesday",
-      cronExpression: "0 8 * * 1,3",
-    },
-  ]);
-
+const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["25%", "90%"], []);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [isRepeat, setIsRepeat] = useState(false);
-  const [repeatOption, setRepeatOption] = useState("daily");
+  const [time, setTime] = useState("20:20");
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(false);
 
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const profile = useSelector((state) => state.profile.profile);
 
   const handleSheetChanges = useCallback((index) => {
     if (index == -1) {
@@ -123,18 +113,69 @@ const Reminders = () => {
     [closeModal]
   );
 
-  const handleAddReminder = () => {
-    console.log("ADD");
+  const addReminder = async () => {
+    if (!validateData()) {
+      setAlertMessage("Please fill the details first.");
+      setShowAlert(true);
+      return;
+    }
+    const reminder = {
+      title,
+      description,
+      time,
+      phone: profile.phoneNumber,
+    };
+    setLoading(true);
+    await handleAddReminder(reminder);
+    setLoading(false);
+    closeModal();
+    resetForm();
+  };
+
+  const deleteReminder = async (reminder) => {
+    handleDeleteReminder(reminder);
+  };
+
+  const parseTime = () => {
+    const splittedTime = time.split(":");
+    const hour = splittedTime[0];
+    const minute = splittedTime[1];
+    const now = new Date();
+    const newDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hour,
+      minute
+    );
+    return newDate;
+  };
+
+  const handleTimeChange = (e, selectedTime) => {
+    if (selectedTime) {
+      const istTime = selectedTime.toLocaleString("en-IN", {
+        timezone: "Asia/Kolkata",
+      });
+      const splittedIST = istTime.split(",")[1]?.trim();
+      const splittedTime = splittedIST.split(":");
+      const hour = splittedTime[0];
+      const minute = splittedTime[1];
+      setTime(`${hour}:${minute}`);
+      setShowTimePicker(false);
+    }
   };
 
   const resetForm = () => {
     setTitle("");
     setDescription("");
-    setDate(new Date());
-    setIsRepeat(false);
-    setRepeatOption("daily");
   };
 
+  const validateData = () => {
+    if (time.length < 0 || title.length < 3 || description.length < 5) {
+      return false;
+    }
+    return true;
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -164,42 +205,55 @@ const Reminders = () => {
           <Text>{t("back")}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => {
-          setSheetOpen(true);
-          bottomSheetRef.current?.snapToIndex(1);
+      <SafeAreaView
+        style={{
+          flex: 1,
         }}
       >
-        <Text style={styles.addButtonText}>Add New Reminder</Text>
-      </TouchableOpacity>
-
-      <ScrollView style={styles.scrollView}>
-        {reminders.map((reminder) => (
-          <View key={reminder.id} style={styles.reminderCard}>
-            <View style={styles.reminderInfo}>
-              <Text style={styles.reminderTitle}>{reminder.title}</Text>
-              <Text style={styles.reminderDescription}>
-                {reminder.description}
-              </Text>
-              <Text style={styles.reminderFrequency}>{reminder.frequency}</Text>
+        <ScrollView style={styles.scrollView}>
+          {reminders.map((reminder) => (
+            <View key={reminder.id} style={styles.reminderCard}>
+              <View style={styles.reminderInfo}>
+                <Text style={styles.reminderTitle}>{reminder.title}</Text>
+                <Text style={styles.reminderDescription}>
+                  {reminder.description}
+                </Text>
+                <Text style={styles.reminderFrequency}>
+                  {reminder.frequency}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => deleteReminder(reminder)}
+                style={styles.deleteButton}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
+                <Trash2
+                  size={20}
+                  color={Colors.white}
+                  style={styles.deleteIcon}
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => console.log(`Edit reminder ${reminder.id}`)}
-              style={styles.editButton}
-            >
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            setSheetOpen(true);
+            bottomSheetRef.current?.snapToIndex(1);
+          }}
+        >
+          <Text style={styles.addButtonText}>Add New Reminder</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
 
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
-        enablePanDownToClose
+        // enablePanDownToClose
         backdropComponent={renderBackdrop}
         style={{
           overflow: "hidden",
@@ -220,6 +274,15 @@ const Reminders = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.modalContent}
           >
+            {showTimePicker && (
+              <DateTimePicker
+                value={parseTime()}
+                mode="time"
+                is24Hour={true}
+                display={Platform.OS === "ios" ? "spinner" : "default"}
+                onChange={handleTimeChange}
+              />
+            )}
             <TouchableOpacity
               onPress={() => {
                 closeModal();
@@ -242,7 +305,10 @@ const Reminders = () => {
               style={styles.input}
               placeholder="Title"
               value={title}
-              onChangeText={setTitle}
+              onChangeText={(text) => {
+                setDescription(`Time for ${text}`);
+                setTitle(text);
+              }}
               maxLength={30}
             />
 
@@ -253,11 +319,28 @@ const Reminders = () => {
               onChangeText={setDescription}
               maxLength={30}
             />
-            <Text style={styles.label}>Time</Text>
-            <View style={styles.repeatContainer}>
-              <Text style={styles.label}>Repeat</Text>
-              <Switch value={isRepeat} onValueChange={setIsRepeat} />
-            </View>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+              onPress={() => setShowTimePicker(true)}
+            >
+              <View>
+                <Text style={styles.label}>Time</Text>
+                <Text
+                  style={{
+                    fontSize: wp(4),
+                    fontFamily: "Montserrat-Regular",
+                  }}
+                >
+                  {time}
+                </Text>
+              </View>
+              <Clock size={24} color={Colors.primaryText} />
+            </TouchableOpacity>
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
@@ -269,16 +352,38 @@ const Reminders = () => {
               >
                 <Text style={styles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.submitButton]}
-                onPress={handleAddReminder}
-              >
-                <Text style={styles.modalButtonText}>Add Reminder</Text>
-              </TouchableOpacity>
+              <Button
+                outline
+                buttonStyle={[styles.modalButton, styles.submitButton]}
+                onPress={addReminder}
+                title={"Add Reminder"}
+                titleStyle={styles.modalButtonText}
+                loading={loading}
+                disabled={loading || !validateData()}
+                loadingStyle={{
+                  color: Colors.black,
+                }}
+              />
             </View>
           </BottomSheetScrollView>
         </KeyboardAvoidingView>
       </BottomSheet>
+      {showAlert && (
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          closeOnTouchOutside={true}
+          title="Error!"
+          message={alertMessage}
+          showConfirmButton={true}
+          confirmText="Try Again"
+          confirmButtonColor={Colors.green}
+          onConfirmPressed={() => setShowAlert(false)}
+          onDismiss={() => {
+            setShowAlert(false);
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -341,13 +446,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.grey.d,
   },
-  editButton: {
-    paddingHorizontal: 12,
+  deleteButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: Colors.red,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8, // Ensures space between text and icon (React Native 0.71+)
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3, // For Android shadow
   },
-  editButtonText: {
-    color: Colors.primary,
+  deleteButtonText: {
+    color: Colors.white, // Ensures high contrast
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+  },
+  deleteIcon: {
+    marginLeft: 6, // Alternative to 'gap' for older React Native versions
   },
   modalContent: {
     padding: 15,
@@ -450,9 +570,11 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: Colors.coinsRed,
+    minWidth: "45%",
   },
   submitButton: {
     backgroundColor: Colors.primary,
+    minWidth: "45%",
   },
 });
 
