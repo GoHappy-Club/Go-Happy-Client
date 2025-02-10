@@ -74,6 +74,12 @@ export default function Sections(props) {
       type: "external",
       text: "Need assistance? Click here to get help and find the support you need.",
     },
+    {
+      title: "Reminders",
+      imgUrl: require("../../images/help.png"),
+      link: "RemindersScreen",
+      text: "Need assistance? Click here to get help and find the support you need.",
+    },
   ];
 
   return (
