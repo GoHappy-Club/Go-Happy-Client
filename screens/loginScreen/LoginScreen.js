@@ -321,17 +321,15 @@ class LoginScreen extends Component {
       this.state.phoneNumber
     );
 
-    if (response.data.includes("success")) {
+    if (response.data?.success == true) {
       this.setState({ otpSent: true }, () => this.startTimer());
-    } else if (response.data.includes("308")) {
+    } else if (response.data?.statusCode == 308) {
       alert(
         "You are re-trying too early, please wait a few minutes and try again."
       );
     } else {
       this.resendOtp();
       return;
-      // this.sendFirebaseOtp(true);
-      // this.showGenericError();
     }
 
     this.setState({ loadingButton: false, loadingResendButton: false });
@@ -341,7 +339,11 @@ class LoginScreen extends Component {
     console.error("Error in OTP process:", error);
     crashlytics().recordError(JSON.stringify(error));
     this.showGenericError();
-    this.setState({ loadingVerifyButton: false, loadingButton: false });
+    this.setState({
+      loadingVerifyButton: false,
+      loadingButton: false,
+      resend: false,
+    });
   };
 
   showGenericError = () => {
@@ -401,7 +403,7 @@ class LoginScreen extends Component {
       code
     );
 
-    if (response.data.includes("success")) {
+    if (response.data?.success == true) {
       if (this.state.reachedBackendSignIn == false) {
         this.setState({ reachedBackendSignIn: true }, () => {
           console.log("Calling bsign fromm GUPSHUP");
@@ -411,13 +413,13 @@ class LoginScreen extends Component {
           );
         });
       } else {
+        this.setState({ loadingVerifyButton: false });
         return;
       }
     } else {
+      this.setState({ loadingVerifyButton: false });
       throw new Error("OTP verification failed");
     }
-
-    this.setState({ loadingVerifyButton: false });
   };
 
   isValidOtpCode = (code) => {
@@ -673,6 +675,7 @@ class LoginScreen extends Component {
 
   _backendSignIn(phone, profileImage) {
     var url = SERVER_URL + "/auth/login";
+    this.setState({ loadingVerifyButton: true });
     axios
       .post(url, {
         phone: phone.substr(1),
@@ -1009,9 +1012,7 @@ class LoginScreen extends Component {
                   );
                 }}
               >
-                <Text
-                  style={{ color: Colors.blue.login, fontSize: 14 }}
-                >
+                <Text style={{ color: Colors.blue.login, fontSize: 14 }}>
                   Trouble logging in? Contact Us
                 </Text>
               </TouchableOpacity>
