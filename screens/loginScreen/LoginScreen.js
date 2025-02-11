@@ -136,6 +136,9 @@ class LoginScreen extends Component {
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
       this.setState({ verificationCode: verificationCode });
+      if(!this.state.resend){
+        this.handleVerifyCode(verificationCode)
+      }
     }
   };
 
