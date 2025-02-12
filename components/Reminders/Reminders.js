@@ -22,7 +22,15 @@ import { hp, wp } from "../../helpers/common";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import { Clock, Trash, Trash2, Trash2Icon, X } from "lucide-react-native";
+import {
+  Bell,
+  BellOff,
+  Clock,
+  Trash,
+  Trash2,
+  Trash2Icon,
+  X,
+} from "lucide-react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
 import { Button } from "react-native-elements";
@@ -33,12 +41,20 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
   const snapPoints = useMemo(() => ["25%", "90%"], []);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [time, setTime] = useState("20:20");
+  const [time, setTime] = useState(() => {
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return formattedTime;
+  });
   const [sheetOpen, setSheetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(false);
+  const isDescriptionManuallyChanged = useRef(false);
 
   const navigation = useNavigation();
   const { t } = useTranslation();
@@ -158,7 +174,7 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
       });
       const splittedIST = istTime.split(",")[1]?.trim();
       const splittedTime = splittedIST.split(":");
-      const hour = splittedTime[0];
+      const hour = splittedTime[0].padStart(2, "0");
       const minute = splittedTime[1];
       setTime(`${hour}:${minute}`);
       setShowTimePicker(false);
@@ -168,6 +184,18 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
   const resetForm = () => {
     setTitle("");
     setDescription("");
+  };
+
+  const handleTitleChange = (text) => {
+    setTitle(text);
+    if (!isDescriptionManuallyChanged.current) {
+      setDescription(`Time for ${text}`);
+    }
+  };
+
+  const handleDescriptionChange = (text) => {
+    setDescription(text);
+    isDescriptionManuallyChanged.current = true;
   };
 
   const validateData = () => {
@@ -210,33 +238,55 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
           flex: 1,
         }}
       >
-        <ScrollView style={styles.scrollView}>
-          {reminders.map((reminder) => (
-            <View key={reminder.id} style={styles.reminderCard}>
-              <View style={styles.reminderInfo}>
-                <Text style={styles.reminderTitle}>{reminder.title}</Text>
-                <Text style={styles.reminderDescription}>
-                  {reminder.description}
-                </Text>
-                <Text style={styles.reminderFrequency}>
-                  {reminder.frequency}
-                </Text>
+        {reminders && reminders.length > 0 && (
+          <ScrollView style={styles.scrollView}>
+            {reminders.map((reminder) => (
+              <View key={reminder.id} style={styles.reminderCard}>
+                <View style={styles.reminderInfo}>
+                  <Text style={styles.reminderTitle}>{reminder.title}</Text>
+                  <Text style={styles.reminderDescription}>
+                    {reminder.description}
+                  </Text>
+                  <Text style={styles.reminderFrequency}>
+                    {reminder.frequency}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => deleteReminder(reminder)}
+                  style={styles.deleteButton}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.deleteButtonText}>Delete</Text>
+                  <Trash2
+                    size={20}
+                    color={Colors.white}
+                    style={styles.deleteIcon}
+                  />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => deleteReminder(reminder)}
-                style={styles.deleteButton}
-                activeOpacity={0.8}
+            ))}
+          </ScrollView>
+        )}
+        {(!reminders || reminders.length === 0) && (
+          <View style={styles.noRemindersContainer}>
+            <BellOff size={32} color={Colors.primaryText} />
+            <Text style={styles.noRemindersText}>No reminders yet.</Text>
+            <Text style={styles.noRemindersSubtext}>
+              Tap the{" "}
+              <Text
+                style={{
+                  fontStyle: "italic",
+                  fontSize: wp(4),
+                  fontWeight: "bold",
+                  color: Colors.primaryText,
+                }}
               >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-                <Trash2
-                  size={20}
-                  color={Colors.white}
-                  style={styles.deleteIcon}
-                />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+                Add new Reminders
+              </Text>{" "}
+              button below to add a reminder.
+            </Text>
+          </View>
+        )}
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
@@ -245,6 +295,7 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
           }}
         >
           <Text style={styles.addButtonText}>Add New Reminder</Text>
+          <Bell size={24} color={Colors.primaryText} />
         </TouchableOpacity>
       </SafeAreaView>
 
@@ -305,10 +356,7 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
               style={styles.input}
               placeholder="Title"
               value={title}
-              onChangeText={(text) => {
-                setDescription(`Time for ${text}`);
-                setTitle(text);
-              }}
+              onChangeText={handleTitleChange}
               maxLength={30}
             />
 
@@ -316,7 +364,7 @@ const Reminders = ({ handleAddReminder, reminders, handleDeleteReminder }) => {
               style={styles.input}
               placeholder="Description"
               value={description}
-              onChangeText={setDescription}
+              onChangeText={handleDescriptionChange}
               maxLength={30}
             />
             <TouchableOpacity
@@ -403,6 +451,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   addButtonText: {
     color: Colors.primaryText,
@@ -575,6 +631,22 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: Colors.primary,
     minWidth: "45%",
+  },
+  noRemindersContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noRemindersText: {
+    fontSize: 22, // Larger, friendlier text
+    color: "gray",
+    marginTop: 10,
+  },
+  noRemindersSubtext: {
+    fontSize: 16,
+    color: "gray",
+    marginTop: 5,
+    textAlign: "center",
   },
 });
 

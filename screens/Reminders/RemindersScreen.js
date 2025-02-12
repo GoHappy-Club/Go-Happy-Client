@@ -23,6 +23,7 @@ const RemindersScreen = () => {
           frequency: `Daily at ${reminder.time}`,
         };
       });
+      console.log(response.data)
       setReminders(newReminders);
       setLoading(false);
     } catch (error) {
