@@ -60,28 +60,32 @@ const getNextTimeForHour = (hour) => {
 };
 
 export const scheduleWaterReminders = () => {
-  PushNotification.getScheduledLocalNotifications((notifications) => {
-    const waterReminderExists = notifications.some((notif) =>
-      notif.title.toLowerCase().includes("Time to Hydrate!".toLowerCase())
-    );
+  PushNotification.cancelAllLocalNotifications();
 
-    if (!waterReminderExists) {
-      const hours = [9, 11, 13, 15, 17, 19];
+  const hours = [9, 11, 13, 15, 17, 19];
+  const now = new Date();
 
-      hours.forEach((hour) => {
-        const notificationTime = getNextTimeForHour(hour);
-        PushNotification.localNotificationSchedule({
-          autoCancel: true,
-          date: notificationTime,
-          title: "Time to Hydrate!",
-          message: "Drink a glass of water to stay healthy and hydrated.",
-          channelId: "Water Reminders",
-          vibration: 400,
-        });
-        console.log(`Water reminder scheduled for ${notificationTime}`);
+  for (let i = 0; i < 30; i++) {
+    hours.forEach((hour) => {
+      const notificationTime = new Date(now);
+      notificationTime.setDate(now.getDate() + i);
+      notificationTime.setHours(hour, 0, 0, 0);
+
+      if (notificationTime <= now && i === 0) {
+        notificationTime.setDate(notificationTime.getDate() + 1);
+      }
+
+      PushNotification.localNotificationSchedule({
+        autoCancel: true,
+        date: notificationTime,
+        title: "Time to Hydrate!",
+        message: "Drink a glass of water to stay healthy and hydrated.",
+        channelId: "Water Reminders",
+        vibration: 400,
       });
-    }
-  });
+      console.log(`Water reminder scheduled for ${notificationTime}`);
+    });
+  }
 };
 
 const getNextMedicineTimeForHour = (hours, minutes) => {
@@ -95,30 +99,34 @@ const getNextMedicineTimeForHour = (hours, minutes) => {
 };
 
 export const scheduleMedicineReminders = () => {
-  PushNotification.getScheduledLocalNotifications((notifications) => {
-    const medicineReminderExists = notifications.some((notif) =>
-      notif.title.toLowerCase().includes("Medicine Reminder".toLowerCase())
-    );
+  PushNotification.cancelAllLocalNotifications();
 
-    if (!medicineReminderExists) {
-      const medicineTimes = [
-        { hours: 9, minutes: 0 },
-        { hours: 14, minutes: 0 },
-        { hours: 21, minutes: 0 },
-      ];
+  const medicineTimes = [
+    { hours: 9, minutes: 0 },
+    { hours: 14, minutes: 0 },
+    { hours: 21, minutes: 0 },
+  ];
+  const now = new Date();
 
-      medicineTimes.forEach(({ hours, minutes }) => {
-        const notificationTime = getNextMedicineTimeForHour(hours, minutes);
-        PushNotification.localNotificationSchedule({
-          autoCancel: true,
-          date: notificationTime,
-          channelId: "Medicine Reminders",
-          title: "Medicine Reminder",
-          message: "Time to take your medicine.",
-          vibration: 400,
-        });
-        console.log(`Medicine reminder scheduled for ${notificationTime}`);
+  for (let i = 0; i < 30; i++) {
+    medicineTimes.forEach(({ hours, minutes }) => {
+      const notificationTime = new Date(now);
+      notificationTime.setDate(now.getDate() + i);
+      notificationTime.setHours(hours, minutes, 0, 0);
+
+      if (notificationTime <= now && i === 0) {
+        notificationTime.setDate(notificationTime.getDate() + 1);
+      }
+
+      PushNotification.localNotificationSchedule({
+        autoCancel: true,
+        date: notificationTime,
+        channelId: "Medicine Reminders",
+        title: "Medicine Reminder",
+        message: "Time to take your medicine.",
+        vibration: 400,
       });
-    }
-  });
+      console.log(`Medicine reminder scheduled for ${notificationTime}`);
+    });
+  }
 };
