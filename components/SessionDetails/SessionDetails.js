@@ -956,6 +956,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                 }}
                 title={getTitle()}
                 loading={state.loadingButton}
+                loadingProps={{ color: Colors.black }}
                 onPress={() => {
                   const title = getTitle();
                   setState((prev) => ({ ...prev, title: title }));
@@ -985,7 +986,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   }
                 }}
                 titleStyle={{
-                  color:Colors.black
+                  color: Colors.black,
                 }}
               ></Button>
             </SafeAreaView>
@@ -1022,9 +1023,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           customView={
             <View style={styles.AAcontainer}>
               <Text style={styles.AAtitle}>Payment Confirmation</Text>
-              <Text style={styles.AAmessage}>
-              Click below to pay.
-              </Text>
+              <Text style={styles.AAmessage}>Click below to pay.</Text>
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
