@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import debounce from "lodash.debounce";
 import { hp, wp } from "../helpers/common";
+import { Colors } from "../assets/colors/color";
 
 const uuidv4 = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -139,7 +140,7 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
           value={input}
           onChangeText={handleInputChange}
           placeholder={"Enter your city here"}
-          placeholderTextColor="#666"
+          placeholderTextColor={Colors.grey[6]}
         />
       </View>
     </View>
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: "#666",
+    color: Colors.grey[6],
     marginBottom: 4,
   },
   inputWrapper: {

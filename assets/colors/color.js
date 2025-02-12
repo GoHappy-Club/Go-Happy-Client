@@ -38,6 +38,7 @@ export const Colors = {
     optionList: "#424242",
     countdown: "#8a8888",
     header: "#F2F2F2",
+    6:"#666"
   },
   linearGradient: ["#4c669f", "#3b5998", "#192f6a"],
   headerLinearGradient: ["#FCF6BA", "#E3D088", "#B38728"],

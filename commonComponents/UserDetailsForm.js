@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import AutocompleteCityInput from '../components/Autocomplete';
 import { Calendar } from 'lucide-react-native';
+import { Colors } from '../assets/colors/color';
 
 const UserDetailsForm = ({
   state,
@@ -17,6 +18,7 @@ const UserDetailsForm = ({
         <TextInput
           style={styles.input}
           placeholder="Name"
+          placeholderTextColor={Colors.grey[6]}
           value={state.name}
           onChangeText={(text) =>
             setState((prev) => ({ ...prev, name: text }))
@@ -30,6 +32,7 @@ const UserDetailsForm = ({
           style={styles.input}
           placeholder="Email"
           keyboardType="email-address"
+          placeholderTextColor={Colors.grey[6]}
           autoCapitalize="none"
           value={state.email}
           onChangeText={(text) =>
@@ -44,6 +47,7 @@ const UserDetailsForm = ({
           style={styles.input}
           value={state.emergencyContact}
           placeholder="Emergency Contact"
+          placeholderTextColor={Colors.grey[6]}
           maxLength={10}
           keyboardType="phone-pad"
           onChangeText={(text) =>
