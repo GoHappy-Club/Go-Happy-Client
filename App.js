@@ -735,7 +735,6 @@ export default function App() {
                         <BackButton
                           styles={styles}
                           navigation={navigation}
-                          navigateTo={"Trips"}
                         />
                       ),
                       headerShadowVisible: false,
