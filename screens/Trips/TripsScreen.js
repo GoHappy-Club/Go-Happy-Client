@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
 import { View } from "react-native";
@@ -182,13 +183,35 @@ class TripsScreen extends Component {
             }}
             animationType="spring"
           >
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
+            <TabView.Item
+              style={{
+                width: "100%",
+                height: "100%",
+                display:
+                  Platform.OS === "android"
+                    ? "flex"
+                    : this.state.index == 0
+                      ? "flex"
+                      : "none",
+              }}
+            >
               <TripsList
                 trips={this.state.upcomingTrips}
                 navigation={this.props.navigation}
               />
             </TabView.Item>
-            <TabView.Item style={{ width: "100%", height: "100%" }}>
+            <TabView.Item
+              style={{
+                width: "100%",
+                height: "100%",
+                display:
+                  Platform.OS === "android"
+                    ? "flex"
+                    : this.state.index == 1
+                      ? "flex"
+                      : "none",
+              }}
+            >
               <TripsList
                 type="past"
                 trips={this.state.pastTrips}

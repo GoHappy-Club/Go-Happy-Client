@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Platform,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGift, faTrophy } from "@fortawesome/free-solid-svg-icons";
@@ -159,10 +160,10 @@ const Rewards = ({ rewards, vouchers, loading }) => {
           dense={true}
           style={{ backgroundColor: Colors.background }}
           indicatorStyle={{
-            backgroundColor: Colors.primary, // Change the indicator color to green
+            backgroundColor: Colors.primary,
           }}
           titleStyle={{
-            color: Colors.primary, // Set color of both active and inactive tab labels to green
+            color: Colors.primaryText,
           }}
         >
           <Tab.Item>Rewards</Tab.Item>
@@ -176,7 +177,18 @@ const Rewards = ({ rewards, vouchers, loading }) => {
           }}
           animationType="spring"
         >
-          <TabView.Item style={{ width: "100%", height: "100%" }}>
+          <TabView.Item
+            style={{
+              width: "100%",
+              height: "100%",
+              display:
+                Platform.OS === "android"
+                  ? "flex"
+                  : index == 0
+                    ? "flex"
+                    : "none",
+            }}
+          >
             {loading == false ? (
               <CoinbackRewards
                 rewards={rewards}
@@ -198,7 +210,18 @@ const Rewards = ({ rewards, vouchers, loading }) => {
               </View>
             )}
           </TabView.Item>
-          <TabView.Item style={{ width: "100%", height: "100%" }}>
+          <TabView.Item
+            style={{
+              width: "100%",
+              height: "100%",
+              display:
+                Platform.OS === "android"
+                  ? "flex"
+                  : index == 1
+                    ? "flex"
+                    : "none",
+            }}
+          >
             <Vouchers vouchers={vouchers} navigation={navigation} />
           </TabView.Item>
         </TabView>
