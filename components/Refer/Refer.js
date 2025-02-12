@@ -239,15 +239,15 @@ class Refer extends Component {
                 flexDirection: "row",
                 margin: "3%",
                 justifyContent: "space-between",
-                width:"40%"
+                width: "40%",
               }}
             >
-              <InstagramIcon size={32} color={Colors.primary} />
-              <FacebookIcon size={32} color={Colors.primary} />
+              <InstagramIcon size={32} color={Colors.primaryText} />
+              <FacebookIcon size={32} color={Colors.primaryText} />
               <FontAwesomeIcon
                 icon={faWhatsapp}
                 size={32}
-                color={Colors.primary}
+                color={Colors.primaryText}
               />
             </View>
           </View>
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   },
   rulesButtonText: {
     fontWeight: "bold",
-    color: Colors.primary,
+    color: Colors.primaryText,
     justifyContent: "center",
     alignSelf: "center",
   },
