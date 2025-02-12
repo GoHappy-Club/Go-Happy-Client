@@ -68,24 +68,27 @@ const Header = () => {
         today.setHours(0, 0, 0, 0);
         const todayString = today.toISOString().split("T")[0];
 
-        const storedQuoteData = await AsyncStorage.getItem("dailyQuote");
         let parsedData = null;
+        let retries = 5;
 
-        if (storedQuoteData) {
+        while (retries > 0) {
           try {
-            parsedData = JSON.parse(storedQuoteData);
+            const storedQuoteData = await AsyncStorage.getItem("dailyQuote");
+            if (storedQuoteData) {
+              parsedData = JSON.parse(storedQuoteData);
+            }
           } catch (e) {
             console.error("Error parsing stored quote:", e);
           }
-        }
 
-        if (
-          !parsedData ||
-          !parsedData.date ||
-          !parsedData.quote ||
-          parsedData.date !== todayString ||
-          !parsedData.quote.english
-        ) {
+          if (
+            parsedData &&
+            parsedData.date === todayString &&
+            parsedData.quote?.english
+          ) {
+            return parsedData;
+          }
+
           if (!quotes?.quotes?.length) {
             throw new Error("Quotes data is not properly loaded");
           }
@@ -94,7 +97,9 @@ const Header = () => {
           const randomQuote = quotes.quotes[randomIndex];
 
           if (!randomQuote?.english) {
-            throw new Error("Invalid quote structure");
+            console.warn("Invalid quote structure, retrying...");
+            retries--;
+            continue;
           }
 
           parsedData = {
@@ -102,19 +107,29 @@ const Header = () => {
             quote: randomQuote,
           };
 
-          await AsyncStorage.setItem("dailyQuote", JSON.stringify(parsedData));
+          try {
+            await AsyncStorage.setItem(
+              "dailyQuote",
+              JSON.stringify(parsedData)
+            );
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(7, 0, 0, 0);
+            await ScheduledNotifcation(
+              "Your Daily Motivation",
+              randomQuote.english,
+              tomorrow
+            );
+          } catch (e) {
+            console.error("Error saving quote to AsyncStorage, retrying...", e);
+            retries--;
+            continue;
+          }
 
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          tomorrow.setHours(7, 0, 0, 0);
-
-          await ScheduledNotifcation(
-            "Your Daily Motivation",
-            randomQuote.english,
-            tomorrow
-          );
+          return parsedData;
         }
-        return parsedData;
+
+        throw new Error("Failed to retrieve or generate a valid quote");
       } catch (error) {
         console.error("Error in getRandomQuote:", error);
         return {
@@ -126,6 +141,7 @@ const Header = () => {
         };
       }
     };
+
     getRandomQuote();
     scheduleWaterReminders();
     scheduleMedicineReminders();
