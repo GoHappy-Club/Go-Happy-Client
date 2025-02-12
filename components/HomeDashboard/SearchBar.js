@@ -9,6 +9,7 @@ import {
   Text,
   FlatList,
   Image,
+  Platform,
 } from "react-native";
 import { Clock, SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
@@ -64,7 +65,9 @@ const Item = ({ item, onPress }) => {
             style={{ width: 30, height: 30, borderRadius: 20 }}
             resizeMode="cover"
           />
-          <Title style={{ color: Colors.primaryText, fontSize: 13, paddingLeft: 10 }}>
+          <Title
+            style={{ color: Colors.primaryText, fontSize: 13, paddingLeft: 10 }}
+          >
             {trimContent(item.expertName, 17)}
           </Title>
         </View>
@@ -262,6 +265,7 @@ const SearchBar = () => {
             borderWidth: 1,
             paddingHorizontal: 15,
             marginBottom: height * 0.025,
+            paddingVertical: Platform.OS === "ios" ? wp(1) : 0,
           },
         ]}
       >
