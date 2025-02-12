@@ -40,10 +40,9 @@ const errorHandler = (error, stackTrace) => {
 const RNRedux = () => {
   async function checkForUpdate() {
     try {
-      const result = await startUpdateFlow(UpdateFlow.FLEXIBLE);
-      console.log("result in checkForUpdate:", result);
+      await startUpdateFlow(UpdateFlow.IMMEDIATE);
     } catch (e) {
-      console.log("error in checkforupdate:", e?.message);
+      crashlytics().log("Error in checkforupdate: " + e?.message);
     }
   }
   useEffect(() => {
