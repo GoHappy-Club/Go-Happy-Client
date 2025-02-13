@@ -223,10 +223,9 @@ const SubscriptionPlans = ({ plans }) => {
 
   const navigation = useNavigation();
   const route = useRoute();
-  console.log("ROUTE ++>", route.params);
 
   useEffect(() => {
-    if (route.params && route.params?.renew == true) {
+    if (route.params && route.params?.renew == true && plans?.length > 1) {
       setRenew(true);
       const stDate = new Date(Number(membership.membershipStartDate));
       const enDate = new Date(Number(membership.membershipEndDate));
@@ -235,7 +234,6 @@ const SubscriptionPlans = ({ plans }) => {
       const planFound = plans
         .filter((plan) => plan.duration == durationOfMembership)
         .filter((plan) => plan.membershipType == membership.membershipType);
-      console.log("PLAN FOUND", planFound);
       if (!planFound || planFound?.length < 1) {
         Toast.show("Membership not active anymore", Toast.LONG);
       } else if (planFound) {
@@ -309,102 +307,82 @@ const SubscriptionPlans = ({ plans }) => {
   };
 
   const isDisabled = () => {
-    // const stDate = new Date(Number(membership.membershipStartDate));
-    // const enDate = new Date(Number(membership.membershipEndDate));
+    const stDate = new Date(Number(membership.membershipStartDate));
+    const enDate = new Date(Number(membership.membershipEndDate));
 
-    // const durationOfMembership = differenceInMonths(enDate, stDate);
+    const durationOfMembership = differenceInMonths(enDate, stDate);
 
-    // if (
-    //   membership?.membershipType == selectedPlan?.membershipType &&
-    //   durationOfMembership == selectedPlan.duration
-    // )
-    return true;
+    if (
+      membership?.membershipType == selectedPlan?.membershipType &&
+      durationOfMembership == selectedPlan.duration
+    )
+      return true;
   };
 
   const getTitle = () => {
-    return "Coming soon";
-    if (membership.membershipType == "Free") {
+    if (membership.membershipType == "Free" || membership.freeTrialActive) {
       return "Join now";
     }
     return "Upgrade now";
   };
 
-  const phonePe = async (type, plan, paymentType, amount) => {
-    const _callback = () => {
+  const paytringWrapper = async (type, plan, amount) => {
+    const data = {
+      phone: profile.phoneNumber,
+      amount: amount,
+      email:
+        profile.email != null || profile.email != ""
+          ? profile.email
+          : "void@paytring.com",
+      cname: profile.name,
+      type: type,
+      planId: plan?.id,
+    };
+    setPayButtonLoading(true);
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/paytring/createOrder`,
+        data
+      );
+      const orderData = response.data;
+
+      navigation.navigate("PaytringView", {
+        callback: () => {
+          navigation.navigate("PaymentSuccessful", {
+            type: "",
+            navigateTo: "",
+          });
+        },
+        error_handler: () => {
+          navigation.navigate("PaymentFailed", {
+            type: "",
+            navigateTo: "",
+          });
+        },
+        order_id: orderData?.order_id,
+      });
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentSuccessful", {
-        type: "",
-        navigateTo: "",
-      });
-    };
-
-    const _errorHandler = () => {
+    } catch (error) {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentFailed", {
-        type: "",
-        navigateTo: "",
-      });
-    };
-
-    if (type == "share") {
-      setShareButtonLoading(true);
-      phonepe_payments
-        .phonePeShare(
-          profile.phoneNumber,
-          amount,
-          _errorHandler,
-          paymentType,
-          null,
-          null,
-          plan.id
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(plan.subscriptionFees),"bold")} for GoHappy Club Membership.
-Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
-    `;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            });
-        });
-    } else {
-      setPayButtonLoading(true);
-      phonepe_payments.phonePe(
-        profile.phoneNumber,
-        amount,
-        _callback,
-        _errorHandler,
-        paymentType,
-        null,
-        null,
-        plan.id
+      crashlytics().log(
+        `Error in paytringWrapper SubscriptionPlans.js ${error}`
       );
     }
   };
 
   const handleBuyPlan = async (type, plan) => {
-    phonePe(type, plan, "subscription", plan.subscriptionFees);
+    paytringWrapper(type, plan, plan.subscriptionFees);
   };
 
   const handleUpgradePlan = async (type, plan) => {
     // handle upgrade plan logic
-    phonePe(type, plan, "upgrade", pricingHelper());
+    paytringWrapper(type, plan, pricingHelper());
+  };
+
+  const handleRenewPlan = async (type, plan) => {
+    paytringWrapper(type, plan, plan.subscriptionFees);
   };
 
   const pricingHelper = () => {
@@ -450,15 +428,6 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     )[0]?.subscriptionFees;
     const usedValue = (diff / duration) * subscriptionFees;
     return Math.round(subscriptionFees - usedValue);
-  };
-
-  const handleRenewPlan = async (type, plan) => {
-    console.log("CAlled renew");
-    console.log("type=>", type);
-    console.log("plan=>", plan);
-
-    //handle renew plan logic
-    phonePe(type, plan, "renewal", plan.subscriptionFees);
   };
 
   const handleSelectPlan = (plan) => {
@@ -593,12 +562,12 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
                     if (renew) {
-                      handleRenewPlan("self", selectedPlan);
+                      handleRenewPlan("renewal", selectedPlan);
                       return;
                     } else if (buttonTitle == "Join now")
-                      handleBuyPlan("self", selectedPlan);
+                      handleBuyPlan("subscription", selectedPlan);
                     else if (buttonTitle == "Upgrade now")
-                      handleUpgradePlan("self", selectedPlan);
+                      handleUpgradePlan("upgrade", selectedPlan);
                   }}
                   disabled={payButtonLoading}
                   loadingStyle={{
