@@ -28,6 +28,15 @@ const monthNames = [
   "Nov",
   "Dec",
 ];
+const weekDays = {
+  0: "SUN",
+  1: "MON",
+  2: "TUE",
+  3: "WED",
+  4: "THU",
+  5: "FRI",
+  6: "SAT",
+};
 
 const DateCard = ({ date, isSelected, onSelect }) => {
   return (
@@ -40,6 +49,9 @@ const DateCard = ({ date, isSelected, onSelect }) => {
       </Text>
       <Text style={[styles.dateText, isSelected && styles.selectedText]}>
         {date.getDate().toString().padStart(2, "0")}
+      </Text>
+      <Text style={[styles.dayText, isSelected && styles.selectedText]}>
+        {weekDays[date.getDay()]}
       </Text>
     </TouchableOpacity>
   );
@@ -182,6 +194,10 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: wp(4),
+    color: Colors.primaryText,
+  },
+  dayText: {
+    fontSize: wp(3),
     color: Colors.primaryText,
   },
   selectedText: {
