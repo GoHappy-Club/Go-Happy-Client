@@ -106,6 +106,67 @@ const SessionDetails = ({
     setState((prevState) => ({ ...prevState, name }));
   };
 
+  const paytringWrapper = async (type, item) => {
+    const data = {
+      phone: profile.phoneNumber,
+      amount: item.cost,
+      email:
+        profile.email != null || profile.email != ""
+          ? profile.email
+          : "void@paytring.com",
+      cname: profile.name,
+      type: type,
+      workshopId: item.id,
+    };
+    setState((prev) => ({
+      ...prev,
+      payButtonLoading: true,
+    }));
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/paytring/createOrder`,
+        data
+      );
+      const orderData = response.data;
+
+      navigation.navigate("PaytringView", {
+        callback: () => {
+          navigation.goBack();
+          navigation.goBack();
+          sessionActionL();
+          setState((prev) => ({
+            ...prev,
+            showPaymentAlert: true,
+            clickPopup: false,
+            payButtonLoading: false,
+            paymentSharePopUp: false,
+          }));
+        },
+        error_handler: () => {
+          navigation.navigate("PaymentFailed", {
+            type: "normal",
+            navigateTo: "HomeScreen",
+          });
+        },
+        order_id: orderData?.order_id,
+      });
+      setState((prev) => ({
+        ...prev,
+        payButtonLoading: false,
+        paymentSharePopUp: false,
+      }));
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        payButtonLoading: false,
+        paymentSharePopUp: false,
+      }));
+      crashlytics().log(
+        `Error in paytringWrapper SubscriptionPlans.js ${error}`
+      );
+    }
+  };
+
   const phonePeWrapper = async (type, item) => {
     const _callback = (id) => {
       setState((prev) => ({ ...prev, success: true, loadingButton: false }));
@@ -971,10 +1032,6 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     getTitle().startsWith("Book")
                   ) {
                     if (event?.type?.toLowerCase() == "workshop") {
-                      if (Platform.OS === "ios") {
-                        iosPaymentHandler();
-                        return;
-                      }
                       setState((prev) => ({
                         ...prev,
                         paymentSharePopUp: true,
@@ -1035,7 +1092,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                   loading={state.payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
-                    phonePeWrapper("self", item);
+                    paytringWrapper("workshop", item);
                   }}
                   disabled={state.payButtonLoading}
                   loadingStyle={{
