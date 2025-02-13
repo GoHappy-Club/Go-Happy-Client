@@ -673,17 +673,21 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
               {item.expertName}
             </Text> */}
           {/* <FontAwesomeIcon icon={ faClock } color={ 'white' } size={25} /> */}
-          <View style={{ flexDirection: "row" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: "5%",
+            }}
+          >
             <FontAwesomeIcon
               icon={faClock}
               color={Colors.grey.grey}
               size={15}
-              style={{ marginTop: "6%" }}
             />
             <Text
               style={{
                 color: Colors.grey.grey,
-                marginTop: "5%",
                 fontSize: 15,
                 marginLeft: 5,
               }}
