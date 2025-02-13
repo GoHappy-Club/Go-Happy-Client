@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import {
   Dimensions,
   Platform,
+  SafeAreaView,
   ScrollView,
   Share,
+  StatusBar,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -19,6 +21,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import toUnicodeVariant from "../toUnicodeVariant.js";
 import { Colors } from "../../assets/colors/color.js";
 import { withTranslation } from "react-i18next";
+import { wp } from "../../helpers/common.js";
 
 class Contribution extends Component {
   constructor(props) {
@@ -229,10 +232,12 @@ The Link will Expire in 20 Minutes.`;
       );
     }
     return (
-      <View
+      <SafeAreaView
         style={{
           backgroundColor: Colors.background,
           flex: 1,
+          paddingTop:
+            Platform.OS === "android" ? StatusBar.currentHeight * 0.5 : wp(2),
         }}
       >
         <ScrollView
@@ -418,7 +423,7 @@ The Link will Expire in 20 Minutes.`;
                         }}
                         disabled={this.state.payButtonLoading}
                         titleStyle={{
-                          color:Colors.primaryText
+                          color: Colors.primaryText,
                         }}
                       />
                       {/* <Button
@@ -483,7 +488,7 @@ The Link will Expire in 20 Minutes.`;
             />
           )}
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
