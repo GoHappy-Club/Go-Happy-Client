@@ -88,92 +88,6 @@ class Contribution extends Component {
     };
     this._retrieveData();
   }
-  iosPaymentHandler = async () => {
-    const message = `Hello, I would like to make a contribution payment to you app. Please guide me how can I do that.`;
-    Share.share({
-      message: message,
-    })
-      .then((result) => {})
-      .catch((errorMsg) => {
-        console.log("error in sharing", errorMsg);
-      });
-  };
-  async phonePeWrapper(type) {
-    var _this = this;
-    const _callback = (id) => {
-      this.setState({
-        clickPopup: false,
-        payButtonLoading: false,
-        success: true,
-      });
-      _this.props.navigation.navigate("PaymentSuccessful", {
-        type: "normal",
-        navigateTo: "Contribution Details",
-      });
-    };
-    const _errorHandler = () => {
-      // //console.log("reached in error handler", error);
-      this.setState({
-        paymentAlertMessage: phonepe_payments.PaymentError(),
-        paymentAlertTitle: "Oops!",
-        amount: "",
-        clickPopup: false,
-        payButtonLoading: false,
-      });
-      // this.setState({ showPaymentAlert: true });
-      _this.props.navigation.navigate("PaymentFailed", {
-        type: "normal",
-        navigateTo: "",
-      });
-    };
-    //console.log('propro',this.props.profile)
-    if (type == "share") {
-      this.setState({
-        shareButtonLoading: true,
-      });
-      phonepe_payments
-        .phonePeShare(
-          this.props.profile.phoneNumber,
-          this.state.amount,
-          _errorHandler,
-          "contribution"
-        )
-        .then((link) => {
-          if (link && link !== undefined) {
-            //prettier-ignore
-            const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
-Please pay on the below link:
-${link}
-The Link will Expire in 20 Minutes.`;
-            Share.share({
-              message: message,
-            })
-              .then((result) => {
-                this.setState({
-                  shareButtonLoading: false,
-                  clickPopup: false,
-                });
-              })
-              .catch((errorMsg) => {
-                console.log("error in sharing", errorMsg);
-              });
-          } else {
-            this.setState({ clickPopup: false });
-          }
-        });
-    } else {
-      this.setState({
-        payButtonLoading: true,
-      });
-      phonepe_payments.phonePe(
-        this.props.profile.phoneNumber,
-        this.state.amount,
-        _callback,
-        _errorHandler,
-        "contribution"
-      );
-    }
-  }
 
   planSelected(plan, index) {
     var allPlans = this.state.plans;
@@ -421,9 +335,7 @@ The Link will Expire in 20 Minutes.`;
                 styles.checkoutButtonEnabled
               }
               onPress={() => {
-                Platform.OS === "ios"
-                  ? this.iosPaymentHandler()
-                  : this.setState({ clickPopup: true });
+                this.setState({ clickPopup: true });
               }}
             >
               <View>
