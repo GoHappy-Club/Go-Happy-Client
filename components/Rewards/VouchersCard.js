@@ -37,7 +37,7 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
           styles.borderedContainer,
           {
             backgroundColor:
-              voucher.status == "ACTIVE" ? "white" : Colors.grey.d,
+              voucher.status == "ACTIVE" ? Colors.beige : Colors.grey.d,
           },
         ]}
       >

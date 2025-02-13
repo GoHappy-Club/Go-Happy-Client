@@ -270,15 +270,12 @@ const styles = StyleSheet.create({
   card: {
     width: wp(42),
     height: wp(42),
-    // height:"45%",
     aspectRatio: 1,
     margin: "2%",
     borderRadius: 20,
-    // padding: 16,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
-    // flex:1
   },
   voucherCard: {
     width: "90%",
@@ -289,14 +286,6 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
     backdropFilter: "blur(12px)",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 8,
   },
   borderedContainer: {
     width: "100%",
@@ -321,7 +310,6 @@ const styles = StyleSheet.create({
   logoImage: {
     width: wp(18),
     height: hp(8),
-    // resizeMode: "contain",
   },
   amount: {
     fontSize: wp(8),
@@ -352,7 +340,7 @@ const styles = StyleSheet.create({
     top: "50%",
     width: 30,
     height: 30,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: Colors.background,
     borderRadius: 15,
     transform: [{ translateY: -15 }],
   },
@@ -362,7 +350,7 @@ const styles = StyleSheet.create({
     top: "50%",
     width: 30,
     height: 30,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: Colors.background,
     borderRadius: 15,
     transform: [{ translateY: -15 }],
   },
