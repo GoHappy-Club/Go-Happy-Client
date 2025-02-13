@@ -30,7 +30,7 @@ import { Colors } from "../../assets/colors/color.js";
 import SearchBar from "./SearchBar.js";
 import { hp, wp } from "../../helpers/common.js";
 import { storeCompletedSession } from "../../services/Startup.js";
-import { Share2, Star } from "lucide-react-native";
+import { Clock, Share2, Star } from "lucide-react-native";
 import FastImage from "react-native-fast-image";
 const { width: screenWidth } = Dimensions.get("window");
 import Sound from "react-native-sound";
@@ -551,15 +551,24 @@ const HomeDashboard = ({
             )}
           </View>
         </View>
-        <Text
+        <View
           style={{
-            fontFamily: "Montserrat-Regular",
-            color: Colors.grey.grey,
-            fontSize: wp(3.5),
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
           }}
         >
-          {loadDate(item)}
-        </Text>
+          <Clock size={14} color={Colors.grey.grey} />
+          <Text
+            style={{
+              fontFamily: "Montserrat-Regular",
+              color: Colors.grey.grey,
+              fontSize: wp(3.5),
+            }}
+          >
+            {loadDate(item).split(", ")[1]}
+          </Text>
+        </View>
         <Text
           style={{
             fontFamily: "Montserrat-Regular",
