@@ -639,6 +639,10 @@ const Profile = () => {
           setState((prevState) => ({ ...prevState, logoutPopup: false }));
         }}
       />
+      <StatusBar
+        barStyle={"dark-content"}
+        backgroundColor={Colors.background}
+      />
     </>
   );
 };
@@ -736,6 +740,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: Colors.primaryText,
-    fontWeight:"400"
+    fontWeight: "400",
   },
 });
