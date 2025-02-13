@@ -85,7 +85,7 @@ const VoucherDetails = () => {
           style={[
             styles.card,
             {
-              backgroundColor: status == "ACTIVE" ? "white" : Colors.grey.d,
+              backgroundColor: status == "ACTIVE" ? Colors.beige : Colors.grey.d,
             },
           ]}
         >
@@ -199,19 +199,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: Colors.background,
   },
   card: {
     width: "90%",
     height: "70%",
-    backgroundColor: "#fff",
     borderRadius: 10,
     paddingVertical: 20,
     paddingHorizontal: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
     overflow: "hidden",
   },
   scrollContainer: {
@@ -288,7 +283,7 @@ const styles = StyleSheet.create({
     top: "70%",
     width: 30,
     height: 30,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: Colors.background,
     borderRadius: 15,
     transform: [{ translateY: -15 }],
   },
@@ -298,7 +293,7 @@ const styles = StyleSheet.create({
     top: "70%",
     width: 30,
     height: 30,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: Colors.background,
     borderRadius: 15,
     transform: [{ translateY: -15 }],
   },
