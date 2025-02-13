@@ -152,7 +152,10 @@ class OverviewScreen extends Component {
     if (this.state.error == true) {
       return (
         <>
-          <StatusBar barStyle={"dark-content"} />
+          <StatusBar
+            barStyle={"dark-content"}
+            backgroundColor={Colors.background}
+          />
           <View
             pointerEvents={this.state.isBlocking ? "none" : "auto"}
             style={{ backgroundColor: Colors.background }}

@@ -105,102 +105,105 @@ const Quotes = () => {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
-      <LinearGradient
-        colors={["#4A1259", "#2D0F45", "#1A0B2E"]}
-        style={styles.container}
-      >
-        <ViewShot
-          ref={viewShotRef}
-          options={{ format: "png", quality: 0.9 }}
-          style={styles.quoteContainer}
+    <>
+      <StatusBar barStyle={"light-content"} backgroundColor={"#4A1259"} />
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+        <LinearGradient
+          colors={["#4A1259", "#2D0F45", "#1A0B2E"]}
+          style={styles.container}
         >
-          <View
-            style={[
-              styles.userInfo,
-              {
-                display: showUserData ? "flex" : "none",
-              },
-            ]}
+          <ViewShot
+            ref={viewShotRef}
+            options={{ format: "png", quality: 0.9 }}
+            style={styles.quoteContainer}
           >
-            <Image
-              source={{ uri: profile.profileImage }}
-              style={[styles.userPhoto]}
-            />
-            <Text style={styles.userName}>{profile.name}</Text>
-          </View>
-          <Animated.View
-            style={[
-              {
-                opacity: fadeAnim,
-                transform: [
-                  {
-                    translateY: fadeAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [20, 0],
-                    }),
-                  },
-                ],
-              },
-              {
-                justifyContent: "center",
-                alignItems: "center",
-              },
-            ]}
-          >
-            <View style={styles.decorativeLine} />
-            <AnimatedText
-              text={quote?.quote?.hindi}
-              style={styles.quoteHindi}
-              duration={300}
-            />
-            <View style={styles.separator} />
-            <AnimatedText
-              text={quote?.quote?.english}
-              style={styles.quoteEnglish}
-              duration={300}
-            />
-            <View style={styles.decorativeLine} />
-          </Animated.View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 10,
-              position: "absolute",
-              bottom: 10,
-              right: 10,
-            }}
-          >
-            <Text
+            <View
+              style={[
+                styles.userInfo,
+                {
+                  display: showUserData ? "flex" : "none",
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: profile.profileImage }}
+                style={[styles.userPhoto]}
+              />
+              <Text style={styles.userName}>{profile.name}</Text>
+            </View>
+            <Animated.View
+              style={[
+                {
+                  opacity: fadeAnim,
+                  transform: [
+                    {
+                      translateY: fadeAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [20, 0],
+                      }),
+                    },
+                  ],
+                },
+                {
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <View style={styles.decorativeLine} />
+              <AnimatedText
+                text={quote?.quote?.hindi}
+                style={styles.quoteHindi}
+                duration={300}
+              />
+              <View style={styles.separator} />
+              <AnimatedText
+                text={quote?.quote?.english}
+                style={styles.quoteEnglish}
+                duration={300}
+              />
+              <View style={styles.decorativeLine} />
+            </Animated.View>
+            <View
               style={{
-                fontFamily: "Montserrat-Regular",
-                fontSize: wp(3),
-                color: Colors.white,
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: 10,
+                position: "absolute",
+                bottom: 10,
+                right: 10,
               }}
             >
-              Powered by
-            </Text>
-            <FastImage
-              source={require("../../images/wordLogo.png")}
-              style={{
-                width: wp(20),
-                height: wp(8),
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
-        </ViewShot>
-        <Button
-          title={ButtonTitle}
-          onPress={shareQuoteOnWhatsApp}
-          buttonStyle={styles.shareButton}
-          titleStyle={{
-            color: Colors.black,
-          }}
-        />
-      </LinearGradient>
-    </ScrollView>
+              <Text
+                style={{
+                  fontFamily: "Montserrat-Regular",
+                  fontSize: wp(3),
+                  color: Colors.white,
+                }}
+              >
+                Powered by
+              </Text>
+              <FastImage
+                source={require("../../images/wordLogo.png")}
+                style={{
+                  width: wp(20),
+                  height: wp(8),
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </View>
+          </ViewShot>
+          <Button
+            title={ButtonTitle}
+            onPress={shareQuoteOnWhatsApp}
+            buttonStyle={styles.shareButton}
+            titleStyle={{
+              color: Colors.black,
+            }}
+          />
+        </LinearGradient>
+      </ScrollView>
+    </>
   );
 };
 
@@ -287,7 +290,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
-    minHeight:"auto",
+    minHeight: "auto",
   },
   decorativeLine: {
     width: wp(20),
