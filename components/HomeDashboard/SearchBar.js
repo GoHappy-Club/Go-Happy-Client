@@ -22,6 +22,7 @@ import { debounce } from "lodash";
 import { Avatar, Title } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FastImage from "react-native-fast-image";
+import { wp } from "../../helpers/common";
 
 const { width, height } = Dimensions.get("window");
 
