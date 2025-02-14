@@ -158,13 +158,13 @@ class Contribution extends Component {
         callback: () => {
           this.props.navigation.navigate("PaymentSuccessful", {
             type: "normal",
-            navigateTo: "MembershipScreen",
+            navigateTo: "Contribution Details",
           });
         },
         error_handler: () => {
           this.props.navigation.navigate("PaymentFailed", {
             type: "normal",
-            navigateTo: "MembershipScreen",
+            navigateTo: "Contribution Details",
           });
         },
         order_id: orderData?.order_id,
