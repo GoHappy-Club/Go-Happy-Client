@@ -652,6 +652,7 @@ export default Profile;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: Colors.background,
   },
   container: {
     height: hp(65),
