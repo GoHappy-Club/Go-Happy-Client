@@ -483,10 +483,6 @@ const styles = StyleSheet.create({
       Platform.OS === "android" ? 0.25 * StatusBar.currentHeight : wp(1),
     backgroundColor: Colors.background,
     elevation: 30,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
   },
   userInfo: {
     flexDirection: "row",
