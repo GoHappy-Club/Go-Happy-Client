@@ -11,7 +11,8 @@
     "buildBundle": "cd android && cross-env gradlew bundleRelease",
     "buildApp": "cd android && cross-env gradlew assembleRelease",
     "removeZoom": "node scripts/removeZoom.js",
-    "installZoom": "node scripts/installZoom.js"
+    "installZoom": "node scripts/installZoom.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
@@ -106,6 +107,7 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@eslint/js": "^9.20.0",
     "@react-native/babel-preset": "0.75.4",
     "@react-native/eslint-config": "0.75.4",
     "@react-native/metro-config": "0.75.4",
@@ -116,8 +118,14 @@
     "@types/semver-compare": "^1",
     "babel-jest": "^29.6.3",
     "cross-env": "^7.0.3",
-    "eslint": "^8.19.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^15.15.0",
+    "husky": "^9.1.7",
     "jest": "^29.6.3",
+    "lint-staged": "^15.4.3",
+    "pinst": "^3.0.0",
     "prettier": "3.4.2",
     "react-native-svg-transformer": "1.5.0",
     "react-test-renderer": "18.3.1",
@@ -129,5 +137,11 @@
   "packageManager": "yarn@4.5.3",
   "resolutions": {
     "react-native-webview": "13.12.5"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
