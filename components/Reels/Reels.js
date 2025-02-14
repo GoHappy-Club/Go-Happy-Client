@@ -90,12 +90,11 @@ const ReelsPage = () => {
     }
 
     return (
-      <SafeAreaView style={styles.videoContainer}>
+      <View style={styles.videoContainer}>
         <Pressable
           style={styles.videoWrapper}
           onPress={() => {
             if (item.category?.toLowerCase() == "promotion") {
-              console.log("item", item.playlistLink);
               if (item?.playlistLink?.includes("https")) {
                 Linking.openURL(item?.playlistLink);
               } else {
@@ -105,34 +104,6 @@ const ReelsPage = () => {
             togglePlay(index);
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 10,
-              position: "absolute",
-              top: hp(2),
-              left: 5,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "Montserrat-Regular",
-                fontSize: wp(4),
-                color: Colors.white,
-              }}
-            >
-              Powered by
-            </Text>
-            <FastImage
-              source={require("../../images/wordLogo.png")}
-              style={{
-                width: wp(20),
-                height: wp(8),
-              }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </View>
           {currentIndex === index &&
           item?.category?.toLowerCase() != "promotion" ? (
             <Pressable>
@@ -189,34 +160,67 @@ const ReelsPage = () => {
         <View style={styles.gradient}>
           <View
             style={{
-              backgroundColor: Colors.grey.f0,
-              padding: 5,
-              borderRadius: wp(10),
-              borderColor: Colors.white,
-              borderWidth: 1,
-              paddingHorizontal: wp(1.5),
-              backdropFilter: "blur(12px)",
-              shadowColor: Colors.white,
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 12,
-              elevation: 8,
-              marginBottom: wp(2.5),
-              alignSelf: "flex-start",
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              paddingHorizontal: wp(2),
+              paddingBottom: 8,
             }}
           >
-            <Text
+            <View
               style={{
-                fontFamily: "Montserrat-SemiBold",
-                textAlign: "center",
-                fontSize: 12,
+                backgroundColor: Colors.grey.f0,
+                padding: 5,
+                borderRadius: wp(10),
+                borderColor: Colors.white,
+                borderWidth: 1,
+                paddingHorizontal: wp(1.5),
+                backdropFilter: "blur(12px)",
+                shadowColor: Colors.white,
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 12,
+                elevation: 8,
               }}
             >
-              {item.category}
-            </Text>
+              <Text
+                style={{
+                  fontFamily: "Montserrat-SemiBold",
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                {item.category}
+              </Text>
+            </View>
+            {item?.category?.toLowerCase() != "promotion" && (
+              <View>
+                <Pressable
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: hp(1),
+                  }}
+                  onPress={handleShare}
+                >
+                  <View style={styles.iconButton}>
+                    <Share2 size={20} color={Colors.black} />
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: hp(1.5),
+                      color: Colors.white,
+                    }}
+                  >
+                    Share
+                  </Text>
+                </Pressable>
+              </View>
+            )}
           </View>
           <View
             style={{
@@ -242,32 +246,7 @@ const ReelsPage = () => {
             <Text style={styles.title}>{item.title}</Text>
           </View>
         </View>
-
-        {item?.category?.toLowerCase() != "promotion" && (
-          <View style={styles.interactionButtonsContainer}>
-            <Pressable
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                gap: hp(1),
-              }}
-              onPress={handleShare}
-            >
-              <View style={styles.iconButton}>
-                <Share2 size={20} color={Colors.black} />
-              </View>
-              <Text
-                style={{
-                  fontSize: hp(1.5),
-                  color: Colors.white,
-                }}
-              >
-                Share
-              </Text>
-            </Pressable>
-          </View>
-        )}
-      </SafeAreaView>
+      </View>
     );
   };
 
@@ -288,14 +267,45 @@ const ReelsPage = () => {
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: Colors.black,
+        height: hp(100),
+        position: "relative",
       }}
     >
-      <View style={{
-        position: "absolute",
-        top: 15,
-        right: 15,
-        zIndex: 1000
-      }}>
+      <View
+        style={{
+          width: "100%",
+          backgroundColor: "transparent",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: 12,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Montserrat-Regular",
+              fontSize: wp(4),
+              color: Colors.white,
+            }}
+          >
+            Powered by
+          </Text>
+          <FastImage
+            source={require("../../images/wordLogo.png")}
+            style={{
+              width: wp(20),
+              height: wp(8),
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -310,7 +320,7 @@ const ReelsPage = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         pagingEnabled
-        snapToInterval={height}
+        snapToInterval={hp(94)}
         snapToAlignment="start"
         decelerationRate="fast"
         viewabilityConfig={viewabilityConfig}
@@ -326,25 +336,18 @@ const ReelsPage = () => {
 
 const styles = StyleSheet.create({
   videoContainer: {
-    height: height,
+    flex: 1,
     width: width,
+    height: hp(94),
     backgroundColor: Colors.black,
     justifyContent: "center",
     alignItems: "center",
   },
   videoWrapper: {
     width: width,
-    height: hp(100),
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.black,
-  },
-  videoWrapper: {
-    width: width,
-    height: hp(100),
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.black,
   },
   thumbnail: {
     width: "100%",
@@ -365,13 +368,6 @@ const styles = StyleSheet.create({
     fontSize: wp(4.5),
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  interactionButtonsContainer: {
-    position: "absolute",
-    right: 20,
-    bottom: 100,
-    justifyContent: "flex-end",
-    alignItems: "center",
   },
   iconButton: {
     width: 40,
