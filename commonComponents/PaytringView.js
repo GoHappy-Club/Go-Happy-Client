@@ -31,11 +31,7 @@ const PaytringView = () => {
 
   const progressHandler = async (nativeEvent) => {
     const url = nativeEvent?.url;
-    if (
-      url.includes("free_sessions") ||
-      url.includes("callback") ||
-      url.includes("/order/cancellation")
-    ) {
+    if (url.includes("callback") || url.includes("/order/cancellation")) {
       setWebViewOpen(false);
       navigation.navigate("PaymentProcessing", {
         callback: callback,
