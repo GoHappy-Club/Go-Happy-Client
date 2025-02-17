@@ -16,7 +16,7 @@ export const activateFreeTrial = async (profile) => {
       id: response.data.id,
     };
   } catch (error) {
-    crashlytics().log(`Error in activateFreeTrial Startup.js ${error}`)
+    crashlytics().log(`Error in activateFreeTrial Startup.js ${error}`);
     console.log("Error in activate", error);
   }
 };
@@ -28,7 +28,7 @@ export const deactivateFreeTrial = async () => {
       phone: profile.phone,
     });
   } catch (error) {
-    crashlytics().log(`Error in deactivateFreeTrial Startup.js ${error}`)
+    crashlytics().log(`Error in deactivateFreeTrial Startup.js ${error}`);
     console.log("Error in deactivate", error);
   }
 };
@@ -111,9 +111,11 @@ export const submitRating = async (
   interested = true,
   phone,
   reason,
-  setSubmitted
+  setSubmitted,
+  setLoading
 ) => {
   try {
+    setLoading(true);
     const sessions = await AsyncStorage.getItem("completedSessions");
     let parsedSessions = sessions ? JSON.parse(sessions) : [];
     if (!interested) {
@@ -140,7 +142,7 @@ export const submitRating = async (
       "completedSessions",
       JSON.stringify(parsedSessions)
     );
-    sendRatingToBackend(
+    await sendRatingToBackend(
       currentSession.sessionId,
       rating,
       phone,
@@ -149,7 +151,9 @@ export const submitRating = async (
       setSubmitted
     );
     setShowRating(false);
+    setLoading(false);
   } catch (error) {
+    setLoading(false);
     console.error("Error submitting rating:", error);
   }
 };
@@ -160,7 +164,7 @@ export const getTodaysFestival = async () => {
     return res.data.festival;
   } catch (error) {
     console.log("Error in getTodaysFestival", error);
-    crashlytics().log(`Error in getTodaysFestival Startup.js ${error}`)
+    crashlytics().log(`Error in getTodaysFestival Startup.js ${error}`);
   }
 };
 
@@ -182,7 +186,7 @@ const sendRatingToBackend = async (
     });
     setSubmitted(true);
   } catch (error) {
-    crashlytics().log(`Error in submitRating Startup.js ${error}`)
+    crashlytics().log(`Error in submitRating Startup.js ${error}`);
     setSubmitted(true);
     console.log("Error in submitRating", error);
   }

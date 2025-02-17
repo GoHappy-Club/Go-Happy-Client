@@ -303,7 +303,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
     const currTime = new Date().getTime();
     if (
       !hasClickedBefore &&
-      currTime > Number.parseFloat(event.startTime) + 1 * 60 * 1000
+      currTime > Number.parseFloat(event.startTime) + 30 * 60 * 1000
     ) {
       setState((prev) => ({ ...prev, after30: true }));
     }

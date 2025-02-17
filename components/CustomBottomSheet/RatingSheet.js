@@ -41,6 +41,7 @@ const SessionRatingSheet = ({
   setReason,
   submitted,
   setSubmitted,
+  loading,
 }) => {
   const [timeLeft, setTimeLeft] = useState(3);
 
@@ -72,13 +73,10 @@ const SessionRatingSheet = ({
           Extrapolation.CLAMP
         ),
       }));
-  
-      const containerStyle = [
-        StyleSheet.absoluteFill,
-        containerAnimatedStyle
-      ];
-  
-      if (Platform.OS === 'ios') {
+
+      const containerStyle = [StyleSheet.absoluteFill, containerAnimatedStyle];
+
+      if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
             <TouchableOpacity
@@ -95,13 +93,13 @@ const SessionRatingSheet = ({
           </Animated.View>
         );
       }
-  
+
       return (
         <Animated.View
           style={[
             {
               ...StyleSheet.absoluteFillObject,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
             },
             containerAnimatedStyle,
           ]}
@@ -215,7 +213,7 @@ const SessionRatingSheet = ({
                     onPress={() =>
                       selectedRating > 0 && submitRating(selectedRating)
                     }
-                    disabled={selectedRating === 0}
+                    disabled={selectedRating === 0 || loading}
                   >
                     <Text
                       style={[
