@@ -57,6 +57,7 @@ const Header = () => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [freeTrialActivated, setFreeTrialActivated] = useState(false);
 
   const modalRef = useRef();
@@ -369,6 +370,7 @@ const Header = () => {
         }}
       />
       <SessionRatingSheet
+        loading={loading}
         selectedRating={selectedRating}
         setSelectedRating={setSelectedRating}
         reason={reason}
@@ -396,7 +398,8 @@ const Header = () => {
             true,
             profile.phoneNumber,
             reason,
-            setSubmitted
+            setSubmitted,
+            setLoading
           );
         }}
       />
