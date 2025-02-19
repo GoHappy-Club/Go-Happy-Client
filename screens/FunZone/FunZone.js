@@ -1,102 +1,78 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Platform,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { games } from "./games";
-import { useNavigation } from "@react-navigation/native";
+"use client"
 
-const { width } = Dimensions.get("window");
-const CARD_WIDTH = width * 0.8;
+import { useState } from "react"
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from "react-native"
+import { Ionicons } from "@expo/vector-icons"
+import { games } from "./games"
+import { useNavigation } from "@react-navigation/native"
+import { Colors } from "../../assets/colors/color"
+import { hp } from "../../helpers/common"
+
+const { width } = Dimensions.get("window")
+const CARD_WIDTH = width * 0.8
 
 export default function FunZone() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const navigation = useNavigation();
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const navigation = useNavigation()
 
-  const categories = ["all", "board", "arcade", "puzzle"];
+  const categories = ["all", "board", "arcade", "puzzle"]
 
-  const filteredGames =
-    selectedCategory === "all"
-      ? games
-      : games.filter((game) => game.category === selectedCategory);
+  const filteredGames = selectedCategory === "all" ? games : games.filter((game) => game.category === selectedCategory)
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "easy":
-        return "#4CAF50";
+        return "#4CAF50"
       case "medium":
-        return "#FFC107";
+        return "#FFC107"
       case "hard":
-        return "#FF5252";
+        return "#FF5252"
       default:
-        return "#4CAF50";
+        return "#4CAF50"
     }
-  };
+  }
 
-  const handlePlay = (url) => {
-    navigation.navigate("Game", { gameUrl: url });
-  };
+  const handlePlay = (url, name) => {
+    navigation.navigate("Game", { gameUrl: url, name })
+  }
 
   return (
     <View style={styles.container}>
+      <View style={styles.topBar}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text>Back</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.header}>
         <Text style={styles.title}>Fun Zone</Text>
         <Text style={styles.subtitle}>Choose your adventure!</Text>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoryContainer}
-        contentContainerStyle={styles.categoryContent}
-      >
-        {categories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            style={[
-              styles.categoryButton,
-              selectedCategory === category && styles.categoryButtonActive,
-            ]}
-            onPress={() => setSelectedCategory(category)}
-          >
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === category && styles.categoryTextActive,
-              ]}
+      <View style={styles.categoryWrapper}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoryContent}>
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              style={[styles.categoryButton, selectedCategory === category && styles.categoryButtonActive]}
+              onPress={() => setSelectedCategory(category)}
             >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+              <Text style={[styles.categoryText, selectedCategory === category && styles.categoryTextActive]}>
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.gamesContainer}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.gamesContainer}>
         {filteredGames.map((game) => (
           <TouchableOpacity key={game.id} style={styles.gameCard}>
             <Image source={{ uri: game.imageUrl }} style={styles.gameImage} />
-            <View
-              intensity={Platform.OS === "ios" ? 60 : 100}
-              style={styles.gameInfo}
-            >
+            <View style={styles.gameInfo}>
               <View style={styles.gameHeader}>
                 <Text style={styles.gameTitle}>{game.title}</Text>
-                <View
-                  style={[
-                    styles.difficultyBadge,
-                    { backgroundColor: getDifficultyColor(game.difficulty) },
-                  ]}
-                >
+                <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(game.difficulty) }]}>
                   <Text style={styles.difficultyText}>{game.difficulty}</Text>
                 </View>
               </View>
@@ -106,12 +82,7 @@ export default function FunZone() {
                   <Ionicons name="people" size={16} color="#FFF" />
                   <Text style={styles.playersText}>{game.players} Players</Text>
                 </View>
-                <TouchableOpacity
-                  style={styles.playButton}
-                  onPress={() => {
-                    handlePlay(game.gameUrl);
-                  }}
-                >
+                <TouchableOpacity style={styles.playButton} onPress={() => handlePlay(game.gameUrl, game.title)}>
                   <Text style={styles.playButtonText}>Play Now</Text>
                 </TouchableOpacity>
               </View>
@@ -120,17 +91,33 @@ export default function FunZone() {
         ))}
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1A1A1A",
+    height: hp(100),
+  },
+  topBar: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 12,
+  },
+  backButton: {
+    padding: 4,
+    backgroundColor: Colors.white,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    shadowColor: Colors.black,
+    elevation: 10,
+    shadowOffset: { height: 2 },
+    shadowOpacity: 0.3,
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 20,
     paddingHorizontal: 20,
   },
   title: {
@@ -144,11 +131,15 @@ const styles = StyleSheet.create({
     color: "#FFF",
     opacity: 0.8,
   },
-  categoryContainer: {
+  categoryWrapper: {
     marginTop: 20,
+    marginBottom: 10,
   },
   categoryContent: {
     paddingHorizontal: 15,
+    paddingVertical: 5,
+    flexDirection: "row",
+    alignItems: "center",
   },
   categoryButton: {
     paddingHorizontal: 20,
@@ -158,8 +149,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
-    backdropFilter: "blur(10px)",
-    alignSelf: "flex-start",
   },
   categoryButtonActive: {
     backgroundColor: "#FF6B6B",
@@ -249,4 +238,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
   },
-});
+})
+

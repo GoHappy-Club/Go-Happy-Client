@@ -996,7 +996,7 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "slide_from_bottom",
                       headerBackVisible: false,
-                      gestureEnabled: false,
+                      headerShown: false,
                     })}
                   />
                   <Stack.Screen
@@ -1009,6 +1009,13 @@ export default function App() {
                       animation: "slide_from_bottom",
                       headerBackVisible: false,
                       gestureEnabled: false,
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
                     })}
                   />
                 </>
