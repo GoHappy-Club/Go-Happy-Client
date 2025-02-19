@@ -44,7 +44,6 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
           screen: "QuotesPage",
         },
       });
-      console.log("Medicine reminder scheduled!");
     }
   });
 };
@@ -83,7 +82,6 @@ export const scheduleWaterReminders = () => {
         channelId: "Water Reminders",
         vibration: 400,
       });
-      console.log(`Water reminder scheduled for ${notificationTime}`);
     });
   }
 };
@@ -126,7 +124,6 @@ export const scheduleMedicineReminders = () => {
         message: "Time to take your medicine.",
         vibration: 400,
       });
-      console.log(`Medicine reminder scheduled for ${notificationTime}`);
     });
   }
 };
