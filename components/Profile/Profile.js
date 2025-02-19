@@ -472,7 +472,7 @@ const Profile = () => {
           <BottomSheetScrollView
             contentContainerStyle={styles.scrollViewContent}
           >
-            {membership.membershipType == "Free" &&
+            {/* {membership.membershipType == "Free" &&
               (profile.age == null || profile.age >= 50) && (
                 <View
                   style={{
@@ -525,7 +525,7 @@ const Profile = () => {
                     </Text>
                   </Pressable>
                 </View>
-              )}
+              )} */}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() => {
