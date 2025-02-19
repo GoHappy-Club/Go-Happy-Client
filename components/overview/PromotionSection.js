@@ -63,7 +63,7 @@ class PromotionSection extends Component {
             return (
               <CopilotStep
                 name={item.title}
-                order={index + 9}
+                order={index + 8}
                 text={item.text}
                 key={index}
               >
