@@ -55,12 +55,12 @@ export default function Sections(props) {
     //   link: "Rewards",
     //   text: "See your earned rewards here.",
     // },
-    {
-      title: t("refer_win"),
-      imgUrl: require("../../images/refer_win.png"),
-      link: "Refer",
-      text: "Share the app with your friends and relatives and win rewards.",
-    },
+    // {
+    //   title: t("refer_win"),
+    //   imgUrl: require("../../images/refer_win.png"),
+    //   link: "Refer",
+    //   text: "Share the app with your friends and relatives and win rewards.",
+    // },
     {
       title: t("contribute"),
       imgUrl: require("../../images/contribute.png"),
