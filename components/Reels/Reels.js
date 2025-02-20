@@ -8,15 +8,14 @@ import {
   Pressable,
   ActivityIndicator,
   Linking,
-  SafeAreaView,
 } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import FastImage from "react-native-fast-image";
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Share2, X } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
+import { Share2, X } from "lucide-react-native";
 import { Share } from "react-native";
 
 const { height, width } = Dimensions.get("window");
@@ -95,6 +94,7 @@ const ReelsPage = () => {
           style={styles.videoWrapper}
           onPress={() => {
             if (item.category?.toLowerCase() == "promotion") {
+              console.log("item", item.playlistLink);
               if (item?.playlistLink?.includes("https")) {
                 Linking.openURL(item?.playlistLink);
               } else {
@@ -104,6 +104,61 @@ const ReelsPage = () => {
             togglePlay(index);
           }}
         >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              position: "absolute",
+              top: 0,
+              padding: "5%",
+              paddingTop: "10%",
+              width: "100%",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Montserrat-Regular",
+                  fontSize: wp(4),
+                  color: Colors.white,
+                }}
+              >
+                Powered by
+              </Text>
+              <FastImage
+                source={require("../../images/wordLogo.png")}
+                style={{
+                  width: wp(20),
+                  height: wp(8),
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+                underlayColor={Colors.white}
+              >
+                <X color="#000" size={24} />
+              </TouchableOpacity>
+            </View>
+          </View>
           {currentIndex === index &&
           item?.category?.toLowerCase() != "promotion" ? (
             <Pressable>
@@ -160,67 +215,34 @@ const ReelsPage = () => {
         <View style={styles.gradient}>
           <View
             style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              paddingHorizontal: wp(2),
-              paddingBottom: 8,
+              backgroundColor: Colors.grey.f0,
+              padding: 5,
+              borderRadius: wp(10),
+              borderColor: Colors.white,
+              borderWidth: 1,
+              paddingHorizontal: wp(1.5),
+              backdropFilter: "blur(12px)",
+              shadowColor: Colors.white,
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 12,
+              elevation: 8,
+              marginBottom: wp(2.5),
+              alignSelf: "flex-start",
             }}
           >
-            <View
+            <Text
               style={{
-                backgroundColor: Colors.grey.f0,
-                padding: 5,
-                borderRadius: wp(10),
-                borderColor: Colors.white,
-                borderWidth: 1,
-                paddingHorizontal: wp(1.5),
-                backdropFilter: "blur(12px)",
-                shadowColor: Colors.white,
-                shadowOffset: {
-                  width: 0,
-                  height: 4,
-                },
-                shadowOpacity: 0.1,
-                shadowRadius: 12,
-                elevation: 8,
+                fontFamily: "Montserrat-SemiBold",
+                textAlign: "center",
+                fontSize: 12,
               }}
             >
-              <Text
-                style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  textAlign: "center",
-                  fontSize: 12,
-                }}
-              >
-                {item.category}
-              </Text>
-            </View>
-            {item?.category?.toLowerCase() != "promotion" && (
-              <View>
-                <Pressable
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: hp(1),
-                  }}
-                  onPress={handleShare}
-                >
-                  <View style={styles.iconButton}>
-                    <Share2 size={20} color={Colors.black} />
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: hp(1.5),
-                      color: Colors.white,
-                    }}
-                  >
-                    Share
-                  </Text>
-                </Pressable>
-              </View>
-            )}
+              {item.category}
+            </Text>
           </View>
           <View
             style={{
@@ -246,6 +268,31 @@ const ReelsPage = () => {
             <Text style={styles.title}>{item.title}</Text>
           </View>
         </View>
+
+        {item?.category?.toLowerCase() != "promotion" && (
+          <View style={styles.interactionButtonsContainer}>
+            <Pressable
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                gap: hp(1),
+              }}
+              onPress={handleShare}
+            >
+              <View style={styles.iconButton}>
+                <Share2 size={20} color={Colors.black} />
+              </View>
+              <Text
+                style={{
+                  fontSize: hp(1.5),
+                  color: Colors.white,
+                }}
+              >
+                Share
+              </Text>
+            </Pressable>
+          </View>
+        )}
       </View>
     );
   };
@@ -264,90 +311,46 @@ const ReelsPage = () => {
     loading ? <ActivityIndicator size="large" color={Colors.white} /> : null;
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors.black,
-        height: hp(100),
-        position: "relative",
-      }}
-    >
-      <View
-        style={{
-          width: "100%",
-          backgroundColor: "transparent",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 12,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Montserrat-Regular",
-              fontSize: wp(4),
-              color: Colors.white,
-            }}
-          >
-            Powered by
-          </Text>
-          <FastImage
-            source={require("../../images/wordLogo.png")}
-            style={{
-              width: wp(20),
-              height: wp(8),
-            }}
-            resizeMode={FastImage.resizeMode.contain}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-          underlayColor={Colors.white}
-        >
-          <X color="#000" size={24} />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        ref={flatListRef}
-        data={videos}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        pagingEnabled
-        snapToInterval={hp(94)}
-        snapToAlignment="start"
-        decelerationRate="fast"
-        viewabilityConfig={viewabilityConfig}
-        onViewableItemsChanged={onViewableItemsChanged}
-        onEndReached={fetchVideos}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-        showsVerticalScrollIndicator={false}
-      />
-    </SafeAreaView>
+    <FlatList
+      ref={flatListRef}
+      data={videos}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      pagingEnabled
+      snapToInterval={height}
+      snapToAlignment="start"
+      decelerationRate="fast"
+      viewabilityConfig={viewabilityConfig}
+      onViewableItemsChanged={onViewableItemsChanged}
+      onEndReached={fetchVideos}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   videoContainer: {
-    flex: 1,
+    height: height,
     width: width,
-    height: hp(94),
     backgroundColor: Colors.black,
     justifyContent: "center",
     alignItems: "center",
   },
   videoWrapper: {
     width: width,
-    height: "100%",
+    height: hp(100),
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: Colors.black,
+  },
+  videoWrapper: {
+    width: width,
+    height: hp(100),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.black,
   },
   thumbnail: {
     width: "100%",
@@ -369,6 +372,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  interactionButtonsContainer: {
+    position: "absolute",
+    right: 20,
+    bottom: 100,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
   iconButton: {
     width: 40,
     height: 40,
@@ -383,6 +393,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   backButton: {
+    // width: "100%",
+    // alignSelf: "flex-end",
+    // alignContent: "flex-end",
+    // marginRight: "auto",
     padding: 4,
     backgroundColor: Colors.white,
     borderRadius: 4,
