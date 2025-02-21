@@ -992,11 +992,19 @@ export default function App() {
                     children={(props) => <FunZone />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerTransparent: true,
+                      headerBackTitle: "back",
+                      headerStyle: {
+                        backgroundColor: Colors.bgBlack,
+                      },
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
                       headerShadowVisible: false,
                       animation: "slide_from_bottom",
-                      headerBackVisible: false,
-                      headerShown: false,
                     })}
                   />
                   <Stack.Screen
@@ -1004,11 +1012,13 @@ export default function App() {
                     children={(props) => <Game />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerTransparent: true,
                       headerShadowVisible: false,
-                      animation: "slide_from_bottom",
+                      animation: "slide_from_right",
                       headerBackVisible: false,
                       gestureEnabled: false,
+                      headerStyle: {
+                        backgroundColor: Colors.lowOpacityBlack,
+                      },
                       headerLeft: () => (
                         <BackButton
                           styles={styles}
