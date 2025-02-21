@@ -31,6 +31,7 @@ import {
   Trophy,
 } from "lucide-react-native";
 import TripsScreen from "../../screens/Trips/TripsScreen";
+import { View } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -72,10 +73,21 @@ export default function BottomNavigator() {
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ focused, color }) => (
-            <HouseIcon
-              size={25}
-              color={focused ? Colors.black : Colors.grey.grey}
-            />
+            <>
+              <HouseIcon
+                size={25}
+                color={focused ? Colors.black : Colors.grey.grey}
+              />
+              {focused && (
+                <View
+                  style={{
+                    height: 2,
+                    width: "130%",
+                    backgroundColor: Colors.black,
+                  }}
+                />
+              )}
+            </>
           ),
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: Colors.grey.grey,
@@ -87,10 +99,21 @@ export default function BottomNavigator() {
         options={{
           tabBarLabel: t("sessions"),
           tabBarIcon: ({ focused, color }) => (
-            <Calendar
-              size={25}
-              color={focused ? Colors.black : Colors.grey.grey}
-            />
+            <>
+              <Calendar
+                size={25}
+                color={focused ? Colors.black : Colors.grey.grey}
+              />
+              {focused && (
+                <View
+                  style={{
+                    height: 2,
+                    width: "130%",
+                    backgroundColor: Colors.black,
+                  }}
+                />
+              )}
+            </>
           ),
         }}
       />
@@ -115,18 +138,27 @@ export default function BottomNavigator() {
       /> */}
       <Tab.Screen
         name="TripBottom"
-        children={(props) => (
-          <TripsScreen {...props} propProfile={profile} />
-        )}
+        children={(props) => <TripsScreen {...props} propProfile={profile} />}
         options={{
           tabBarLabel: t("trips"),
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0,
           tabBarIcon: ({ focused, color }) => (
-            <Plane
-              size={25}
-              color={focused ? Colors.black : Colors.grey.grey}
-            />
+            <>
+              <Plane
+                size={25}
+                color={focused ? Colors.black : Colors.grey.grey}
+              />
+              {focused && (
+                <View
+                  style={{
+                    height: 2,
+                    width: "130%",
+                    backgroundColor: Colors.black,
+                  }}
+                />
+              )}
+            </>
           ),
           tabBarActiveTintColor: "tomato",
           tabBarInactiveTintColor: Colors.grey.grey,
@@ -141,10 +173,21 @@ export default function BottomNavigator() {
             elevation: 0, // remove shadow on Android
             shadowOpacity: 0,
             tabBarIcon: ({ focused, color }) => (
-              <Trophy
-                size={25}
-                color={focused ? Colors.black : Colors.grey.grey}
-              />
+              <>
+                <Trophy
+                  size={25}
+                  color={focused ? Colors.black : Colors.grey.grey}
+                />
+                {focused && (
+                  <View
+                    style={{
+                      height: 2,
+                      width: "130%",
+                      backgroundColor: Colors.black,
+                    }}
+                  />
+                )}
+              </>
             ),
           }}
         />
