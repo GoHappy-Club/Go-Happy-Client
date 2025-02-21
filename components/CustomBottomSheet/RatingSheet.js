@@ -9,9 +9,10 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { X } from "lucide-react-native";
 import Animated, {
   Extrapolation,
@@ -29,6 +30,7 @@ import {
   faSmile,
   faSmileBeam,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 const SessionRatingSheet = ({
   modalRef,
@@ -44,6 +46,7 @@ const SessionRatingSheet = ({
   loading,
 }) => {
   const [timeLeft, setTimeLeft] = useState(3);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (submitted) {
@@ -79,11 +82,7 @@ const SessionRatingSheet = ({
       if (Platform.OS === "ios") {
         return (
           <Animated.View style={containerStyle}>
-            <TouchableOpacity
-              style={StyleSheet.absoluteFill}
-              // onPress={closeModal}
-              activeOpacity={1}
-            >
+            <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1}>
               <BlurView
                 style={StyleSheet.absoluteFill}
                 blurAmount={1}
@@ -104,11 +103,7 @@ const SessionRatingSheet = ({
             containerAnimatedStyle,
           ]}
         >
-          <TouchableOpacity
-            style={StyleSheet.absoluteFill}
-            // onPress={closeModal}
-            activeOpacity={1}
-          />
+          <TouchableOpacity style={StyleSheet.absoluteFill} activeOpacity={1} />
         </Animated.View>
       );
     },
@@ -132,17 +127,76 @@ const SessionRatingSheet = ({
     </TouchableOpacity>
   );
 
+  const renderContent = () => (
+    <View style={styles.contentContainer}>
+      <View>
+        <Text style={styles.ratingTitle}>{t("drop_review")}</Text>
+        <View style={styles.sessionContainer}>
+          <View style={styles.sessionTextContainer}>
+            <Text style={styles.attendedText}>{t("recently_attended")}</Text>
+            <Text style={styles.sessionName}>
+              {currentSession?.sessionName}
+            </Text>
+            <Text style={styles.improveText}>{t("rate_session")}</Text>
+          </View>
+        </View>
+        <View style={styles.emojiRow}>
+          {renderEmoji(faFrown, 1)}
+          {renderEmoji(faMeh, 2)}
+          {renderEmoji(faSmile, 3)}
+          {renderEmoji(faSmileBeam, 4)}
+          {renderEmoji(faGrinHearts, 5)}
+        </View>
+      </View>
+
+      <View style={styles.bottomContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder={t("rating_placeholder")}
+          placeholderTextColor="#999999"
+          multiline={true}
+          numberOfLines={4}
+          value={reason}
+          onChangeText={setReason}
+        />
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            selectedRating > 0
+              ? styles.submitButtonActive
+              : styles.submitButtonDisabled,
+          ]}
+          onPress={() => selectedRating > 0 && submitRating(selectedRating)}
+          disabled={selectedRating === 0 || loading}
+        >
+          <Text
+            style={[
+              styles.submitButtonText,
+              selectedRating > 0
+                ? styles.submitButtonTextActive
+                : styles.submitButtonTextDisabled,
+            ]}
+          >
+            {t("submit")}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
     <BottomSheetModal
       ref={modalRef}
       index={0}
-      snapPoints={["70%"]}
+      snapPoints={Platform.OS === "ios" ? ["70%"] : ["75%"]}
       enablePanDownToClose={false}
       enableDismissOnClose={true}
       enableHandlePanningGesture={false}
       handleStyle={{ display: "none" }}
       backgroundStyle={{ borderRadius: 24 }}
       backdropComponent={renderBackdrop}
+      keyboardBehavior="interactive"
+      android_keyboardInputMode="adjustResize"
       onChange={(index) => {
         setSelectedRating(0);
         if (index === -1) {
@@ -150,88 +204,18 @@ const SessionRatingSheet = ({
         }
       }}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardAvoidingView}
+      {submitted ? (
+        <View style={styles.thanksContainer}>
+          <Text style={styles.ratingTitle}>Thank you for your feedback!</Text>
+        </View>
+      ) : (
+        <BottomSheetScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.scrollViewContent}
         >
-          <BottomSheetView style={styles.container}>
-            {/* <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-              <X size={24} color="#000" />
-            </TouchableOpacity> */}
-            {submitted ? (
-              <View style={styles.thanksContainer}>
-                <Text style={styles.ratingTitle}>
-                  Thank you for your feedback!
-                </Text>
-              </View>
-            ) : (
-              <View style={styles.contentContainer}>
-                <View>
-                  <Text style={styles.ratingTitle}>Drop your review</Text>
-                  <View style={styles.sessionContainer}>
-                    <View style={styles.sessionTextContainer}>
-                      <Text style={styles.attendedText}>
-                        You recently attended
-                      </Text>
-                      <Text style={styles.sessionName}>
-                        {currentSession?.sessionName}
-                      </Text>
-                      <Text style={styles.improveText}>
-                        Please rate our session so we can improve.
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.emojiRow}>
-                    {renderEmoji(faFrown, 1)}
-                    {renderEmoji(faMeh, 2)}
-                    {renderEmoji(faSmile, 3)}
-                    {renderEmoji(faSmileBeam, 4)}
-                    {renderEmoji(faGrinHearts, 5)}
-                  </View>
-                </View>
-
-                <View style={styles.bottomContainer}>
-                  {selectedRating <= 2 && (
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Please tell us why are you rating us so low so we can improve"
-                      placeholderTextColor="#999999"
-                      multiline={true}
-                      numberOfLines={4}
-                      value={reason}
-                      onChangeText={setReason}
-                    />
-                  )}
-                  <TouchableOpacity
-                    style={[
-                      styles.submitButton,
-                      selectedRating > 0
-                        ? styles.submitButtonActive
-                        : styles.submitButtonDisabled,
-                    ]}
-                    onPress={() =>
-                      selectedRating > 0 && submitRating(selectedRating)
-                    }
-                    disabled={selectedRating === 0 || loading}
-                  >
-                    <Text
-                      style={[
-                        styles.submitButtonText,
-                        selectedRating > 0
-                          ? styles.submitButtonTextActive
-                          : styles.submitButtonTextDisabled,
-                      ]}
-                    >
-                      Submit
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          </BottomSheetView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+          {renderContent()}
+        </BottomSheetScrollView>
+      )}
     </BottomSheetModal>
   );
 };
@@ -239,23 +223,14 @@ const SessionRatingSheet = ({
 export default SessionRatingSheet;
 
 const styles = StyleSheet.create({
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
+  scrollViewContent: {
+    flexGrow: 1,
   },
   contentContainer: {
     flex: 1,
     padding: 20,
     justifyContent: "space-between",
-  },
-  closeButton: {
-    position: "absolute",
-    right: 20,
-    top: 20,
-    padding: 8,
-    zIndex: 1,
+    minHeight: "100%",
   },
   sessionContainer: {
     width: "100%",
@@ -313,10 +288,12 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     gap: 16,
+    marginTop: "auto",
+    paddingBottom: Platform.OS === "ios" ? 20 : 0,
   },
   textInput: {
     width: "100%",
-    height: hp(8),
+    height: hp(20),
     borderWidth: 1,
     borderColor: "#E0E0E0",
     borderRadius: 12,
