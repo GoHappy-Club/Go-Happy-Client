@@ -4898,6 +4898,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-push-notification@npm:^8.1.4":
+  version: 8.1.4
+  resolution: "@types/react-native-push-notification@npm:8.1.4"
+  checksum: 10c0/cd5f3f25baa16f8c6e68030b21d62b1f928b6555cbcfff23b74655f72d7aeb4d473e873358dc5a771e3d3745e64d90ec9fe34dc46d427765879e5efec8c86a08
+  languageName: node
+  linkType: hard
+
 "@types/react-native-vector-icons@npm:^6.4.10, @types/react-native-vector-icons@npm:^6.4.6":
   version: 6.4.18
   resolution: "@types/react-native-vector-icons@npm:6.4.18"
@@ -5280,6 +5287,7 @@ __metadata:
     "@rneui/base": "npm:^4.0.0-rc.7"
     "@rneui/themed": "npm:^4.0.0-rc.7"
     "@types/react": "npm:^18.3.18"
+    "@types/react-native-push-notification": "npm:^8.1.4"
     "@types/react-test-renderer": "npm:^18.3.1"
     axios: "npm:1.7.9"
     babel-jest: "npm:^29.6.3"

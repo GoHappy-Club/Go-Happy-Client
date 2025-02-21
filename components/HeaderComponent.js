@@ -41,6 +41,8 @@ import {
 } from "../services/LocalPushController";
 import { formatNumberWithSuffix } from "../commonComponents/helpers";
 import { hp, wp } from "../helpers/common";
+import PushNotification from "react-native-push-notification";
+
 
 const width = Dimensions.get("window").width;
 
