@@ -736,10 +736,7 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <BackButton
-                          styles={styles}
-                          navigation={navigation}
-                        />
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -953,7 +950,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
-                      headerShown:false,
+                      headerShown: false,
                       headerShadowVisible: false,
                       animation: "slide_from_right",
                     })}
@@ -1015,12 +1012,20 @@ export default function App() {
                     children={(props) => <LeaderboardScreen />}
                     options={({ navigation }) => ({
                       title: null,
-                      headerTransparent: true,
+                      headerBackTitle: "back",
+                      // headerStyle: {
+                      //   backgroundColor: Colors.background,
+                      // },
+                      headerTransparent:true,
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
                       headerShadowVisible: false,
-                      animation: "slide_from_bottom",
-                      headerBackVisible: false,
-                      gestureEnabled: false,
-                      headerShown:false
+                      animation: "ios_from_right",
                     })}
                   />
                 </>

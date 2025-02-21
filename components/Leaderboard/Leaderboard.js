@@ -184,9 +184,17 @@ function TopThree() {
             style={[
               styles.topUserContainer,
               isWinner && styles.winnerContainer,
-              isRunnerUp && styles.runnerUpContainer,
             ]}
           >
+            {/* Background Box */}
+            <View
+              style={[
+                styles.backgroundBox,
+                isWinner ? styles.winnerBox : styles.runnerUpBox,
+              ]}
+            />
+
+            {/* Avatar & Crown */}
             <View style={styles.avatarContainer}>
               {isWinner && (
                 <View style={styles.crownContainer}>
@@ -202,6 +210,8 @@ function TopThree() {
                 ]}
               />
             </View>
+
+            {/* User Info */}
             <Text style={styles.topUserName}>{user.name}</Text>
             <Text style={[styles.topUserScore, isWinner && styles.winnerScore]}>
               {user.score}
@@ -246,18 +256,7 @@ export default function Leaderboard({ type, setType }) {
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Pressable
-            style={styles.backButton}
-            onPress={() => {
-              setType("");
-            }}
-          >
-            <Text style={styles.backText}>Back</Text>
-          </Pressable>
           <Text style={styles.title}>Workshops Leaderboard</Text>
-          {/* <Pressable style={styles.menuButton}>
-            <Ellipsis size={24} color="#1A1A1A" />
-          </Pressable> */}
         </View>
         <LeaderboardTabs />
         <TopThree />
@@ -280,7 +279,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     gap: 18,
@@ -341,7 +340,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderTopLeftRadius: wp(10),
     borderTopRightRadius: wp(10),
-    borderBottomEndRadius:0,
+    borderBottomEndRadius: 0,
     paddingTop: hp(5),
   },
   topThreeContainer: {
@@ -349,18 +348,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     paddingHorizontal: 16,
-    marginBottom: wp(8),
-    marginTop: wp(4),
+    marginBottom: 8,
+    marginTop: 4,
+    position: "relative",
   },
   topUserContainer: {
     alignItems: "center",
     marginHorizontal: 12,
+    position: "relative",
   },
   winnerContainer: {
     marginTop: -30,
   },
-  runnerUpContainer: {
-    marginTop: 10,
+  backgroundBox: {
+    position: "absolute",
+    width: "130%",
+    borderRadius: 16,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    bottom: 0,
+  },
+  winnerBox: {
+    height: 120,
+  },
+  runnerUpBox: {
+    height: 100,
   },
   topUserAvatar: {
     width: 64,

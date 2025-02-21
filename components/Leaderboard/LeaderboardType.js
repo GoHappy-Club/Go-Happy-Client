@@ -34,15 +34,8 @@ export default function LeaderboardTypeSelection({ type, setType }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Pressable
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          {/* <ChevronLeft size={24} color="#1A1A1A" /> */}
-          <Text style={styles.backText}>Back</Text>
-        </Pressable>
         <Text style={styles.title}>Select Leaderboard</Text>
-        <View style={{ width: 40 }} />
+        {/* <View style={{ width: 40 }} /> */}
       </View>
 
       <View style={styles.cardsContainer}>
@@ -77,7 +70,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
