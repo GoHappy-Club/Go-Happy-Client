@@ -69,6 +69,8 @@ import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js"
 import BackButton from "./commonComponents/BackButton.js";
 import PaytringView from "./commonComponents/PaytringView.js";
 import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
+import Leaderboard from "./components/Leaderboard/Leaderboard.js";
+import LeaderboardScreen from "./screens/Leaderboard/LeaderboardScreen.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -1006,6 +1008,19 @@ export default function App() {
                       animation: "slide_from_bottom",
                       headerBackVisible: false,
                       gestureEnabled: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Leaderboard"
+                    children={(props) => <LeaderboardScreen />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerTransparent: true,
+                      headerShadowVisible: false,
+                      animation: "slide_from_bottom",
+                      headerBackVisible: false,
+                      gestureEnabled: false,
+                      headerShown:false
                     })}
                   />
                 </>

@@ -68,6 +68,12 @@ export default function Sections(props) {
       text: "Help us make a difference! Click here to learn how you can contribute.",
     },
     {
+      title: "Leaderboard",
+      imgUrl: require("../../images/contribute.png"),
+      link: "Leaderboard",
+      text: "Help us make a difference! Click here to learn how you can contribute.",
+    },
+    {
       title: t("get_help"),
       imgUrl: require("../../images/help.png"),
       link: "props.helpUrl",
