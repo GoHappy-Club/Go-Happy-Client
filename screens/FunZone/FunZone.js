@@ -38,11 +38,11 @@ export default function FunZone() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topBar}>
+      {/* <View style={styles.topBar}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text>Back</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.header}>
         <Text style={styles.title}>Fun Zone</Text>
