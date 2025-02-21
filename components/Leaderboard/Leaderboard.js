@@ -21,7 +21,7 @@ import {
 } from "lucide-react-native";
 import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
-import { wp } from "../../helpers/common";
+import { hp, wp } from "../../helpers/common";
 import FastImage from "react-native-fast-image";
 
 const MOCK_DATA = {
@@ -105,6 +105,46 @@ const MOCK_DATA = {
         "https://www.rd.com/wp-content/uploads/2019/09/GettyImages-621924830-scaled.jpg?w=2560",
       trending: "down",
     },
+    {
+      id: "8",
+
+      name: "Mehul",
+      score: 2430,
+      username: "@mehul",
+      avatar:
+        "https://www.rd.com/wp-content/uploads/2019/09/GettyImages-621924830-scaled.jpg?w=2560",
+      trending: "down",
+    },
+    {
+      id: "8",
+
+      name: "Mehul",
+      score: 2430,
+      username: "@mehul",
+      avatar:
+        "https://www.rd.com/wp-content/uploads/2019/09/GettyImages-621924830-scaled.jpg?w=2560",
+      trending: "down",
+    },
+    {
+      id: "8",
+
+      name: "Mehul",
+      score: 2430,
+      username: "@mehul",
+      avatar:
+        "https://www.rd.com/wp-content/uploads/2019/09/GettyImages-621924830-scaled.jpg?w=2560",
+      trending: "down",
+    },
+    {
+      id: "8",
+
+      name: "Mehul",
+      score: 2430,
+      username: "@mehul",
+      avatar:
+        "https://www.rd.com/wp-content/uploads/2019/09/GettyImages-621924830-scaled.jpg?w=2560",
+      trending: "down",
+    },
   ],
 };
 
@@ -177,21 +217,22 @@ function TopThree() {
 function LeaderboardList() {
   return (
     <View style={styles.listContainer}>
-      {MOCK_DATA.otherUsers.map((user) => (
-        <View key={user.id} style={styles.listItem}>
-          <Image source={{ uri: user.avatar }} style={styles.listAvatar} />
-          <View style={styles.listUserInfo}>
-            <Text style={styles.listName}>{user.name}</Text>
-            <Text style={styles.listUsername}>{user.username}</Text>
+      {MOCK_DATA.otherUsers.map((user, index) => (
+        <View key={user.id}>
+          <View style={styles.listItem}>
+            <Text style={styles.listRank}>{index + 3}</Text>
+            <Image source={{ uri: user.avatar }} style={styles.listAvatar} />
+            <View style={styles.listUserInfo}>
+              <Text style={styles.listName}>{user.name}</Text>
+              <Text style={styles.listUsername}>{user.username}</Text>
+            </View>
+            <View style={styles.scoreContainer}>
+              <Text style={styles.listScore}>{user.score}</Text>
+            </View>
           </View>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.listScore}>{user.score}</Text>
-            {/* {user.trending === "up" ? (
-              <TrendingUp size={24} color={Colors.green} />
-            ) : (
-              <TrendingDown size={24} color={Colors.red} />
-            )} */}
-          </View>
+          {index !== MOCK_DATA.otherUsers.length - 1 && (
+            <View style={styles.separator} />
+          )}
         </View>
       ))}
     </View>
@@ -219,11 +260,11 @@ export default function Leaderboard({ type, setType }) {
           </Pressable> */}
         </View>
         <LeaderboardTabs />
+        <TopThree />
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
         >
-          <TopThree />
           <LeaderboardList />
         </ScrollView>
       </SafeAreaView>
@@ -242,7 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap:18
+    gap: 18,
   },
   backButton: {
     padding: 4,
@@ -295,6 +336,13 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    height: "100%",
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    borderTopLeftRadius: wp(10),
+    borderTopRightRadius: wp(10),
+    borderBottomEndRadius:0,
+    paddingTop: hp(5),
   },
   topThreeContainer: {
     flexDirection: "row",
@@ -363,15 +411,23 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   listContainer: {
-    paddingHorizontal: 16,
+    flex: 1,
+    height: "100%",
+    paddingBottom: hp(8),
   },
   listItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.primary,
+    backgroundColor: "#fff",
     padding: 12,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 0,
+  },
+  listRank: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1A1A1A",
+    marginRight: 8,
   },
   listAvatar: {
     width: 40,
@@ -401,5 +457,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#1A1A1A",
     marginRight: 4,
+  },
+  separator: {
+    marginVertical: 6,
   },
 });
