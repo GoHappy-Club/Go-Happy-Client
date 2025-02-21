@@ -18,6 +18,7 @@ import { connect, useSelector } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
 import { bindActionCreators } from "redux";
 import { Colors } from "../../assets/colors/color";
+import NewRefer from "../../components/Refer/NewRefer";
 class ReferScreen extends Component {
   constructor(props) {
     super(props);
@@ -94,14 +95,15 @@ class ReferScreen extends Component {
     const navigation = this.props.navigation;
     const title = "Login";
     return (
-      <Refer
-        // loadMySessions={this.loadMySessions.bind(this)}
-        navigation={this.props.navigation}
-        ongoingEvents={this.state.ongoingEvents}
-        upcomingEvents={this.state.upcomingEvents}
-        expiredEvents={this.state.expiredEvents}
-        requestReferrals={this.requestReferrals.bind(this)}
-      />
+      // <Refer
+      //   // loadMySessions={this.loadMySessions.bind(this)}
+      //   navigation={this.props.navigation}
+      //   ongoingEvents={this.state.ongoingEvents}
+      //   upcomingEvents={this.state.upcomingEvents}
+      //   expiredEvents={this.state.expiredEvents}
+      //   requestReferrals={this.requestReferrals.bind(this)}
+      // />
+      <NewRefer/>
     );
   }
 }
