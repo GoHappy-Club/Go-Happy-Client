@@ -40,7 +40,7 @@ const Game = () => {
       <WebView
         source={{ uri: gameUrl }}
         style={{ flex: 1 }}
-        injectedJavaScript={name == "Bubble Shooter" ? removeMargin : ""}
+        injectedJavaScript={name == "Bubble Shooter" ? removeMargin : adBlockScript}
       />
     </SafeAreaView>
   );
