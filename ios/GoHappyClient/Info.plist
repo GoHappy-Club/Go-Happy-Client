@@ -54,7 +54,10 @@
 		<string>ppemerchantsdkv2</string>
 		<string>ppemerchantsdkv3</string>
 		<string>paytmmp</string>
+		<string>phonepe</string>
+		<string>tez</string>
 		<string>gpay</string>
+		<string>upi</string>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
