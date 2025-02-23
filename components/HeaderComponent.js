@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import GradientText from "../commonComponents/GradientText";
 import { useNavigation } from "@react-navigation/native";
 import BottomSheet from "./CustomBottomSheet/BottomSheet";
-import SessionRatingSheet from "./CustomBottomSheet/RatingSheet";
 import {
   activateFreeTrial,
   checkPendingFeedback,
@@ -32,17 +31,14 @@ import {
 } from "../services/Startup";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setMembership } from "../redux/actions/counts";
-import dayjs from "dayjs";
 import quotes from "../constants/quotes.json";
 import {
   ScheduledNotifcation,
   scheduleMedicineReminders,
   scheduleWaterReminders,
 } from "../services/LocalPushController";
-import { formatNumberWithSuffix } from "../commonComponents/helpers";
 import { hp, wp } from "../helpers/common";
-import PushNotification from "react-native-push-notification";
-
+import SessionRatingAlert from "./CustomBottomSheet/RatingSheet";
 
 const width = Dimensions.get("window").width;
 
@@ -371,16 +367,17 @@ const Header = () => {
           }, 4200);
         }}
       />
-      <SessionRatingSheet
+      <SessionRatingAlert
+        showAlert={showRating}
         loading={loading}
         selectedRating={selectedRating}
         setSelectedRating={setSelectedRating}
         reason={reason}
         setReason={setReason}
-        modalRef={ratingModalRef}
         submitted={submitted}
         setSubmitted={setSubmitted}
-        closeModal={() => {
+        currentSession={currentSession}
+        closeAlert={() => {
           submitRating(
             currentSession,
             setCurrentSession,
@@ -388,9 +385,8 @@ const Header = () => {
             0,
             false
           );
-          ratingModalRef.current?.dismiss();
+          setShowRating(false);
         }}
-        currentSession={currentSession}
         submitRating={() => {
           submitRating(
             currentSession,
@@ -405,6 +401,7 @@ const Header = () => {
           );
         }}
       />
+
       <View style={styles.header}>
         <Pressable style={styles.userInfo} onPress={handleNavigate}>
           <Image
