@@ -326,7 +326,7 @@ const SubscriptionPlans = ({ plans }) => {
     return "Upgrade now";
   };
 
-  const paytringWrapper = async (type, plan, amount) => {
+  const paytringWrapper = async (share = false, type, plan, amount) => {
     const data = {
       phone: profile.phoneNumber,
       amount: amount,
@@ -338,33 +338,42 @@ const SubscriptionPlans = ({ plans }) => {
       type: type,
       planId: plan?.id,
     };
-    setPayButtonLoading(true);
+    if (share) {
+      setShareButtonLoading(true);
+    } else {
+      setPayButtonLoading(true);
+    }
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
         data
       );
       const orderData = response.data;
-
-      navigation.navigate("PaytringView", {
-        callback: () => {
-          navigation.navigate("PaymentSuccessful", {
-            type: "",
-            navigateTo: "",
-          });
-        },
-        error_handler: () => {
-          navigation.navigate("PaymentFailed", {
-            type: "",
-            navigateTo: "",
-          });
-        },
-        order_id: orderData?.order_id,
-      });
       setPayButtonLoading(false);
+      setShareButtonLoading(false);
       setPaymentSharePopUp(false);
+      if (share) {
+        handlePaymentShare(orderData, amount);
+      } else {
+        navigation.navigate("PaytringView", {
+          callback: () => {
+            navigation.navigate("PaymentSuccessful", {
+              type: "",
+              navigateTo: "",
+            });
+          },
+          error_handler: () => {
+            navigation.navigate("PaymentFailed", {
+              type: "",
+              navigateTo: "",
+            });
+          },
+          order_id: orderData?.order_id,
+        });
+      }
     } catch (error) {
       setPayButtonLoading(false);
+      setShareButtonLoading(false);
       setPaymentSharePopUp(false);
       crashlytics().log(
         `Error in paytringWrapper SubscriptionPlans.js ${error}`
@@ -372,17 +381,29 @@ const SubscriptionPlans = ({ plans }) => {
     }
   };
 
-  const handleBuyPlan = async (type, plan) => {
-    paytringWrapper(type, plan, plan.subscriptionFees);
+  const handlePaymentShare = async (orderData, amount) => {
+    try {
+      Share.share({
+        title: "GoHappy Payment Link",
+        message: `Hey, ${profile.name} has requested an amount of ₹${amount} for joining GoHappyClub Membership. Click on the link to pay. \nhttps://api.paytring.com/pay/token/${orderData?.order_id}`,
+      });
+    } catch (error) {
+      console.log("Error in sharing payment link : ", error);
+      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
+    }
   };
 
-  const handleUpgradePlan = async (type, plan) => {
+  const handleBuyPlan = async (share = false, type, plan) => {
+    paytringWrapper(share, type, plan, plan.subscriptionFees);
+  };
+
+  const handleUpgradePlan = async (share = false, type, plan) => {
     // handle upgrade plan logic
-    paytringWrapper(type, plan, pricingHelper());
+    paytringWrapper(share, type, plan, pricingHelper());
   };
 
-  const handleRenewPlan = async (type, plan) => {
-    paytringWrapper(type, plan, plan.subscriptionFees);
+  const handleRenewPlan = async (share = false, type, plan) => {
+    paytringWrapper(share, type, plan, plan.subscriptionFees);
   };
 
   const pricingHelper = () => {
@@ -527,7 +548,9 @@ const SubscriptionPlans = ({ plans }) => {
                 style={[
                   styles.footerButtonText,
                   {
-                    color: isDisabled() ? Colors.grey.countdown : Colors.primaryText,
+                    color: isDisabled()
+                      ? Colors.grey.countdown
+                      : Colors.primaryText,
                   },
                 ]}
               >
@@ -569,30 +592,30 @@ const SubscriptionPlans = ({ plans }) => {
                     else if (buttonTitle == "Upgrade now")
                       handleUpgradePlan("upgrade", selectedPlan);
                   }}
-                  disabled={payButtonLoading}
+                  disabled={payButtonLoading || shareButtonLoading}
                   loadingStyle={{
                     color: Colors.black,
                   }}
                   titleStyle={{
-                    color:Colors.primaryText
+                    color: Colors.primaryText,
                   }}
                 />
-                {/* <Button
+                <Button
                   outline
                   title={"Share"}
                   loading={shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
                     if (renew) {
-                      handleRenewPlan("share", selectedPlan);
+                      handleRenewPlan(true, "renewal", selectedPlan);
                       return;
                     } else if (buttonTitle == "Join now")
-                      handleBuyPlan("share", selectedPlan);
+                      handleBuyPlan(true, "subscription", selectedPlan);
                     else if (buttonTitle == "Upgrade now")
-                      handleUpgradePlan("share", selectedPlan);
+                      handleUpgradePlan(true, "upgrade", selectedPlan);
                   }}
-                  disabled={shareButtonLoading}
-                /> */}
+                  disabled={shareButtonLoading || payButtonLoading}
+                />
               </View>
             </View>
           }

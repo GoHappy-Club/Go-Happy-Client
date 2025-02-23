@@ -129,7 +129,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     }
   };
 
-  const paytringWrapper = async (amount, type) => {
+  const paytringWrapper = async (share = false, amount, type) => {
     const data = {
       phone: profile.phoneNumber,
       amount: amount,
@@ -141,35 +141,55 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       type: type,
       coinsToGive: coins,
     };
-    setPayButtonLoading(true);
+    if (share) {
+      setShareButtonLoading(true);
+    } else {
+      setPayButtonLoading(true);
+    }
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
         data
       );
       const orderData = response.data;
-
-      navigation.navigate("PaytringView", {
-        callback: () => {
-          navigation.navigate("PaymentSuccessful", {
-            type: "normal",
-            navigateTo: "WalletScreen",
-          });
-        },
-        error_handler: () => {
-          navigation.navigate("PaymentFailed", {
-            type: "normal",
-            navigateTo: "TopUpScreen",
-          });
-        },
-        order_id: orderData?.order_id,
-      });
       setPayButtonLoading(false);
+      setShareButtonLoading(false);
       setPaymentSharePopUp(false);
+      if (share) {
+        handlePaymentShare(orderData, amount);
+      } else {
+        navigation.navigate("PaytringView", {
+          callback: () => {
+            navigation.navigate("PaymentSuccessful", {
+              type: "normal",
+              navigateTo: "WalletScreen",
+            });
+          },
+          error_handler: () => {
+            navigation.navigate("PaymentFailed", {
+              type: "normal",
+              navigateTo: "TopUpScreen",
+            });
+          },
+          order_id: orderData?.order_id,
+        });
+      }
     } catch (error) {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
       crashlytics().log(`Error in paytringWrapper TopUp.js ${error}`);
+    }
+  };
+
+  const handlePaymentShare = async (orderData, amount) => {
+    try {
+      Share.share({
+        title: "GoHappy Payment Link",
+        message: `Hey, ${profile.name} has requested an amount of ₹${amount} for coins credit. Click on the link to pay. \nhttps://api.paytring.com/pay/token/${orderData?.order_id}`,
+      });
+    } catch (error) {
+      console.log("Error in sharing payment link : ", error);
+      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
@@ -444,16 +464,16 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                   }}
                   disabled={payButtonLoading}
                 />
-                {/* <Button
+                <Button
                   outline
                   title={"Share"}
                   loading={shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
-                    phonePe("share", amount, "topUp");
+                    paytringWrapper(true, amount, "topUp");
                   }}
                   disabled={shareButtonLoading}
-                /> */}
+                />
               </View>
             </View>
           }

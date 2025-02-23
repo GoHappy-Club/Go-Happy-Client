@@ -135,7 +135,7 @@ class Contribution extends Component {
     // Do something with the selected amount
   }
 
-  paytringWrapper = async () => {
+  paytringWrapper = async (share = false) => {
     const data = {
       phone: this.props.profile.phoneNumber,
       amount: this.state.amount,
@@ -146,33 +146,56 @@ class Contribution extends Component {
       cname: this.props.profile.name,
       type: "contribution",
     };
-    this.setState({ payButtonLoading: true });
+    this.setState({
+      payButtonLoading: share ? false : true,
+      shareButtonLoading: share ? true : false,
+    });
     try {
       const response = await axios.post(
         `${SERVER_URL}/paytring/createOrder`,
         data
       );
       const orderData = response.data;
-      this.setState({ payButtonLoading: false, clickPopup: false });
-      this.props.navigation.navigate("PaytringView", {
-        callback: () => {
-          this.props.navigation.navigate("PaymentSuccessful", {
-            type: "normal",
-            navigateTo: "Contribution Details",
-          });
-        },
-        error_handler: () => {
-          this.props.navigation.navigate("PaymentFailed", {
-            type: "normal",
-            navigateTo: "Contribution Details",
-          });
-        },
-        order_id: orderData?.order_id,
+      this.setState({
+        payButtonLoading: false,
+        shareButtonLoading: false,
+        clickPopup: false,
       });
+      if (share) {
+        this.handlePaymentShare(orderData);
+      } else {
+        this.props.navigation.navigate("PaytringView", {
+          callback: () => {
+            this.props.navigation.navigate("PaymentSuccessful", {
+              type: "normal",
+              navigateTo: "Contribution Details",
+            });
+          },
+          error_handler: () => {
+            this.props.navigation.navigate("PaymentFailed", {
+              type: "normal",
+              navigateTo: "Contribution Details",
+            });
+          },
+          order_id: orderData?.order_id,
+        });
+      }
     } catch (error) {
       this.setState({ payButtonLoading: false, clickPopup: false });
       console.log("Error in fetching order id : ", error);
       crashlytics().log(`Error in paytringWrapper Contribution.js ${error}`);
+    }
+  };
+
+  handlePaymentShare = async (orderData) => {
+    try {
+      Share.share({
+        title: "GoHappy Payment Link",
+        message: `Hey, ${this.props.profile.name} has requested an amount of ₹${this.state.amount} for contribution in GoHappyClub Family. Click on the link to pay. \nhttps://api.paytring.com/pay/token/${orderData?.order_id}`,
+      });
+    } catch (error) {
+      console.log("Error in sharing payment link : ", error);
+      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
@@ -379,16 +402,16 @@ class Contribution extends Component {
                           color: Colors.primaryText,
                         }}
                       />
-                      {/* <Button
+                      <Button
                         outline
                         title={"Share"}
                         loading={this.state.shareButtonLoading}
                         buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                         onPress={() => {
-                          this.phonePeWrapper("share", this.state.itemToBuy);
+                          this.paytringWrapper(true);
                         }}
                         disabled={this.state.shareButtonLoading}
-                      /> */}
+                      />
                     </View>
                   </View>
                 }
