@@ -15,6 +15,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts";
 import { withTranslation } from "react-i18next";
+import { wp } from "../../helpers/common";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
@@ -32,9 +33,8 @@ class PromotionSection extends Component {
     const data = [
       {
         id: 1,
-        title: "Refer Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/refer_banner_new.png",
+        title: "Refer & Win",
+        image: require("../../images/promotion_refer.png"),
         to:
           this.props.profile.age == null || this.props.profile.age >= 50
             ? "Refer"
@@ -43,9 +43,8 @@ class PromotionSection extends Component {
       },
       {
         id: 2,
-        title: "Contribute Banner",
-        image:
-          "https://storage.googleapis.com/gohappy-main-bucket/Assets/contribute_banner.png",
+        title: "Contribute",
+        image: require("../../images/promotion_contribute.png"),
         to: "Contribution Details",
         text: "Support our mission! Click here to learn how you can contribute and make an impact.",
       },
@@ -75,11 +74,12 @@ class PromotionSection extends Component {
                 >
                   {/* <View style={styles.card}> */}
                   <FastImage
-                    source={{ uri: item.image }}
+                    source={item.image}
                     resizeMode="contain"
                     style={styles.image}
                   />
                   {/* </View> */}
+                  <Text style={styles.itemText}>{item.title}</Text>
                 </Walkthroughable>
               </CopilotStep>
             );
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 8,
     justifyContent: "center",
+    alignItems:"center"
   },
 
   image: {
@@ -116,9 +117,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flex: 1,
     justifyContent: "center",
-    // borderTopRightRadius: 0,
-
-    // borderBottomRightRadius: 0,
+  },
+  itemText:{
+    fontSize:wp(4),
+    fontWeight:"bold",
   },
   headingContainer: {
     flexDirection: "row",
