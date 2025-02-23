@@ -32,6 +32,13 @@ import {
 } from "lucide-react-native";
 import TripsScreen from "../../screens/Trips/TripsScreen";
 import { View } from "react-native";
+import {
+  Feather,
+  FontAwesome6,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -74,19 +81,14 @@ export default function BottomNavigator() {
           shadowOpacity: 0,
           tabBarIcon: ({ focused, color }) => (
             <>
-              <HouseIcon
-                size={25}
-                color={focused ? Colors.black : Colors.grey.grey}
-              />
-              {focused && (
-                <View
-                  style={{
-                    height: 2,
-                    width: "130%",
-                    backgroundColor: Colors.black,
-                  }}
+              {!focused && (
+                <MaterialCommunityIcons
+                  name="home-outline"
+                  size={28}
+                  color={Colors.grey.grey}
                 />
               )}
+              {focused && <MaterialIcons name="home" size={28} color="black" />}
             </>
           ),
           tabBarActiveTintColor: "tomato",
@@ -100,17 +102,18 @@ export default function BottomNavigator() {
           tabBarLabel: t("sessions"),
           tabBarIcon: ({ focused, color }) => (
             <>
-              <Calendar
-                size={25}
-                color={focused ? Colors.black : Colors.grey.grey}
-              />
+              {!focused && (
+                <FontAwesome6
+                  name="calendar"
+                  size={24}
+                  color={Colors.grey.grey}
+                />
+              )}
               {focused && (
-                <View
-                  style={{
-                    height: 2,
-                    width: "130%",
-                    backgroundColor: Colors.black,
-                  }}
+                <FontAwesome6
+                  name="calendar-day"
+                  size={24}
+                  color="black"
                 />
               )}
             </>
@@ -145,18 +148,15 @@ export default function BottomNavigator() {
           shadowOpacity: 0,
           tabBarIcon: ({ focused, color }) => (
             <>
-              <Plane
-                size={25}
-                color={focused ? Colors.black : Colors.grey.grey}
-              />
-              {focused && (
-                <View
-                  style={{
-                    height: 2,
-                    width: "130%",
-                    backgroundColor: Colors.black,
-                  }}
+              {!focused && (
+                <Ionicons
+                  name="airplane-outline"
+                  size={24}
+                  color={Colors.grey.grey}
                 />
+              )}
+              {focused && (
+                <Ionicons name="airplane" size={24} color={Colors.black} />
               )}
             </>
           ),
@@ -174,18 +174,15 @@ export default function BottomNavigator() {
             shadowOpacity: 0,
             tabBarIcon: ({ focused, color }) => (
               <>
-                <Trophy
-                  size={25}
-                  color={focused ? Colors.black : Colors.grey.grey}
-                />
-                {focused && (
-                  <View
-                    style={{
-                      height: 2,
-                      width: "130%",
-                      backgroundColor: Colors.black,
-                    }}
+                {!focused && (
+                  <Ionicons
+                    name="trophy-outline"
+                    size={24}
+                    color={Colors.grey.grey}
                   />
+                )}
+                {focused && (
+                  <Ionicons name="trophy" size={24} color={Colors.black} />
                 )}
               </>
             ),

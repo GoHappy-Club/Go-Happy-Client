@@ -2391,7 +2391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/vector-icons@npm:^14.0.3":
+"@expo/vector-icons@npm:^14.0.3, @expo/vector-icons@npm:^14.0.4":
   version: 14.0.4
   resolution: "@expo/vector-icons@npm:14.0.4"
   dependencies:
@@ -5257,6 +5257,7 @@ __metadata:
     "@babel/core": "npm:^7.20.0"
     "@babel/preset-env": "npm:^7.20.0"
     "@babel/runtime": "npm:^7.20.0"
+    "@expo/vector-icons": "npm:^14.0.4"
     "@fortawesome/fontawesome-svg-core": "npm:6.7.2"
     "@fortawesome/free-brands-svg-icons": "npm:6.7.2"
     "@fortawesome/free-regular-svg-icons": "npm:6.7.2"
