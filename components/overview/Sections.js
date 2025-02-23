@@ -49,18 +49,18 @@ export default function Sections(props) {
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
     },
-    {
-      title: t("rewards"),
-      imgUrl: require("../../images/rewards.png"),
-      link: "Rewards",
-      text: "See your earned rewards here.",
-    },
-    {
-      title: t("refer_win"),
-      imgUrl: require("../../images/refer_win.png"),
-      link: "Refer",
-      text: "Share the app with your friends and relatives and win rewards.",
-    },
+    // {
+    //   title: t("rewards"),
+    //   imgUrl: require("../../images/rewards.png"),
+    //   link: "Rewards",
+    //   text: "See your earned rewards here.",
+    // },
+    // {
+    //   title: t("refer_win"),
+    //   imgUrl: require("../../images/refer_win.png"),
+    //   link: "Refer",
+    //   text: "Share the app with your friends and relatives and win rewards.",
+    // },
     {
       title: t("contribute"),
       imgUrl: require("../../images/contribute.png"),
