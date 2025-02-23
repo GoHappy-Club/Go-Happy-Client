@@ -529,6 +529,8 @@ export default function App() {
         Trips: "trips",
         TripDetails: "trip_details",
         PastSessions: "past_sessions",
+        ReelsPage: "videos",
+        QuotesPage: "quotes",
       },
     },
   };
@@ -734,10 +736,7 @@ export default function App() {
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
-                        <BackButton
-                          styles={styles}
-                          navigation={navigation}
-                        />
+                        <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                     })}
@@ -951,7 +950,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
-                      headerShown:false,
+                      headerShown: false,
                       headerShadowVisible: false,
                       animation: "slide_from_right",
                     })}
