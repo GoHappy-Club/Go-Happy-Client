@@ -72,11 +72,10 @@
   "step_4": "4. Receive Thank You Gift from GoHappy Club delivered to your home once you have seven successful referrals.",
   "referral_level": "Referral Level",
   "level_completed": "level completed",
-  "levels_completed":"levels completed",
-  "drop_review":"Drop your review",
-  "recently_attended":"You Recently Attended",
-  "rate_session":"Please rate our sessions so we can improve.",
-  "rating_placeholder":"We'd love to hear your thoughts! Please share your feedback so we can improve your experience.",
-  "submit":"Submit"
-
+  "levels_completed": "levels completed",
+  "drop_review": "Drop your review",
+  "recently_attended": "Thanks for attending the",
+  "rate_session": "We'd love your feedback to improve future sessions. Please rate your experience.",
+  "rating_placeholder": "Please Let us know how we can do better.",
+  "submit": "Submit"
 }
