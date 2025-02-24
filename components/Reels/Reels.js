@@ -161,7 +161,11 @@ const ReelsPage = () => {
           </View>
           {currentIndex === index &&
           item?.category?.toLowerCase() != "promotion" ? (
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                togglePlay(index);
+              }}
+            >
               <View
                 pointerEvents="none"
                 style={{
