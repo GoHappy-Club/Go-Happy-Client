@@ -4,6 +4,7 @@ import {
   Linking,
   Platform,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -48,7 +49,7 @@ const PaymentFailed = () => {
 
   if (type == "normal")
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.goBackContainer}>
           <TouchableOpacity
             style={styles.goBackTouchable}
@@ -91,11 +92,11 @@ const PaymentFailed = () => {
             <Text style={styles.retryText}>Retry</Text>
           </View>
         </Pressable>
-      </View>
+      </SafeAreaView>
     );
   else if (type == "pending") {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.goBackContainer}>
           <TouchableOpacity
             style={styles.goBackTouchable}
@@ -138,12 +139,12 @@ const PaymentFailed = () => {
             <Text style={styles.retryText}>Help Me</Text>
           </View>
         </Pressable>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.goBackContainer}>
         <TouchableOpacity
           style={styles.goBackTouchable}
@@ -186,7 +187,7 @@ const PaymentFailed = () => {
           <Text style={styles.retryText}>Retry</Text>
         </View>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 };
 

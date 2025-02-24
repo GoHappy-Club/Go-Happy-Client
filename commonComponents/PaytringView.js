@@ -1,4 +1,4 @@
-import { BackHandler, Dimensions, StyleSheet, Text, View } from "react-native";
+import { BackHandler, Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import WebView from "react-native-webview";
@@ -42,7 +42,7 @@ const PaytringView = () => {
   };
 
   return webViewOpen ? (
-    <View style={{ position: "absolute", top: 0, left: 0, zIndex: 9999 }}>
+    <SafeAreaView style={{ position: "absolute", top: 0, left: 0, zIndex: 9999 }}>
       <WebView
         ref={webview}
         scalesPageToFit={true}
@@ -68,7 +68,7 @@ const PaytringView = () => {
           });
         `}
       />
-    </View>
+    </SafeAreaView>
   ) : null;
 };
 
