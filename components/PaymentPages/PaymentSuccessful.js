@@ -3,6 +3,7 @@ import {
   Image,
   Platform,
   Pressable,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -17,7 +18,7 @@ import FastImage from "react-native-fast-image";
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [timer, setTimer] = useState(8);
+  const [timer, setTimer] = useState(4);
 
   const timerRef = useRef();
   const timingRef = useRef();
@@ -54,11 +55,10 @@ const PaymentSuccessful = () => {
 
   if (type && type == "normal")
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <LottieView
           source={require("../../assets/lottie/correct.json")}
           autoPlay
-          loop
           style={{
             width: wp(100),
             height: hp(30),
@@ -107,15 +107,14 @@ const PaymentSuccessful = () => {
         >
           Click here
         </Text>
-      </View>
+      </SafeAreaView>
     );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <LottieView
         source={require("../../assets/lottie/correct.json")}
         autoPlay
-        loop
         style={{
           width: wp(100),
           height: hp(30),
@@ -154,7 +153,7 @@ const PaymentSuccessful = () => {
           <Text style={styles.retryText}>Explore</Text>
         </View>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 };
 

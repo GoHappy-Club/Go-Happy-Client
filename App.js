@@ -818,6 +818,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       headerShown: false,
                       animation: "slide_from_right",
+                      gestureEnabled: false,
                     })}
                   />
                   <Stack.Screen
@@ -826,6 +827,7 @@ export default function App() {
                     options={({ navigation }) => ({
                       headerShown: false,
                       animation: "slide_from_right",
+                      gestureEnabled: false,
                     })}
                   />
                   <Stack.Screen
@@ -1005,6 +1007,7 @@ export default function App() {
                       animation: "slide_from_bottom",
                       headerBackVisible: false,
                       gestureEnabled: false,
+                      headerShown: false,
                     })}
                   />
                 </>
