@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
 
 const SessionRatingAlert = ({
   showAlert,
@@ -53,7 +54,12 @@ const SessionRatingAlert = ({
 
   const renderEmoji = (icon, rating) => (
     <TouchableOpacity
-      onPress={() => setSelectedRating(rating)}
+      onPress={() => {
+        setSelectedRating(rating);
+        if (rating > 3) {
+          setReason("");
+        }
+      }}
       style={[
         styles.emojiContainer,
         selectedRating === rating && styles.selectedEmoji,
@@ -71,7 +77,6 @@ const SessionRatingAlert = ({
     <AwesomeAlert
       show={showAlert}
       showProgress={false}
-      title={submitted ? t("thank_you") : t("drop_review")}
       closeOnTouchOutside={false}
       closeOnHardwareBackPress={false}
       onDismiss={closeAlert}
@@ -80,10 +85,21 @@ const SessionRatingAlert = ({
           <Text style={styles.thankYouText}>{t("thank_you_for_feedback")}</Text>
         ) : (
           <View style={styles.contentContainer}>
-            <Text style={styles.sessionName}>
-              {currentSession?.sessionName}
+            <Text style={styles.sessionName}>{t("drop_review")}</Text>
+            <Text style={styles.improveText}>
+              {t("recently_attended")}{" "}
+              <Text
+                style={{
+                  fontSize: wp(4),
+                  fontWeight: "600",
+                  color: Colors.primaryText,
+                }}
+              >
+                {currentSession?.sessionName}
+              </Text>
+              {" session! "}
+              {t("rate_session")}
             </Text>
-            <Text style={styles.improveText}>{t("rate_session")}</Text>
             <View style={styles.emojiRow}>
               {renderEmoji(faFrown, 1)}
               {renderEmoji(faMeh, 2)}
@@ -91,28 +107,41 @@ const SessionRatingAlert = ({
               {renderEmoji(faSmileBeam, 4)}
               {renderEmoji(faGrinHearts, 5)}
             </View>
-            <TextInput
-              style={styles.textInput}
-              placeholder={t("rating_placeholder")}
-              placeholderTextColor="#999"
-              multiline
-              numberOfLines={4}
-              value={reason}
-              onChangeText={setReason}
-            />
+            {selectedRating != 0 && selectedRating <= 3 && (
+              <TextInput
+                style={styles.textInput}
+                placeholder={t("rating_placeholder")}
+                placeholderTextColor="#999"
+                multiline
+                numberOfLines={4}
+                value={reason}
+                onChangeText={setReason}
+              />
+            )}
           </View>
         )
       }
       showConfirmButton={!submitted}
       confirmButtonText={t("submit")}
-      confirmButtonColor={
-        selectedRating === 0 || loading ? Colors.grey.grey : Colors.primary
-      }
+      confirmButtonColor={Colors.primary}
+      confirmButtonTextStyle={{ color: Colors.black }}
+      confirmButtonStyle={{
+        opacity:
+          selectedRating === 0 ||
+          loading ||
+          (selectedRating <= 3 && reason.length === 0)
+            ? 0.5
+            : 1,
+      }}
       onCancelPressed={closeAlert}
       onConfirmPressed={() =>
         selectedRating > 0 && submitRating(selectedRating)
       }
-      confirmButtonDisabled={selectedRating === 0 || loading}
+      confirmButtonDisabled={
+        selectedRating === 0 ||
+        loading ||
+        (selectedRating <= 3 && reason.length === 0)
+      }
     />
   );
 };
@@ -125,7 +154,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sessionName: {
-    fontSize: 18,
+    fontSize: wp(6),
     fontWeight: "600",
     textAlign: "center",
     marginBottom: 10,
@@ -138,7 +167,6 @@ const styles = StyleSheet.create({
   emojiRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 10,
   },
   emojiContainer: {
     padding: 10,
@@ -158,6 +186,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     color: Colors.black,
     backgroundColor: "#FFFFFF",
+    marginTop: 10,
   },
   thankYouText: {
     fontSize: 16,
