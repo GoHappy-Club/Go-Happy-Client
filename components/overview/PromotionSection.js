@@ -102,13 +102,18 @@ const styles = StyleSheet.create({
     padding: 0,
     borderRadius: 8,
     height: "100%",
+    gap:wp(2)
   },
   touchable: {
-    width: "50%",
+    width: "48%",
     height: 150,
     borderRadius: 8,
     justifyContent: "center",
-    alignItems:"center"
+    alignItems:"center",
+    borderColor:Colors.grey.grey,
+    borderWidth:1,
+    gap:10,
+    paddingBottom:10
   },
 
   image: {
