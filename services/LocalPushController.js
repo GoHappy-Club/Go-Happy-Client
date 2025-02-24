@@ -49,27 +49,25 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
   });
 };
 
-const getNextTimeForHour = (hour) => {
-  const now = new Date();
-  const nextTime = new Date();
-  nextTime.setHours(hour, 0, 0, 0);
-  if (nextTime <= now) {
-    nextTime.setDate(nextTime.getDate() + 1);
-  }
-  return nextTime;
-};
-
 export const scheduleWaterReminders = () => {
   PushNotification.cancelAllLocalNotifications();
 
-  const hours = [9, 11, 13, 15, 17, 19];
+  const waterTimes = [
+    { hours: 9, minutes: 0 },
+    { hours: 11, minutes: 0 },
+    { hours: 13, minutes: 0 },
+    { hours: 16, minutes: 0 },
+    { hours: 17, minutes: 0 },
+    { hours: 19, minutes: 0 },
+  ];
+
   const now = new Date();
 
   for (let i = 0; i < 30; i++) {
-    hours.forEach((hour) => {
+    waterTimes.forEach((time) => {
       const notificationTime = new Date(now);
       notificationTime.setDate(now.getDate() + i);
-      notificationTime.setHours(hour, 0, 0, 0);
+      notificationTime.setHours(time.hours, time.minutes, 0, 0);
 
       if (notificationTime <= now && i === 0) {
         notificationTime.setDate(notificationTime.getDate() + 1);
@@ -88,16 +86,6 @@ export const scheduleWaterReminders = () => {
       });
     });
   }
-};
-
-const getNextMedicineTimeForHour = (hours, minutes) => {
-  const now = new Date();
-  const nextTime = new Date(now);
-  nextTime.setHours(hours, minutes, 0, 0);
-  if (nextTime <= now) {
-    nextTime.setDate(nextTime.getDate() + 1);
-  }
-  return nextTime;
 };
 
 export const scheduleMedicineReminders = () => {
