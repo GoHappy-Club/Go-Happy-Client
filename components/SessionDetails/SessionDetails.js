@@ -106,7 +106,7 @@ const SessionDetails = ({
     setState((prevState) => ({ ...prevState, name }));
   };
 
-  const paytringWrapper = async (type, item) => {
+  const paytringWrapper = async (share = false, type, item) => {
     const data = {
       phone: profile.phoneNumber,
       amount: item.cost,
@@ -120,7 +120,8 @@ const SessionDetails = ({
     };
     setState((prev) => ({
       ...prev,
-      payButtonLoading: true,
+      payButtonLoading: share ? false : true,
+      shareButtonLoading: share ? true : false,
     }));
     try {
       const response = await axios.post(
@@ -129,37 +130,43 @@ const SessionDetails = ({
       );
       const orderData = response.data;
 
-      navigation.navigate("PaytringView", {
-        callback: () => {
-          navigation.goBack();
-          navigation.goBack();
-          sessionActionL();
-          setState((prev) => ({
-            ...prev,
-            showPaymentAlert: true,
-            clickPopup: false,
-            payButtonLoading: false,
-            paymentSharePopUp: false,
-          }));
-        },
-        error_handler: () => {
-          navigation.navigate("PaymentFailed", {
-            type: "normal",
-            navigateTo: "HomeScreen",
-          });
-        },
-        order_id: orderData?.order_id,
-      });
       setState((prev) => ({
         ...prev,
         payButtonLoading: false,
+        shareButtonLoading: false,
         paymentSharePopUp: false,
       }));
+      if (share) {
+        handlePaymentShare(orderData, item.cost, item.eventName);
+        return;
+      } else {
+        navigation.navigate("PaytringView", {
+          callback: () => {
+            navigation.goBack();
+            navigation.goBack();
+            setState((prev) => ({
+              ...prev,
+              showPaymentAlert: true,
+              clickPopup: false,
+              payButtonLoading: false,
+              paymentSharePopUp: false,
+            }));
+          },
+          error_handler: () => {
+            navigation.navigate("PaymentFailed", {
+              type: "normal",
+              navigateTo: "HomeScreen",
+            });
+          },
+          order_id: orderData?.order_id,
+        });
+      }
     } catch (error) {
       setState((prev) => ({
         ...prev,
         payButtonLoading: false,
         paymentSharePopUp: false,
+        shareButtonLoading: false,
       }));
       crashlytics().log(
         `Error in paytringWrapper SubscriptionPlans.js ${error}`
@@ -167,85 +174,24 @@ const SessionDetails = ({
     }
   };
 
-  const phonePeWrapper = async (type, item) => {
-    const _callback = (id) => {
-      setState((prev) => ({ ...prev, success: true, loadingButton: false }));
-
-      if (id === "") {
-        route.params.onGoBack();
-        navigation.navigate("GoHappy Club");
-      } else {
-        sessionActionL();
-        setState((prev) => ({
-          ...prev,
-          showPaymentAlert: true,
-          clickPopup: false,
-          payButtonLoading: false,
-          paymentSharePopUp: false,
-        }));
-      }
-    };
-    const _errorHandler = () => {
-      setState((prev) => ({
-        ...prev,
-        paymentAlertMessage: phonepe_payments.PaymentError(),
-        paymentAlertTitle: "Oops!",
-        clickPopup: false,
-        payButtonLoading: false,
-        showPaymentAlert: true,
-        paymentSharePopUp: false,
-      }));
-    };
-    if (type == "share") {
-      setState((prev) => ({ ...prev, shareButtonLoading: true }));
-      const tambolaTicket = tambola.generateTicket();
-      phonepe_payments
-        .phonePeShare(
-          profile.phoneNumber,
-          item.cost,
-          _errorHandler,
-          "workshop",
-          item.id,
-          tambolaTicket
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
+  const handlePaymentShare = async (orderData, amount, eventName) => {
+    try {
+      Share.share({
+        title: "GoHappy Payment Link",
+        message: `Hello from the GoHappy Club Family,
 ${toUnicodeVariant(
-  state.name,
+  profile.name,
   "italic"
 )} is requesting a payment of ₹${toUnicodeVariant(
-            String(item.cost),
-            "bold"
-          )} for ${toUnicodeVariant(item.eventName, "bold")}.
+          String(amount),
+          "bold"
+        )} for ${toUnicodeVariant(eventName, "bold")}.
 Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              setState((prev) => ({
-                ...prev,
-                shareButtonLoading: false,
-                clickPopup: false,
-                showPaymentAlert: false,
-                paymentSharePopUp: false,
-              }));
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-            });
-        });
-    } else {
-      setState((prev) => ({ ...prev, payButtonLoading: true }));
-      phonepe_payments.phonePe(
-        profile.phoneNumber,
-        item.cost,
-        _callback,
-        _errorHandler,
-        "workshop"
-      );
+https://api.paytring.com/pay/token/${orderData?.order_id}`,
+      });
+    } catch (error) {
+      console.log("Error in sharing payment link : ", error);
+      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
@@ -1099,16 +1045,16 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
                     color: Colors.black,
                   }}
                 />
-                {/* <Button
+                <Button
                   outline
                   title={"Share"}
                   loading={state.shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
-                    phonePeWrapper("share", item);
+                    paytringWrapper(true, "workshop", item);
                   }}
                   disabled={state.shareButtonLoading}
-                /> */}
+                />
               </View>
             </View>
           }
