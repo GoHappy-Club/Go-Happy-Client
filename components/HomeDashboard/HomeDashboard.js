@@ -517,7 +517,7 @@ const HomeDashboard = ({
             style={{
               fontFamily: "Montserrat-SemiBold",
               fontSize: wp(5.5),
-              width:"75%",
+              width: "75%",
             }}
           >
             {trimContent(item.eventName, 30)}
@@ -529,6 +529,18 @@ const HomeDashboard = ({
               gap: 3,
             }}
           >
+            {item.costType == "paid" &&
+              item?.type?.toLowerCase() == "workshop" && (
+                <Text
+                  style={{
+                    fontFamily: "Montserrat-SemiBold",
+                    color: Colors.grey.grey,
+                    fontSize: wp(5),
+                  }}
+                >
+                  ₹
+                </Text>
+              )}
             <Text
               style={{
                 fontFamily: "Montserrat-SemiBold",
@@ -540,15 +552,16 @@ const HomeDashboard = ({
                 ? formatNumberWithSuffix(item.cost)
                 : "FREE"}
             </Text>
-            {item.costType == "paid" && (
-              <FastImage
-                source={require("../../images/coins.png")}
-                style={{
-                  width: wp(6),
-                  aspectRatio: 1,
-                }}
-              />
-            )}
+            {item.costType == "paid" &&
+              item?.type?.toLowerCase() != "workshop" && (
+                <FastImage
+                  source={require("../../images/coins.png")}
+                  style={{
+                    width: wp(6),
+                    aspectRatio: 1,
+                  }}
+                />
+              )}
           </View>
         </View>
         <View
