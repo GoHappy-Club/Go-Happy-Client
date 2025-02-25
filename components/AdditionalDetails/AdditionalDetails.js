@@ -220,7 +220,7 @@ const AdditionalDetails = ({ route }) => {
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
       AsyncStorage.setItem("city", state.city);
       AsyncStorage.setItem("dob", state.dob);
-      AsyncStorage.setItem("age", state.age);
+      AsyncStorage.setItem("age", JSON.stringify(state.age));
       setState((prevState) => ({ ...prevState, loading: false }));
       AsyncStorage.setItem("showTour", "true");
       navigation.replace("GoHappy Club");
