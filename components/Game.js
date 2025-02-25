@@ -40,7 +40,30 @@ const Game = () => {
       <WebView
         source={{ uri: gameUrl }}
         style={{ flex: 1 }}
-        injectedJavaScript={name == "Bubble Shooter" ? removeMargin : adBlockScript}
+        userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        injectedJavaScript={`
+          function removeAds() {
+            // Select ad containers by their class names or IDs
+            const adElements = document.querySelectorAll('.ad-container, #banner-ad, .advertisement');
+            
+            // Remove each element
+            adElements.forEach(el => {
+              if (el && el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            });
+            
+            // For dynamically loaded ads, run periodically
+            setTimeout(removeAds, 1000);
+          }
+          
+          // Initial call
+          removeAds();
+          
+          true; // This is needed for iOS
+        `}
+        // javaScriptEnabled={true}
+        // domStorageEnabled={true}
       />
     </SafeAreaView>
   );
