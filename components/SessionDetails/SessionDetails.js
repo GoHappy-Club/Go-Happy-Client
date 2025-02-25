@@ -603,6 +603,11 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
       style={{
         backgroundColor: Colors.background,
         flex: 1,
+        paddingBottom:
+          state?.title?.toLowerCase().startsWith("book") &&
+          event.costType == "paid"
+            ? hp(13)
+            : hp(8),
       }}
     >
       <ScrollView

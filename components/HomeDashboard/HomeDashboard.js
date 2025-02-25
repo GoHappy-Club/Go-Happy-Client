@@ -511,13 +511,13 @@ const HomeDashboard = ({
             justifyContent: "space-between",
             alignItems: "center",
             marginTop: 10,
-            width: "100%",
           }}
         >
           <Text
             style={{
               fontFamily: "Montserrat-SemiBold",
               fontSize: wp(5.5),
+              width:"75%",
             }}
           >
             {trimContent(item.eventName, 30)}
