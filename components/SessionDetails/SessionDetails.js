@@ -1043,7 +1043,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                   loading={state.payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
-                    paytringWrapper("workshop", item);
+                    paytringWrapper(false, "workshop", item);
                   }}
                   disabled={state.payButtonLoading}
                   loadingStyle={{

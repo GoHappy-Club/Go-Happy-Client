@@ -395,7 +395,7 @@ class Contribution extends Component {
                         loading={this.state.payButtonLoading}
                         buttonStyle={[styles.AApayButton, styles.AAbutton]}
                         onPress={() => {
-                          this.paytringWrapper();
+                          this.paytringWrapper(false);
                         }}
                         disabled={this.state.payButtonLoading}
                         titleStyle={{
