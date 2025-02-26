@@ -5,6 +5,7 @@
 import {
   Alert,
   AppRegistry,
+  Platform,
   StatusBar,
   Text,
   useWindowDimensions,
@@ -14,7 +15,7 @@ import App from "./App";
 import { name as appName } from "./app.json";
 import { Provider } from "react-redux";
 import { rectangleSvgPath } from "./commonComponents/svgPath";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import store from "./store/store";
 import { CopilotProvider, useCopilot } from "react-native-copilot";
 import CustomTooltip from "./commonComponents/tooltip";
@@ -30,6 +31,8 @@ import {
   startUpdateFlow,
   UpdateFlow,
 } from "@gurukumparan/react-native-android-inapp-updates";
+import AwesomeAlert from "react-native-awesome-alerts";
+import DeviceInfo from "react-native-device-info";
 
 const errorHandler = (error, stackTrace) => {
   crashlytics().log(
@@ -38,15 +41,40 @@ const errorHandler = (error, stackTrace) => {
 };
 
 const RNRedux = () => {
-  async function checkForUpdate() {
+  const [showAlert, setShowAlert] = useState(false);
+  async function checkForUpdateAndroid() {
     try {
-      await startUpdateFlow(UpdateFlow.IMMEDIATE);
+      startUpdateFlow(UpdateFlow.IMMEDIATE).then((result) => {
+        if (result == "Canceled") {
+          setUpdateUrl(
+            "https://play.google.com/store/apps/details?id=com.gohappyclient"
+          );
+          setShowAlert(true);
+        }
+      });
     } catch (e) {
       crashlytics().log("Error in checkforupdate: " + e?.message);
     }
   }
+
+  async function checkForUpdateIos() {
+    const latestVersion = await fetch(
+      `https://itunes.apple.com/in/lookup?com.gohappyclient`
+    )
+      .then((r) => r.json())
+      .then((res) => {
+        return res?.results[0]?.version;
+      });
+    const currentVersion = DeviceInfo.getVersion();
+    if (latestVersion !== currentVersion) {
+      setUpdateUrl(
+        `https://apps.apple.com/in/app/gohappyclient/idcom.gohappyclient`
+      );
+      setShowAlert(true);
+    }
+  }
   useEffect(() => {
-    checkForUpdate();
+    Platform.OS === "ios" ? checkForUpdateIos() : checkForUpdateAndroid();
   }, []);
   return (
     <ErrorBoundary onError={errorHandler} FallbackComponent={Fallback}>
@@ -70,6 +98,21 @@ const RNRedux = () => {
         > */}
           <App />
           {/* </ZoomSDKProvider> */}
+          <AwesomeAlert
+            show={showAlert}
+            showProgress={false}
+            title="Update Required"
+            message="Please update the app to continue using it."
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false}
+            showConfirmButton={true}
+            confirmText="Update"
+            confirmButtonColor={Colors.primary}
+            onConfirmPressed={() => {
+              setShowAlert(false);
+            }}
+          />
         </Provider>
       </CopilotProvider>
     </ErrorBoundary>
