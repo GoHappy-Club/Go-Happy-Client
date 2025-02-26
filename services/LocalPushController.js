@@ -50,8 +50,6 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
 };
 
 export const scheduleWaterReminders = () => {
-  PushNotification.cancelAllLocalNotifications();
-
   const waterTimes = [
     { hours: 9, minutes: 0 },
     { hours: 11, minutes: 0 },
@@ -89,8 +87,6 @@ export const scheduleWaterReminders = () => {
 };
 
 export const scheduleMedicineReminders = () => {
-  PushNotification.cancelAllLocalNotifications();
-
   const medicineTimes = [
     { hours: 9, minutes: 0 },
     { hours: 14, minutes: 0 },

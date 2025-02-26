@@ -39,6 +39,7 @@ import {
 } from "../services/LocalPushController";
 import { hp, wp } from "../helpers/common";
 import SessionRatingAlert from "./CustomBottomSheet/RatingSheet";
+import PushNotification from "react-native-push-notification";
 
 const width = Dimensions.get("window").width;
 
@@ -127,6 +128,7 @@ const Header = () => {
         };
       }
     };
+    PushNotification.cancelAllLocalNotifications();
     getRandomQuote();
     scheduleWaterReminders();
     scheduleMedicineReminders();
