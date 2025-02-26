@@ -210,17 +210,12 @@ export default function App() {
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
   const [notify, setNotify] = useState(null);
-  var [productionAppVersion, setProductionAppVersion] = useState("");
   const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
     WhatsNewMessage().show
   );
   const [updateRequired, setUpdateRequired] = useState(false);
   const width = Dimensions.get("window").width;
-  const contentWidth = useWindowDimensions();
 
-  // AsyncStorage.getItem("token").then((out) => {
-  //   token = out;
-  // });
   const [isConnected, setIsConnected] = useState(true);
   const [token, setToken] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
@@ -486,29 +481,6 @@ export default function App() {
     } catch (error) {
       crashlytics().log(`Error in recheck App.js`, error);
       setIsConnected(false);
-    }
-  };
-
-  const checkVersionHelper = async () => {
-    var buildNumber = DeviceInfo.getBuildNumber();
-    var url = SERVER_URL + "/properties/list";
-    try {
-      const response = await axios.get(url);
-      if (response.data) {
-        const properties = response.data.properties;
-        if (properties && properties.length > 0) {
-          setProductionAppVersion(properties[0].buildNumber);
-          if (properties[0].buildNumber > buildNumber) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
-    } catch (error) {
-      this.error = true;
-      crashlytics().log(`Error in checkVersionHelper : ${error}`);
-      // throw new Error("Error getting order ID");
     }
   };
 
