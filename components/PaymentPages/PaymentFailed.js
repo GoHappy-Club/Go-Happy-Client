@@ -61,37 +61,41 @@ const PaymentFailed = () => {
             <Text style={styles.goBackText}>Home</Text>
           </TouchableOpacity>
         </View>
-        <FastImage
-          source={require("../../images/paymentError.png")}
-          style={styles.image}
-        />
-        <Text style={styles.sorryTitle}>Sorry!</Text>
-        <View style={styles.textWrapper}>
-          <Text style={styles.plainText}>We couldn't process your payment</Text>
-          <Text style={styles.plainText}>Please try again.</Text>
-        </View>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.8 : 1,
-            },
-            styles.retryButton,
-          ]}
-          onPress={() =>
-            navigation.navigate(navigateTo ? navigateTo : "GoHappy Club")
-          }
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              gap: wp(3),
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={styles.retryText}>Retry</Text>
+        <View style={styles.insideContainer}>
+          <FastImage
+            source={require("../../images/paymentError.png")}
+            style={styles.image}
+          />
+          <Text style={styles.sorryTitle}>Sorry!</Text>
+          <View style={styles.textWrapper}>
+            <Text style={styles.plainText}>
+              We couldn't process your payment
+            </Text>
+            <Text style={styles.plainText}>Please try again.</Text>
           </View>
-        </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                opacity: pressed ? 0.8 : 1,
+              },
+              styles.retryButton,
+            ]}
+            onPress={() =>
+              navigation.navigate(navigateTo ? navigateTo : "GoHappy Club")
+            }
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                gap: wp(3),
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.retryText}>Retry</Text>
+            </View>
+          </Pressable>
+        </View>
       </SafeAreaView>
     );
   else if (type == "pending") {
@@ -108,37 +112,39 @@ const PaymentFailed = () => {
             <Text style={styles.goBackText}>Home</Text>
           </TouchableOpacity>
         </View>
-        <FastImage
-          source={require("../../images/paymentError.png")}
-          style={styles.image}
-        />
-        <Text style={styles.sorryTitle}>Sorry!</Text>
-        <View style={styles.textWrapper}>
-          <Text style={styles.plainText}>
-            We couldn't verify your Payment, it is still in Pending.
-          </Text>
-          <Text style={styles.plainText}>Please contact support.</Text>
-        </View>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? 0.8 : 1,
-            },
-            styles.retryButton,
-          ]}
-          onPress={() => Linking.openURL(helpLink)}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              gap: wp(3),
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={styles.retryText}>Help Me</Text>
+        <View style={styles.insideContainer}>
+          <FastImage
+            source={require("../../images/paymentError.png")}
+            style={styles.image}
+          />
+          <Text style={styles.sorryTitle}>Sorry!</Text>
+          <View style={styles.textWrapper}>
+            <Text style={styles.plainText}>
+              We couldn't verify your Payment, it is still in Pending.
+            </Text>
+            <Text style={styles.plainText}>Please contact support.</Text>
           </View>
-        </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                opacity: pressed ? 0.8 : 1,
+              },
+              styles.retryButton,
+            ]}
+            onPress={() => Linking.openURL(helpLink)}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                gap: wp(3),
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.retryText}>Help Me</Text>
+            </View>
+          </Pressable>
+        </View>
       </SafeAreaView>
     );
   }
@@ -156,37 +162,39 @@ const PaymentFailed = () => {
           <Text style={styles.goBackText}>Home</Text>
         </TouchableOpacity>
       </View>
-      <FastImage
-        source={require("../../images/paymentError.png")}
-        style={styles.image}
-      />
-      <Text style={styles.sorryTitle}>Sorry!</Text>
-      <View style={styles.textWrapper}>
-        <Text style={styles.plainText}>
-          We couldn't process your request to join GoHappy Club.
-        </Text>
-        <Text style={styles.plainText}>Please try again.</Text>
-      </View>
-      <Pressable
-        style={({ pressed }) => [
-          {
-            opacity: pressed ? 0.8 : 1,
-          },
-          styles.retryButton,
-        ]}
-        onPress={() => navigation.navigate("SubscriptionPlans")}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            gap: wp(3),
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.retryText}>Retry</Text>
+      <View style={styles.insideContainer}>
+        <FastImage
+          source={require("../../images/paymentError.png")}
+          style={styles.image}
+        />
+        <Text style={styles.sorryTitle}>Sorry!</Text>
+        <View style={styles.textWrapper}>
+          <Text style={styles.plainText}>
+            We couldn't process your request to join GoHappy Club.
+          </Text>
+          <Text style={styles.plainText}>Please try again.</Text>
         </View>
-      </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? 0.8 : 1,
+            },
+            styles.retryButton,
+          ]}
+          onPress={() => navigation.navigate("SubscriptionPlans")}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              gap: wp(3),
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.retryText}>Retry</Text>
+          </View>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
@@ -196,8 +204,14 @@ export default PaymentFailed;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  insideContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: wp(100),
   },
   image: {
     width: wp(50),
@@ -237,11 +251,11 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS == "android" ? "Droid Sans Mono" : "Avenir",
   },
   goBackContainer: {
-    position: "absolute",
-    top: 20,
-    left: 20,
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
+    padding: wp(4),
   },
   goBackTouchable: {
     flexDirection: "row",

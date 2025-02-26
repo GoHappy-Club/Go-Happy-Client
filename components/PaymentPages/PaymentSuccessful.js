@@ -41,7 +41,7 @@ const PaymentSuccessful = () => {
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
-    }, 8000);
+    }, 4000);
 
     timingRef.current = setInterval(() => {
       setTimer((prev) => prev - 1);
