@@ -5,6 +5,7 @@
 import {
   Alert,
   AppRegistry,
+  Linking,
   Platform,
   StatusBar,
   Text,
@@ -42,13 +43,16 @@ const errorHandler = (error, stackTrace) => {
 
 const RNRedux = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [updateUrl, setUpdateUrl] = useState(
+    Platform.OS === "ios"
+      ? "https://apps.apple.com/in/app/gohappyclient/idcom.gohappyclient"
+      : "https://play.google.com/store/apps/details?id=com.gohappyclient"
+  );
+
   async function checkForUpdateAndroid() {
     try {
       startUpdateFlow(UpdateFlow.IMMEDIATE).then((result) => {
         if (result == "Canceled") {
-          setUpdateUrl(
-            "https://play.google.com/store/apps/details?id=com.gohappyclient"
-          );
           setShowAlert(true);
         }
       });
@@ -67,9 +71,6 @@ const RNRedux = () => {
       });
     const currentVersion = DeviceInfo.getVersion();
     if (latestVersion !== currentVersion) {
-      setUpdateUrl(
-        `https://apps.apple.com/in/app/gohappyclient/idcom.gohappyclient`
-      );
       setShowAlert(true);
     }
   }
@@ -110,6 +111,7 @@ const RNRedux = () => {
             confirmText="Update"
             confirmButtonColor={Colors.primary}
             onConfirmPressed={() => {
+              Linking.openURL(updateUrl);
               setShowAlert(false);
             }}
           />
