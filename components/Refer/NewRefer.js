@@ -12,6 +12,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
 import { Copy, Share2 } from "lucide-react-native";
+import ReferralSteps from "./ReferralSteps";
 
 export default function ReferralScreen() {
   const referralLink = "https://gohappyclub.page.link/xmzd";
@@ -46,40 +47,7 @@ export default function ReferralScreen() {
           Members who refer 3 seniors (50+ of age) to GoHappy Club will receive
           exciting gifts at home!
         </Text>
-
-        {/* <View style={styles.stepsContainer}>
-          <View style={styles.step}>
-            <View style={styles.stepDot} />
-            <View style={styles.stepContent}>
-              <Text style={styles.stepTitle}>Invite Your Friends & Family</Text>
-              <Text style={styles.stepDescription}>
-                Share your unique referral link with friends and family members.
-              </Text>
-            </View>
-          </View>
-          <View style={[styles.stepLine]} />
-
-          <View style={styles.step}>
-            <View style={styles.stepDot} />
-            <View style={styles.stepContent}>
-              <Text style={styles.stepTitle}>They Join & Attend a Session</Text>
-              <Text style={styles.stepDescription}>
-                Your referral joins and attends their first session.
-              </Text>
-            </View>
-          </View>
-          <View style={[styles.stepLine]} />
-
-          <View style={styles.step}>
-            <View style={styles.stepDot} />
-            <View style={styles.stepContent}>
-              <Text style={styles.stepTitle}>Win Exciting Rewards!</Text>
-              <Text style={styles.stepDescription}>
-                Complete referrals and receive your rewards at home.
-              </Text>
-            </View>
-          </View>
-        </View> */}
+        <ReferralSteps />
 
         <View style={styles.linkContainer}>
           <Text style={styles.linkLabel}>Share your referral link</Text>
@@ -154,7 +122,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: Colors.grey.countdown,
-    marginBottom: 24,
   },
   stepsContainer: {
     marginVertical: 24,
