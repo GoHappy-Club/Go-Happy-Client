@@ -14,6 +14,7 @@ import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 import FastImage from "react-native-fast-image";
+import { useTranslation } from "react-i18next";
 
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
@@ -25,6 +26,7 @@ const PaymentSuccessful = () => {
 
   // type -> normal, empty for subscription
   const { type, navigateTo } = route?.params;
+  const { t } = useTranslation();
 
   useEffect(() => {
     const backAction = () => {
@@ -71,9 +73,7 @@ const PaymentSuccessful = () => {
           resizeMode={FastImage.resizeMode.contain}
         />
         <View style={styles.textWrapper}>
-          <Text style={styles.plainText}>
-            {t("payment_successful")}
-          </Text>
+          <Text style={styles.plainText}>{t("payment_successful")}</Text>
         </View>
         {/* <Pressable
           style={({ pressed }) => [
@@ -97,7 +97,9 @@ const PaymentSuccessful = () => {
             <Text style={styles.retryText}>Explore</Text>
           </View>
         </Pressable> */}
-        <Text>{t("redirecting")} {timer}. </Text>
+        <Text>
+          {t("redirecting")} {timer}.{" "}
+        </Text>
       </SafeAreaView>
     );
 

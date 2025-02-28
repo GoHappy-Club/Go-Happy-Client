@@ -39,6 +39,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import phonepe_payments from "../PhonePe/Payments.js";
 import tambola from "tambola";
 import FastImage from "react-native-fast-image";
+import { useTranslation } from "react-i18next";
 
 const SessionDetails = ({
   route,
@@ -90,6 +91,8 @@ const SessionDetails = ({
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     retrieveData();
