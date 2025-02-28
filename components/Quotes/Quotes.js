@@ -84,16 +84,13 @@ const Quotes = () => {
       await Share.open({
         title: "Daily Quote",
         message:
-          "Check out today's quote!\n\n " +
-          "Come and join my happy family, " +
+          "Start your day with a dose of inspiration! ✨ Check out today's quote and stay motivated with " +
           toUnicodeVariant("GoHappy Club", "italic") +
-          " and attend " +
-          toUnicodeVariant("Free sessions", "bold") +
-          " on " +
-          toUnicodeVariant("Fitness, Learning and Fun", "bold") +
-          ", carefully designed for the 50+ with a dedicated team to treat you with uttermost love and respect. \n\n" +
-          toUnicodeVariant("Click on the link below ", "bold italic") +
-          "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
+          ".\n\nJoin now for " +
+          toUnicodeVariant("free", "bold") +
+          " sessions on " +
+          toUnicodeVariant("Fitness, Learning & Fun!", "bold") +
+          "\n\n" +
           referralLink,
         url: `file://${filePath}`,
       });
