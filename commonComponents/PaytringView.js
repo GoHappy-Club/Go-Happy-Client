@@ -117,16 +117,16 @@ const PaytringView = () => {
       <AwesomeAlert
         show={showAlert}
         showProgress={false}
-        title="Confirm"
-        message="Are you sure you want to cancel your payment."
+        title={t("confirm")}
+        message={t("sure_cancel_payment")}
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={true}
         showCancelButton={true}
         showConfirmButton={true}
-        confirmText="Cancel"
+        confirmText={t("cancel")}
         confirmButtonColor={Colors.primary}
         cancelButtonColor={Colors.grey.grey}
-        cancelText="Yes, Go back"
+        cancelText={t("yes_go_back")}
         onConfirmPressed={() => {
           setShowAlert(false);
         }}

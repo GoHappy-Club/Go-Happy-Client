@@ -72,7 +72,7 @@ const PaymentSuccessful = () => {
         />
         <View style={styles.textWrapper}>
           <Text style={styles.plainText}>
-            Congratulations! Your payment was successful.
+            {t("payment_successful")}
           </Text>
         </View>
         {/* <Pressable
@@ -97,16 +97,7 @@ const PaymentSuccessful = () => {
             <Text style={styles.retryText}>Explore</Text>
           </View>
         </Pressable> */}
-        <Text>Redirecting you in {timer}. If not redirected please </Text>
-        <Text
-          style={{
-            color: "blue",
-            textDecorationStyle: "solid",
-            textDecorationLine: "underline",
-          }}
-        >
-          Click here
-        </Text>
+        <Text>{t("redirecting")} {timer}. </Text>
       </SafeAreaView>
     );
 

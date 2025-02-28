@@ -22,6 +22,7 @@ import toUnicodeVariant from "../toUnicodeVariant.js";
 import { Colors } from "../../assets/colors/color.js";
 import { withTranslation } from "react-i18next";
 import { wp } from "../../helpers/common.js";
+import { t } from "i18next";
 
 class Contribution extends Component {
   constructor(props) {
@@ -151,8 +152,8 @@ class Contribution extends Component {
     const _errorHandler = () => {
       // //console.log("reached in error handler", error);
       this.setState({
-        paymentAlertMessage: phonepe_payments.PaymentError(),
-        paymentAlertTitle: "Oops!",
+        paymentAlertMessage: `${t("sorry")} ${t("couldnt_process")}`,
+        paymentAlertTitle: t("oops"),
         amount: "",
         clickPopup: false,
         payButtonLoading: false,
@@ -459,10 +460,10 @@ The Link will Expire in 20 Minutes.`;
                 }
                 customView={
                   <View style={styles.AAcontainer}>
-                    <Text style={styles.AAtitle}>{t("payment_confirmation")}</Text>
-                    <Text style={styles.AAmessage}>
-                      {t("below_to_pay")}
+                    <Text style={styles.AAtitle}>
+                      {t("payment_confirmation")}
                     </Text>
+                    <Text style={styles.AAmessage}>{t("below_to_pay")}</Text>
                     <View style={styles.AAbuttonContainer}>
                       <Button
                         outline

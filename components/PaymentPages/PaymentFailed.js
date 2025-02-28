@@ -15,10 +15,13 @@ import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ChevronLeft } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 
 const PaymentFailed = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const { t } = useTranslation();
 
   const [helpLink, setHelpLink] = useState("");
 
@@ -58,7 +61,7 @@ const PaymentFailed = () => {
             }}
           >
             <ChevronLeft size={24} color={Colors.black} />
-            <Text style={styles.goBackText}>Home</Text>
+            <Text style={styles.goBackText}>{t("home")}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.insideContainer}>
@@ -66,12 +69,10 @@ const PaymentFailed = () => {
             source={require("../../images/paymentError.png")}
             style={styles.image}
           />
-          <Text style={styles.sorryTitle}>Sorry!</Text>
+          <Text style={styles.sorryTitle}>{t("sorry")}</Text>
           <View style={styles.textWrapper}>
-            <Text style={styles.plainText}>
-              We couldn't process your payment
-            </Text>
-            <Text style={styles.plainText}>Please try again.</Text>
+            <Text style={styles.plainText}>{t("couldnt_process")}</Text>
+            <Text style={styles.plainText}>{t("try_again")}</Text>
           </View>
           <Pressable
             style={({ pressed }) => [
@@ -92,7 +93,7 @@ const PaymentFailed = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.retryText}>Retry</Text>
+              <Text style={styles.retryText}>{t("retry")}</Text>
             </View>
           </Pressable>
         </View>
@@ -109,7 +110,7 @@ const PaymentFailed = () => {
             }}
           >
             <ChevronLeft size={24} color={Colors.black} />
-            <Text style={styles.goBackText}>Home</Text>
+            <Text style={styles.goBackText}>{t("home")}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.insideContainer}>
@@ -117,12 +118,10 @@ const PaymentFailed = () => {
             source={require("../../images/paymentError.png")}
             style={styles.image}
           />
-          <Text style={styles.sorryTitle}>Sorry!</Text>
+          <Text style={styles.sorryTitle}>{t("sorry")}</Text>
           <View style={styles.textWrapper}>
-            <Text style={styles.plainText}>
-              We couldn't verify your Payment, it is still in Pending.
-            </Text>
-            <Text style={styles.plainText}>Please contact support.</Text>
+            <Text style={styles.plainText}>{t("still_pending")} </Text>
+            <Text style={styles.plainText}>{t("contact_support")}</Text>
           </View>
           <Pressable
             style={({ pressed }) => [
@@ -141,7 +140,7 @@ const PaymentFailed = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.retryText}>Help Me</Text>
+              <Text style={styles.retryText}>{t("help")}</Text>
             </View>
           </Pressable>
         </View>
