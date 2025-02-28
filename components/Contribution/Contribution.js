@@ -135,6 +135,79 @@ class Contribution extends Component {
     // Do something with the selected amount
   }
 
+  async phonePeWrapper(type) {
+    var _this = this;
+    const _callback = (id) => {
+      this.setState({
+        clickPopup: false,
+        payButtonLoading: false,
+        success: true,
+      });
+      this.props.navigation.navigate("PaymentSuccessful", {
+        type: "normal",
+        navigateTo: "Contribution Details",
+      });
+    };
+    const _errorHandler = () => {
+      // //console.log("reached in error handler", error);
+      this.setState({
+        paymentAlertMessage: phonepe_payments.PaymentError(),
+        paymentAlertTitle: "Oops!",
+        amount: "",
+        clickPopup: false,
+        payButtonLoading: false,
+      });
+      this.setState({ showPaymentAlert: true });
+    };
+    //console.log('propro',this.props.profile)
+    if (type == "share") {
+      this.setState({
+        shareButtonLoading: true,
+      });
+      phonepe_payments
+        .phonePeShare(
+          this.props.profile.phoneNumber,
+          this.state.amount,
+          _errorHandler,
+          "contribution"
+        )
+        .then((link) => {
+          if (link && link !== undefined) {
+            //prettier-ignore
+            const message = `Hello from GoHappy Club Family, ${toUnicodeVariant(this.props.profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(this.state.amount,"bold")} for Contribution to Go Happy Club Family.
+Please pay on the below link:
+${link}
+The Link will Expire in 20 Minutes.`;
+            Share.share({
+              message: message,
+            })
+              .then((result) => {
+                this.setState({
+                  shareButtonLoading: false,
+                  clickPopup: false,
+                });
+              })
+              .catch((errorMsg) => {
+                console.log("error in sharing", errorMsg);
+              });
+          } else {
+            this.setState({ clickPopup: false });
+          }
+        });
+    } else {
+      this.setState({
+        payButtonLoading: true,
+      });
+      phonepe_payments.phonePe(
+        this.props.profile.phoneNumber,
+        this.state.amount,
+        _callback,
+        _errorHandler,
+        "contribution"
+      );
+    }
+  }
+
   paytringWrapper = async (share = false) => {
     const data = {
       phone: this.props.profile.phoneNumber,
@@ -395,7 +468,8 @@ class Contribution extends Component {
                         loading={this.state.payButtonLoading}
                         buttonStyle={[styles.AApayButton, styles.AAbutton]}
                         onPress={() => {
-                          this.paytringWrapper(false);
+                          // this.paytringWrapper(false);
+                          this.phonePeWrapper("self");
                         }}
                         disabled={this.state.payButtonLoading}
                         titleStyle={{
@@ -408,7 +482,8 @@ class Contribution extends Component {
                         loading={this.state.shareButtonLoading}
                         buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                         onPress={() => {
-                          this.paytringWrapper(true);
+                          // this.paytringWrapper(true);
+                          this.phonePeWrapper("share");
                         }}
                         disabled={this.state.shareButtonLoading}
                       />
