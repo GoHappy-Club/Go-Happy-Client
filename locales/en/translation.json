@@ -77,5 +77,20 @@
   "recently_attended": "Thanks for attending the",
   "rate_session": "We'd love your feedback to improve future sessions. Please rate your experience.",
   "rating_placeholder": "Please Let us know how we can do better.",
-  "submit": "Submit"
+  "submit": "Submit",
+  "pay_now": "Pay now",
+  "payment_confirmation":"Payment Confirmation",
+  "below_to_pay":"Click below to pay.",
+  "share":"Share",
+  "oops":"Oops!",
+  "already_booked":"You have already booked the same session for this date. Please cancel your booking of the other session and try again.",
+  "try_again":"Try again",
+  "ok":"Ok",
+  "session_starting_in":"Your session is starting in :",
+  "sure_cancel":"Are you sure you want to cancel your booking?",
+  "yes":"Yes",
+  "no":"No",
+  "after_30":"You cannot join the session as you are joining after more than 30 minutes. Don't worry, you can still see the recording.",
+  "sorry":"Sorry!"
+
 }

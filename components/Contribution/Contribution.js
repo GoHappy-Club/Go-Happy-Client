@@ -459,12 +459,14 @@ The Link will Expire in 20 Minutes.`;
                 }
                 customView={
                   <View style={styles.AAcontainer}>
-                    <Text style={styles.AAtitle}>Payment Confirmation</Text>
-                    <Text style={styles.AAmessage}>Click below to pay.</Text>
+                    <Text style={styles.AAtitle}>{t("payment_confirmation")}</Text>
+                    <Text style={styles.AAmessage}>
+                      {t("below_to_pay")}
+                    </Text>
                     <View style={styles.AAbuttonContainer}>
                       <Button
                         outline
-                        title={"Pay Now"}
+                        title={t("pay_now")}
                         loading={this.state.payButtonLoading}
                         buttonStyle={[styles.AApayButton, styles.AAbutton]}
                         onPress={() => {
@@ -478,7 +480,7 @@ The Link will Expire in 20 Minutes.`;
                       />
                       <Button
                         outline
-                        title={"Share"}
+                        title={t("share")}
                         loading={this.state.shareButtonLoading}
                         buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                         onPress={() => {
