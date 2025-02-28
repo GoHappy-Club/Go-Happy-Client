@@ -369,9 +369,8 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
         setState((prev) => ({
           ...prev,
           showPopUp: true,
-          popUpMessage:
-            "You cannot join the session as you are joining after more than 30 minutes. Don't worry, you can still see the recording.",
-          popUpTitle: "Sorry!",
+          popUpMessage: t("after_30"),
+          popUpTitle: t("sorry"),
         }));
         return;
       } else {
@@ -1034,12 +1033,12 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
           }
           customView={
             <View style={styles.AAcontainer}>
-              <Text style={styles.AAtitle}>Payment Confirmation</Text>
-              <Text style={styles.AAmessage}>Click below to pay.</Text>
+              <Text style={styles.AAtitle}>{t("payment_confirmation")}</Text>
+              <Text style={styles.AAmessage}>{t("below_to_pay")}</Text>{" "}
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
-                  title={"Pay Now"}
+                  title={t("pay_now")}
                   loading={state.payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
@@ -1052,7 +1051,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                 />
                 <Button
                   outline
-                  title={"Share"}
+                  title={t("share")}
                   loading={state.shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
@@ -1072,8 +1071,8 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
         <AwesomeAlert
           show={state.showAlert}
           showProgress={false}
-          title="Oops!"
-          message="You have already booked the same session for this date. Please cancel your booking of the other session and try again."
+          title={t("oops")}
+          message={t("already_booked")}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
@@ -1094,7 +1093,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
-          confirmText="OK"
+          confirmText={t("ok")}
           confirmButtonColor={Colors.errorButton}
           onConfirmPressed={() => {
             setState((prev) => ({
@@ -1130,7 +1129,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                   textAlign: "center",
                 }}
               >
-                Your session is starting in :
+                {t("session_starting_in")}
               </Text>
               <CountdownTimer targetTime={item.startTime} />
               <Text
@@ -1140,7 +1139,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                   marginVertical: HEIGHT * 0.015,
                 }}
               >
-                Are you sure you want to cancel your booking?
+                {t("sure_cancel")}
               </Text>
               <View
                 style={{
@@ -1150,7 +1149,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                 }}
               >
                 <Button
-                  title="Yes"
+                  title={t("yes")}
                   buttonStyle={{
                     backgroundColor: Colors.errorButton,
                     width: WIDTH * 0.2,
@@ -1162,7 +1161,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                 />
 
                 <Button
-                  title="No"
+                  title={t("no")}
                   buttonStyle={{
                     backgroundColor: "#34983CAF",
                     width: WIDTH * 0.2,

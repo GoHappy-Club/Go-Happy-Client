@@ -451,12 +451,12 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
           }
           customView={
             <View style={styles.AAcontainer}>
-              <Text style={styles.AAtitle}>Payment Confirmation</Text>
-              <Text style={styles.AAmessage}>Click below to pay.</Text>
+              <Text style={styles.AAtitle}>{t("payment_confirmation")}</Text>
+              <Text style={styles.AAmessage}>{t("below_to_pay")}</Text>{" "}
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
-                  title={"Pay Now"}
+                  title={t("pay_now")}
                   loading={payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
@@ -466,7 +466,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 />
                 <Button
                   outline
-                  title={"Share"}
+                  title={t("share")}
                   loading={shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
