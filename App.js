@@ -609,22 +609,24 @@ export default function App() {
                       // headerShadowVisible: true,
                     })}
                   />
-                  <Stack.Screen
-                    name="Contribution Details"
-                    // component={MembershipScreen}
-                    children={(props) => (
-                      <MembershipScreen {...props} propProfile={profile} />
-                    )}
-                    options={({ navigation }) => ({
-                      headerTransparent: true,
-                      title: null,
-                      headerBackTitle: "back",
-                      headerLeft: () => (
-                        <BackButton styles={styles} navigation={navigation} />
-                      ),
-                      headerShadowVisible: false,
-                    })}
-                  />
+                  {Platform.OS == "android" && (
+                    <Stack.Screen
+                      name="Contribution Details"
+                      // component={MembershipScreen}
+                      children={(props) => (
+                        <MembershipScreen {...props} propProfile={profile} />
+                      )}
+                      options={({ navigation }) => ({
+                        headerTransparent: true,
+                        title: null,
+                        headerBackTitle: "back",
+                        headerLeft: () => (
+                          <BackButton styles={styles} navigation={navigation} />
+                        ),
+                        headerShadowVisible: false,
+                      })}
+                    />
+                  )}
                   <Stack.Screen
                     name="Additional Details"
                     // component={AdditionalDetails}

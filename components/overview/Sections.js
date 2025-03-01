@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  Platform,
 } from "react-native";
 import { Linking } from "react-native";
 import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
@@ -55,18 +56,23 @@ export default function Sections(props) {
     //   link: "Rewards",
     //   text: "See your earned rewards here.",
     // },
-    // {
-    //   title: t("refer_win"),
-    //   imgUrl: require("../../images/refer_win.png"),
-    //   link: "Refer",
-    //   text: "Share the app with your friends and relatives and win rewards.",
-    // },
-    {
-      title: t("contribute"),
-      imgUrl: require("../../images/contribute.png"),
-      link: "Contribution Details",
-      text: "Help us make a difference! Click here to learn how you can contribute.",
-    },
+    ...(Platform.OS == "android"
+      ? [
+          {
+            title: t("contribute"),
+            imgUrl: require("../../images/contribute.png"),
+            link: "Contribution Details",
+            text: "Help us make a difference! Click here to learn how you can contribute.",
+          },
+        ]
+      : [
+          {
+            title: t("refer_win"),
+            imgUrl: require("../../images/refer_win.png"),
+            link: "Refer",
+            text: "Share the app with your friends and relatives and win rewards.",
+          },
+        ]),
     {
       title: t("get_help"),
       imgUrl: require("../../images/help.png"),
