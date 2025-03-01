@@ -77,5 +77,7 @@
   "recently_attended": "Thanks for attending the",
   "rate_session": "We'd love your feedback to improve future sessions. Please rate your experience.",
   "rating_placeholder": "Please Let us know how we can do better.",
-  "submit": "Submit"
+  "submit": "Submit",
+  "rating_error":"Please select a rating above to share your feedback.",
+  "reason_error":"Please write your reason in the text box."
 }
