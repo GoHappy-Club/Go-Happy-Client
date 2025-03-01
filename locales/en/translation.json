@@ -102,4 +102,7 @@
   "confirm": "Confirm",
   "cancel": "Cancel",
   "yes_go_back": "Yes, Go back"
+  "submit": "Submit",
+  "rating_error":"Please select a rating above to share your feedback.",
+  "reason_error":"Please write your reason in the text box."
 }
