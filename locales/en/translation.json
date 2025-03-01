@@ -101,8 +101,7 @@
   "sure_cancel_payment": "Are you sure you want to cancel your payment.",
   "confirm": "Confirm",
   "cancel": "Cancel",
-  "yes_go_back": "Yes, Go back"
-  "submit": "Submit",
+  "yes_go_back": "Yes, Go back",
   "rating_error":"Please select a rating above to share your feedback.",
   "reason_error":"Please write your reason in the text box."
 }
