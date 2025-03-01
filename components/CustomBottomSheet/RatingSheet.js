@@ -18,6 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
+import { Button } from "react-native-elements";
 
 const SessionRatingAlert = ({
   showAlert,
@@ -33,6 +34,8 @@ const SessionRatingAlert = ({
   loading,
 }) => {
   const [timeLeft, setTimeLeft] = useState(3);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -55,6 +58,7 @@ const SessionRatingAlert = ({
   const renderEmoji = (icon, rating) => (
     <TouchableOpacity
       onPress={() => {
+        setShowError(false);
         setSelectedRating(rating);
         if (rating > 3) {
           setReason("");
@@ -66,7 +70,7 @@ const SessionRatingAlert = ({
       ]}
     >
       <FontAwesomeIcon
-        size={28}
+        size={24}
         icon={icon}
         color={selectedRating === rating ? "#fff" : "#666"}
       />
@@ -107,6 +111,11 @@ const SessionRatingAlert = ({
               {renderEmoji(faSmileBeam, 4)}
               {renderEmoji(faGrinHearts, 5)}
             </View>
+            {showError && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{errorMessage}</Text>
+              </View>
+            )}
             {selectedRating != 0 && selectedRating <= 3 && (
               <TextInput
                 style={styles.textInput}
@@ -118,30 +127,41 @@ const SessionRatingAlert = ({
                 onChangeText={setReason}
               />
             )}
+            <Button
+              outline
+              title={t("submit")}
+              loading={loading}
+              buttonStyle={{
+                backgroundColor: Colors.primary,
+                borderRadius: 6,
+                marginTop: 10,
+              }}
+              titleStyle={{
+                color: Colors.primaryText,
+                fontSize: wp(4),
+              }}
+              onPress={() => {
+                if (selectedRating == 0) {
+                  setErrorMessage(t("rating_error"));
+                  setShowError(true);
+                  return;
+                } else if (selectedRating <= 3 && reason.length === 0) {
+                  setErrorMessage(t("reason_error"));
+                  setShowError(true);
+                  return;
+                }
+                submitRating(selectedRating);
+              }}
+              disabled={loading}
+              loadingProps={{
+                color:Colors.primaryText
+              }}
+            />
           </View>
         )
       }
-      showConfirmButton={!submitted}
-      confirmButtonText={t("submit")}
-      confirmButtonColor={Colors.primary}
-      confirmButtonTextStyle={{ color: Colors.black }}
-      confirmButtonStyle={{
-        opacity:
-          selectedRating === 0 ||
-          loading ||
-          (selectedRating <= 3 && reason.length === 0)
-            ? 0.5
-            : 1,
-      }}
-      onCancelPressed={closeAlert}
-      onConfirmPressed={() =>
-        selectedRating > 0 && submitRating(selectedRating)
-      }
-      confirmButtonDisabled={
-        selectedRating === 0 ||
-        loading ||
-        (selectedRating <= 3 && reason.length === 0)
-      }
+      showConfirmButton={false}
+      showCancelButton={false}
     />
   );
 };
@@ -151,7 +171,7 @@ export default SessionRatingAlert;
 const styles = StyleSheet.create({
   contentContainer: {
     alignItems: "center",
-    padding: 10,
+    padding: 4,
   },
   sessionName: {
     fontSize: wp(6),
@@ -165,15 +185,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   emojiRow: {
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    gap: 5,
   },
   emojiContainer: {
     padding: 10,
     borderRadius: 12,
     alignItems: "center",
-    marginHorizontal: 5,
     backgroundColor: "#FFFFFF",
+  },
+  errorContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  errorText: {
+    color: Colors.red,
+    fontSize: 12,
+    textAlign: "center",
   },
   selectedEmoji: {
     backgroundColor: Colors.primary,
