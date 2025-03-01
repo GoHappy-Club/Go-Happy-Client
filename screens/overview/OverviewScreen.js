@@ -3,7 +3,7 @@ import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
 import Video from "react-native-video";
 import { connect } from "react-redux";
 import { setProfile } from "../../redux/actions/counts.js";
-import { StatusBar, View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { bindActionCreators } from "redux";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
@@ -188,7 +188,9 @@ class OverviewScreen extends Component {
                 reloadOverview={this.getOverviewData.bind(this)}
               />
               <Feed videos={this.state.videos} />
-              <PromotionSection navigation={this.props.navigation} />
+              {Platform.OS == "android" && (
+                <PromotionSection navigation={this.props.navigation} />
+              )}
             </ScrollView>
           </View>
         </>
