@@ -70,7 +70,7 @@ const RNRedux = () => {
         return res?.results[0]?.version;
       });
     const currentVersion = DeviceInfo.getVersion();
-    if (latestVersion !== currentVersion) {
+    if (latestVersion > currentVersion) {
       setShowAlert(true);
     }
   }
