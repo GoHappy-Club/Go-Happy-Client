@@ -63,7 +63,7 @@ const RNRedux = () => {
 
   async function checkForUpdateIos() {
     const latestVersion = await fetch(
-      `https://itunes.apple.com/in/lookup?com.gohappyclient`
+      `https://itunes.apple.com/lookup?bundleId=com.gohappyclient`
     )
       .then((r) => r.json())
       .then((res) => {
