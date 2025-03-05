@@ -1037,7 +1037,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
           customView={
             <View style={styles.AAcontainer}>
               <Text style={styles.AAtitle}>{t("payment_confirmation")}</Text>
-              <Text style={styles.AAmessage}>{t("below_to_pay")}</Text>{" "}
+              <Text style={styles.AAmessage}>{t("below_to_pay")}</Text>
               <View style={styles.AAbuttonContainer}>
                 <Button
                   outline
