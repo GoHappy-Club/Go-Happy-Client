@@ -7,7 +7,7 @@ export const games = [
       "https://img.gamesgo.net/storage/images/games/ludo-king-online/ludo-king-onlinejpg.jpg",
     gameUrl:
       "https://www.gamezop.com/en/game/ludo-with-friends/SkhljT2fdgb?session-start-page=home-page&int-nav=1",
-    difficulty: "Easy",
+    difficulty: "Medium",
     players: "1",
     category: "board",
   },
@@ -67,7 +67,7 @@ export const games = [
       "https://glance-mob.glance-cdn.com/public/gamecenter/assets/1333b150-4d3e-11ee-8d81-579851380304/primaryBannerUrls/A.webp?d=360x765",
     gameUrl:
       "https://www.gamezop.com/en/game/fruit-chop/rkWfy2pXq0r?session-start-page=home-page&int-nav=1",
-    difficulty: "Hard",
+    difficulty: "Easy",
     players: "1",
     category: "arcade",
   },

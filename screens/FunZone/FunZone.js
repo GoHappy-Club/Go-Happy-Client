@@ -72,7 +72,7 @@ export default function FunZone() {
             <View style={styles.gameInfo}>
               <View style={styles.gameHeader}>
                 <Text style={styles.gameTitle}>{game.title}</Text>
-                <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(game.difficulty) }]}>
+                <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(game.difficulty.toLowerCase()) }]}>
                   <Text style={styles.difficultyText}>{game.difficulty}</Text>
                 </View>
               </View>
