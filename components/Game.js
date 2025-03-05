@@ -1,70 +1,91 @@
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { View } from "react-native";
+import GOHLoader from "../commonComponents/GOHLoader";
+import { Colors } from "../assets/colors/color";
 
 const Game = () => {
-  const fullScreenScript = `
-    setTimeout(() => {
-      let fullScreenButton = document.querySelector('button'); // Modify if necessary
-      if (fullScreenButton) {
-        fullScreenButton.click(); // Simulates a user clicking the full-screen button
-      }
-    }, 2000);
-  `;
-
-  const adBlockScript = `
-    (function() {
-      var adSelectors = ['iframe', '.ads', '.ad-banner', '[id^="ad-"]', '[class*="ad"]'];
-      adSelectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => el.remove());
-      });
-    })();
-  `;
-
-  const removeMargin = `
-  setTimeout(() => {
-    const canvas = document.querySelector("#content canvas");
-    if (canvas) {
-      canvas.style.marginTop = "0px";
-    }
-  }, 1000);
-`;
-
+  const [time, setTime] = useState(5);
   const route = useRoute();
   const { gameUrl, name } = route.params;
 
+  const adBlockScript = `
+  (function() {
+  const adSelectors = ['ins', '.ads', '.ad-banner', '[id*="ad-"]', '[class*="ad"]'];
+  
+  function removeAds() {
+    adSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => el.remove());
+    });
+  }
+  
+  removeAds();
+
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) { // Ensure it's an element node
+          adSelectors.forEach(selector => {
+            if (node.matches(selector)) {
+              node.remove();
+            }
+            node.querySelectorAll(selector).forEach(el => el.remove());
+          });
+        }
+      });
+    });
+  });
+
+  // Observe changes in the document body
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+`;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime === 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
+      {time > 0 && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.background,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <GOHLoader />
+        </View>
+      )}
+      {/* {time == 0 && ( */}
       <WebView
         source={{ uri: gameUrl }}
-        style={{ flex: 1 }}
+        style={{ flex: time == 0 ? 1 : 0 }}
         userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        injectedJavaScript={`
-          function removeAds() {
-            // Select ad containers by their class names or IDs
-            const adElements = document.querySelectorAll('.ad-container, #banner-ad, .advertisement');
-            
-            // Remove each element
-            adElements.forEach(el => {
-              if (el && el.parentNode) {
-                el.parentNode.removeChild(el);
-              }
-            });
-            
-            // For dynamically loaded ads, run periodically
-            setTimeout(removeAds, 1000);
-          }
-          
-          // Initial call
-          removeAds();
-          
-          true; // This is needed for iOS
-        `}
+        injectedJavaScript={adBlockScript}
         // javaScriptEnabled={true}
         // domStorageEnabled={true}
       />
+      {/* )} */}
     </SafeAreaView>
   );
 };
