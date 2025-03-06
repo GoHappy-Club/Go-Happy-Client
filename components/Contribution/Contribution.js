@@ -479,7 +479,7 @@ The Link will Expire in 20 Minutes.`;
                           color: Colors.primaryText,
                         }}
                       />
-                      <Button
+                      {/* <Button
                         outline
                         title={t("share")}
                         loading={this.state.shareButtonLoading}
@@ -489,7 +489,7 @@ The Link will Expire in 20 Minutes.`;
                           this.phonePeWrapper("share");
                         }}
                         disabled={this.state.shareButtonLoading}
-                      />
+                      /> */}
                     </View>
                   </View>
                 }

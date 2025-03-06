@@ -177,6 +177,88 @@ const SessionDetails = ({
     }
   };
 
+  const phonePeWrapper = async (type, item) => {
+    const _callback = (id) => {
+      setState((prev) => ({ ...prev, success: true, loadingButton: false }));
+
+      if (id === "") {
+        route.params.onGoBack();
+        navigation.navigate("GoHappy Club");
+      } else {
+        sessionActionL();
+        setState((prev) => ({
+          ...prev,
+          showPaymentAlert: true,
+          clickPopup: false,
+          payButtonLoading: false,
+          paymentSharePopUp: false,
+        }));
+      }
+    };
+    const _errorHandler = () => {
+      setState((prev) => ({
+        ...prev,
+        paymentAlertMessage: phonepe_payments.PaymentError(),
+        paymentAlertTitle: "Oops!",
+        clickPopup: false,
+        payButtonLoading: false,
+        showPaymentAlert: true,
+        paymentSharePopUp: false,
+      }));
+    };
+    if (type == "share") {
+      setState((prev) => ({ ...prev, shareButtonLoading: true }));
+      const tambolaTicket = tambola.generateTicket();
+      phonepe_payments
+        .phonePeShare(
+          profile.phoneNumber,
+          item.cost,
+          _errorHandler,
+          "workshop",
+          item.id,
+          tambolaTicket
+        )
+        .then((link) => {
+          //prettier-ignore
+          const message = `Hello from the GoHappy Club Family,
+${toUnicodeVariant(
+  state.name,
+  "italic"
+)} is requesting a payment of ₹${toUnicodeVariant(
+            String(item.cost),
+            "bold"
+          )} for ${toUnicodeVariant(item.eventName, "bold")}.
+Please make the payment using the link below:
+${link}
+${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
+          Share.share({
+            message: message,
+          })
+            .then((result) => {
+              setState((prev) => ({
+                ...prev,
+                shareButtonLoading: false,
+                clickPopup: false,
+                showPaymentAlert: false,
+                paymentSharePopUp: false,
+              }));
+            })
+            .catch((errorMsg) => {
+              console.log("error in sharing", errorMsg);
+            });
+        });
+    } else {
+      setState((prev) => ({ ...prev, payButtonLoading: true }));
+      phonepe_payments.phonePe(
+        profile.phoneNumber,
+        item.cost,
+        _callback,
+        _errorHandler,
+        "workshop"
+      );
+    }
+  };
+
   const handlePaymentShare = async (orderData, amount, eventName) => {
     try {
       Share.share({
@@ -1045,23 +1127,25 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                   loading={state.payButtonLoading}
                   buttonStyle={[styles.AApayButton, styles.AAbutton]}
                   onPress={() => {
-                    paytringWrapper(false, "workshop", item);
+                    // paytringWrapper(false, "workshop", item);
+                    phonePeWrapper("self", item);
                   }}
                   disabled={state.payButtonLoading}
                   loadingStyle={{
                     color: Colors.black,
                   }}
                 />
-                <Button
+                {/* <Button
                   outline
                   title={t("share")}
                   loading={state.shareButtonLoading}
                   buttonStyle={[styles.AAshareButton, styles.AAbutton]}
                   onPress={() => {
-                    paytringWrapper(true, "workshop", item);
+                    // paytringWrapper(true, "workshop", item);
+                    phonePeWrapper("share", item);
                   }}
                   disabled={state.shareButtonLoading}
-                />
+                /> */}
               </View>
             </View>
           }
