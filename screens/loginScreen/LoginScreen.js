@@ -34,6 +34,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
 import OTPAuthWrapper from "../../services/Authentication/OTPAuthWrapper.js";
+import DeviceInfo from "react-native-device-info";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -567,6 +568,7 @@ class LoginScreen extends Component {
             .post(SERVER_URL + "/user/update", {
               fcmToken: fcmToken,
               phone: phoneNumber,
+              lastDevice: `${DeviceInfo.getBrand()} ${DeviceInfo.getDeviceNameSync()}`,
             })
             .then((response) => {
               AsyncStorage.setItem(
