@@ -670,14 +670,13 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
   };
 
   const iosPaymentHandler = async () => {
-    const message = `Hello, I would like book a seat for the workshop ${toUnicodeVariant(event.eventName, "bold")}, Please tell me how to proceed.`;
-    Share.share({
-      message: message,
-    })
-      .then((result) => {})
-      .catch((errorMsg) => {
-        console.log("error in sharing", errorMsg);
-      });
+    const url =
+      "https://wa.me/6280114385?text=" +
+      "Hi%20GoHappy%20Club%20Team%2C%0A%0AI%E2%80%99d%20like%20to%20book%20a%20spot%20for%20the%20following%20workshop%3A%0A%0AWorkshop%20Name%3A%20eventName%0AName%3A%20username%0APhone%3A%20phone%0A%0APlease%20confirm%20the%20booking.%20Thanks%21%20";
+    url.replace("eventName", event.eventName);
+    url.replace("username", profile.name);
+    url.replace("phone", profile.phoneNumber);
+    await Linking.openURL(url);
   };
 
   const item = event;
@@ -1067,6 +1066,10 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
                     getTitle().startsWith("Book")
                   ) {
                     if (event?.type?.toLowerCase() == "workshop") {
+                      if (Platform.OS === "ios") {
+                        iosPaymentHandler();
+                        return;
+                      }
                       setState((prev) => ({
                         ...prev,
                         paymentSharePopUp: true,
