@@ -2,6 +2,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Linking,
+  Platform,
   Pressable,
   ScrollView,
   StatusBar,
@@ -59,9 +60,7 @@ const AdditionalDetails = ({ route }) => {
     name: route.params?.name,
     email: route.params?.email,
     emergencyContact: route.params?.emergencyContact,
-    dob: route.params?.dob
-      ? route.params?.dob
-      : getFormattedDate(dayjs().subtract(50, "years")),
+    dob: route.params?.dob ? route.params?.dob : getFormattedDate(dayjs()),
     city: route.params?.city,
     age: route.params?.age,
     showAlert: false,
@@ -138,16 +137,26 @@ const AdditionalDetails = ({ route }) => {
     return mobileRegex.test(state.emergencyContact);
   };
 
+  const validateDate = () => {
+    const dateSplitted = state?.dob?.split("-");
+    const day = dateSplitted[0];
+    const month = dateSplitted[1];
+    const year = dateSplitted[2];
+    const dayjsDay = dayjs().get("date");
+    const dayjsMonth = dayjs().get("month") + 1;
+    const dayjsYear = dayjs().get("year");
+    if (day == dayjsDay && month == dayjsMonth && year == dayjsYear) {
+      return false;
+    }
+    return true;
+  };
+
   const updateUser = async () => {
     if (
       state.name == null ||
       state.name == "" ||
-      state.age == null ||
-      state.age == "" ||
       state.city == null ||
-      state.city == "" ||
-      state.dob == null ||
-      state.dob == ""
+      state.city == ""
     ) {
       setState((prev) => ({
         ...prev,
@@ -179,6 +188,15 @@ const AdditionalDetails = ({ route }) => {
         ...prevState,
         alertTitle: "Invalid emergency contact",
         alertMessage: "Please enter a valid emergency contact number.",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!validateDate()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid Date of Birth",
+        alertMessage: "Please enter a Valid DOB.",
         showAlert: true,
       }));
       return;
@@ -288,45 +306,49 @@ const AdditionalDetails = ({ route }) => {
           </View>
         </Pressable>
         <StatusBar barStyle="dark-content" />
-
-        <ScrollView
-          contentContainerStyle={styles.container}
-          showsVerticalScrollIndicator={false}
-          keyboardDismissMode="interactive"
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "position"}
+          style={{ flex: 1 }}
         >
-          <View style={styles.basicDetailsContainer}>
-            <View style={styles.coverContainer}>
-              <FastImage
-                style={styles.cover}
-                resizeMode="cover"
-                source={{
-                  uri: profile.profileImage,
-                }}
-              />
-              <Pressable
-                style={styles.cameraContainer}
-                onPress={handleSelectImage}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#00000080",
-                    padding: 8,
-                    borderRadius: 300,
+          <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            keyboardDismissMode="interactive"
+          >
+            <View style={styles.basicDetailsContainer}>
+              <View style={styles.coverContainer}>
+                <FastImage
+                  style={styles.cover}
+                  resizeMode="cover"
+                  source={{
+                    uri: profile.profileImage,
                   }}
+                />
+                <Pressable
+                  style={styles.cameraContainer}
+                  onPress={handleSelectImage}
                 >
-                  <Camera size={24} color={"#666"} fill={"white"} />
-                </View>
-              </Pressable>
+                  <View
+                    style={{
+                      backgroundColor: "#00000080",
+                      padding: 8,
+                      borderRadius: 300,
+                    }}
+                  >
+                    <Camera size={24} color={"#666"} fill={"white"} />
+                  </View>
+                </Pressable>
+              </View>
             </View>
-          </View>
-          <UserDetailsForm
-            state={state}
-            setState={setState}
-            setOpen={setOpen}
-            setUpdated={setUpdated}
-            styles={styles}
-          />
-        </ScrollView>
+            <UserDetailsForm
+              state={state}
+              setState={setState}
+              setOpen={setOpen}
+              setUpdated={setUpdated}
+              styles={styles}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
         <Button
           outline
           title={"Save"}
@@ -366,7 +388,7 @@ export default AdditionalDetails;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.background,
   },
   container: {
     justifyContent: "flex-start",

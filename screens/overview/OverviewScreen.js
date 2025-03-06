@@ -135,7 +135,7 @@ class OverviewScreen extends Component {
         const properties = response.data.properties;
         if (properties && properties.length > 0 && redux_profile) {
           redux_profile.properties = properties[0];
-          actions.setProfile(redux_profile);
+          this.props.actions.setProfile(redux_profile);
           this.setState({ whatsappLink: properties[0].whatsappHelpLink });
         }
       }

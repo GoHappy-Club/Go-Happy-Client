@@ -51,9 +51,7 @@ const EditProfile = () => {
     email: profile.email,
     emergencyContact: profile.emergencyContact,
     whatsappLink: "",
-    dob: profile.dob
-      ? profile.dob
-      : getFormattedDate(dayjs().subtract(50, "years")),
+    dob: profile.dob ? profile.dob : getFormattedDate(dayjs()),
     city: profile.city,
     showAlert: false,
     alertMessage: "",
@@ -115,6 +113,15 @@ const EditProfile = () => {
         ...prevState,
         alertTitle: "Invalid emergency contact",
         alertMessage: "Please enter a valid emergency contact number.",
+        showAlert: true,
+      }));
+      return;
+    }
+    if (!validateDate()) {
+      setState((prevState) => ({
+        ...prevState,
+        alertTitle: "Invalid Date of Birth",
+        alertMessage: "Please enter a Valid DOB.",
         showAlert: true,
       }));
       return;
@@ -185,6 +192,20 @@ const EditProfile = () => {
   const validateEmergencyContact = () => {
     const mobileRegex = /^[0-9]{10}$/;
     return mobileRegex.test(state.emergencyContact);
+  };
+
+  const validateDate = () => {
+    const dateSplitted = state?.dob?.split("-");
+    const day = dateSplitted[0];
+    const month = dateSplitted[1];
+    const year = dateSplitted[2];
+    const dayjsDay = dayjs().get("date");
+    const dayjsMonth = dayjs().get("month") + 1;
+    const dayjsYear = dayjs().get("year");
+    if (day == dayjsDay && month == dayjsMonth && year == dayjsYear) {
+      return false;
+    }
+    return true;
   };
 
   return (
