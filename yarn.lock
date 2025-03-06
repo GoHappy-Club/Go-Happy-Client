@@ -5336,7 +5336,7 @@ __metadata:
     react-native-reanimated: "npm:^3.0.2"
     react-native-render-html: "npm:6.3.4"
     react-native-safe-area-context: "npm:^5.0.0"
-    react-native-screens: "npm:^3.35.0"
+    react-native-screens: "npm:^4.4.0"
     react-native-share: "npm:^12.0.3"
     react-native-simple-toast: "npm:^3.3.1"
     react-native-snap-carousel: "npm:^4.0.0-beta.6"
@@ -13125,16 +13125,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.35.0":
-  version: 3.36.0
-  resolution: "react-native-screens@npm:3.36.0"
+"react-native-screens@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "react-native-screens@npm:4.4.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/8bffe0a35200e27b1a1ca7360307f5d13379ce2f731ae14951a0eb3abc035f4a948a7ba66540704e749535c563fb9f3badbe358c1ed08058d0861492289ca711
+  checksum: 10c0/63eff2f7761109ed05b0656c28bf34c83d5d7ebbcd92931202a250cab0e54109c764fac3471db7ae52f5c6c782bfca5caf5d8f1dc9a4a27a4b9889aeec7a4dcc
   languageName: node
   linkType: hard
 
