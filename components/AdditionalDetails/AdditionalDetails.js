@@ -388,7 +388,7 @@ export default AdditionalDetails;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Colors.beige,
+    backgroundColor: Colors.background,
   },
   container: {
     justifyContent: "flex-start",
