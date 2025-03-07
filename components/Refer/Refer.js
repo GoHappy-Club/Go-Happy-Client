@@ -27,6 +27,9 @@ import ReferBottomSheet from "./ReferBottomSheet.js";
 import { withTranslation } from "react-i18next";
 import { FacebookIcon, InstagramIcon } from "lucide-react-native";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import FastImage from "react-native-fast-image";
+
+const WIDTH = Dimensions.get("window").width;
 class Refer extends Component {
   constructor(props) {
     super(props);
@@ -197,15 +200,15 @@ class Refer extends Component {
     const { referralLink } = this.state;
     const { t } = this.props;
     return (
-      <View style={{ backgroundColor: Colors.background }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.background }}>
         <ScrollView>
           <Text style={styles.title}>{t("refer_win")}</Text>
           <Text style={styles.subtitle}>{t("refer_text")}</Text>
           <FastImage
-            resizeMode="cover"
+            resizeMode={FastImage.resizeMode.cover}
             style={{
               width: "100%",
-              height: 150,
+              height: WIDTH > 600 ? 200 : 150,
             }}
             source={require("../../images/1_2_3-Refer.png")}
           />
@@ -309,10 +312,10 @@ class Refer extends Component {
             </View>
           </TouchableOpacity>
           <FastImage
-            resizeMode="cover"
+            resizeMode={FastImage.resizeMode.cover}
             style={{
               width: "100%",
-              height: 220,
+              height: WIDTH>600?320:220,
               alignSelf: "center",
               // marginLeft: "10%",
               // marginRight: "10%",
@@ -330,7 +333,7 @@ class Refer extends Component {
             trivialTitle2={this.state.trivialTitle2}
           />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -465,7 +468,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   clip: {
-    marginTop: "-10%",
+    marginTop: WIDTH < 600 ? "-10%" : 0,
     display: "flex",
     flexDirection: "row",
     width: "90%",
