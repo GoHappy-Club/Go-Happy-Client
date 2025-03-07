@@ -121,8 +121,10 @@ class Refer extends Component {
         },
         ios: {
           bundleId: "com.gohappyclient",
+          appStoreId: "6737447673",
+          customScheme: "gohappyclient",
           fallbackUrl:
-            "https://play.google.com/store/apps/details?id=com.gohappyclient",
+            "https://apps.apple.com/ca/app/gohappy-club/id6737447673",
         },
       },
       firebase.dynamicLinks.ShortLinkType.SHORT
