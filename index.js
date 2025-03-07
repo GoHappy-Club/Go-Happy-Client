@@ -34,6 +34,7 @@ import {
 } from "@gurukumparan/react-native-android-inapp-updates";
 import AwesomeAlert from "react-native-awesome-alerts";
 import DeviceInfo from "react-native-device-info";
+import compareVersions from "semver-compare";
 
 const errorHandler = (error, stackTrace) => {
   crashlytics().log(
@@ -70,7 +71,7 @@ const RNRedux = () => {
         return res?.results[0]?.version;
       });
     const currentVersion = DeviceInfo.getVersion();
-    if (latestVersion > currentVersion) {
+    if (compareVersions(latestVersion, currentVersion) > 0) {
       setShowAlert(true);
     }
   }
