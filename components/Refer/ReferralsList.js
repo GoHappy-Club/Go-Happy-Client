@@ -146,7 +146,7 @@ class ReferralsList extends React.Component {
               color={Colors.white}
               borderColor={Colors.white}
               // indeterminateAnimationDuration={10000}
-              progress={currentCount / 7}
+              progress={currentCount / 3}
               width={barWidth}
               height={barHeight}
             />
