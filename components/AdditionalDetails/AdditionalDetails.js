@@ -300,7 +300,7 @@ const AdditionalDetails = ({ route }) => {
                 setState((prev) => ({ ...prev, dob: finalDate, age: age }));
                 setOpen(false);
               }}
-              maxDate={dayjs().subtract(49, "year")}
+              maxDate={dayjs().subtract(5, "year")}
               selectedItemColor={Colors.primary}
             />
           </View>
