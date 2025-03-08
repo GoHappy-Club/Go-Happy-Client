@@ -334,9 +334,11 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
     const neededItem = result.filter((itemL) => itemL.sessionId == event.id);
     const hasClickedBefore = neededItem && neededItem.length > 0;
     const currTime = new Date().getTime();
+    const allowance =
+      (Number.parseInt(event.endTime) - Number.parseInt(event.startTime)) / 2;
     if (
       !hasClickedBefore &&
-      currTime > Number.parseFloat(event.startTime) + 30 * 60 * 1000
+      currTime > Number.parseInt(event.startTime) + allowance
     ) {
       setState((prev) => ({ ...prev, after30: true }));
     }
