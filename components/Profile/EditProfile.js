@@ -249,7 +249,7 @@ const EditProfile = () => {
                 setState((prev) => ({ ...prev, dob: finalDate, age: age }));
                 setOpen(false);
               }}
-              maxDate={dayjs().subtract(50, "years")}
+              maxDate={dayjs().subtract(5, "years")}
               selectedItemColor={Colors.primary}
               selectedTextStyle={{
                 color:Colors.primaryText
