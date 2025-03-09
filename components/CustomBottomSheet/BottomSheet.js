@@ -1,28 +1,16 @@
-import {
-  Dimensions,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetBackdrop,
-} from "@gorhom/bottom-sheet";
-import { X, Heart, CheckCircle, Star } from "lucide-react-native";
-import { Colors } from "../../assets/colors/color";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BlurView } from "@react-native-community/blur";
+import PropTypes from "prop-types";
+import React, { useCallback } from "react";
+import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { BlurView } from "@react-native-community/blur";
-import { FreeTrialContent } from "./BottomSheetContents";
 
-const { width, height } = Dimensions.get("window");
+import { Colors } from "../../assets/colors/color";
+import { FreeTrialContent } from "./BottomSheetContents";
 
 const BottomSheet = ({
   modalRef,
@@ -38,7 +26,7 @@ const BottomSheet = ({
           animatedIndex.value,
           [-1, 0],
           [0, 1],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         ),
       }));
 
@@ -80,7 +68,7 @@ const BottomSheet = ({
         </Animated.View>
       );
     },
-    [closeModal]
+    [closeModal],
   );
 
   return (
@@ -109,6 +97,12 @@ const BottomSheet = ({
   );
 };
 
-export default BottomSheet;
+BottomSheet.propTypes = {
+  modalRef: PropTypes.object.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  cta: PropTypes.string,
+  freeTrialActivated: PropTypes.bool,
+};
 
-const styles = StyleSheet.create({});
+export default BottomSheet;
