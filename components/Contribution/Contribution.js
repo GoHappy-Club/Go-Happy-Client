@@ -1,4 +1,7 @@
+import { t } from "i18next";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 import {
   Dimensions,
   Platform,
@@ -11,18 +14,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import phonepe_payments from "../PhonePe/Payments.js";
-import { Button, Text } from "react-native-elements";
-import Video, { ResizeMode } from "expo-av";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
 import AwesomeAlert from "react-native-awesome-alerts";
-import toUnicodeVariant from "../toUnicodeVariant.js";
+import { Button, Text } from "react-native-elements";
+import FastImage from "react-native-fast-image";
+import { MaterialIndicator } from "react-native-indicators";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { Colors } from "../../assets/colors/color.js";
-import { withTranslation } from "react-i18next";
 import { wp } from "../../helpers/common.js";
-import { t } from "i18next";
+import ContributionImage from "../../images/secured.png";
+import { setProfile } from "../../redux/actions/counts.js";
+import phonepe_payments from "../PhonePe/Payments.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 
 class Contribution extends Component {
   constructor(props) {
@@ -110,16 +114,17 @@ class Contribution extends Component {
   }
   _retrieveData = async () => {
     try {
-      const name = await AsyncStorage.getItem("name");
-      const email = await AsyncStorage.getItem("email");
-      const profileImage = await AsyncStorage.getItem("profileImage");
+      const name = await globalThis.AsyncStorage.getItem("name");
+      const email = await globalThis.AsyncStorage.getItem("email");
+      const profileImage =
+        await globalThis.AsyncStorage.getItem("profileImage");
       // const membership = await AsyncStorage.getItem("membership");
       this.setState({ name: name });
       this.setState({ email: email });
       this.setState({ profileImage: profileImage });
-      this.setState({ membership: membership });
     } catch (error) {
       // Error retrieving data
+      console.log(error);
     }
   };
 
@@ -137,8 +142,7 @@ class Contribution extends Component {
   }
 
   async phonePeWrapper(type) {
-    var _this = this;
-    const _callback = (id) => {
+    const _callback = () => {
       this.setState({
         clickPopup: false,
         payButtonLoading: false,
@@ -170,7 +174,7 @@ class Contribution extends Component {
           this.props.profile.phoneNumber,
           this.state.amount,
           _errorHandler,
-          "contribution"
+          "contribution",
         )
         .then((link) => {
           if (link && link !== undefined) {
@@ -182,7 +186,7 @@ The Link will Expire in 20 Minutes.`;
             Share.share({
               message: message,
             })
-              .then((result) => {
+              .then(() => {
                 this.setState({
                   shareButtonLoading: false,
                   clickPopup: false,
@@ -204,7 +208,7 @@ The Link will Expire in 20 Minutes.`;
         this.state.amount,
         _callback,
         _errorHandler,
-        "contribution"
+        "contribution",
       );
     }
   }
@@ -225,9 +229,9 @@ The Link will Expire in 20 Minutes.`;
       shareButtonLoading: share ? true : false,
     });
     try {
-      const response = await axios.post(
-        `${SERVER_URL}/paytring/createOrder`,
-        data
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/paytring/createOrder`,
+        data,
       );
       const orderData = response.data;
       this.setState({
@@ -257,7 +261,9 @@ The Link will Expire in 20 Minutes.`;
     } catch (error) {
       this.setState({ payButtonLoading: false, clickPopup: false });
       console.log("Error in fetching order id : ", error);
-      crashlytics().log(`Error in paytringWrapper Contribution.js ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in paytringWrapper Contribution.js ${error}`);
     }
   };
 
@@ -269,7 +275,9 @@ The Link will Expire in 20 Minutes.`;
       });
     } catch (error) {
       console.log("Error in sharing payment link : ", error);
-      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
@@ -308,7 +316,7 @@ The Link will Expire in 20 Minutes.`;
           <View style={{ flex: 1, flexDirection: "row", marginTop: "5%" }}>
             <FastImage
               style={{ height: 40, width: 40 }}
-              source={require("../../images/secured.png")}
+              source={ContributionImage}
             />
             <Text
               style={{
@@ -679,7 +687,14 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
+
+Contribution.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  t: PropTypes.object.isRequired,
+};
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withTranslation()(Contribution));
