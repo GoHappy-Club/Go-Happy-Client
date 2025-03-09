@@ -3,52 +3,42 @@
  */
 
 import {
-  Alert,
-  AppRegistry,
-  Linking,
-  Platform,
-  StatusBar,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import App from "./App";
-import { name as appName } from "./app.json";
-import { Provider } from "react-redux";
-import { rectangleSvgPath } from "./commonComponents/svgPath";
-import React, { useEffect, useState } from "react";
-import store from "./store/store";
-import { CopilotProvider, useCopilot } from "react-native-copilot";
-import CustomTooltip from "./commonComponents/tooltip";
-import StepNumber from "./commonComponents/StepNumber";
-import { Colors } from "./assets/colors/color";
-import firebase from "@react-native-firebase/app";
-// import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
-import { generateZoomSignature } from "./helpers/generateZoomSignature";
-import ErrorBoundary from "react-native-error-boundary";
-import crashlytics from "@react-native-firebase/crashlytics";
-import Fallback from "./commonComponents/Fallback";
-import {
   startUpdateFlow,
   UpdateFlow,
 } from "@gurukumparan/react-native-android-inapp-updates";
+import crashlytics from "@react-native-firebase/crashlytics";
+import React, { useEffect, useState } from "react";
+import { AppRegistry, Linking, Platform, StatusBar, Text } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { CopilotProvider } from "react-native-copilot";
 import DeviceInfo from "react-native-device-info";
+// import { ZoomSDKProvider } from "@zoom/meetingsdk-react-native";
+// import { generateZoomSignature } from "./helpers/generateZoomSignature";
+import ErrorBoundary from "react-native-error-boundary";
+import { Provider } from "react-redux";
 import compareVersions from "semver-compare";
+
+import App from "./App";
+import { name as appName } from "./app.json";
+import { Colors } from "./assets/colors/color";
+import Fallback from "./commonComponents/Fallback";
+import StepNumber from "./commonComponents/StepNumber";
+import { rectangleSvgPath } from "./commonComponents/svgPath";
+import CustomTooltip from "./commonComponents/tooltip";
+import store from "./store/store";
 
 const errorHandler = (error, stackTrace) => {
   crashlytics().log(
-    "Error(Caught with error boundary) : " + error + stackTrace
+    "Error(Caught with error boundary) : " + error + stackTrace,
   );
 };
 
 const RNRedux = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [updateUrl, setUpdateUrl] = useState(
+  const updateUrl =
     Platform.OS === "ios"
       ? "https://apps.apple.com/in/app/gohappyclient/idcom.gohappyclient"
-      : "https://play.google.com/store/apps/details?id=com.gohappyclient"
-  );
+      : "https://play.google.com/store/apps/details?id=com.gohappyclient";
 
   async function checkForUpdateAndroid() {
     try {
@@ -64,7 +54,7 @@ const RNRedux = () => {
 
   async function checkForUpdateIos() {
     const latestVersion = await fetch(
-      `https://itunes.apple.com/lookup?bundleId=com.gohappyclient`
+      `https://itunes.apple.com/lookup?bundleId=com.gohappyclient`,
     )
       .then((r) => r.json())
       .then((res) => {
