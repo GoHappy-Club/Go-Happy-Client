@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-} from "react-native";
-import AwesomeAlert from "react-native-awesome-alerts";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faFrown,
+  faGrinHearts,
   faMeh,
   faSmile,
   faSmileBeam,
-  faGrinHearts,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { Button } from "react-native-elements";
+
 import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
-import { Button } from "react-native-elements";
 
 const SessionRatingAlert = ({
   showAlert,
@@ -154,7 +156,7 @@ const SessionRatingAlert = ({
               }}
               disabled={loading}
               loadingProps={{
-                color:Colors.primaryText
+                color: Colors.primaryText,
               }}
             />
           </View>
@@ -164,6 +166,20 @@ const SessionRatingAlert = ({
       showCancelButton={false}
     />
   );
+};
+
+SessionRatingAlert.propTypes = {
+  showAlert: PropTypes.bool.isRequired,
+  closeAlert: PropTypes.func.isRequired,
+  currentSession: PropTypes.object,
+  submitRating: PropTypes.func.isRequired,
+  selectedRating: PropTypes.number.isRequired,
+  setSelectedRating: PropTypes.func.isRequired,
+  reason: PropTypes.string.isRequired,
+  setReason: PropTypes.func.isRequired,
+  submitted: PropTypes.bool.isRequired,
+  setSubmitted: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default SessionRatingAlert;
