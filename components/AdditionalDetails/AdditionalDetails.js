@@ -1,40 +1,30 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
+import { Camera } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useLayoutEffect, useState } from "react";
 import {
-  Image,
   KeyboardAvoidingView,
-  Linking,
   Platform,
   Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { Colors } from "../../assets/colors/color";
-import { hp, wp } from "../../helpers/common";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Award,
-  Calendar,
-  Camera,
-  CircleHelp,
-  Clock,
-} from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ImagePicker from "react-native-image-crop-picker";
-import { setProfile } from "../../redux/actions/counts";
-import { TouchableOpacity } from "react-native";
-import DateTimePicker from "react-native-ui-datepicker";
-import dayjs from "dayjs";
-import { Button } from "react-native-elements";
-import AutocompleteCityInput from "../Autocomplete";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { Button } from "react-native-elements";
+import FastImage from "react-native-fast-image";
+import ImagePicker from "react-native-image-crop-picker";
+import DateTimePicker from "react-native-ui-datepicker";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
+import { hp, wp } from "../../helpers/common";
+import { setProfile } from "../../redux/actions/counts";
 
 const AdditionalDetails = ({ route }) => {
   const parseDate = (date) => {
@@ -69,9 +59,7 @@ const AdditionalDetails = ({ route }) => {
     selectedFromDropdown: false,
   });
 
-  const [updated, setUpdated] = useState(false);
   const [open, setOpen] = useState(false);
-  const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -108,8 +96,8 @@ const AdditionalDetails = ({ route }) => {
       ImagePicker.openPicker(options)
         .then((image) => {
           const base64Image = `data:${image.mime};base64,${image.data}`;
-          var url = SERVER_URL + "/user/updateProfileImage";
-          axios
+          var url = globalThis.SERVER_URL + "/user/updateProfileImage";
+          globalThis.axios
             .post(url, {
               phoneNumber: profile.phoneNumber,
               profileImage: base64Image,
@@ -119,9 +107,9 @@ const AdditionalDetails = ({ route }) => {
               setState((prevState) => ({ ...prevState, image: base64Image }));
               AsyncStorage.setItem("profileImage", base64Image);
             })
-            .catch((error) => {});
+            .catch(() => {});
         })
-        .catch((error) => {});
+        .catch(() => {});
     } catch (error) {
       console.log("Error in handleSelectImage:", error);
     }
@@ -212,15 +200,18 @@ const AdditionalDetails = ({ route }) => {
     }
     try {
       setState((prevState) => ({ ...prevState, loading: true }));
-      const response = await axios.post(`${SERVER_URL}/user/update`, {
-        name: state.name,
-        email: state.email,
-        emergencyContact: state.emergencyContact,
-        phone: profile.phoneNumber,
-        city: state.city,
-        dob: state.dob,
-        age: state.age,
-      });
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/user/update`,
+        {
+          name: state.name,
+          email: state.email,
+          emergencyContact: state.emergencyContact,
+          phone: profile.phoneNumber,
+          city: state.city,
+          dob: state.dob,
+          age: state.age,
+        },
+      );
       dispatch(
         setProfile({
           ...profile,
@@ -230,7 +221,7 @@ const AdditionalDetails = ({ route }) => {
           city: state.city,
           dob: state.dob,
           age: state.age,
-        })
+        }),
       );
       AsyncStorage.setItem("phoneNumber", response.data.phone);
       AsyncStorage.setItem("name", state.name);
@@ -242,7 +233,7 @@ const AdditionalDetails = ({ route }) => {
       setState((prevState) => ({ ...prevState, loading: false }));
       AsyncStorage.setItem("showTour", "true");
       navigation.replace("GoHappy Club");
-      await analytics().logEvent("signup_click", {
+      await globalThis.analytics().logEvent("signup_click", {
         phoneNumber: response.data.phone,
         email: response.data.email,
         age: response.data.age,
@@ -251,7 +242,9 @@ const AdditionalDetails = ({ route }) => {
     } catch (error) {
       setState((prevState) => ({ ...prevState, loading: false }));
       console.log("Error in updateUser:", error);
-      crashlytics().log(`Error in updateUser AdditionalDetails ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in updateUser AdditionalDetails ${error}`);
     }
   };
 
@@ -290,9 +283,9 @@ const AdditionalDetails = ({ route }) => {
               onChange={({ date }) => {
                 const finalDate = `${String(date.get("date")).padStart(
                   2,
-                  "0"
+                  "0",
                 )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
-                  "year"
+                  "year",
                 )}`;
                 const d = parseDate(finalDate).toDate();
                 const millis = new Date().getTime() - d.getTime();
@@ -344,7 +337,6 @@ const AdditionalDetails = ({ route }) => {
               state={state}
               setState={setState}
               setOpen={setOpen}
-              setUpdated={setUpdated}
               styles={styles}
             />
           </ScrollView>
@@ -381,6 +373,10 @@ const AdditionalDetails = ({ route }) => {
       )}
     </>
   );
+};
+
+AdditionalDetails.propTypes = {
+  route: PropTypes.object.isRequired,
 };
 
 export default AdditionalDetails;
