@@ -5325,6 +5325,7 @@ __metadata:
     react-native-collapsible: "npm:^1.6.2"
     react-native-config: "npm:^1.5.3"
     react-native-copilot: "npm:^3.3.3"
+    react-native-date-picker: "npm:^5.0.10"
     react-native-device-info: "npm:^14.0.2"
     react-native-elements: "npm:3.4.3"
     react-native-error-boundary: "npm:^1.2.7"
@@ -5353,7 +5354,6 @@ __metadata:
     react-native-svg-transformer: "npm:1.5.0"
     react-native-table-component: "npm:1.2.1"
     react-native-toast-message: "npm:^2.2.1"
-    react-native-ui-datepicker: "npm:^2.0.4"
     react-native-vector-icons: "npm:10.2.0"
     react-native-video: "npm:^6.8.2"
     react-native-view-shot: "npm:^4.0.3"
@@ -12855,6 +12855,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-date-picker@npm:^5.0.10":
+  version: 5.0.10
+  resolution: "react-native-date-picker@npm:5.0.10"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 10c0/20256350c8b04720751d3d36942a45577ad5eeb2654cde1934c48802ff3801ef03619e073d95a058388a3148eee68fe45b3c2dafc1d1ef349606815e45b3cf65
+  languageName: node
+  linkType: hard
+
 "react-native-device-info@npm:^14.0.2":
   version: 14.0.2
   resolution: "react-native-device-info@npm:14.0.2"
@@ -13250,20 +13260,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-ui-datepicker@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "react-native-ui-datepicker@npm:2.0.4"
-  dependencies:
-    dayjs: "npm:^1.11.13"
-    lodash: "npm:^4.17.21"
-    react-native-wheely: "npm:^0.6.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/319c1435407d2910135ef070988e4c4024f43354bd7fd2087d3be6e88d9f8a3e7e2f959e6b737869c7e049de391ed83d284e8f0db90b114a49064b03c3bbc184
-  languageName: node
-  linkType: hard
-
 "react-native-vector-icons@npm:10.2.0":
   version: 10.2.0
   resolution: "react-native-vector-icons@npm:10.2.0"
@@ -13311,13 +13307,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/c738e622fa29837e0715e0632c8b8dafd3086bcef115353b0fab23d94169a789cefa7f7980206278612927f2fe236488eebf34795a6aa49a812a179e36c85d2c
-  languageName: node
-  linkType: hard
-
-"react-native-wheely@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "react-native-wheely@npm:0.6.0"
-  checksum: 10c0/397d1742feffe03951fb9a66ad4e8dbe85432cfe1686dbefdfe9ff8d86aadc979cef69c3eba75dc429a78925e80890bd0e0d071903ebf26880e3d91cfebddc3b
   languageName: node
   linkType: hard
 
