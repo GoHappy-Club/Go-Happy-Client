@@ -4,9 +4,10 @@
     "details": [
       {
         "appID": "M8R68P2F29.com.gohappyclient",
-        "paths": ["https://www.gohappyclub.in/*"]
+        "paths": [
+          "*"
+        ]
       }
     ]
   }
 }
-

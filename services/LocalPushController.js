@@ -1,21 +1,6 @@
 import dayjs from "dayjs";
 import PushNotification from "react-native-push-notification";
 
-export const localNotification = (title, quote) => {
-  PushNotification.localNotification({
-    autoCancel: true,
-    bigText: title,
-    subText: "Thank you for booking this session.",
-    title: title,
-    message: quote,
-    channelId: "Quote",
-    vibrate: true,
-    vibration: 400,
-    playSound: true,
-    soundName: "default",
-  });
-};
-
 export const ScheduledNotifcation = (title, quote, fireTime) => {
   PushNotification.getScheduledLocalNotifications((notifications) => {
     const quoteNotif = notifications.some(
@@ -43,6 +28,7 @@ export const ScheduledNotifcation = (title, quote, fireTime) => {
         data: {
           screen: "QuotesPage",
         },
+        userInfo: { id: "123" },
       });
       console.log("Medicine reminder scheduled!");
     }
@@ -81,6 +67,7 @@ export const scheduleWaterReminders = () => {
         vibration: 400,
         playSound: true,
         soundName: "default",
+        userInfo: { id: "123" },
       });
     });
   }
@@ -114,6 +101,7 @@ export const scheduleMedicineReminders = () => {
         vibration: 400,
         playSound: true,
         soundName: "default",
+        userInfo: { id: "123" },
       });
     });
   }
