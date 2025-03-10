@@ -19,13 +19,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImagePicker from "react-native-image-crop-picker";
 import { setProfile } from "../../redux/actions/counts";
 import { TouchableOpacity } from "react-native";
-import DateTimePicker from "react-native-ui-datepicker";
 import dayjs from "dayjs";
 import { Button } from "react-native-elements";
 import LottieView from "lottie-react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
 import { useTranslation } from "react-i18next";
+import DatePicker from "react-native-date-picker";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -35,8 +35,7 @@ const EditProfile = () => {
     const day = splittedDate[0];
     const month = splittedDate[1];
     const year = splittedDate[2];
-    const d = new Date(year, month - 1, day);
-    const finalDate = dayjs(d);
+    const finalDate = new Date(year, month - 1, day);
     return finalDate;
   };
 
@@ -233,26 +232,25 @@ const EditProfile = () => {
               padding: 20,
             }}
           >
-            <DateTimePicker
-              timePicker={false}
+            <DatePicker
+              modal
+              open={open}
+              mode="date"
               date={parseDate(state.dob)}
-              onChange={({ date }) => {
-                const finalDate = `${String(date.get("date")).padStart(
-                  2,
-                  "0"
-                )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
-                  "year"
-                )}`;
-                const d = parseDate(finalDate).toDate();
+              onConfirm={(date) => {
+                console.log("Date", date);
+                const today = date.getDate().toString().padStart(2,'0');
+                const month = (date.getMonth() + 1).toString().padStart(2,'0');
+                const year = date.getFullYear().toString();
+                const finalDate = `${today}-${month}-${year}`;
+                const d = parseDate(finalDate);
                 const millis = new Date().getTime() - d.getTime();
                 const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
-                setState((prev) => ({ ...prev, dob: finalDate, age: age }));
+                setState((prev) => ({ ...prev, dob: finalDate,age:age }));
                 setOpen(false);
               }}
-              maxDate={dayjs().subtract(5, "years")}
-              selectedItemColor={Colors.primary}
-              selectedTextStyle={{
-                color:Colors.primaryText
+              onCancel={() => {
+                setOpen(false);
               }}
             />
           </View>
