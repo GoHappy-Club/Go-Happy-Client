@@ -1,28 +1,29 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Share2, X } from "lucide-react-native";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
-  FlatList,
+  ActivityIndicator,
   Dimensions,
+  FlatList,
+  Linking,
+  Pressable,
   StyleSheet,
   Text,
-  Pressable,
-  ActivityIndicator,
-  Linking,
+  View,
 } from "react-native";
-import YoutubePlayer from "react-native-youtube-iframe";
+import { TouchableOpacity } from "react-native";
+import { Share } from "react-native";
 import FastImage from "react-native-fast-image";
+import YoutubePlayer from "react-native-youtube-iframe";
+
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native";
-import { Share2, X } from "lucide-react-native";
-import { Share } from "react-native";
+import WordLogo from "../../images/wordLogo.png";
 
 const { height, width } = Dimensions.get("window");
 
 const extractVideoId = (url) => {
-  const regExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return match && match[2].length === 11 ? match[2] : "";
 };
@@ -50,7 +51,9 @@ const ReelsPage = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await axios.get(`${SERVER_URL}/videos/getRandom`);
+      const response = await globalThis.axios.get(
+        `${globalThis.SERVER_URL}/videos/getRandom`,
+      );
       const data = response.data;
       const shuffledVideos = data.sort(() => Math.random() - 0.5);
       const allVideos = [...videos, ...shuffledVideos];
@@ -58,7 +61,7 @@ const ReelsPage = () => {
       setVideos(allVideos);
     } catch (error) {
       console.error("Error fetching videos:", error);
-      crashlytics().log(`Error in getting randomVideos ${error}`);
+      globalThis.crashlytics().log(`Error in getting randomVideos ${error}`);
     } finally {
       setLoading(false);
     }
@@ -134,7 +137,7 @@ const ReelsPage = () => {
                 Powered by
               </Text>
               <FastImage
-                source={require("../../images/wordLogo.png")}
+                source={WordLogo}
                 style={{
                   width: wp(20),
                   height: wp(8),
@@ -341,13 +344,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.black,
     justifyContent: "center",
     alignItems: "center",
-  },
-  videoWrapper: {
-    width: width,
-    height: hp(100),
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.black,
   },
   videoWrapper: {
     width: width,

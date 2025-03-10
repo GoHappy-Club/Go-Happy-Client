@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Skeleton } from "@rneui/themed";
+import PropTypes from "prop-types";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import {
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Text,
-  StyleSheet,
   Dimensions,
   ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../../assets/colors/color";
 import FastImage from "react-native-fast-image";
-import { Skeleton } from "@rneui/themed";
-import { useTranslation } from "react-i18next";
+
+import { Colors } from "../../assets/colors/color";
 
 const { width } = Dimensions.get("window");
 
@@ -77,6 +78,15 @@ export default function Feed({ videos }) {
     </>
   );
 }
+
+Feed.propTypes = {
+  videos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      thumbnail: PropTypes.string.isRequired,
+    }),
+  ),
+};
 
 const styles = StyleSheet.create({
   skeletonContainer: {
