@@ -1,19 +1,29 @@
+import { PropTypes } from "prop-types";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
-  View,
-  Text,
+  Platform,
   StyleSheet,
+  Text,
   TouchableOpacity,
   useWindowDimensions,
-  Platform,
+  View,
 } from "react-native";
 import { Linking } from "react-native";
-import { useCopilot, walkthroughable, CopilotStep } from "react-native-copilot";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
 import FastImage from "react-native-fast-image";
-import { Colors } from "../../assets/colors/color";
 import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+
+import { Colors } from "../../assets/colors/color";
 import { hp } from "../../helpers/common";
+// import RewardsImage from "../../images/rewards.png";
+import Contribute from "../../images/contribute.png";
+import Help from "../../images/help.png";
+import Quotes from "../../images/quotes.png";
+import Reels from "../../images/reels.png";
+import Refer from "../../images/refer_win.png";
+import Sessions from "../../images/sessions.png";
+import Trips from "../../images/trips.png";
 
 const Walkthroughable = walkthroughable(View);
 
@@ -28,31 +38,31 @@ export default function Sections(props) {
   const data1 = [
     {
       title: t("free_sessions"),
-      imgUrl: require("../../images/sessions.png"),
+      imgUrl: Sessions,
       link: "HomeScreen",
       text: "Click here to explore and book free sessions tailored just for you!",
     },
     {
       title: t("trips"),
-      imgUrl: require("../../images/trips.png"),
+      imgUrl: Trips,
       link: "Trips",
       text: "Discover exciting trips and adventures! Click here to see our upcoming trips.",
     },
     {
       title: t("reels"),
-      imgUrl: require("../../images/reels.png"),
+      imgUrl: Reels,
       link: "ReelsPage",
       text: "See videos especially tailored for you.",
     },
     {
       title: t("quotes"),
-      imgUrl: require("../../images/quotes.png"),
+      imgUrl: Quotes,
       link: "QuotesPage",
       text: "Get Daily Positive Quotes here.",
     },
     // {
     //   title: t("rewards"),
-    //   imgUrl: require("../../images/rewards.png"),
+    //   imgUrl: RewardsImage,
     //   link: "Rewards",
     //   text: "See your earned rewards here.",
     // },
@@ -60,7 +70,7 @@ export default function Sections(props) {
       ? [
           {
             title: t("contribute"),
-            imgUrl: require("../../images/contribute.png"),
+            imgUrl: Contribute,
             link: "Contribution Details",
             text: "Help us make a difference! Click here to learn how you can contribute.",
           },
@@ -68,14 +78,14 @@ export default function Sections(props) {
       : [
           {
             title: t("refer_win"),
-            imgUrl: require("../../images/refer_win.png"),
+            imgUrl: Refer,
             link: "Refer",
             text: "Share the app with your friends and relatives and win rewards.",
           },
         ]),
     {
       title: t("get_help"),
-      imgUrl: require("../../images/help.png"),
+      imgUrl: Help,
       link: "props.helpUrl",
       type: "external",
       text: "Need assistance? Click here to get help and find the support you need.",
@@ -144,6 +154,11 @@ export default function Sections(props) {
     </View>
   );
 }
+
+Sections.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  helpUrl: PropTypes.string.isRequired,
+};
 
 const styles = StyleSheet.create({
   mainContainer: {

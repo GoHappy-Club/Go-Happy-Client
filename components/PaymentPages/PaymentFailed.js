@@ -1,6 +1,9 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { ChevronLeft } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BackHandler,
-  Image,
   Linking,
   Platform,
   Pressable,
@@ -10,12 +13,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import FastImage from "react-native-fast-image";
+
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ChevronLeft } from "lucide-react-native";
-import { useTranslation } from "react-i18next";
+import PaymentError from "../../images/paymentError.png";
 
 const PaymentFailed = () => {
   const navigation = useNavigation();
@@ -28,16 +30,20 @@ const PaymentFailed = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/properties/list`);
+        const response = await globalThis.axios.get(
+          `${globalThis.SERVER_URL}/properties/list`,
+        );
         const properties = response.data?.properties[0];
         setHelpLink(properties?.whatsappHelpLink);
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error in properties", error);
+      }
     };
     fetchProperties();
   }, []);
 
   // type -> normal, empty for subscription
-  const { type, navigateTo } = route?.params;
+  const { type, navigateTo } = route?.params || {};
   useEffect(() => {
     const backAction = () => {
       navigation.navigate(navigateTo ? navigateTo : "GoHappy Club");
@@ -45,7 +51,7 @@ const PaymentFailed = () => {
     };
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      backAction,
     );
     return () => backHandler.remove();
   }, []);
@@ -65,10 +71,7 @@ const PaymentFailed = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.insideContainer}>
-          <FastImage
-            source={require("../../images/paymentError.png")}
-            style={styles.image}
-          />
+          <FastImage source={PaymentError} style={styles.image} />
           <Text style={styles.sorryTitle}>{t("sorry")}</Text>
           <View style={styles.textWrapper}>
             <Text style={styles.plainText}>{t("couldnt_process")}</Text>
@@ -114,10 +117,7 @@ const PaymentFailed = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.insideContainer}>
-          <FastImage
-            source={require("../../images/paymentError.png")}
-            style={styles.image}
-          />
+          <FastImage source={PaymentError} style={styles.image} />
           <Text style={styles.sorryTitle}>{t("sorry")}</Text>
           <View style={styles.textWrapper}>
             <Text style={styles.plainText}>{t("still_pending")} </Text>
@@ -162,14 +162,11 @@ const PaymentFailed = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.insideContainer}>
-        <FastImage
-          source={require("../../images/paymentError.png")}
-          style={styles.image}
-        />
+        <FastImage source={PaymentError} style={styles.image} />
         <Text style={styles.sorryTitle}>Sorry!</Text>
         <View style={styles.textWrapper}>
           <Text style={styles.plainText}>
-            We couldn't process your request to join GoHappy Club.
+            We couldn&apos;t process your request to join GoHappy Club.
           </Text>
           <Text style={styles.plainText}>Please try again.</Text>
         </View>

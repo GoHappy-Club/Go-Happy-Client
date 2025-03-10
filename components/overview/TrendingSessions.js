@@ -1,43 +1,22 @@
-import React, { Component } from "react";
-import { Card, Divider } from "react-native-paper";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
 import { Skeleton } from "@rneui/themed";
 import { format, fromUnixTime } from "date-fns";
-import { Colors } from "../../assets/colors/color.js";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import FastImage from "react-native-fast-image";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-const data = [
-  {
-    title: "Tambola",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "In turpis",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGhvdG9ncmFwaHl8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "Lorem Ipsum",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.pexels.com/photos/3314294/pexels-photo-3314294.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-];
+import { Colors } from "../../assets/colors/color.js";
+import { setProfile } from "../../redux/actions/counts.js";
+
 class TrendingSessions extends Component {
   constructor(props) {
     super(props);
@@ -76,7 +55,7 @@ class TrendingSessions extends Component {
   }
 
   // Render each row of items
-  renderRow = ({ item, index }) => (
+  renderRow = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
         this.props.navigation.navigate("Session Details", {
@@ -89,7 +68,7 @@ class TrendingSessions extends Component {
             this.props.reloadOverview();
           },
           alreadyBookedSameDayEvent: this.checkIsParticipantInSameEvent(
-            item.value
+            item.value,
           ),
         })
       }
@@ -111,7 +90,7 @@ class TrendingSessions extends Component {
     </TouchableOpacity>
   );
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <>
         {this.props.trendingSessions == null && (
@@ -151,8 +130,13 @@ class TrendingSessions extends Component {
   }
 }
 
-const SLIDER_WIDTH = Dimensions.get("window").width;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
+TrendingSessions.propTypes = {
+  trendingSessions: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  reloadOverview: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -217,4 +201,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(TrendingSessions));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(TrendingSessions));

@@ -1,8 +1,9 @@
-import { getPayload } from "../../services/PhonePe/PaymentServices";
-import React, { Component } from "react";
 import axios from "axios";
-import PhonePePaymentSDK from "react-native-phonepe-pg";
+import { Component } from "react";
 import { Platform } from "react-native";
+import PhonePePaymentSDK from "react-native-phonepe-pg";
+
+import { getPayload } from "../../services/PhonePe/PaymentServices";
 
 class Payments extends Component {
   constructor(props) {
@@ -40,19 +41,19 @@ class Payments extends Component {
     orderId = null,
     tambolaTicket = null,
     membershipId,
-    coinsToGive = null
+    coinsToGive = null,
   ) {
-    payload = await getPayload(
+    let payload = await getPayload(
       phone,
       amount * 100,
       paymentType,
       orderId,
       tambolaTicket,
       membershipId,
-      coinsToGive
+      coinsToGive,
     );
-    requestBody = payload.requestBody;
-    checksum = payload.checksum;
+    let requestBody = payload.requestBody;
+    let checksum = payload.checksum;
     const options = {
       method: "post",
       url: "https://api.phonepe.com/apis/hermes/pg/v1/pay",
@@ -71,7 +72,7 @@ class Payments extends Component {
         response.data.data.instrumentResponse.redirectInfo.url;
       const shortenLinkApi =
         "https://ulvis.net/api.php?url=" + shareableLink + "&private=1";
-      const shortenLinkApiCall = await axios
+      await axios
         .request({
           method: "get",
           url: shortenLinkApi,
@@ -85,6 +86,7 @@ class Payments extends Component {
         });
       return shareableLink;
     } catch (error) {
+      console.log("Error in phonePeShare", error);
       error_handler();
     }
   }
@@ -97,15 +99,15 @@ class Payments extends Component {
     orderId = null,
     tambolaTicket = null,
     membershipId,
-    coinsToGive = null
+    coinsToGive = null,
   ) {
-    //console.log('phonepe')
+    console.log(orderId, tambolaTicket);
     const _this = this;
     PhonePePaymentSDK.init(
       _this.state.environmentDropDownValue,
       _this.state.merchantId,
       _this.state.appId,
-      true
+      true,
     )
       .then(async (result) => {
         console.log("init success", result);
@@ -120,7 +122,7 @@ class Payments extends Component {
           error_handler,
           paymentType,
           membershipId,
-          coinsToGive
+          coinsToGive,
         );
       })
       .catch((error) => {
@@ -138,19 +140,19 @@ class Payments extends Component {
     error_handler,
     paymentType,
     membershipId,
-    coinsToGive
+    coinsToGive,
   ) {
-    payload = await getPayload(
+    let payload = await getPayload(
       phone,
       amount * 100,
       paymentType,
       null,
       null,
       membershipId,
-      coinsToGive
+      coinsToGive,
     );
-    requestBody = payload.requestBody;
-    checksum = payload.checksum;
+    let requestBody = payload.requestBody;
+    let checksum = payload.checksum;
     console.log(checksum);
     console.log(requestBody);
     PhonePePaymentSDK.startTransaction(
@@ -159,7 +161,7 @@ class Payments extends Component {
       // this.state.packageName,
       // this.state.callbackURL
       null,
-      "gohappyclub"
+      "gohappyclub",
     )
       .then((a) => {
         console.log(a);
@@ -179,58 +181,14 @@ class Payments extends Component {
         error_handler();
       });
   }
-  handleIsPhonePeAppInstalled() {
-    PhonePePaymentSDK.isPhonePeInstalled()
-      .then((a) => {
-        setPhonePeAppInstalled(a);
-        if (a) {
-          setMessage("Message: PhonePe App Installed");
-        } else {
-          setMessage("Message: PhonePe App Unavailable");
-        }
-      })
-      .catch((error) => {
-        setMessage("error:" + error.message);
-      });
-  }
-  handleIsGPayAppInstalled() {
-    PhonePePaymentSDK.isGPayAppInstalled()
-      .then((a) => {
-        setGPayAppInstalled(a);
-        if (a) {
-          setMessage("Message: Gpay App Installed");
-        } else {
-          setMessage("Message: Gpay App Unavailable");
-        }
-      })
-      .catch((error) => {
-        setMessage("error:" + error.message);
-      });
-  }
-
-  handleIsPaytmInstalled() {
-    PhonePePaymentSDK.isPaytmAppInstalled()
-      .then((a) => {
-        setPaytmAppInstalled(a);
-        if (a) {
-          setMessage("Message: Paytm App Installed");
-        } else {
-          setMessage("Message: Paytm App Unavailable");
-        }
-      })
-      .catch((error) => {
-        setMessage("error:" + error.message);
-      });
-  }
-
   getPackageSignatureForAndroid() {
-    if (Platformtform.OS === "android") {
+    if (Platform.OS === "android") {
       PhonePePaymentSDK.getPackageSignatureForAndroid()
         .then((packageSignture) => {
-          setMessage(JSON.stringify(packageSignture));
+          this.setState({ message: JSON.stringify(packageSignture) });
         })
         .catch((error) => {
-          setMessage("error:" + error.message);
+          this.setState({ error: error.message });
         });
     }
   }
@@ -239,10 +197,11 @@ class Payments extends Component {
     if (Platform.OS === "android") {
       PhonePePaymentSDK.getUpiAppsForAndroid()
         .then((upiApps) => {
-          if (upiApps != null) setMessage(JSON.stringify(JSON.parse(upiApps)));
+          if (upiApps != null)
+            this.setState({ message: JSON.stringify(JSON.parse(upiApps)) });
         })
         .catch((error) => {
-          setMessage("error:" + error.message);
+          this.setState({ error: error.message });
         });
     }
   }

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { FAB } from "react-native-paper";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Linking } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+import FastImage from "react-native-fast-image";
+import { FAB } from "react-native-paper";
 import { useSelector } from "react-redux";
 
-import { CopilotStep, walkthroughable } from "react-native-copilot";
 import { Colors } from "../assets/colors/color";
+import WhatsappImage from "../images/whatsapp.png";
 
 const Walkthroughable = walkthroughable(View);
 
@@ -20,15 +20,16 @@ const WhatsAppFAB = () => {
   }, []);
 
   const handlePress = async () => {
-    var url = SERVER_URL + "/properties/list";
+    var url = globalThis.SERVER_URL + "/properties/list";
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0) {
           const now = new Date();
           const days = Math.ceil(
-            (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
+            (now.getTime() - Number(profile.dateOfJoining)) /
+              (1000 * 3600 * 24),
           );
           if (days < 10 || Number(profile.sessionsAttended) < 5) {
             setLink(properties[0].whatsappGroupLink[0]);
@@ -39,7 +40,7 @@ const WhatsAppFAB = () => {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log("Error in getting properties list",error);
+      globalThis.crashlytics().log("Error in getting properties list", error);
     }
   };
 
@@ -55,10 +56,7 @@ const WhatsAppFAB = () => {
             <FAB
               style={styles.fab}
               icon={() => (
-                <FastImage
-                  source={require("../images/whatsapp.png")}
-                  style={styles.logo}
-                />
+                <FastImage source={WhatsappImage} style={styles.logo} />
               )}
             />
           </TouchableOpacity>

@@ -1,11 +1,11 @@
 import { Crown } from "lucide-react-native";
 import React from "react";
-import { Image } from "react-native";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import { useSelector } from "react-redux";
 
-const GoldCard = ({ identifier }) => {
+const GoldCard = () => {
   const profile = useSelector((state) => state.profile.profile);
 
   return (

@@ -1,15 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
-import { wp } from "../helpers/common";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef } from "react";
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
 import { Colors } from "../assets/colors/color";
+import { wp } from "../helpers/common";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CARD_WIDTH = wp(16) + 8;
@@ -86,7 +88,7 @@ export default function CustomCalendarStrip({
 
   const handlePrevious = () => {
     const currentIndex = dates.findIndex(
-      (date) => date.getTime() === new Date(selectedDate).getTime()
+      (date) => date.getTime() === new Date(selectedDate).getTime(),
     );
     if (currentIndex > 0) {
       changeSelectedDate(dates[currentIndex - 1].toISOString());
@@ -96,7 +98,7 @@ export default function CustomCalendarStrip({
 
   const handleNext = () => {
     const currentIndex = dates.findIndex(
-      (date) => date.getTime() === new Date(selectedDate).getTime()
+      (date) => date.getTime() === new Date(selectedDate).getTime(),
     );
     if (currentIndex < dates.length - 1) {
       changeSelectedDate(dates[currentIndex + 1].toISOString());
@@ -106,7 +108,7 @@ export default function CustomCalendarStrip({
 
   useEffect(() => {
     const initialIndex = dates.findIndex(
-      (date) => date.getTime() === new Date(selectedDate).getTime()
+      (date) => date.getTime() === new Date(selectedDate).getTime(),
     );
     if (initialIndex !== -1) {
       scrollToIndex(initialIndex);
@@ -141,7 +143,7 @@ export default function CustomCalendarStrip({
               onSelect={(date) => {
                 changeSelectedDate(date.toISOString());
                 const index = dates.findIndex(
-                  (d) => d.getTime() === date.getTime()
+                  (d) => d.getTime() === date.getTime(),
                 );
                 scrollToIndex(index);
               }}
@@ -157,6 +159,16 @@ export default function CustomCalendarStrip({
     </View>
   );
 }
+
+CustomCalendarStrip.propTypes = {
+  selectedDate: PropTypes.string.isRequired,
+  changeSelectedDate: PropTypes.func.isRequired,
+};
+DateCard.propTypes = {
+  date: PropTypes.instanceOf(Date).isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
