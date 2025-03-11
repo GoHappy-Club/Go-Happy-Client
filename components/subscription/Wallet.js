@@ -1,22 +1,24 @@
+import { useNavigation } from "@react-navigation/native";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  Image,
+  Platform,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
-  Image,
-  Pressable,
-  ScrollView,
-  Platform,
 } from "react-native";
-import React, { useState } from "react";
-import SubscriptionCard from "./SubscriptionCard";
-import { hp, wp } from "../../helpers/common";
-import { useSelector } from "react-redux";
-import { Colors } from "../../assets/colors/color";
-import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
+import SubscriptionCard from "./SubscriptionCard";
 import TransactionHistory from "./TransactionHistory";
-import { useTranslation } from "react-i18next";
 
 const Wallet = ({ transactions }) => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
@@ -24,7 +26,7 @@ const Wallet = ({ transactions }) => {
   const membership = useSelector((state) => state.membership.membership);
   const navigation = useNavigation();
 
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -53,10 +55,7 @@ const Wallet = ({ transactions }) => {
                 {membership.coins}
               </Text>
             </View>
-            <Image
-              source={require("../../images/coins.png")}
-              style={styles.coinImage}
-            />
+            <Image source={Coins} style={styles.coinImage} />
           </View>
 
           {/* <Pressable
@@ -120,6 +119,10 @@ const Wallet = ({ transactions }) => {
       )}
     </SafeAreaView>
   );
+};
+
+Wallet.propTypes = {
+  transactions: PropTypes.array,
 };
 
 export default Wallet;

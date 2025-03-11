@@ -1,21 +1,24 @@
+import { useNavigation } from "@react-navigation/native";
+import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  View,
+  ScrollView,
+  Share,
+  StyleSheet,
   Text,
   TextInput,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-  Image,
+  View,
 } from "react-native";
-import { Colors } from "../../assets/colors/color";
-import { wp, hp } from "../../helpers/common";
-import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { TouchableOpacity } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { Button } from "react-native-elements";
-import phonepe_payments from "../PhonePe/Payments";
-import { TouchableOpacity } from "react-native";
+import FastImage from "react-native-fast-image";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
 
 const predefinedPackages = [
   {
@@ -50,84 +53,13 @@ const WalletTopUp = ({ packages }) => {
   const [payButtonLoading, setPayButtonLoading] = useState(false);
   const [shareButtonLoading, setShareButtonLoading] = useState(false);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
-  const [error, setError] = useState(false);
-  const [plan, setPlan] = useState(null);
 
   const inputRef = useRef();
 
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const profile = useSelector((state) => state.profile.profile);
-
-  const phonePe = async (type, amount, paymentType) => {
-    const _callback = () => {
-      setPayButtonLoading(false);
-      setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentSuccessful", {
-        type: "normal",
-        navigateTo: "WalletScreen",
-      });
-    };
-
-    const _errorHandler = () => {
-      setPayButtonLoading(false);
-      setPaymentSharePopUp(false);
-      setShareButtonLoading(false);
-      navigation.navigate("PaymentFailed", {
-        type: "normal",
-        navigateTo: "TopUpScreen",
-      });
-    };
-    if (type == "share") {
-      setShareButtonLoading(true);
-      phonepe_payments
-        .phonePeShare(
-          profile.phoneNumber,
-          Number.parseInt(amount),
-          _errorHandler,
-          paymentType,
-          null,
-          null,
-          null,
-          coins
-        )
-        .then((link) => {
-          //prettier-ignore
-          const message = `Hello from the GoHappy Club Family,
-${toUnicodeVariant(profile.name,"italic")} is requesting a payment of ₹${toUnicodeVariant(String(plan.subscriptionFees),"bold")} for GoHappy Club Wallet top-up.
-Please make the payment using the link below:
-${link}
-${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
-    `;
-          Share.share({
-            message: message,
-          })
-            .then((result) => {
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            })
-            .catch((errorMsg) => {
-              console.log("error in sharing", errorMsg);
-              setPaymentSharePopUp(false);
-              setShareButtonLoading(false);
-            });
-        });
-    } else {
-      setPayButtonLoading(true);
-      phonepe_payments.phonePe(
-        profile.phoneNumber,
-        amount,
-        _callback,
-        _errorHandler,
-        paymentType,
-        null,
-        null,
-        null,
-        coins
-      );
-    }
-  };
 
   const paytringWrapper = async (share = false, amount, type) => {
     const data = {
@@ -147,9 +79,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       setPayButtonLoading(true);
     }
     try {
-      const response = await axios.post(
-        `${SERVER_URL}/paytring/createOrder`,
-        data
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/paytring/createOrder`,
+        data,
       );
       const orderData = response.data;
       setPayButtonLoading(false);
@@ -177,7 +109,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
     } catch (error) {
       setPayButtonLoading(false);
       setPaymentSharePopUp(false);
-      crashlytics().log(`Error in paytringWrapper TopUp.js ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in paytringWrapper TopUp.js ${error}`);
     }
   };
 
@@ -189,24 +123,24 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       });
     } catch (error) {
       console.log("Error in sharing payment link : ", error);
-      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
   const validateAmount = () => {
     if (coins.length == 0) {
-      setError(true);
       return false;
     }
     if (!/^\d+$/.test(coins)) {
-      setError(true);
       return false;
     }
     return true;
   };
 
   const planSelected = (plan, key) => {
-    const selected = predefinedPackages.map((item, index) => {
+    predefinedPackages.map((item, index) => {
       if (index == key) {
         item.backgroundColor = Colors.pink.sessionDetails;
         item.textColor = Colors.white;
@@ -215,10 +149,9 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       item.backgroundColor = Colors.white;
       item.textColor = Colors.grey.countdown;
     });
-    setPlan(selected);
     setCoins(String(plan.coins));
     setAmount(
-      String(plan.coins - plan.coins * (plan.discountPercentage / 100))
+      String(plan.coins - plan.coins * (plan.discountPercentage / 100)),
     );
   };
 
@@ -238,7 +171,6 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               keyboardType="numeric"
               value={amount}
               onChangeText={(text) => {
-                setError(false);
                 setAmount(text);
               }}
               style={styles.amountInput}
@@ -280,7 +212,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
               }}
             >
               <FastImage
-                source={require("../../images/coins.png")}
+                source={Coins}
                 style={{
                   height: 40,
                   width: 40,
@@ -319,7 +251,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/coins.png")}
+                  source={Coins}
                   style={{
                     height: 20,
                     width: 20,
@@ -335,7 +267,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/coins.png")}
+                  source={Coins}
                   style={{
                     height: 20,
                     width: 20,
@@ -351,7 +283,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/coins.png")}
+                  source={Coins}
                   style={{
                     height: 20,
                     width: 20,
@@ -367,7 +299,7 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
                 }}
               >
                 <FastImage
-                  source={require("../../images/coins.png")}
+                  source={Coins}
                   style={{
                     height: 20,
                     width: 20,
@@ -482,6 +414,10 @@ ${toUnicodeVariant("Note:","bold")} The link will expire in 20 minutes.
       )}
     </>
   );
+};
+
+WalletTopUp.propTypes = {
+  packages: PropTypes.array,
 };
 
 export default WalletTopUp;

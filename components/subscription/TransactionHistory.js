@@ -1,17 +1,20 @@
-import { format, fromUnixTime } from "date-fns";
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import { hp, wp } from "../../helpers/common";
-import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
+import { format, fromUnixTime } from "date-fns";
+import PropTypes from "prop-types";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import FastImage from "react-native-fast-image";
+
+import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
 
 const TransactionHistory = ({ transactions, seeAll = false }) => {
   const navigation = useNavigation();
@@ -48,7 +51,7 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
             {isCredit ? "+" : "-"} {item.amount}{" "}
           </Text>
           <FastImage
-            source={require("../../images/coins.png")}
+            source={Coins}
             style={{
               height: 18,
               width: 18,
@@ -86,6 +89,11 @@ const TransactionHistory = ({ transactions, seeAll = false }) => {
       )}
     </View>
   );
+};
+
+TransactionHistory.propTypes = {
+  transactions: PropTypes.array,
+  seeAll: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({

@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  Text,
-  StyleSheet,
-  Pressable,
-  Animated,
-} from "react-native";
 import debounce from "lodash.debounce";
-import { hp, wp } from "../helpers/common";
+import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  Animated,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
 import { Colors } from "../assets/colors/color";
+import { wp } from "../helpers/common";
 
 const uuidv4 = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -20,7 +22,12 @@ const uuidv4 = () => {
   });
 };
 
-const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, setSelectedFromDropdown }) => {
+const AutocompleteCityInput = ({
+  label,
+  input,
+  setInput,
+  setSelectedFromDropdown,
+}) => {
   const [suggestions, setSuggestions] = useState([]);
   const [correlationId] = useState(uuidv4());
   const [isSelected, setIsSelected] = useState(false);
@@ -41,7 +48,7 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
               "X-Request-Id": requestId,
               "X-Correlation-Id": correlationId,
             },
-          }
+          },
         );
         const data = await response.json();
         if (data.status === "ok") {
@@ -50,9 +57,9 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
               data.predictions
                 .filter((prediction) => prediction.types.includes("locality"))
                 .map((prediction) =>
-                  prediction.structured_formatting.main_text.toLowerCase()
-                )
-            )
+                  prediction.structured_formatting.main_text.toLowerCase(),
+                ),
+            ),
           );
           if (text && !cities.includes(text.toLowerCase())) {
             cities.push(`${text.toLowerCase()}...`);
@@ -69,12 +76,12 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
         console.error("Error fetching suggestions:", error);
       }
     },
-    [correlationId, dropdownHeight]
+    [correlationId, dropdownHeight],
   );
 
   const debouncedFetchSuggestions = useCallback(
     debounce(fetchSuggestions, 300),
-    [fetchSuggestions]
+    [fetchSuggestions],
   );
 
   useEffect(() => {
@@ -111,10 +118,7 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputWrapper}>
         <Animated.View
-          style={[
-            styles.suggestionsContainer,
-            { height: dropdownHeight },
-          ]}
+          style={[styles.suggestionsContainer, { height: dropdownHeight }]}
         >
           <FlatList
             data={suggestions}
@@ -145,6 +149,13 @@ const AutocompleteCityInput = ({ label, input, setInput, selectedFromDropdown, s
       </View>
     </View>
   );
+};
+
+AutocompleteCityInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  input: PropTypes.string.isRequired,
+  setInput: PropTypes.func.isRequired,
+  setSelectedFromDropdown: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -193,4 +204,3 @@ const styles = StyleSheet.create({
 });
 
 export default AutocompleteCityInput;
-

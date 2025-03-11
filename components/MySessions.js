@@ -1,11 +1,11 @@
+import { format, fromUnixTime } from "date-fns";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-
 import {
   FlatList,
   Linking,
   Modal,
   Pressable,
-  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,14 +13,15 @@ import {
   View,
 } from "react-native";
 import { Button, Text } from "react-native-elements";
-import { WebView } from "react-native-webview";
-
-import { Avatar, Card as Cd, Title } from "react-native-paper";
-import { format, fromUnixTime } from "date-fns";
-import { Colors } from "../assets/colors/color";
-import { connect } from "react-redux";
-import { hp, wp } from "../helpers/common";
 import FastImage from "react-native-fast-image";
+import MaterialIndicator from "react-native-indicators";
+import { Card as Cd, Title } from "react-native-paper";
+import { WebView } from "react-native-webview";
+import { connect } from "react-redux";
+
+import { Colors } from "../assets/colors/color";
+import { hp, wp } from "../helpers/common";
+import ProfileDummy from "../images/profile_image.jpeg";
 
 class MySessions extends Component {
   constructor(props) {
@@ -43,9 +44,10 @@ class MySessions extends Component {
   }
   _retrieveData = async () => {
     try {
-      const email = await AsyncStorage.getItem("email");
+      const email = await globalThis.AsyncStorage.getItem("email");
       this.setState({ email: email });
     } catch (error) {
+      console.log("ERROR", error);
       // Error retrieving data
     }
   };
@@ -203,7 +205,7 @@ class MySessions extends Component {
                 <FastImage
                   source={
                     // {
-                    require("../images/profile_image.jpeg")
+                    ProfileDummy
                     // uri: this.state.profileImage
                     // }
                   }
@@ -234,7 +236,7 @@ class MySessions extends Component {
                   onPress={this.videoPlayer.bind(this, item.recordingLink)}
                   loading={item.loadingButton}
                   titleStyle={{
-                    color:Colors.primaryText
+                    color: Colors.primaryText,
                   }}
                 />
               )}
@@ -291,6 +293,18 @@ class MySessions extends Component {
     );
   }
 }
+
+MySessions.propTypes = {
+  mySessions: PropTypes.array,
+  childLoader: PropTypes.bool,
+  ongoingEvents: PropTypes.array,
+  upcomingEvents: PropTypes.array,
+  expiredEvents: PropTypes.array,
+  membership: PropTypes.object,
+  profile: PropTypes.object,
+  navigation: PropTypes.object,
+  phoneNumber: PropTypes.string,
+};
 
 const styles = StyleSheet.create({
   card: {

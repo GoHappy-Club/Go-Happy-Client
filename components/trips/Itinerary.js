@@ -1,21 +1,22 @@
-import { Linking, View } from "react-native";
-import { Button, Text } from "react-native-paper";
-import React, { Component, useEffect, useState } from "react";
-import Accordion from "react-native-collapsible/Accordion";
-import { StyleSheet } from "react-native";
-import { ScrollView } from "react-native";
-import { loadOnlyDate } from "../../commonComponents/helpers";
-
 import {
+  faArrowAltCircleDown,
   faCalendarAlt,
+  faCloudSun,
   faMapMarkerAlt,
   faMoneyBill,
-  faCloudSun,
-  faArrowAltCircleDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Linking, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
+import Accordion from "react-native-collapsible/Accordion";
+import { Button, Text } from "react-native-paper";
 import RenderHTML from "react-native-render-html";
+
 import { Colors } from "../../assets/colors/color";
+import { loadOnlyDate } from "../../commonComponents/helpers";
 import { wp } from "../../helpers/common";
 
 export const Itinerary = ({ details, vouchers }) => {
@@ -278,6 +279,11 @@ export const Itinerary = ({ details, vouchers }) => {
       )}
     </View>
   );
+};
+
+Itinerary.propTypes = {
+  details: PropTypes.object.isRequired,
+  vouchers: PropTypes.array.isRequired,
 };
 
 const styles = StyleSheet.create({

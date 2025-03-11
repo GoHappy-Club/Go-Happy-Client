@@ -1,21 +1,20 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
 import {
-  StyleSheet,
-  Image,
   Dimensions,
-  TouchableOpacity,
   SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-import Carousel from "react-native-snap-carousel";
-
-import { Tab, TabView } from "@rneui/themed";
 import { View } from "react-native";
-import Accordion from "react-native-collapsible/Accordion";
-import { Itinerary } from "./Itinerary.js";
+import FastImage from "react-native-fast-image";
+import Carousel from "react-native-snap-carousel";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { Colors } from "../../assets/colors/color.js";
+import { setProfile } from "../../redux/actions/counts.js";
+import { Itinerary } from "./Itinerary.js";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
@@ -29,7 +28,7 @@ class Trip extends Component {
       error: true,
       index: 0,
     };
-    crashlytics().log(JSON.stringify(props.propProfile));
+    globalThis.crashlytics().log(JSON.stringify(props.propProfile));
   }
 
   CarouselComponent = ({ images }) => {
@@ -87,6 +86,12 @@ class Trip extends Component {
     );
   }
 }
+
+Trip.propTypes = {
+  details: PropTypes.object.isRequired,
+  vouchers: PropTypes.array.isRequired,
+  propProfile: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   outsideContainer: {
