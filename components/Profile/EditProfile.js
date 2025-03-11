@@ -252,6 +252,7 @@ const EditProfile = () => {
               onCancel={() => {
                 setOpen(false);
               }}
+              maximumDate={new Date()}
             />
           </View>
         </Pressable>

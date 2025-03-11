@@ -301,6 +301,7 @@ const AdditionalDetails = ({ route }) => {
               onCancel={() => {
                 setOpen(false);
               }}
+              maximumDate={new Date()}
             />
           </View>
         </Pressable>
