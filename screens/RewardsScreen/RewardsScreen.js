@@ -1,8 +1,8 @@
-import { StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import { useSelector } from "react-redux";
+
 import Rewards from "../../components/Rewards/Rewards";
-import GOHLoader from "../../commonComponents/GOHLoader";
 
 const RewardsScreen = () => {
   const [rewards, setRewards] = useState([]);
@@ -13,31 +13,33 @@ const RewardsScreen = () => {
   useEffect(() => {
     const updateVouchers = async (voucherIds) => {
       try {
-        const res = await axios.post(
-          `${SERVER_URL}/membership/updateVoucher?toExpire=true`,
+        await globalThis.axios.post(
+          `${globalThis.SERVER_URL}/membership/updateVoucher?toExpire=true`,
           {
             voucherIds,
-          }
+          },
         );
       } catch (error) {
         console.log("Error in updating vouchers ==>", error);
-        crashlytics().log(`Error in updateVouchers RewardsScreen ${error}`)
+        globalThis
+          .crashlytics()
+          .log(`Error in updateVouchers RewardsScreen ${error}`);
       }
     };
     const getRewards = async () => {
       setLoading(true);
       try {
-        const response1 = await axios.post(
-          `${SERVER_URL}/membership/getRewards`,
+        const response1 = await globalThis.axios.post(
+          `${globalThis.SERVER_URL}/membership/getRewards`,
           {
             phone: profile.phoneNumber,
-          }
+          },
         );
-        const response2 = await axios.post(
-          `${SERVER_URL}/membership/getVouchers`,
+        const response2 = await globalThis.axios.post(
+          `${globalThis.SERVER_URL}/membership/getVouchers`,
           {
             phone: profile.phoneNumber,
-          }
+          },
         );
         setRewards(response1.data);
         const currTime = new Date().getTime();
@@ -63,7 +65,9 @@ const RewardsScreen = () => {
         setLoading(false);
         await updateVouchers(expiredVouchersIds);
       } catch (error) {
-        crashlytics().log(`Error in getRewards RewardsScreen ${error}`)
+        globalThis
+          .crashlytics()
+          .log(`Error in getRewards RewardsScreen ${error}`);
         setLoading(false);
         console.log("Error in getting rewards ==>", error);
       }
@@ -82,5 +86,3 @@ const RewardsScreen = () => {
 };
 
 export default RewardsScreen;
-
-const styles = StyleSheet.create({});

@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import WalletTopUp from "../../components/subscription/TopUp";
-import { useSelector } from "react-redux";
-import AwesomeAlert from "react-native-awesome-alerts";
-import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
-import Video from "react-native-video";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import WalletTopUp from "../../components/subscription/TopUp";
+import { wp } from "../../helpers/common";
 
 const TopUpScreen = () => {
   const [nonMemberPopUp, setNonMemberPopUp] = useState(false);
@@ -18,14 +19,16 @@ const TopUpScreen = () => {
 
   const getCoinPackages = async () => {
     //get all coins packages from api
-    const url = SERVER_URL + "/membership/listCoinPackages";
+    const url = globalThis.SERVER_URL + "/membership/listCoinPackages";
     try {
       setLoading(true);
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       setPackages(response.data);
       setLoading(false);
     } catch (error) {
-      crashlytics().log(`Error in getCoinPackages TopUpScreen ${error}`)
+      globalThis
+        .crashlytics()
+        .log(`Error in getCoinPackages TopUpScreen ${error}`);
       setLoading(false);
       console.log("Error in fetching plans", error);
     }
@@ -97,5 +100,3 @@ const TopUpScreen = () => {
 };
 
 export default TopUpScreen;
-
-const styles = StyleSheet.create({});
