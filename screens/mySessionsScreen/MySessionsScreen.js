@@ -1,10 +1,10 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import { MaterialIndicator } from "react-native-indicators";
-import MySessions from "../../components/MySessions";
+import { View } from "react-native";
+
 import { Colors } from "../../assets/colors/color";
-import Video from "react-native-video";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import MySessions from "../../components/MySessions";
 
 export default class MySessionsScreen extends Component {
   constructor(props) {
@@ -23,10 +23,12 @@ export default class MySessionsScreen extends Component {
   }
   _retrieveData = async () => {
     try {
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+      const phoneNumber = await globalThis.AsyncStorage.getItem("phoneNumber");
       this.setState({ phoneNumber: phoneNumber });
       this.loadMySessions(this.state.phoneNumber);
     } catch (error) {
+      console.log(error);
+
       // Error retrieving data
     }
   };
@@ -38,9 +40,9 @@ export default class MySessionsScreen extends Component {
    */
   loadMySessions(phoneNumber) {
     phoneNumber = this.state.phoneNumber;
-    var url = SERVER_URL + "/event/mySessions";
+    var url = globalThis.SERVER_URL + "/event/mySessions";
     this.setState({ loading: true });
-    axios
+    globalThis.axios
       .post(url, { phoneNumber: phoneNumber })
       .then((response) => {
         if (response.data) {
@@ -70,8 +72,6 @@ export default class MySessionsScreen extends Component {
         </View>
       );
     }
-    const navigation = this.props.navigation;
-    const title = "Login";
     return (
       <MySessions
         loadMySessions={this.loadMySessions.bind(this)}
@@ -88,3 +88,8 @@ export default class MySessionsScreen extends Component {
     // this.loadMySessions(this.state.email);
   }
 }
+
+MySessionsScreen.propTypes = {
+  propProfile: PropTypes.object,
+  navigation: PropTypes.object,
+};

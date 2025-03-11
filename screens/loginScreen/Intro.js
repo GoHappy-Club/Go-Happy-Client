@@ -1,6 +1,8 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Image } from "react-native-elements";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import FastImage from "react-native-fast-image";
+
 import { Colors } from "../../assets/colors/color";
 
 export default class Intro extends Component {
@@ -25,8 +27,8 @@ export default class Intro extends Component {
         </View>
 
         <Text style={styles.text}>
-          Join free sessions by clicking the "Free Sessions" icon on the next
-          Screen.
+          Join free sessions by clicking the &quot;Free Sessions&quot; icon on
+          the next Screen.
         </Text>
         {/* <FastImage
           style={styles.image}
@@ -39,12 +41,16 @@ export default class Intro extends Component {
           }}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>Let's get started</Text>
+          <Text style={styles.buttonText}>Let&apos;s get started</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+
+Intro.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   container1: {
