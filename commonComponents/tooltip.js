@@ -1,29 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  useWindowDimensions,
-} from "react-native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useCopilot } from "react-native-copilot";
+
 import { Colors } from "../assets/colors/color";
 
 const CustomTooltip = () => {
-  const {
-    isFirstStep,
-    isLastStep,
-    currentStep,
-    goToNext,
-    goToPrev,
-    stop,
-    copilotEvents,
-    totalStepsNumber,
-    unregisterStep,
-    registerStep,
-  } = useCopilot();
+  const { isFirstStep, isLastStep, currentStep, goToNext, goToPrev, stop } =
+    useCopilot();
 
   const handleSkip = () => {
     AsyncStorage.setItem("showTour", "false");

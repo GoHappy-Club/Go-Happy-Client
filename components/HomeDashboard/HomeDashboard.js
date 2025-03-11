@@ -1,53 +1,36 @@
-import React, { Component, useEffect, useState } from "react";
+import { format, fromUnixTime, getTime, parseISO } from "date-fns";
+import { Clock, Share2, Star } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  Linking,
   SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-  View,
   Share,
-  Platform,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Badge, Button, Text } from "react-native-elements";
 import AwesomeAlert from "react-native-awesome-alerts";
-import {
-  parseISO,
-  format,
-  getTime,
-  fromUnixTime,
-  parse,
-  addHours,
-} from "date-fns";
-import { Dimensions } from "react-native";
-import { MaterialIndicator } from "react-native-indicators";
-
-import { useDispatch, useSelector } from "react-redux";
-import { setSessionAttended } from "../../services/events/EventService";
-
-import toUnicodeVariant from "../toUnicodeVariant.js";
-import { Colors } from "../../assets/colors/color.js";
-import SearchBar from "./SearchBar.js";
-import { hp, wp } from "../../helpers/common.js";
-import { storeCompletedSession } from "../../services/Startup.js";
-import { Clock, Share2, Star } from "lucide-react-native";
+import { Button, Text } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-const { width: screenWidth } = Dimensions.get("window");
-import Sound from "react-native-sound";
+import { MaterialIndicator } from "react-native-indicators";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color.js";
 import CustomCalendarStrip from "../../commonComponents/CalendarStrip.js";
 import { formatNumberWithSuffix } from "../../commonComponents/helpers.js";
+import { wp } from "../../helpers/common.js";
+import Coin from "../../images/coins.png";
+import toUnicodeVariant from "../toUnicodeVariant.js";
+import SearchBar from "./SearchBar.js";
+
 const HomeDashboard = ({
   events,
   ratings,
   childLoader,
-  bookEvent,
   loadEvents,
   navigation,
 }) => {
   const profile = useSelector((state) => state.profile.profile);
-  const membership = useSelector((state) => state.membership.membership);
-
-  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     loader: false,
@@ -77,8 +60,8 @@ const HomeDashboard = ({
 
   const retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("email");
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+      const value = await globalThis.AsyncStorage.getItem("email");
+      const phoneNumber = await globalThis.AsyncStorage.getItem("phoneNumber");
       if (value !== null) {
         setState((prevState) => ({ ...prevState, email: value }));
       }
@@ -87,48 +70,8 @@ const HomeDashboard = ({
       }
     } catch (error) {
       // Error retrieving data
+      console.log("Error retrieving data", error);
     }
-  };
-
-  const extractMeetingNumber = (url) => {
-    const regex = /j\/(\d+)/;
-    const match = url.match(regex);
-
-    if (match && match[1]) {
-      return match[1];
-    } else {
-      return null;
-    }
-  };
-
-  const joinMeeting = async (item) => {
-    try {
-      Linking.openURL(item?.meetingLink);
-    } catch (e) {
-      console.log("Error in join", e);
-    }
-  };
-
-  const handleClickBook = (item) => {
-    if (!isBookingAllowed(item)) return;
-    // setState({ itemToBuy: item }, () => {
-    //   setState({ clickPopup: true });
-    // });
-    updateEventBook(item);
-  };
-
-  const isBookingAllowed = (item) => {
-    if (membership.freeTrialActive == true) return true;
-    if (membership && membership?.membershipType == "Free") {
-      // setState({ nonMemberPopUp: true });
-      navigation.navigate("SubscriptionPlans");
-      return false;
-    } else if (membership && membership?.coins < item.cost) {
-      setState({ lowCoinsPopUp: true });
-      return false;
-    }
-
-    return true;
   };
 
   const changeSelectedDate = (date) => {
@@ -157,9 +100,11 @@ const HomeDashboard = ({
   };
 
   const isOngoingEvent = (item) => {
-    crashlytics().log(
-      JSON.stringify(item.startTime) + JSON.stringify(new Date().getTime())
-    );
+    globalThis
+      .crashlytics()
+      .log(
+        JSON.stringify(item.startTime) + JSON.stringify(new Date().getTime()),
+      );
     return item.startTime - 600000 <= new Date().getTime();
   };
 
@@ -170,7 +115,7 @@ const HomeDashboard = ({
     return events.some(
       (event) =>
         event.sameDayEventId === item.sameDayEventId &&
-        event.participantList.includes(profile.phoneNumber)
+        event.participantList.includes(profile.phoneNumber),
     );
   };
 
@@ -180,59 +125,15 @@ const HomeDashboard = ({
       `👋 Hi! A new session is starting at GoHappy Club, which is very useful and interesting for seniors. \n\n` +
       `📚 The name of the session is *${toUnicodeVariant(
         item.eventName,
-        "bold italic"
+        "bold italic",
       )}*.\n\n` +
       `I think you will definitely like it! 😊 \n\n` +
       `👉 Here is the link to the session: \n${link}.\n\n` +
       `💬 Join in and let me know how you liked it! 👍`;
 
     Share.share({ message: shareMessage })
-      .then((result) => {})
-      .catch((errorMsg) => {});
-  };
-
-  const updateEventBook = async (item) => {
-    setState((prevState) => ({
-      ...prevState,
-      bookingLoader: true,
-      itemClicked: item,
-    }));
-    if (getTitle(item) == "Share") {
-      setState((prevState) => ({ ...prevState, belowAgePopUp: true }));
-      return;
-    }
-    if (getTitle(item) == "Join") {
-      await storeCompletedSession(
-        item.id,
-        item.eventName,
-        item.coverImage,
-        item.subCategory,
-        profile.phoneNumber,
-        item.endTime
-      );
-      setSessionAttended(profile.phoneNumber);
-      // await Linking.openURL(item.meetingLink);
-      joinMeeting(item);
-      return;
-    }
-    if (checkIsParticipantInSameEvent(item)) {
-      setState((prevState) => ({ ...prevState, showAlert: true }));
-      return;
-    }
-    item.loadingButton = true;
-    bookEvent(item, profile.phoneNumber, state.selectedDateRaw, playSound);
-  };
-
-  const giveRewards = async (item) => {
-    try {
-      const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
-        phone: profile.phoneNumber,
-        eventId: item.id,
-      });
-    } catch (error) {
-      crashlytics().log(`Error in giveRewards HomeDashboard ${error}`);
-      console.log("Error in giveRewards ==>", error);
-    }
+      .then(() => {})
+      .catch(() => {});
   };
 
   const loadCaller = () => {
@@ -254,7 +155,7 @@ const HomeDashboard = ({
         color: Colors.greyishText,
       }}
     >
-      Check tomorrow's sessions 😁
+      Check tomorrow&apos;s sessions 😁
     </Text>
   );
 
@@ -333,7 +234,7 @@ const HomeDashboard = ({
     if (profile.age != null && profile.age < 50) {
       handleBelowAge(
         item,
-        "https://www.gohappyclub.in/session_details/" + item.id
+        "https://www.gohappyclub.in/session_details/" + item.id,
       );
       return;
     }
@@ -342,27 +243,13 @@ const HomeDashboard = ({
         ? item.shareMessage
         : await createShareMessage(
             item,
-            "https://www.gohappyclub.in/session_details/" + item.id
+            "https://www.gohappyclub.in/session_details/" + item.id,
           );
     Share.share({
       message: sessionShareMessage,
     })
-      .then((result) => {})
-      .catch((errorMsg) => {});
-  };
-
-  const playSound = () => {
-    const sound = new Sound("booked.mp3", Sound.MAIN_BUNDLE, (error) => {
-      if (error) {
-        console.log("failed to load the sound", error);
-        return;
-      }
-      sound.play((success) => {
-        if (!success) {
-          console.log("playback failed due to audio decoding errors");
-        }
-      });
-    });
+      .then(() => {})
+      .catch(() => {});
   };
 
   const renderItem = ({ item }) => (
@@ -555,7 +442,7 @@ const HomeDashboard = ({
             {item.costType == "paid" &&
               item?.type?.toLowerCase() != "workshop" && (
                 <FastImage
-                  source={require("../../images/coins.png")}
+                  source={Coin}
                   style={{
                     width: wp(6),
                     aspectRatio: 1,
@@ -757,7 +644,7 @@ const HomeDashboard = ({
               handleBelowAge(
                 state.itemClicked,
                 "https://www.gohappyclub.in/session_details/" +
-                  state.itemClicked.id
+                  state.itemClicked.id,
               );
               setState({ belowAgePopUp: false });
             }}
@@ -828,135 +715,15 @@ const HomeDashboard = ({
   );
 };
 
-const calendarStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F5F5F5",
-  },
-  calendarStrip: {
-    height: hp(10),
-    backgroundColor: Colors.background,
-  },
-  headerStyle: {
-    // color: "#333",
-    fontSize: 18,
-    display: "none",
-  },
-  dateNumberStyle: {
-    // color: "#333",
-    fontSize: 16,
-    // backgroundColor: "red",
-    padding: 5,
-    width: wp(10),
-    height: wp(10),
-  },
-  dateNameStyle: {
-    // color: "#666",
-    fontSize: 14,
-  },
-  highlightDateNumberStyle: {
-    // color: "blue",
-    fontWeight: "bold",
-    fontSize: 16,
-    // backgroundColor: "red",
-    padding: 10,
-  },
-  disabledDateNameStyle: {
-    // color: "#CCC",
-  },
-  disabledDateNumberStyle: {
-    // color: "#CCC",
-  },
-  iconContainer: {
-    flex: 0.1,
-  },
-});
-
-const styles = StyleSheet.create({
-  item: {
-    width: screenWidth - 60,
-    height: screenWidth - 60,
-  },
-  imageContainer: {
-    flex: 1,
-    marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: Colors.white,
-    borderRadius: 8,
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: "cover",
-  },
-  contentContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.grey.lightgrey,
-    paddingBottom: 50,
-    margin: 40,
-  },
-  container: {
-    flex: 1,
-  },
-  card: {
-    backgroundColor: Colors.white,
-    marginBottom: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.primary,
-  },
-  badge: {
-    backgroundColor: Colors.white,
-    alignSelf: "flex-start",
-    color: Colors.primary,
-    // padding:4
-  },
-  fav: {
-    alignSelf: "flex-start",
-  },
-  bookButton: {
-    backgroundColor: Colors.green,
-  },
-  AAcontainer: {
-    padding: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  AAtitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: Colors.grey.grey,
-  },
-  AAmessage: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 20,
-    color: Colors.grey.grey,
-  },
-  AAbuttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 20,
-  },
-  AAbutton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    minWidth: 100,
-  },
-  AApayButton: {
-    backgroundColor: Colors.primary,
-  },
-  AAshareButton: {
-    backgroundColor: Colors.grey.grey,
-  },
-  AAbuttonText: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-});
+HomeDashboard.propTypes = {
+  events: PropTypes.array.isRequired,
+  profile: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+  loadCaller: PropTypes.func.isRequired,
+  checkIsParticipantInSameEvent: PropTypes.func.isRequired,
+  ratings: PropTypes.array.isRequired,
+  childLoader: PropTypes.bool.isRequired,
+  loadEvents: PropTypes.func.isRequired,
+};
 
 export default HomeDashboard;

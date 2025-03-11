@@ -1,45 +1,41 @@
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faWallet, faCrown } from "@fortawesome/free-solid-svg-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  Image,
-  Dimensions,
-  Pressable,
   Animated,
-  Easing,
   AppState,
-  SafeAreaView,
+  Dimensions,
+  Easing,
+  Image,
   Platform,
+  Pressable,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
 } from "react-native";
-import { Colors } from "../assets/colors/color";
+import PushNotification from "react-native-push-notification";
 import { useDispatch, useSelector } from "react-redux";
-import GradientText from "../commonComponents/GradientText";
-import { useNavigation } from "@react-navigation/native";
-import BottomSheet from "./CustomBottomSheet/BottomSheet";
-import {
-  activateFreeTrial,
-  checkPendingFeedback,
-  deactivateFreeTrial,
-  getTodaysFestival,
-  submitRating,
-  checkFreeTrialExpired,
-} from "../services/Startup";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setMembership } from "../redux/actions/counts";
+
+import { Colors } from "../assets/colors/color";
 import quotes from "../constants/quotes.json";
+import { wp } from "../helpers/common";
+import { setMembership } from "../redux/actions/counts";
 import {
   ScheduledNotifcation,
   scheduleMedicineReminders,
   scheduleWaterReminders,
 } from "../services/LocalPushController";
-import { hp, wp } from "../helpers/common";
+import {
+  activateFreeTrial,
+  checkFreeTrialExpired,
+  checkPendingFeedback,
+  deactivateFreeTrial,
+  getTodaysFestival,
+  submitRating,
+} from "../services/Startup";
+import BottomSheet from "./CustomBottomSheet/BottomSheet";
 import SessionRatingAlert from "./CustomBottomSheet/RatingSheet";
-import PushNotification from "react-native-push-notification";
 
 const width = Dimensions.get("window").width;
 
@@ -113,7 +109,7 @@ const Header = () => {
           await ScheduledNotifcation(
             "Your Daily Motivation",
             randomQuote.english,
-            tomorrow
+            tomorrow,
           );
         }
         return parsedData;
@@ -138,7 +134,7 @@ const Header = () => {
     const getFestival = async () => {
       // get today's festival if any
       const alreadyCheckedFestival = await AsyncStorage.getItem(
-        "alreadyCheckedFestival"
+        "alreadyCheckedFestival",
       );
       const currDate = new Date().toISOString().split("T")[0].split("-")[2];
       if (
@@ -235,24 +231,12 @@ const Header = () => {
         duration: 2000,
         easing: Easing.linear,
         useNativeDriver: true,
-      })
+      }),
     ).start();
   }, []);
 
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-
   const handleNavigate = () => {
     navigation.navigate("MyProfile");
-  };
-
-  const trimContent = (content) => {
-    if (content.length > 7) {
-      return content.substring(0, 7) + "...";
-    }
-    return content;
   };
 
   const setNewMembership = ({
@@ -385,7 +369,7 @@ const Header = () => {
             setCurrentSession,
             setShowRating,
             0,
-            false
+            false,
           );
           setShowRating(false);
         }}
@@ -399,7 +383,7 @@ const Header = () => {
             profile.phoneNumber,
             reason,
             setSubmitted,
-            setLoading
+            setLoading,
           );
         }}
       />

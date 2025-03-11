@@ -1,3 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
+import LottieView from "lottie-react-native";
+import { Camera } from "lucide-react-native";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,24 +15,20 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
 import { SafeAreaView } from "react-native";
-import { Colors } from "../../assets/colors/color";
-import { hp, wp } from "../../helpers/common";
-import { useDispatch, useSelector } from "react-redux";
-import { Camera } from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ImagePicker from "react-native-image-crop-picker";
-import { setProfile } from "../../redux/actions/counts";
 import { TouchableOpacity } from "react-native";
-import DateTimePicker from "react-native-ui-datepicker";
-import dayjs from "dayjs";
-import { Button } from "react-native-elements";
-import LottieView from "lottie-react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { Button } from "react-native-elements";
+import FastImage from "react-native-fast-image";
+import ImagePicker from "react-native-image-crop-picker";
+import DateTimePicker from "react-native-ui-datepicker";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import Correct from "../../assets/lottie/correct.json";
 import UserDetailsForm from "../../commonComponents/UserDetailsForm";
-import { useTranslation } from "react-i18next";
+import { hp, wp } from "../../helpers/common";
+import { setProfile } from "../../redux/actions/counts";
 
 const EditProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -62,7 +65,6 @@ const EditProfile = () => {
 
   const [updated, setUpdated] = useState(false);
   const [open, setOpen] = useState(false);
-  const membership = useSelector((state) => state.membership.membership);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t } = useTranslation();
@@ -79,8 +81,8 @@ const EditProfile = () => {
       ImagePicker.openPicker(options)
         .then((image) => {
           const base64Image = `data:${image.mime};base64,${image.data}`;
-          var url = SERVER_URL + "/user/updateProfileImage";
-          axios
+          var url = globalThis.SERVER_URL + "/user/updateProfileImage";
+          globalThis.axios
             .post(url, {
               phoneNumber: profile.phoneNumber,
               profileImage: base64Image,
@@ -90,9 +92,9 @@ const EditProfile = () => {
               setState((prevState) => ({ ...prevState, image: base64Image }));
               AsyncStorage.setItem("profileImage", base64Image);
             })
-            .catch((error) => {});
+            .catch(() => {});
         })
-        .catch((error) => {});
+        .catch(() => {});
     } catch (error) {
       console.log("Error in handleSelectImage:", error);
     }
@@ -137,7 +139,7 @@ const EditProfile = () => {
     }
     try {
       setState((prevState) => ({ ...prevState, loading: true }));
-      const response = await axios.post(`${SERVER_URL}/user/update`, {
+      await globalThis.axios.post(`${globalThis.SERVER_URL}/user/update`, {
         phone: profile.phoneNumber,
         name: state.name,
         email: state.email,
@@ -155,7 +157,7 @@ const EditProfile = () => {
           city: state.city,
           dob: state.dob,
           age: state.age,
-        })
+        }),
       );
       AsyncStorage.setItem("email", state.email);
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
@@ -239,9 +241,9 @@ const EditProfile = () => {
               onChange={({ date }) => {
                 const finalDate = `${String(date.get("date")).padStart(
                   2,
-                  "0"
+                  "0",
                 )}-${String(date.get("month") + 1).padStart(2, "0")}-${date.get(
-                  "year"
+                  "year",
                 )}`;
                 const d = parseDate(finalDate).toDate();
                 const millis = new Date().getTime() - d.getTime();
@@ -252,14 +254,14 @@ const EditProfile = () => {
               maxDate={dayjs().subtract(5, "years")}
               selectedItemColor={Colors.primary}
               selectedTextStyle={{
-                color:Colors.primaryText
+                color: Colors.primaryText,
               }}
             />
           </View>
         </Pressable>
         {updated && (
           <LottieView
-            source={require("../../assets/lottie/correct.json")}
+            source={Correct}
             autoPlay
             style={{
               width: wp(50),

@@ -1,29 +1,22 @@
-import {
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
+
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
-import { useNavigation } from "@react-navigation/native";
+import PaymentError from "../../images/paymentError.png";
 
 const SubscriptionFailed = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <FastImage
-        source={require("../../images/paymentError.png")}
-        style={styles.image}
-      />
+      <FastImage source={PaymentError} style={styles.image} />
       <Text style={styles.sorryTitle}>Sorry!</Text>
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
-          We couldn't process your request to join GoHappy Club.
+          We couldn&apos;t process your request to join GoHappy Club.
         </Text>
         <Text style={styles.plainText}>Please try again.</Text>
       </View>

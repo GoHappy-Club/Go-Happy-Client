@@ -1,17 +1,16 @@
-import React, { Component } from "react";
-//import axios from "axios";
-import HomeDashboard from "../../components/HomeDashboard/HomeDashboard.js";
-import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-
-import tambola from "tambola";
-import Video from "react-native-video";
-import { connect } from "react-redux";
-import { setMembership, setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import GOHLoader from "../../commonComponents/GOHLoader.js";
-import { View } from "react-native";
-import { Colors } from "../../assets/colors/color.js";
 import { fromUnixTime } from "date-fns";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { View } from "react-native";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import tambola from "tambola";
+
+import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
+import HomeDashboard from "../../components/HomeDashboard/HomeDashboard.js";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -26,16 +25,17 @@ class HomeScreen extends Component {
       whatsappLink: "",
       ratings: [],
     };
-    crashlytics().log(JSON.stringify(props.propProfile));
+    globalThis.crashlytics().log(JSON.stringify(props.propProfile));
     this._retrieveData();
     // alert(JSON.stringify(props));
   }
 
   _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("email");
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+      const value = await globalThis.AsyncStorage.getItem("email");
+      const phoneNumber = await globalThis.AsyncStorage.getItem("phoneNumber");
+      const selfInviteCode =
+        await globalThis.AsyncStorage.getItem("selfInviteCode");
       if (value !== null) {
         // We have data!!
         this.setState({ email: value });
@@ -43,25 +43,27 @@ class HomeScreen extends Component {
         this.setState({ selfInviteCode: selfInviteCode });
       }
     } catch (error) {
+      console.log(error);
       // Error retrieving data
     }
   };
 
   async getProperties() {
-    var url = SERVER_URL + "/properties/list";
+    var url = globalThis.SERVER_URL + "/properties/list";
     const redux_profile = this.props.profile;
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0 && redux_profile) {
           redux_profile.properties = properties[0];
-          actions.setProfile(redux_profile);
+          this.props.actions.setProfile(redux_profile);
           this.setState({ whatsappLink: properties[0].whatsappHelpLink });
         }
       }
     } catch (error) {
       this.error = true;
+      console.log("ERROR", error);
       // throw new Error("Error getting order ID");
     }
   }
@@ -103,7 +105,7 @@ class HomeScreen extends Component {
   loadEvents(selectedDate, midnightDate) {
     this.setState({ childLoader: true });
     this.setState({ events: [] });
-    var url = SERVER_URL + "/event/getEventsByDate";
+    var url = globalThis.SERVER_URL + "/event/getEventsByDate";
     if (selectedDate == null) {
       selectedDate = new Date().setHours(0, 0, 0, 0);
     }
@@ -113,7 +115,7 @@ class HomeScreen extends Component {
       midnightDate = dt.getTime();
     }
 
-    axios
+    globalThis.axios
       .post(url, { date: selectedDate, midnightDate })
       .then((response) => {
         if (response.data) {
@@ -129,7 +131,7 @@ class HomeScreen extends Component {
         }
         this.getProperties();
       })
-      .catch((error) => {
+      .catch(() => {
         // alert("blablabla" + url + error);
         this.error = true;
         this.getProperties();
@@ -142,10 +144,10 @@ class HomeScreen extends Component {
       phoneNumber = this.state.phoneNumber;
     }
     var id = item.id;
-    var url = SERVER_URL + "/event/bookEvent";
+    var url = globalThis.SERVER_URL + "/event/bookEvent";
     let { membership, actions } = this.props;
 
-    axios
+    globalThis.axios
       .post(url, { id: id, phoneNumber: phoneNumber, tambolaTicket: ticket })
       .then((response) => {
         if (response.data) {
@@ -179,7 +181,7 @@ class HomeScreen extends Component {
           }
         }
       })
-      .catch((error) => {
+      .catch(() => {
         this.error = true;
         return false;
       });
@@ -188,6 +190,18 @@ class HomeScreen extends Component {
     this.loadEvents(new Date().setHours(0, 0, 0, 0));
   }
 }
+
+HomeScreen.propTypes = {
+  propProfile: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
+  copilotEvents: PropTypes.object.isRequired,
+  start: PropTypes.func.isRequired,
+  registerStep: PropTypes.func.isRequired,
+  membership: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   count: state.count.count,

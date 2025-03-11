@@ -1,21 +1,18 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Avatar, Button, Card, Text } from "react-native-paper";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import { walkthroughable, CopilotStep } from "react-native-copilot";
-import { Colors } from "../../assets/colors/color";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts";
 import { withTranslation } from "react-i18next";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { CopilotStep, walkthroughable } from "react-native-copilot";
+import FastImage from "react-native-fast-image";
+import { Text } from "react-native-paper";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
+import Contribute from "../../images/promotion_contribute.png";
+import PromotionRefer from "../../images/promotion_refer.png";
+import { setProfile } from "../../redux/actions/counts";
 
 const Walkthroughable = walkthroughable(TouchableOpacity);
 
@@ -34,7 +31,7 @@ class PromotionSection extends Component {
       {
         id: 1,
         title: "Refer & Win",
-        image: require("../../images/promotion_refer.png"),
+        image: PromotionRefer,
         to:
           this.props.profile.age == null || this.props.profile.age >= 50
             ? "Refer"
@@ -44,7 +41,7 @@ class PromotionSection extends Component {
       {
         id: 2,
         title: "Contribute",
-        image: require("../../images/promotion_contribute.png"),
+        image: Contribute,
         to: "Contribution Details",
         text: "Support our mission! Click here to learn how you can contribute and make an impact.",
       },
@@ -90,6 +87,12 @@ class PromotionSection extends Component {
   }
 }
 
+PromotionSection.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
+};
+
 const styles = StyleSheet.create({
   mainContainer: {
     height: "100%",
@@ -102,18 +105,18 @@ const styles = StyleSheet.create({
     padding: 0,
     borderRadius: 8,
     height: "100%",
-    gap:wp(2)
+    gap: wp(2),
   },
   touchable: {
     width: "48%",
     height: 150,
     borderRadius: 8,
     justifyContent: "center",
-    alignItems:"center",
-    borderColor:Colors.grey.grey,
-    borderWidth:1,
-    gap:10,
-    paddingBottom:10
+    alignItems: "center",
+    borderColor: Colors.grey.grey,
+    borderWidth: 1,
+    gap: 10,
+    paddingBottom: 10,
   },
 
   image: {
@@ -123,9 +126,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  itemText:{
-    fontSize:wp(4),
-    fontWeight:"bold",
+  itemText: {
+    fontSize: wp(4),
+    fontWeight: "bold",
   },
   headingContainer: {
     flexDirection: "row",
@@ -156,5 +159,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withTranslation()(PromotionSection));

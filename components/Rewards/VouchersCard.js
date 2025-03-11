@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { hp, wp } from "../../helpers/common";
-import { Colors } from "../../assets/colors/color";
-import Animated from "react-native-reanimated";
+import PropTypes from "prop-types";
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
+import Animated from "react-native-reanimated";
 
-const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
+import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
+
+const VouchersCard = ({ voucher, onPress, styles, formatDate }) => {
   return (
     <TouchableOpacity style={[styles.voucherCard]} onPress={onPress}>
       {voucher.status != "ACTIVE" && (
@@ -69,7 +72,7 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
           >
             {voucher?.value != null && (
               <FastImage
-                source={require("../../images/coins.png")}
+                source={Coins}
                 style={{
                   width: wp(8),
                   aspectRatio: 1,
@@ -95,7 +98,7 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
             {voucher.status == "REDEEMED"
               ? formatDate(voucher?.redemptionTime)
               : formatDate(
-                  Math.min(voucher.expiryDate, voucher.parentExpiryDate)
+                  Math.min(voucher.expiryDate, voucher.parentExpiryDate),
                 )}
           </Animated.Text>
         </Animated.View>
@@ -104,6 +107,13 @@ const VouchersCard = ({ voucher, id, onPress, styles, formatDate }) => {
       <View style={styles.cutoutRight} />
     </TouchableOpacity>
   );
+};
+
+VouchersCard.propTypes = {
+  voucher: PropTypes.object,
+  onPress: PropTypes.func,
+  styles: PropTypes.object,
+  formatDate: PropTypes.func,
 };
 
 export default VouchersCard;

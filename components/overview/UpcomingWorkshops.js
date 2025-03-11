@@ -1,61 +1,22 @@
-import React, { Component } from "react";
-import { Card, Divider } from "react-native-paper";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
 import { Skeleton } from "@rneui/themed";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
 import { format, fromUnixTime } from "date-fns";
-import { Colors } from "../../assets/colors/color.js";
-import { useTranslation, withTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import FastImage from "react-native-fast-image";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-const data = [
-  {
-    title: "Tambola",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "In turpis",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGhvdG9ncmFwaHl8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "Lorem Ipsum",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.pexels.com/photos/3314294/pexels-photo-3314294.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-  {
-    title: "Tambola",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGhvdG98ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "In turpis",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGhvdG9ncmFwaHl8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-  },
-  {
-    title: "Lorem Ipsum",
-    eventDate: "1687725145435",
-    imgUrl:
-      "https://images.pexels.com/photos/3314294/pexels-photo-3314294.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-];
+import { Colors } from "../../assets/colors/color.js";
+import { setProfile } from "../../redux/actions/counts.js";
+
 class UpcomingWorkshops extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +39,7 @@ class UpcomingWorkshops extends Component {
   }
 
   // Render each row of items
-  renderRow = ({ item, index }) => (
+  renderRow = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
         this.props.navigation.navigate("Session Details", {
@@ -106,7 +67,7 @@ class UpcomingWorkshops extends Component {
     </TouchableOpacity>
   );
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <>
         {this.props.upcomingWorkshops == null && (
@@ -127,13 +88,15 @@ class UpcomingWorkshops extends Component {
             <View style={styles.mainContainer}>
               <View style={styles.headingContainer}>
                 <View style={styles.line} />
-                <Text style={styles.headingText}>{t("upcoming_workshops")}</Text>
+                <Text style={styles.headingText}>
+                  {t("upcoming_workshops")}
+                </Text>
                 <View style={styles.line} />
               </View>
               <FlatList
                 horizontal={true}
                 data={this.props.upcomingWorkshops}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(index) => index.toString()}
                 renderItem={this.renderRow.bind(this)}
                 // nestedScrollEnabled={true}
               />
@@ -143,6 +106,14 @@ class UpcomingWorkshops extends Component {
     );
   }
 }
+
+UpcomingWorkshops.propTypes = {
+  upcomingWorkshops: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  reloadOverview: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -210,4 +181,7 @@ const ActionCreators = Object.assign({}, { setProfile });
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(ActionCreators, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(UpcomingWorkshops));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(UpcomingWorkshops));

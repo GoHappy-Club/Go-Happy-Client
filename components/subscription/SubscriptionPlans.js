@@ -1,36 +1,36 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { differenceInMonths } from "date-fns";
+import { MoveRight, Star } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  Platform,
   Pressable,
+  SafeAreaView,
+  ScrollView,
+  Share,
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  Platform,
-  Share,
-  SafeAreaView,
 } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import phonepe_payments from "../PhonePe/Payments";
-import toUnicodeVariant from "../toUnicodeVariant";
-import { useSelector } from "react-redux";
-import { Button } from "react-native-elements";
 import { TouchableOpacity } from "react-native";
-import { hp, wp } from "../../helpers/common";
-import { Colors } from "../../assets/colors/color";
-import { MoveRight, Star } from "lucide-react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { Button } from "react-native-elements";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {
   FadeInUp,
+  useSharedValue,
   withSequence,
   withTiming,
-  useAnimatedStyle,
-  useSharedValue,
 } from "react-native-reanimated";
-import GradientText from "../../commonComponents/GradientText";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import AwesomeAlert from "react-native-awesome-alerts";
-import BottomSheet from "../CustomBottomSheet/BottomSheet";
-import { differenceInMonths, fromUnixTime, getDay, startOfDay } from "date-fns";
 import Toast from "react-native-simple-toast";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import GradientText from "../../commonComponents/GradientText";
+import { hp, wp } from "../../helpers/common";
+import BottomSheet from "../CustomBottomSheet/BottomSheet";
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -54,9 +54,9 @@ const colorMapping = {
 
 const CARD_MARGIN = 8;
 
-const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
+const SubscriptionCard = ({ membershipPlans, isSelected, onSelect, t }) => {
   const [selectedDuration, setSelectedDuration] = useState(
-    membershipPlans && membershipPlans[0]?.duration
+    membershipPlans && membershipPlans[0]?.duration,
   );
   const shakeOffset = useSharedValue(0);
 
@@ -67,7 +67,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
   const handleDurationSelect = (duration) => {
     setSelectedDuration(duration);
     const newSelectedPlan = membershipPlans.find(
-      (plan) => plan.duration === duration
+      (plan) => plan.duration === duration,
     );
     onSelect(newSelectedPlan);
   };
@@ -77,16 +77,11 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
       shakeOffset.value = withSequence(
         withTiming(-10, { duration: 200 }),
         withTiming(10, { duration: 200 }),
-        withTiming(0, { duration: 200 })
+        withTiming(0, { duration: 200 }),
       );
     }
   }, [isSelected]);
 
-  const animatedTextStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: shakeOffset.value }],
-    };
-  });
   const monthlyPrice = selectedPlan?.subscriptionFees / selectedPlan?.duration;
 
   return (
@@ -133,13 +128,15 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
         <View style={styles.divider} />
 
         <View style={styles.featuresContainer}>
-          {selectedPlan?.perks?.map((perk) => (
+          {selectedPlan?.perks?.map((perk, index) => (
             <FeatureItem
+              key={index}
               title={perk}
               highlight={true}
               textColor={
                 colorMapping[selectedPlan?.membershipType]["textColor"]
               }
+              t={t}
             />
           ))}
         </View>
@@ -162,6 +159,7 @@ const SubscriptionCard = ({ membershipPlans, isSelected, onSelect }) => {
                 duration={plan.duration}
                 isSelected={selectedDuration === plan.duration}
                 onSelect={() => handleDurationSelect(plan.duration)}
+                t={t}
               />
             ))}
           </View>
@@ -209,7 +207,7 @@ const DurationButton = ({ duration, isSelected, onSelect }) => {
 
 const SubscriptionPlans = ({ plans }) => {
   const uniquePlans = Array.from(
-    new Set(plans.map((plan) => plan.membershipType))
+    new Set(plans.map((plan) => plan.membershipType)),
   ).map((type) => plans.find((plan) => plan.membershipType === type));
   const [selectedPlan, setSelectedPlan] = useState(uniquePlans[1]);
   const [paymentSharePopUp, setPaymentSharePopUp] = useState(false);
@@ -245,6 +243,7 @@ const SubscriptionPlans = ({ plans }) => {
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -281,30 +280,30 @@ const SubscriptionPlans = ({ plans }) => {
     pricingHelper();
   }, [selectedPlan]);
 
-  const openRenewModal = () => {
-    modalRef.current.present();
-  };
+  // const openRenewModal = () => {
+  //   modalRef.current.present();
+  // };
 
   const closeRenewModal = () => {
     modalRef.current.dismiss();
   };
 
-  const checkForRenew = () => {
-    const membershipType = membership.membershipType;
-    const membershipEndDate = membership.membershipEndDate;
-    const currentTime = new Date().getTime();
-    const diff = membershipEndDate - currentTime;
+  // const checkForRenew = () => {
+  //   const membershipType = membership.membershipType;
+  //   const membershipEndDate = membership.membershipEndDate;
+  //   const currentTime = new Date().getTime();
+  //   const diff = membershipEndDate - currentTime;
 
-    if (membershipType == "Free") return;
-    if (
-      (membershipType == "Silver" ||
-        membershipType == "Gold" ||
-        membershipType == "Platinum") &&
-      diff < 60 * 24 * 60 * 60 * 1000
-    ) {
-      openRenewModal();
-    }
-  };
+  //   if (membershipType == "Free") return;
+  //   if (
+  //     (membershipType == "Silver" ||
+  //       membershipType == "Gold" ||
+  //       membershipType == "Platinum") &&
+  //     diff < 60 * 24 * 60 * 60 * 1000
+  //   ) {
+  //     openRenewModal();
+  //   }
+  // };
 
   const isDisabled = () => {
     const stDate = new Date(Number(membership.membershipStartDate));
@@ -344,9 +343,9 @@ const SubscriptionPlans = ({ plans }) => {
       setPayButtonLoading(true);
     }
     try {
-      const response = await axios.post(
-        `${SERVER_URL}/paytring/createOrder`,
-        data
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/paytring/createOrder`,
+        data,
       );
       const orderData = response.data;
       setPayButtonLoading(false);
@@ -375,9 +374,9 @@ const SubscriptionPlans = ({ plans }) => {
       setPayButtonLoading(false);
       setShareButtonLoading(false);
       setPaymentSharePopUp(false);
-      crashlytics().log(
-        `Error in paytringWrapper SubscriptionPlans.js ${error}`
-      );
+      globalThis
+        .crashlytics()
+        .log(`Error in paytringWrapper SubscriptionPlans.js ${error}`);
     }
   };
 
@@ -389,7 +388,9 @@ const SubscriptionPlans = ({ plans }) => {
       });
     } catch (error) {
       console.log("Error in sharing payment link : ", error);
-      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in handlePaymentShare Contribution.js ${error}`);
     }
   };
 
@@ -420,12 +421,12 @@ const SubscriptionPlans = ({ plans }) => {
     } else {
       return getRemainingMembershipValue(
         membership.membershipStartDate,
-        membership.membershipEndDate
+        membership.membershipEndDate,
       ) < subsFees
         ? subsFees -
             getRemainingMembershipValue(
               membership.membershipStartDate,
-              membership.membershipEndDate
+              membership.membershipEndDate,
             )
         : "101";
     }
@@ -439,13 +440,13 @@ const SubscriptionPlans = ({ plans }) => {
 
   const getRemainingMembershipValue = (
     membershipStartDate,
-    membershipEndDate
+    membershipEndDate,
   ) => {
     const currentTime = new Date().getTime();
     const diff = currentTime - membershipStartDate;
     const duration = membershipEndDate - membershipStartDate;
     const subscriptionFees = getCurrentMembershipFees(
-      duration / (30 * 24 * 60 * 60 * 1000)
+      duration / (30 * 24 * 60 * 60 * 1000),
     )[0]?.subscriptionFees;
     const usedValue = (diff / duration) * subscriptionFees;
     return Math.round(subscriptionFees - usedValue);
@@ -474,14 +475,15 @@ const SubscriptionPlans = ({ plans }) => {
       >
         <View style={styles.container}>
           {Object.entries(groupedPlans).map(
-            ([membershipType, membershipPlans], index) => (
+            ([membershipType, membershipPlans]) => (
               <SubscriptionCard
                 key={membershipType}
                 membershipPlans={membershipPlans}
                 isSelected={selectedPlan?.membershipType === membershipType}
                 onSelect={handleSelectPlan}
+                t={t}
               />
-            )
+            ),
           )}
         </View>
       </ScrollView>
@@ -629,6 +631,29 @@ const SubscriptionPlans = ({ plans }) => {
   );
 };
 
+SubscriptionCard.propTypes = {
+  membershipPlans: PropTypes.array,
+  isSelected: PropTypes.bool,
+  onSelect: PropTypes.func,
+  t: PropTypes.func,
+};
+
+FeatureItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  highlight: PropTypes.string.isRequired,
+  textColor: PropTypes.string.isRequired,
+};
+
+DurationButton.propTypes = {
+  duration: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
+
+SubscriptionPlans.propTypes = {
+  plans: PropTypes.array.isRequired,
+};
+
 export default SubscriptionPlans;
 
 const styles = StyleSheet.create({
@@ -662,7 +687,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     borderRadius: 20,
     padding: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
     backdropFilter: "blur(12px)",
     shadowColor: "#000",
     shadowOffset: {
@@ -749,14 +773,6 @@ const styles = StyleSheet.create({
   },
   selectedDurationButton: {
     backgroundColor: Colors.primary,
-  },
-  durationButtonText: {
-    fontSize: 12,
-    textAlign: "center",
-    fontWeight: "500",
-  },
-  selectedDurationButtonText: {
-    color: Colors.primaryText,
   },
   footerContainer: {
     marginTop: "2%",

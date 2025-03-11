@@ -1,23 +1,13 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import {
-  Button,
-  Image,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-// import { Container, Header, Content, Left, Body, Right, Icon, Title, Form, Item, Input, Label } from 'native-base';
 import { MaterialIndicator } from "react-native-indicators";
-import Refer from "../../components/Refer/Refer";
-import { connect, useSelector } from "react-redux";
-import { setProfile } from "../../redux/actions/counts";
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
 import { Colors } from "../../assets/colors/color";
+import Refer from "../../components/Refer/Refer";
+import { setProfile } from "../../redux/actions/counts";
+
 class ReferScreen extends Component {
   constructor(props) {
     super(props);
@@ -35,10 +25,11 @@ class ReferScreen extends Component {
   }
   _retrieveData = async () => {
     try {
-      const email = await AsyncStorage.getItem("email");
+      const email = await globalThis.AsyncStorage.getItem("email");
       this.setState({ email: email });
       this.loadMySessions(this.state.email);
     } catch (error) {
+      console.log(error);
       // Error retrieving data
     }
   };
@@ -66,8 +57,8 @@ class ReferScreen extends Component {
   requestReferrals(_callback) {
     // fetching refferals
     ////console.log("In requestReferrals api");
-    axios
-      .post(SERVER_URL + "/user/referralsList", {
+    globalThis.axios
+      .post(globalThis.SERVER_URL + "/user/referralsList", {
         from: this.props.profile.phoneNumber,
       })
       .then((response) => {
@@ -77,7 +68,7 @@ class ReferScreen extends Component {
       })
       .catch((error) => {
         ////console.log("referrals failed");
-        crashlytics().recordError(JSON.stringify(error));
+        globalThis.crashlytics().recordError(JSON.stringify(error));
         this.error = true;
       });
   }
@@ -91,8 +82,6 @@ class ReferScreen extends Component {
         />
       );
     }
-    const navigation = this.props.navigation;
-    const title = "Login";
     return (
       <Refer
         // loadMySessions={this.loadMySessions.bind(this)}
@@ -106,80 +95,11 @@ class ReferScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container1: {
-    flex: 1,
-    backgroundColor: Colors.materialIndicatorColor,
-  },
-  input: {
-    width: "90%",
-    backgroundColor: Colors.white,
-    padding: 15,
-    marginBottom: 10,
-  },
-  btnContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  userBtn: {
-    backgroundColor: "#f0ad4e",
-    paddingVertical: 15,
-    height: 60,
-  },
-  btnTxt: {
-    fontSize: 20,
-    textAlign: "center",
-    color: Colors.black,
-    fontWeight: "700",
-  },
-  registerTxt: {
-    marginTop: 5,
-    fontSize: 15,
-    textAlign: "center",
-    color: Colors.white,
-  },
-  welcome: {
-    fontSize: 30,
-    textAlign: "center",
-    margin: 10,
-    color: Colors.white,
-  },
-  logo: {
-    width: 150,
-    height: 150,
-  },
-  logoContainer: {
-    alignItems: "center",
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-  formContainer: {},
-  title: {
-    color: Colors.white,
-    marginTop: 10,
-    width: 160,
-    opacity: 0.9,
-    textAlign: "center",
-  },
-  newinput: {
-    height: 50,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    marginBottom: 10,
-    color: Colors.white,
-    paddingHorizontal: 10,
-  },
-  container2: {
-    padding: 25,
-  },
-  title2: {
-    color: Colors.white,
-    marginTop: "30%",
-    marginBottom: 10,
-    opacity: 0.9,
-    textAlign: "center",
-    fontSize: 30,
-  },
-});
+ReferScreen.propTypes = {
+  profile: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,

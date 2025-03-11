@@ -1,27 +1,24 @@
-import React, { Component } from "react";
-//import axios from "axios";
-import Video from "react-native-video";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
-import { ScrollView } from "react-native-gesture-handler";
-import {
-  StyleSheet,
-  ActivityIndicator,
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  TouchableOpacity,
-  Dimensions,
-  Platform,
-} from "react-native";
 import { Tab, TabView, Text } from "@rneui/themed";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import {
+  Dimensions,
+  ImageBackground,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { View } from "react-native";
-import TripsList from "../../components/trips/TripsList.js";
+import FastImage from "react-native-fast-image";
+import Carousel from "react-native-snap-carousel";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
-import Carousel from "react-native-snap-carousel";
-import FastImage from "react-native-fast-image";
+import TripsList from "../../components/trips/TripsList.js";
+import { setProfile } from "../../redux/actions/counts.js";
 
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
@@ -43,41 +40,43 @@ class TripsScreen extends Component {
       upcomingTrips: [],
       tripImages: [],
     };
-    crashlytics().log(JSON.stringify(props.propProfile));
+    globalThis.crashlytics().log(JSON.stringify(props.propProfile));
     this._carousel = null;
     // alert(JSON.stringify(props));
   }
 
   getProperties = async () => {
     try {
-      const response = await axios.get(SERVER_URL + "/properties/list");
+      const response = await globalThis.axios.get(
+        globalThis.SERVER_URL + "/properties/list",
+      );
       const properties = response.data.properties[0];
       this.setState({ topBannerImages: properties?.tripImages });
     } catch (error) {
-      crashlytics().log(`Error in getProperties ${error}`);
+      globalThis.crashlytics().log(`Error in getProperties ${error}`);
       console.log("Error in getProperties", error);
     }
   };
 
   async getPastTripsData() {
-    var url = SERVER_URL + "/trips/past";
+    var url = globalThis.SERVER_URL + "/trips/past";
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         this.setState({
           pastTrips: response.data.trips,
         });
       }
     } catch (error) {
-      crashlytics().log(`Error in getPastTripsData ${error}`);
+      globalThis.crashlytics().log(`Error in getPastTripsData ${error}`);
       this.error = true;
     }
   }
 
   async getUpcomingTripsData() {
-    var url = SERVER_URL + "/trips/upcoming";
+    var url = globalThis.SERVER_URL + "/trips/upcoming";
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         this.setState({
           upcomingTrips: response.data.trips,
@@ -85,12 +84,12 @@ class TripsScreen extends Component {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log(`Error in getUpcomingTripsData ${error}`);
+      globalThis.crashlytics().log(`Error in getUpcomingTripsData ${error}`);
       // throw new Error("Error getting order ID");
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.getPastTripsData();
     this.getUpcomingTripsData();
     this.getProperties();
@@ -234,6 +233,11 @@ class TripsScreen extends Component {
     }
   }
 }
+
+TripsScreen.propTypes = {
+  propProfile: PropTypes.object,
+  navigation: PropTypes.object,
+};
 
 const styles = StyleSheet.create({
   outsideContainer: {

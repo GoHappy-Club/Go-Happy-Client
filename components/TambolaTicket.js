@@ -1,30 +1,9 @@
-
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import {
-  Dimensions,
-  Image,
-  KeyboardAvoidingView,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-
+import { Alert, Modal, Pressable, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-elements";
-import {
-  Cell,
-  Col,
-  Cols,
-  Row,
-  Rows,
-  Table,
-  TableWrapper,
-} from "react-native-table-component";
+import { Rows, Table } from "react-native-table-component";
+
 import { Colors } from "../assets/colors/color";
 
 export default class TambolaTicket extends Component {
@@ -51,21 +30,19 @@ export default class TambolaTicket extends Component {
     this.setState({ modalVisible: flag });
     this.setState({
       ticketNumber: this.props.event.participantList.indexOf(
-        this.props.phoneNumber
+        this.props.phoneNumber,
       ),
     });
     // var index = this.props.event.participantList.indexOf(this.props.email);
     // this.setState({tambolaTicket:this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].substr(1,this.props.event.tambolaTickets[this.props.event.participantList.indexOf(this.props.email)].length-2)})
     //
   }
-  x;
   render() {
     // const tic = ;
     const item = this.props.event;
 
-    var tic = null;
     var tic = new Array(10);
-    for (var i = 0; i < tic.length; i++) {
+    for (let i = 0; i < tic.length; i++) {
       tic[i] = new Array(3);
     }
     if (
@@ -83,19 +60,19 @@ export default class TambolaTicket extends Component {
 
         if (jsonString != null) {
           var temp = jsonString.match(/\d+/g);
-          for (var i = 0; i < 9; i++) {
+          for (let i = 0; i < 9; i++) {
             tic[0][i] = parseInt(temp[i]);
             if (tic[0][i] == 0) {
               tic[0][i] = "";
             }
           }
-          for (var i = 9; i < 18; i++) {
+          for (let i = 9; i < 18; i++) {
             tic[1][i - 9] = parseInt(temp[i]);
             if (tic[1][i - 9] == 0) {
               tic[1][i - 9] = "";
             }
           }
-          for (var i = 18; i < 27; i++) {
+          for (let i = 18; i < 27; i++) {
             tic[2][i - 18] = parseInt(temp[i]);
             if (tic[2][i - 18] == 0) {
               tic[2][i - 18] = "";
@@ -164,6 +141,12 @@ export default class TambolaTicket extends Component {
     );
   }
 }
+
+TambolaTicket.propTypes = {
+  event: PropTypes.object,
+  phoneNumber: PropTypes.string,
+  setModalVisible: PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   centeredView: {

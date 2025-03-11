@@ -1,28 +1,31 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { format, fromUnixTime, getUnixTime, startOfDay } from "date-fns";
+import { debounce } from "lodash";
+import { Clock, SearchIcon, X } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
+  Animated,
+  Dimensions,
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  Animated,
-  StyleSheet,
-  Dimensions,
-  Text,
-  FlatList,
-  Image,
-  Platform,
+  View,
 } from "react-native";
-import { Clock, SearchIcon, X } from "lucide-react-native";
 import { Pressable } from "react-native";
-import { Colors } from "../../assets/colors/color";
-import { format, fromUnixTime, getUnixTime, startOfDay } from "date-fns";
-import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
-import { MaterialIndicator } from "react-native-indicators";
-import { debounce } from "lodash";
-import { Avatar, Title } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import FastImage from "react-native-fast-image";
+import { MaterialIndicator } from "react-native-indicators";
+import { Title } from "react-native-paper";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
 import { wp } from "../../helpers/common";
+import NoSearchResult from "../../images/noSearchResult.png";
+import ProfileDummy from "../../images/profile_image.jpeg";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,7 +64,7 @@ const Item = ({ item, onPress }) => {
                 ? {
                     uri: item.expertImage,
                   }
-                : require("../../images/profile_image.jpeg")
+                : ProfileDummy
             }
             style={{ width: 30, height: 30, borderRadius: 20 }}
             resizeMode="cover"
@@ -82,7 +85,6 @@ const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [recentSearches, setRecentSearches] = useState([]);
 
   const profile = useSelector((state) => state.profile.profile);
@@ -127,9 +129,9 @@ const SearchBar = () => {
         const trimmedSearches = filteredSearches.slice(0, 3);
         AsyncStorage.setItem(
           "recent_searches",
-          JSON.stringify(trimmedSearches)
+          JSON.stringify(trimmedSearches),
         ).catch((error) =>
-          console.error("Error saving to AsyncStorage:", error)
+          console.error("Error saving to AsyncStorage:", error),
         );
 
         return trimmedSearches;
@@ -160,25 +162,23 @@ const SearchBar = () => {
     }
 
     setLoading(true);
-    setError(false);
     try {
-      const response = await axios.get(
-        `${SERVER_URL}/event/searchEvents?inputSearch=${text}`
+      const response = await globalThis.axios.get(
+        `${globalThis.SERVER_URL}/event/searchEvents?inputSearch=${text}`,
       );
       setEvents(response.data);
       // Save to recent searches only if the search was successful
       await saveRecentSearch(text);
     } catch (error) {
       console.log(error);
-      setError(true);
-      crashlytics().log(`Error in searching events ${error}`);
+      globalThis.crashlytics().log(`Error in searching events ${error}`);
     } finally {
       setLoading(false);
     }
   };
 
   const debouncedSearch = useRef(
-    debounce((text) => handleSearch(text), 500)
+    debounce((text) => handleSearch(text), 500),
   ).current;
 
   // Cleanup debounce on unmount
@@ -333,7 +333,7 @@ const SearchBar = () => {
             marginTop: height * 0.2,
           }}
         >
-          Please type what you're looking for above.
+          Please type what you&apos;re looking for above.
         </Text>
       )}
       {isSearchActive && loading && (
@@ -362,7 +362,7 @@ const SearchBar = () => {
             }}
           >
             <FastImage
-              source={require("../../images/noSearchResult.png")}
+              source={NoSearchResult}
               resizeMode="cover"
               style={{
                 width: width,
@@ -374,6 +374,11 @@ const SearchBar = () => {
         )}
     </View>
   );
+};
+
+Item.propTypes = {
+  item: PropTypes.object.isRequired,
+  onPress: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

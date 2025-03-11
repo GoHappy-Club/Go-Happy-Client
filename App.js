@@ -1,83 +1,83 @@
 import "./i18n.js";
-import React, { useEffect, useState } from "react";
-import {
-  Dimensions,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Platform,
-  PermissionsAndroid,
-  useWindowDimensions,
-} from "react-native";
-import * as Updates from "expo-updates";
-import FastImage from "react-native-fast-image";
-import { setProfile, setMembership } from "./redux/actions/counts.js";
+import "@react-native-firebase/messaging";
+
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "@react-native-firebase/app";
+import crashlytics from "@react-native-firebase/crashlytics";
 import {
   createNavigationContainerRef,
   NavigationContainer,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "./screens/loginScreen/LoginScreen";
-import BottomNavigator from "./components/navigators/BottomNavigator";
-import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
-import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
-import About from "./components/About";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as configData from "./config/cloud/config.json";
-import Icon from "react-native-vector-icons/Ionicons";
-import DeviceInfo from "react-native-device-info";
-import firebase from "@react-native-firebase/app";
-import { useSelector, useDispatch } from "react-redux";
-import ErrorScreen from "./commonComponents/NoInternet";
-import { WhatsNewMessage } from "./config/CONSTANTS";
-import AwesomeAlert from "react-native-awesome-alerts";
-import RenderHtml from "react-native-render-html";
-import crashlytics from "@react-native-firebase/crashlytics";
-import messaging from "@react-native-firebase/messaging";
-import TripsScreen from "./screens/Trips/TripsScreen";
-import TripDetailsScreen from "./screens/Trips/TripDetailsScreen";
-import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-import { useCopilot } from "react-native-copilot";
-import axios from "./config/CustomAxios.js";
-import { Colors } from "./assets/colors/color.js";
-import Header from "./components/HeaderComponent.js";
-import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
+import * as Updates from "expo-updates";
 import { X } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Dimensions,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { useCopilot } from "react-native-copilot";
+import FastImage from "react-native-fast-image";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import WalletScreen from "./screens/WalletScreens/WalletScreen.js";
-import TopUpScreen from "./screens/WalletScreens/TopUpScreen.js";
+import PushNotification from "react-native-push-notification";
+import RenderHtml from "react-native-render-html";
+import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Colors } from "./assets/colors/color.js";
+import BackButton from "./commonComponents/BackButton.js";
+import GOHLoader from "./commonComponents/GOHLoader.js";
+import ErrorScreen from "./commonComponents/NoInternet";
+import PaytringView from "./commonComponents/PaytringView.js";
+import About from "./components/About";
+import AdditionalDetails from "./components/AdditionalDetails/AdditionalDetails.js";
+import Language from "./components/ChangeLanguage/Language.js";
+import FestiveWish from "./components/Festivals/FestiveWish.js";
+import Header from "./components/HeaderComponent.js";
+import BottomNavigator from "./components/navigators/BottomNavigator";
 import PaymentFailed from "./components/PaymentPages/PaymentFailed.js";
+import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
 import PaymentSuccessful from "./components/PaymentPages/PaymentSuccessful.js";
-import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
-import RewardsScreen from "./screens/RewardsScreen/RewardsScreen.js";
+import EditProfile from "./components/Profile/EditProfile.js";
+import Profile from "./components/Profile/Profile.js";
+import Quotes from "./components/Quotes/Quotes.js";
+import Reels from "./components/Reels/Reels.js";
 import VoucherDetails from "./components/Rewards/VoucherDetails.js";
 import VoucherScratch from "./components/Rewards/VoucherScratch.js";
-import FestiveWish from "./components/Festivals/FestiveWish.js";
-import Profile from "./components/Profile/Profile.js";
-import EditProfile from "./components/Profile/EditProfile.js";
-import GOHLoader from "./commonComponents/GOHLoader.js";
-import AdditionalDetails from "./components/AdditionalDetails/AdditionalDetails.js";
-import Quotes from "./components/Quotes/Quotes.js";
-import PushNotification from "react-native-push-notification";
-import Reels from "./components/Reels/Reels.js";
-import Language from "./components/ChangeLanguage/Language.js";
+import * as configData from "./config/cloud/config.json";
+import { WhatsNewMessage } from "./config/CONSTANTS";
+import axios from "./config/CustomAxios.js";
+import { setMembership, setProfile } from "./redux/actions/counts.js";
+import AllTransactions from "./screens/AllTransactions/AllTransactions.js";
+import HomeDetailsScreen from "./screens/homeScreen/HomeDetailsScreen";
+import LoginScreen from "./screens/loginScreen/LoginScreen";
 import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js";
-import BackButton from "./commonComponents/BackButton.js";
-import PaytringView from "./commonComponents/PaytringView.js";
-import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
+import MembershipScreen from "./screens/myProfileScreen/MembershipScreen";
+import MySessionsScreen from "./screens/mySessionsScreen/MySessionsScreen";
+import RewardsScreen from "./screens/RewardsScreen/RewardsScreen.js";
+import SubscriptionScreen from "./screens/subscriptionScreen/SubscriptionScreen.js";
+import TripDetailsScreen from "./screens/Trips/TripDetailsScreen";
+import TripsScreen from "./screens/Trips/TripsScreen";
+import TopUpScreen from "./screens/WalletScreens/TopUpScreen.js";
+import WalletScreen from "./screens/WalletScreens/WalletScreen.js";
 
 const navigationRef = createNavigationContainerRef();
 
-global.axios = axios;
-global.AsyncStorage = AsyncStorage;
-global.SERVER_URL = configData.BACKEND.SERVER_URL;
-global.crashlytics = crashlytics;
-global.Icon = Icon;
-global.FastImage = FastImage;
+globalThis.axios = axios;
+globalThis.AsyncStorage = AsyncStorage;
+globalThis.SERVER_URL = configData.BACKEND.SERVER_URL;
+globalThis.crashlytics = crashlytics;
+globalThis.Icon = Icon;
+globalThis.FastImage = FastImage;
 
 Icon.loadFont();
 
@@ -97,7 +97,7 @@ export const handleNotification = (notification) => {
 
 navigationRef.addListener("state", () => {
   if (navigationRef.isReady() && pendingNavigation) {
-    const { screen, params } = pendingNavigation.data;
+    const { params } = pendingNavigation.data;
     navigationRef.navigate("QuotesPage", params || {});
     pendingNavigation = null;
   }
@@ -125,7 +125,7 @@ PushNotification.createChannel(
     importance: 4,
     vibrate: true,
   },
-  (created) => crashlytics().log(`createChannel returned '${created}'`)
+  (created) => crashlytics().log(`createChannel returned '${created}'`),
 );
 PushNotification.createChannel(
   {
@@ -137,7 +137,7 @@ PushNotification.createChannel(
     importance: 4,
     vibrate: true,
   },
-  (created) => crashlytics().log(`createChannel returned '${created}'`)
+  (created) => crashlytics().log(`createChannel returned '${created}'`),
 );
 PushNotification.createChannel(
   {
@@ -149,7 +149,7 @@ PushNotification.createChannel(
     importance: 4,
     vibrate: true,
   },
-  (created) => crashlytics().log(`createChannel returned '${created}'`)
+  (created) => crashlytics().log(`createChannel returned '${created}'`),
 );
 
 const requestNotificationPermission = async () => {
@@ -210,10 +210,7 @@ export default function App() {
   // set up parameters for what's new function
   var [justUpdated, setJustUpdated] = useState(false);
   const [notify, setNotify] = useState(null);
-  const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(
-    WhatsNewMessage().show
-  );
-  const [updateRequired, setUpdateRequired] = useState(false);
+  const [showWhatsNewMessage, setShowWhatsNewMessage] = useState(false);
   const width = Dimensions.get("window").width;
 
   const [isConnected, setIsConnected] = useState(true);
@@ -248,13 +245,13 @@ export default function App() {
     const membershipEndDate = membership?.membershipEndDate;
 
     if (membershipEndDate && currentDate > membershipEndDate) {
-      const url = `${SERVER_URL}/membership/expire?phoneNumber=${profile.phoneNumber}`;
+      const url = `${globalThis.SERVER_URL}/membership/expire?phoneNumber=${profile.phoneNumber}`;
       axios
         .get(url)
         .then((res) => {
           if (res.data) {
             setNewMembership({
-              membershipType: response.data.membershipType,
+              membershipType: res.data.membershipType,
             });
           }
         })
@@ -293,7 +290,7 @@ export default function App() {
     selfInviteCode,
     city,
     emergencyContact,
-    age
+    age,
   ) => {
     const new_profile = {
       name: name,
@@ -340,7 +337,7 @@ export default function App() {
           const membershipType = await AsyncStorage.getItem("membershipType");
           const id = await AsyncStorage.getItem("membershipId");
           const membershipStartDate = await AsyncStorage.getItem(
-            "membershipStartDate"
+            "membershipStartDate",
           );
           const membershipEndDate =
             await AsyncStorage.getItem("membershipEndDate");
@@ -357,7 +354,7 @@ export default function App() {
             selfInviteCode,
             city,
             emergencyContact,
-            age
+            age,
           );
 
           setNewMembership({
@@ -472,7 +469,7 @@ export default function App() {
 
   const recheck = async () => {
     try {
-      const response = await axios.get(SERVER_URL);
+      const response = await axios.get(globalThis.SERVER_URL);
       if (response.status == 200) {
         setIsConnected(true);
       } else {
@@ -525,35 +522,7 @@ export default function App() {
           confirmButtonColor={Colors.deepskyblue}
           onConfirmPressed={() => {
             setJustUpdated((justUpdated = false));
-            setShowWhatsNewMessage((showWhatsNewMessage = false));
-          }}
-        />
-      )}
-
-      {updateRequired && (
-        <AwesomeAlert
-          show={true}
-          showProgress={false}
-          title="Update Required"
-          message={
-            <View style={{ width: width * 0.6 }}>
-              <RenderHtml
-                source={{
-                  html: "To continue using the app, please install the latest version available. <br/><br/>This update ensures you have access to the newest features and improvements. Thank you for staying up to date!",
-                }}
-              />
-            </View>
-          }
-          closeOnTouchOutside={false}
-          closeOnHardwareBackPress={false}
-          showConfirmButton={true}
-          confirmText="Update Now"
-          confirmButtonColor={Colors.primary}
-          onConfirmPressed={() => {
-            Linking.openURL(
-              "https://play.google.com/store/apps/details?id=com.gohappyclient"
-            );
-            // setShowWhatsNewMessage((showWhatsNewMessage = false));
+            setShowWhatsNewMessage(false);
           }}
         />
       )}
@@ -569,35 +538,30 @@ export default function App() {
                 <>
                   <Stack.Screen
                     name="Login"
-                    children={(props) => (
-                      <LoginScreen {...props} propProfile={profile} />
-                    )}
                     options={{
                       headerLeft: () => <View />,
                       headerShown: false,
                     }}
-                  />
+                  >
+                    {(props) => (
+                      <LoginScreen {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="GoHappy Club"
-                    children={(props) => (
-                      <BottomNavigator {...props} propProfile={profile} />
-                    )}
                     options={{
                       header: (props) => <Header {...props} />,
                       elevation: 0,
                       shadowOpacity: 0,
                       headerShadowVisible: true,
                     }}
-                  />
+                  >
+                    {(props) => (
+                      <BottomNavigator {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="Session Details"
-                    children={(props) => (
-                      <HomeDetailsScreen
-                        {...props}
-                        propProfile={profile}
-                        copilotEvents={copilotEvents}
-                      />
-                    )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -608,14 +572,18 @@ export default function App() {
                       ),
                       // headerShadowVisible: true,
                     })}
-                  />
+                  >
+                    {(props) => (
+                      <HomeDetailsScreen
+                        {...props}
+                        propProfile={profile}
+                        copilotEvents={copilotEvents}
+                      />
+                    )}
+                  </Stack.Screen>
                   {Platform.OS == "android" && (
                     <Stack.Screen
                       name="Contribution Details"
-                      // component={MembershipScreen}
-                      children={(props) => (
-                        <MembershipScreen {...props} propProfile={profile} />
-                      )}
                       options={({ navigation }) => ({
                         headerTransparent: true,
                         title: null,
@@ -625,27 +593,27 @@ export default function App() {
                         ),
                         headerShadowVisible: false,
                       })}
-                    />
+                    >
+                      {(props) => (
+                        <MembershipScreen {...props} propProfile={profile} />
+                      )}
+                    </Stack.Screen>
                   )}
                   <Stack.Screen
                     name="Additional Details"
-                    // component={AdditionalDetails}
-                    children={(props) => (
-                      <AdditionalDetails {...props} propProfile={profile} />
-                    )}
                     options={{
                       headerLeft: () => <View />,
                       headerTransparent: true,
                       title: null,
                       headerShadowVisible: false,
                     }}
-                  />
+                  >
+                    {(props) => (
+                      <AdditionalDetails {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="About GoHappy Club"
-                    // component={About}
-                    children={(props) => (
-                      <About {...props} propProfile={profile} />
-                    )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -659,13 +627,11 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {(props) => <About {...props} propProfile={profile} />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="PastSessions"
-                    // component={About}
-                    children={(props) => (
-                      <MySessionsScreen {...props} propProfile={profile} />
-                    )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -679,13 +645,13 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {(props) => (
+                      <MySessionsScreen {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="Trips"
-                    // component={HomeDetailsScreen}
-                    children={(props) => (
-                      <TripsScreen {...props} propProfile={profile} />
-                    )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -699,12 +665,13 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {(props) => (
+                      <TripsScreen {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="TripDetails"
-                    children={(props) => (
-                      <TripDetailsScreen {...props} propProfile={profile} />
-                    )}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -714,28 +681,31 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {(props) => (
+                      <TripDetailsScreen {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="MyProfile"
-                    children={(props) => (
-                      <Profile {...props} propProfile={profile} />
-                    )}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       headerShown: false,
                     })}
-                  />
+                  >
+                    {(props) => <Profile {...props} propProfile={profile} />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="EditProfile"
-                    children={(props) => (
-                      <EditProfile {...props} propProfile={profile} />
-                    )}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       headerShown: false,
                     })}
-                  />
+                  >
+                    {(props) => (
+                      <EditProfile {...props} propProfile={profile} />
+                    )}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="SubscriptionPlans"
-                    children={(props) => <SubscriptionScreen />}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
@@ -746,23 +716,24 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "fade_from_bottom",
                     })}
-                  />
+                  >
+                    {() => <SubscriptionScreen />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="WalletScreen"
-                    children={(props) => <WalletScreen />}
                     options={({ navigation }) => ({
                       headerTransparent: true,
                       title: null,
-                      // headerBackTitle: "back",
                       headerLeft: () => (
                         <BackButton styles={styles} navigation={navigation} />
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {() => <WalletScreen />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="TopUpScreen"
-                    children={(props) => <TopUpScreen />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -776,37 +747,41 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {() => <TopUpScreen />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="PaymentProcessing"
-                    children={(props) => <PaymentProcessing />}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       headerShown: false,
                       animation: "slide_from_right",
                       gestureEnabled: false,
                     })}
-                  />
+                  >
+                    {() => <PaymentProcessing />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="PaymentFailed"
-                    children={(props) => <PaymentFailed />}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       headerShown: false,
                       animation: "slide_from_right",
                       gestureEnabled: false,
                     })}
-                  />
+                  >
+                    {() => <PaymentFailed />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="PaymentSuccessful"
-                    children={(props) => <PaymentSuccessful />}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       headerShown: false,
                       animation: "slide_from_right",
                       gestureEnabled: false,
                     })}
-                  />
+                  >
+                    {() => <PaymentSuccessful />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="AllTransactions"
-                    children={(props) => <AllTransactions />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -822,10 +797,11 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {() => <AllTransactions />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="Rewards"
-                    children={(props) => <RewardsScreen />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -839,10 +815,11 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {() => <RewardsScreen />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="VoucherDetails"
-                    children={(props) => <VoucherDetails />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -856,10 +833,11 @@ export default function App() {
                       ),
                       headerShadowVisible: false,
                     })}
-                  />
+                  >
+                    {() => <VoucherDetails />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="VoucherScratch"
-                    children={(props) => <VoucherScratch />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -878,10 +856,11 @@ export default function App() {
                       presentation: "transparentModal",
                       animation: "fade",
                     })}
-                  />
+                  >
+                    {() => <VoucherScratch />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="FestiveWish"
-                    children={(props) => <FestiveWish />}
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
@@ -899,10 +878,11 @@ export default function App() {
                       animation: "fade",
                       headerLeft: () => <View />,
                     })}
-                  />
+                  >
+                    {() => <FestiveWish />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="QuotesPage"
-                    children={(props) => <Quotes />}
                     options={({ navigation }) => ({
                       title: null,
                       headerTransparent: true,
@@ -919,21 +899,23 @@ export default function App() {
                       animation: "fade",
                       headerLeft: () => <View />,
                     })}
-                  />
+                  >
+                    {() => <Quotes />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="ReelsPage"
-                    children={(props) => <Reels />}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       title: null,
                       headerTransparent: true,
                       headerShown: false,
                       headerShadowVisible: false,
                       animation: "slide_from_right",
                     })}
-                  />
+                  >
+                    {() => <Reels />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="Languages"
-                    children={(props) => <Language />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -950,10 +932,11 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "ios_from_right",
                     })}
-                  />
+                  >
+                    {() => <Language />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="MembershipDetails"
-                    children={(props) => <MembershipDetails />}
                     options={({ navigation }) => ({
                       title: null,
                       headerBackTitle: "back",
@@ -970,11 +953,12 @@ export default function App() {
                       headerShadowVisible: false,
                       animation: "ios_from_right",
                     })}
-                  />
+                  >
+                    {() => <MembershipDetails />}
+                  </Stack.Screen>
                   <Stack.Screen
                     name="PaytringView"
-                    children={(props) => <PaytringView />}
-                    options={({ navigation }) => ({
+                    options={() => ({
                       title: null,
                       headerTransparent: true,
                       headerShadowVisible: false,
@@ -983,7 +967,9 @@ export default function App() {
                       gestureEnabled: false,
                       headerShown: false,
                     })}
-                  />
+                  >
+                    {() => <PaytringView />}
+                  </Stack.Screen>
                 </>
               </Stack.Navigator>
             </NavigationContainer>

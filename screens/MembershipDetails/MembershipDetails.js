@@ -1,37 +1,35 @@
-import React, { useRef, useEffect, useMemo, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Calendar,
+  CircleX,
+  Clock,
+  Crown,
+  Gift,
+  Phone,
+  Quote,
+  Shield,
+  Star,
+  Users,
+  Video,
+  Zap,
+} from "lucide-react-native";
+import React, { useEffect, useMemo, useRef } from "react";
+import {
+  Animated,
   ScrollView,
   StyleSheet,
-  Animated,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import {
-  Gift,
-  Quote,
-  Video,
-  Crown,
-  Star,
-  Shield,
-  Headphones,
-  Clock,
-  Calendar,
-  Mail,
-  Phone,
-  Users,
-  Zap,
-  CircleX,
-} from "lucide-react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import CancellationBottomSheet from "../../commonComponents/CancellationAlert";
+import { formatDate } from "../../components/Rewards/Rewards";
 import SubscriptionCard from "../../components/subscription/SubscriptionCard";
 import { wp } from "../../helpers/common";
-import { Colors } from "../../assets/colors/color";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import CancellationBottomSheet from "../../commonComponents/CancellationAlert";
 import { setMembership } from "../../redux/actions/counts";
-import { format } from "date-fns";
-import { formatDate } from "../../components/Rewards/Rewards";
 
 const membershipTiers = {
   silver: {
@@ -210,7 +208,7 @@ export default function MembershipDetails() {
         onPress: () => openBottomSheet(),
       },
     ],
-    [navigation]
+    [navigation],
   );
 
   const openBottomSheet = () => {
@@ -223,10 +221,13 @@ export default function MembershipDetails() {
 
   const handleConfirm = async (reason) => {
     try {
-      const response = await axios.post(`${SERVER_URL}/membership/cancel`, {
-        phoneNumber: profile.phoneNumber,
-        reason: reason,
-      });
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/membership/cancel`,
+        {
+          phoneNumber: profile.phoneNumber,
+          reason: reason,
+        },
+      );
       const newMembership = {
         membershipType: response.data?.membershipType,
         id: response.data?.id,

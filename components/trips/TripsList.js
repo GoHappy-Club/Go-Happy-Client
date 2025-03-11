@@ -1,21 +1,17 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Card, Divider } from "react-native-paper";
 import {
-  View,
-  StyleSheet,
-  Dimensions,
-  ImageBackground,
-  ScrollView,
   FlatList,
-  TouchableOpacity,
+  ImageBackground,
   Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Text } from "react-native-elements";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Skeleton } from "@rneui/themed";
-import { loadDate, trimContent } from "../../commonComponents/helpers";
+
 import { Colors } from "../../assets/colors/color";
+import { loadDate, trimContent } from "../../commonComponents/helpers";
 
 class TripsList extends Component {
   constructor(props) {
@@ -100,11 +96,14 @@ class TripsList extends Component {
   }
 }
 
+TripsList.propTypes = {
+  trips: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired,
+  navigation: PropTypes.object.isRequired,
+};
+
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: "row",
-    // alignItems: "center",
-    borderRadius: 8,
     borderColor: Colors.grey.grey,
     borderWidth: 0.2,
     margin: 10,

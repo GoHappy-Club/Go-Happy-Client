@@ -1,13 +1,15 @@
-import { Image, Pressable, StyleSheet, Text, View, Alert } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
 import { useRoute } from "@react-navigation/native";
-import { hp, wp } from "../../helpers/common";
-import { Video,ResizeMode } from "expo-av";
-import { Colors } from "../../assets/colors/color";
-import ViewShot, { captureRef } from "react-native-view-shot";
-import Share from "react-native-share";
-import RNFS from "react-native-fs";
+import { ResizeMode, Video } from "expo-av";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-elements";
+import FastImage from "react-native-fast-image";
+import RNFS from "react-native-fs";
+import Share from "react-native-share";
+import ViewShot, { captureRef } from "react-native-view-shot";
+
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 
 const FestiveWish = () => {
   const route = useRoute();

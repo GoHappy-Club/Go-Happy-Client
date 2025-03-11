@@ -1,11 +1,13 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-
-import { Image, SafeAreaView, ScrollView, View } from "react-native";
-
+import { withTranslation } from "react-i18next";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import { Text } from "react-native-elements";
-import { hp, wp } from "../helpers/common";
+import FastImage from "react-native-fast-image";
+
 import { Colors } from "../assets/colors/color";
-import { useTranslation, withTranslation } from "react-i18next";
+import { wp } from "../helpers/common";
+import AboutImage from "../images/about.jpeg";
 
 class About extends Component {
   constructor(props) {
@@ -53,7 +55,7 @@ class About extends Component {
                 {t("about_us")}
               </Text>
               <FastImage
-                source={require("../images/about.jpeg")}
+                source={AboutImage}
                 style={{
                   width: wp(95),
                   height: 300,
@@ -151,5 +153,9 @@ class About extends Component {
     );
   }
 }
+
+About.propTypes = {
+  t: PropTypes.func.isRequired,
+};
 
 export default withTranslation()(About);

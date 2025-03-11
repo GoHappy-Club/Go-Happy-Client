@@ -1,4 +1,14 @@
 import {
+  BottomSheetModal,
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { BlurView } from "@react-native-community/blur";
+import { X } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import {
   Dimensions,
   Platform,
   ScrollView,
@@ -7,23 +17,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback } from "react";
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import { Colors } from "../../assets/colors/color";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { BlurView } from "@react-native-community/blur";
+
+import { Colors } from "../../assets/colors/color";
 import ReferralsList from "./ReferralsList";
-import { X } from "lucide-react-native";
-import { hp, wp } from "../../helpers/common";
-import { useTranslation } from "react-i18next";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -44,7 +45,7 @@ const ReferBottomSheet = ({
           animatedIndex.value,
           [-1, 0],
           [0, 1],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         ),
       }));
 
@@ -86,7 +87,7 @@ const ReferBottomSheet = ({
         </Animated.View>
       );
     },
-    [closeModal]
+    [closeModal],
   );
 
   return (
@@ -193,6 +194,16 @@ const ReferBottomSheet = ({
       )}
     </BottomSheetModal>
   );
+};
+
+ReferBottomSheet.propTypes = {
+  closeModal: PropTypes.func,
+  modalRef: PropTypes.object,
+  type: PropTypes.string,
+  numberReferrals: PropTypes.number,
+  referrals: PropTypes.array,
+  trivialTitle1: PropTypes.string,
+  trivialTitle2: PropTypes.string,
 };
 
 export default ReferBottomSheet;

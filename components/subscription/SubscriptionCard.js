@@ -1,34 +1,35 @@
-import { Crown } from "lucide-react-native";
+import { BlurView } from "@react-native-community/blur";
+import { format, fromUnixTime } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import { useSelector } from "react-redux";
-import { hp, wp } from "../../helpers/common";
-import { format, fromUnixTime } from "date-fns";
-import { BlurView } from "@react-native-community/blur";
-import { Colors } from "../../assets/colors/color";
-import FastImage from "react-native-fast-image";
 
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import DarkWordLogo from "../../images/darkWordLogo.png";
+import WordLogo from "../../images/wordLogo.png";
 const COLORS_MAPPING = {
   Silver: {
     gradient: ["#C0C0C0", "#E8E8E8", "#B8B8B8"],
     textColor: Colors.black,
-    logo: require("../../images/darkWordLogo.png"),
+    logo: DarkWordLogo,
     textShadowColor: "rgba(0, 0, 0, 0.4)",
     borderColor: Colors.grey.f0,
   },
   Gold: {
     gradient: ["#FFD700", "#FDB931", "#A85F05"],
     textColor: Colors.black,
-    logo: require("../../images/wordLogo.png"),
+    logo: WordLogo,
     textShadowColor: "rgba(0, 0, 0, 0.5)",
     borderColor: "#FF8C00",
   },
   Platinum: {
     gradient: ["#304352", "#304352A1", "#d7d2cc", "#304352A1"],
     textColor: Colors.white,
-    logo: require("../../images/darkWordLogo.png"),
+    logo: DarkWordLogo,
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     borderColor: Colors.grey.f0,
   },

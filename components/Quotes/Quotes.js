@@ -1,28 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "@react-native-firebase/app";
+import { Share2 } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
+  Image,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
-  Animated,
-  Alert,
-  StatusBar,
-  ScrollView,
-  Image,
 } from "react-native";
-import { hp, wp } from "../../helpers/common";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LinearGradient } from "react-native-linear-gradient";
-import ViewShot, { captureRef } from "react-native-view-shot";
 import { Button } from "react-native-elements";
-import RNFS from "react-native-fs";
-import { Colors } from "../../assets/colors/color";
 import FastImage from "react-native-fast-image";
+import RNFS from "react-native-fs";
+import { LinearGradient } from "react-native-linear-gradient";
 import Share from "react-native-share";
-import { Share2 } from "lucide-react-native";
+import ViewShot, { captureRef } from "react-native-view-shot";
 import { useSelector } from "react-redux";
-import firebase from "@react-native-firebase/app";
-import toUnicodeVariant from "../toUnicodeVariant";
+
+import { Colors } from "../../assets/colors/color";
 import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
+import { hp, wp } from "../../helpers/common";
+import WordLogo from "../../images/wordLogo.png";
+import toUnicodeVariant from "../toUnicodeVariant";
 
 const Quotes = () => {
   const [quote, setQuote] = useState({});
@@ -63,7 +65,7 @@ const Quotes = () => {
             "https://apps.apple.com/ca/app/gohappy-club/id6737447673",
         },
       },
-      firebase.dynamicLinks.ShortLinkType.SHORT
+      firebase.dynamicLinks.ShortLinkType.SHORT,
     );
     return link1;
   };
@@ -183,7 +185,7 @@ const Quotes = () => {
                 Powered by
               </Text>
               <FastImage
-                source={require("../../images/wordLogo.png")}
+                source={WordLogo}
                 style={{
                   width: wp(20),
                   height: wp(8),
@@ -265,6 +267,12 @@ const AnimatedText = ({ text, style, duration }) => {
 };
 
 export default Quotes;
+
+AnimatedText.propTypes = {
+  text: PropTypes.string.isRequired,
+  style: PropTypes.object.isRequired,
+  duration: PropTypes.number.isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

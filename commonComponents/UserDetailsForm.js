@@ -1,16 +1,12 @@
-import React from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
-import AutocompleteCityInput from '../components/Autocomplete';
-import { Calendar } from 'lucide-react-native';
-import { Colors } from '../assets/colors/color';
+import { Calendar } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 
-const UserDetailsForm = ({
-  state,
-  setState,
-  setOpen,
-  setUpdated,
-  styles
-}) => {
+import { Colors } from "../assets/colors/color";
+import AutocompleteCityInput from "../components/Autocomplete";
+
+const UserDetailsForm = ({ state, setState, setOpen, styles }) => {
   return (
     <>
       <View style={styles.inputContainer}>
@@ -20,9 +16,7 @@ const UserDetailsForm = ({
           placeholder="Name"
           placeholderTextColor={Colors.grey[6]}
           value={state.name}
-          onChangeText={(text) =>
-            setState((prev) => ({ ...prev, name: text }))
-          }
+          onChangeText={(text) => setState((prev) => ({ ...prev, name: text }))}
         />
       </View>
 
@@ -80,12 +74,18 @@ const UserDetailsForm = ({
         setInput={(city) => setState((prev) => ({ ...prev, city: city }))}
         selectedFromDropdown={state.selectedFromDropdown}
         setSelectedFromDropdown={(value) => {
-          setUpdated(false);
           setState((prev) => ({ ...prev, selectedFromDropdown: value }));
         }}
       />
     </>
   );
+};
+
+UserDetailsForm.propTypes = {
+  state: PropTypes.object.isRequired,
+  setState: PropTypes.func.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  styles: PropTypes.object.isRequired,
 };
 
 export default UserDetailsForm;

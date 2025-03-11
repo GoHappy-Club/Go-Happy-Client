@@ -1,29 +1,22 @@
-import {
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
+
 import { Colors } from "../../assets/colors/color";
 import { hp, wp } from "../../helpers/common";
-import { useNavigation } from "@react-navigation/native";
+import Hurray from "../../images/hurray.png";
 
 const SubscriptionSuccessful = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <FastImage
-        source={require("../../images/hurray.png")}
-        style={styles.image}
-      />
+      <FastImage source={Hurray} style={styles.image} />
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
-          Congratulations! Your payment was successful, and you're now a member
-          of the GoHappy Club.
+          Congratulations! Your payment was successful, and you&apos;re now a
+          member of the GoHappy Club.
         </Text>
         <Text style={styles.plainText}>Welcome aboard! 🎉</Text>
       </View>

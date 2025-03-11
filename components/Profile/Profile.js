@@ -1,5 +1,26 @@
 import {
-  Image,
+  faHistory,
+  faInfoCircle,
+  faSignOutAlt,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BlurView } from "@react-native-community/blur";
+import { firebase } from "@react-native-firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+import {
+  Award,
+  Calendar,
+  CircleHelp,
+  Clock,
+  Languages,
+  Pencil,
+} from "lucide-react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
   Linking,
   Platform,
   Pressable,
@@ -8,45 +29,19 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
-import { Colors } from "../../assets/colors/color";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { hp, wp } from "../../helpers/common";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  Award,
-  Calendar,
-  CircleHelp,
-  Clock,
-  Languages,
-  Pen,
-  Pencil,
-  PenIcon,
-} from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCrow,
-  faCrown,
-  faHistory,
-  faInfoCircle,
-  faLanguage,
-  faSignOutAlt,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { firebase } from "@react-native-firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import FastImage from "react-native-fast-image";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { BlurView } from "@react-native-community/blur";
-import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 
 const Profile = () => {
   const [state, setState] = useState({
@@ -69,7 +64,6 @@ const Profile = () => {
 
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
-  const dispatch = useDispatch();
   const navigation = useNavigation();
   const ref = useRef();
   const { t } = useTranslation();
@@ -87,13 +81,14 @@ const Profile = () => {
       }));
     } catch (error) {
       // Error retrieving data
+      console.log("Error in retrieveData:", error);
     }
   }, []);
 
   const openWhatsApp = useCallback(async () => {
-    var url = SERVER_URL + "/properties/list";
+    var url = globalThis.SERVER_URL + "/properties/list";
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0) {
@@ -104,7 +99,8 @@ const Profile = () => {
           }));
           const now = new Date();
           const days = Math.ceil(
-            (now.getTime() - Number(profile.dateOfJoining)) / (1000 * 3600 * 24)
+            (now.getTime() - Number(profile.dateOfJoining)) /
+              (1000 * 3600 * 24),
           );
           if (days < 10 || Number(profile.sessionsAttended) < 5) {
             setState((prevState) => ({
@@ -164,7 +160,7 @@ const Profile = () => {
   const formatDuration = (dateOfJoining) => {
     const now = new Date();
     const days = Math.ceil(
-      (now.getTime() - Number(dateOfJoining)) / (1000 * 3600 * 24)
+      (now.getTime() - Number(dateOfJoining)) / (1000 * 3600 * 24),
     );
 
     const dayString = isNaN(days) || days <= 1 ? t("day") : t("days");
@@ -251,7 +247,7 @@ const Profile = () => {
           animatedIndex.value,
           [0, 1],
           [0, 1],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         ),
       }));
 
@@ -297,7 +293,7 @@ const Profile = () => {
         </Animated.View>
       );
     },
-    [closeModal]
+    [closeModal],
   );
 
   const snapPoints = React.useMemo(() => ["42%", "70%"], []);

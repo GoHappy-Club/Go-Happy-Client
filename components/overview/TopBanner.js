@@ -1,15 +1,13 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Card } from "react-native-paper";
 import {
-  View,
-  Text,
-  StyleSheet,
   Dimensions,
-  Image,
   Linking,
-  TouchableOpacity,
   SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
+import FastImage from "react-native-fast-image";
 import Carousel from "react-native-snap-carousel";
 
 export default class TopBanner extends Component {
@@ -71,6 +69,11 @@ export default class TopBanner extends Component {
   }
 }
 
+TopBanner.propTypes = {
+  posters: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
+};
+
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const SLIDER_HEIGHT = Dimensions.get("window").height * 0.25;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
   body: {
     color: "#222",
     fontSize: 18,
-    paddingLeft: 20,
     paddingLeft: 20,
     paddingRight: 20,
   },

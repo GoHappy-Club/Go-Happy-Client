@@ -1,16 +1,16 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-// import PushNotification from "react-native-push-notification";
-import Video from "react-native-video";
-import { Linking, StyleSheet, View } from "react-native";
-import SessionDetails from "../../components/SessionDetails/SessionDetails";
-import tambola from "tambola";
-import { getEvent } from "../../services/events/EventService";
-import { setMembership, setProfile } from "../../redux/actions/counts";
-import { bindActionCreators } from "redux";
+import { Linking, View } from "react-native";
 import { connect } from "react-redux";
-import GOHLoader from "../../commonComponents/GOHLoader";
-import { getDiscountValue } from "../../helpers/transactions";
+import { bindActionCreators } from "redux";
+import tambola from "tambola";
+
 import { Colors } from "../../assets/colors/color";
+import GOHLoader from "../../commonComponents/GOHLoader";
+import SessionDetails from "../../components/SessionDetails/SessionDetails";
+import { getDiscountValue } from "../../helpers/transactions";
+import { setMembership, setProfile } from "../../redux/actions/counts";
+import { getEvent } from "../../services/events/EventService";
 
 class HomeDetailsScreen extends Component {
   constructor(props) {
@@ -33,9 +33,10 @@ class HomeDetailsScreen extends Component {
   }
   _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("email");
-      const phoneNumber = await AsyncStorage.getItem("phoneNumber");
-      const selfInviteCode = await AsyncStorage.getItem("selfInviteCode");
+      const value = await globalThis.AsyncStorage.getItem("email");
+      const phoneNumber = await globalThis.AsyncStorage.getItem("phoneNumber");
+      const selfInviteCode =
+        await globalThis.AsyncStorage.getItem("selfInviteCode");
       if (phoneNumber !== null) {
         // We have data!!
         this.setState({ email: value });
@@ -43,13 +44,14 @@ class HomeDetailsScreen extends Component {
         this.setState({ selfInviteCode: selfInviteCode });
       }
     } catch (error) {
+      console.log(error);
       // Error retrieving data
     }
   };
 
   getEventDetails(id) {
     // this.setState({event:null})
-    this.state.loader = true;
+    this.setState({ loader: true });
     getEvent(id, this.state.phoneNumber)
       .then((response) => {
         this.setState({
@@ -60,7 +62,7 @@ class HomeDetailsScreen extends Component {
       })
       .catch((error) => {
         console.log(error);
-        crashlytics().recordError(JSON.stringify(error));
+        globalThis.crashlytics().recordError(JSON.stringify(error));
       });
   }
 
@@ -79,20 +81,21 @@ class HomeDetailsScreen extends Component {
       var ei = meetingLink.indexOf("?");
       var meetingId = meetingLink.substring(si, ei);
 
-      axios
-        .post(SERVER_URL + "/zoom/getRecording", { meetingId: meetingId })
+      globalThis.axios
+        .post(globalThis.SERVER_URL + "/zoom/getRecording", {
+          meetingId: meetingId,
+        })
         .then((response) => {
           if (response.data) {
             Linking.canOpenURL(response.data).then((supported) => {
               if (supported) {
                 Linking.openURL(response.data);
-              } else {
               }
             });
           }
         })
         .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
+          globalThis.crashlytics().recordError(JSON.stringify(error));
           this.error = true;
         });
     } else if (type == "ongoing") {
@@ -102,8 +105,8 @@ class HomeDetailsScreen extends Component {
       this.state.event.participantList.includes(phoneNumber)
     ) {
       //cancel a notification
-      var url = SERVER_URL + "/event/cancelEvent";
-      axios
+      var url = globalThis.SERVER_URL + "/event/cancelEvent";
+      globalThis.axios
         .post(url, {
           id: this.state.event.id,
           phoneNumber: phoneNumber,
@@ -134,15 +137,15 @@ class HomeDetailsScreen extends Component {
           }
         })
         .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
+          globalThis.crashlytics().recordError(JSON.stringify(error));
           this.error = true;
         });
     } else if (type == "book") {
       let ticket = tambola.generateTicket(); // This generates a standard Tambola Ticket
 
-      var url = SERVER_URL + "/event/bookEvent";
+      const url = globalThis.SERVER_URL + "/event/bookEvent";
       var id = this.state.event.id;
-      axios
+      globalThis.axios
         .post(url, {
           id: id,
           phoneNumber: phoneNumber,
@@ -182,7 +185,7 @@ class HomeDetailsScreen extends Component {
           }
         })
         .catch((error) => {
-          crashlytics().recordError(JSON.stringify(error));
+          globalThis.crashlytics().recordError(JSON.stringify(error));
           this.error = true;
 
           return false;
@@ -223,7 +226,13 @@ class HomeDetailsScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({});
+HomeDetailsScreen.propTypes = {
+  route: PropTypes.object,
+  navigation: PropTypes.object,
+  actions: PropTypes.object,
+  profile: PropTypes.object,
+  membership: PropTypes.object,
+};
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,

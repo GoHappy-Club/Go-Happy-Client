@@ -1,6 +1,9 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import LottieView from "lottie-react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BackHandler,
-  Image,
   Platform,
   Pressable,
   SafeAreaView,
@@ -8,13 +11,12 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { Colors } from "../../assets/colors/color";
-import { hp, wp } from "../../helpers/common";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import LottieView from "lottie-react-native";
 import FastImage from "react-native-fast-image";
-import { useTranslation } from "react-i18next";
+
+import { Colors } from "../../assets/colors/color";
+import Correct from "../../assets/lottie/correct.json";
+import { hp, wp } from "../../helpers/common";
+import Hurray from "../../images/hurray.png";
 
 const PaymentSuccessful = () => {
   const navigation = useNavigation();
@@ -25,7 +27,7 @@ const PaymentSuccessful = () => {
   const timingRef = useRef();
 
   // type -> normal, empty for subscription
-  const { type, navigateTo } = route?.params;
+  const { type, navigateTo } = route?.params || {};
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const PaymentSuccessful = () => {
     };
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      backAction,
     );
     return () => backHandler.remove();
   }, []);
@@ -59,7 +61,7 @@ const PaymentSuccessful = () => {
     return (
       <SafeAreaView style={styles.container}>
         <LottieView
-          source={require("../../assets/lottie/correct.json")}
+          source={Correct}
           autoPlay
           style={{
             width: wp(100),
@@ -68,7 +70,7 @@ const PaymentSuccessful = () => {
           speed={0.5}
         />
         <FastImage
-          source={require("../../images/hurray.png")}
+          source={Hurray}
           style={styles.image}
           resizeMode={FastImage.resizeMode.contain}
         />
@@ -106,7 +108,7 @@ const PaymentSuccessful = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LottieView
-        source={require("../../assets/lottie/correct.json")}
+        source={Correct}
         autoPlay
         style={{
           width: wp(100),
@@ -115,14 +117,14 @@ const PaymentSuccessful = () => {
         speed={0.5}
       />
       <FastImage
-        source={require("../../images/hurray.png")}
+        source={Hurray}
         style={styles.image}
         resizeMode={FastImage.resizeMode.contain}
       />
       <View style={styles.textWrapper}>
         <Text style={styles.plainText}>
-          Congratulations! Your payment was successful, and you're now a member
-          of the GoHappy Club.
+          Congratulations! Your payment was successful, and you&apos;re now a
+          member of the GoHappy Club.
         </Text>
         <Text style={styles.plainText}>Welcome aboard! 🎉</Text>
       </View>

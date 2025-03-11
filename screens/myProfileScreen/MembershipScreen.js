@@ -1,10 +1,12 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
 import { MaterialIndicator } from "react-native-indicators";
 import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
 import { bindActionCreators } from "redux";
+
+import { Colors } from "../../assets/colors/color.js";
 import Membership from "../../components/Contribution/Contribution";
+import { setProfile } from "../../redux/actions/counts.js";
 
 class MembershipScreen extends Component {
   constructor(props) {
@@ -26,22 +28,21 @@ class MembershipScreen extends Component {
     //console.log("this is the profile", profile);
   }
   setPaymentData(id, phoneNumber, amount, _callback) {
-    var url = SERVER_URL + "/user/setPaymentData";
-    axios
+    var url = globalThis.SERVER_URL + "/user/setPaymentData";
+    globalThis.axios
       .post(url, { id: id, phoneNumber: phoneNumber, amount: amount })
-      .then((response) => {
+      .then(() => {
         // if (response.data) {
-        AsyncStorage.setItem("amount", amount);
+        globalThis.AsyncStorage.setItem("amount", amount);
         this.setProfile(amount);
         _callback();
         // }
       })
-      .catch((error) => {
+      .catch(() => {
         this.error = true;
       });
   }
   render() {
-    const { profile } = this.props;
     if (this.state.loader == true) {
       return (
         <MaterialIndicator
@@ -60,7 +61,11 @@ class MembershipScreen extends Component {
   }
 }
 
-const styles = StyleSheet.create({});
+MembershipScreen.propTypes = {
+  profile: PropTypes.object,
+  navigation: PropTypes.object,
+  actions: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,

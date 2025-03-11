@@ -1,26 +1,27 @@
-import React, { useCallback, useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-  Dimensions,
-  TextInput,
-  KeyboardAvoidingView,
-} from "react-native";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BlurView } from "@react-native-community/blur";
+import { Picker } from "@react-native-picker/picker";
+import { X } from "lucide-react-native";
+import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { BlurView } from "@react-native-community/blur";
-import { Picker } from "@react-native-picker/picker";
-import { X } from "lucide-react-native";
+
 import { Colors } from "../assets/colors/color";
 
-const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const CancellationBottomSheet = ({
@@ -40,7 +41,7 @@ const CancellationBottomSheet = ({
           animatedIndex.value,
           [-1, 0],
           [0, 1],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         ),
       }));
 
@@ -82,7 +83,7 @@ const CancellationBottomSheet = ({
         </Animated.View>
       );
     },
-    [closeModal]
+    [closeModal],
   );
 
   const handleConfirm = async () => {
@@ -142,7 +143,7 @@ const CancellationBottomSheet = ({
             <Text style={styles.title}>Are you sure you want to cancel?</Text>
 
             <Text style={styles.message}>
-              We're sorry to see you go. Please let us know why you're
+              We&apos;re sorry to see you go. Please let us know why you&apos;re
               cancelling:
             </Text>
 
@@ -201,6 +202,13 @@ const CancellationBottomSheet = ({
       </KeyboardAvoidingView>
     </BottomSheetModal>
   );
+};
+
+CancellationBottomSheet.propTypes = {
+  modalRef: PropTypes.object.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  reasons: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const styles = StyleSheet.create({

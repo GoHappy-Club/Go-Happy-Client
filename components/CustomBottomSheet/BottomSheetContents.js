@@ -1,8 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Colors } from "../../assets/colors/color";
-import { hp, wp } from "../../helpers/common";
 import LottieView from "lottie-react-native";
+import PropTypes from "prop-types";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { Colors } from "../../assets/colors/color";
+import Confetti from "../../assets/lottie/free_trial.json";
+import { hp, wp } from "../../helpers/common";
 
 export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
   return (
@@ -63,38 +66,38 @@ export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
       {freeTrialActivated && (
         <>
           <LottieView
-            source={require("../../assets/lottie/free_trial.json")}
+            source={Confetti}
             autoPlay
             style={{
               width: wp(100),
               height: hp(50),
               zIndex: 1000,
               position: "absolute",
-              left:25
+              left: 25,
             }}
             loop
           />
           <LottieView
-            source={require("../../assets/lottie/free_trial.json")}
+            source={Confetti}
             autoPlay
             style={{
               width: wp(100),
               height: hp(50),
               zIndex: 1000,
               position: "absolute",
-              right:50
+              right: 50,
             }}
             loop
           />
           <LottieView
-            source={require("../../assets/lottie/free_trial.json")}
+            source={Confetti}
             autoPlay
             style={{
               width: wp(100),
               height: hp(50),
               zIndex: 1000,
               position: "absolute",
-              right:25
+              right: 25,
             }}
             loop
           />
@@ -122,6 +125,11 @@ export const FreeTrialContent = ({ cta, freeTrialActivated }) => {
       )}
     </View>
   );
+};
+
+FreeTrialContent.propTypes = {
+  cta: PropTypes.func,
+  freeTrialActivated: PropTypes.bool,
 };
 
 export const FreeTrialExpiredContent = () => (

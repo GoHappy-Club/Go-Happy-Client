@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, BackHandler } from "react-native";
-import Svg, { Circle } from "react-native-svg";
-import Animated, {
-  useSharedValue,
-  useAnimatedProps,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
-import { wp } from "../../helpers/common";
-import { Colors } from "../../assets/colors/color";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useRef, useState } from "react";
+import { BackHandler, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
+
+import { Colors } from "../../assets/colors/color";
+import { wp } from "../../helpers/common";
 import { verifyPayment } from "../../helpers/VerifyPayment";
 
 const TIMER_DURATION = 60;
@@ -55,7 +56,7 @@ const PaymentProcessing = () => {
 
     const handler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      backAction,
     );
 
     return () => handler.remove();
@@ -116,7 +117,8 @@ const PaymentProcessing = () => {
         <Text style={styles.timerText}>{countdown}</Text>
       </View>
       <Text style={styles.message}>
-        We are processing your payment, please don't press back and hang tight.
+        We are processing your payment, please don&apos;t press back and hang
+        tight.
       </Text>
     </View>
   );
