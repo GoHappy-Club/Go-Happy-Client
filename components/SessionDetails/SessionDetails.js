@@ -1,7 +1,13 @@
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "@react-native-firebase/app";
+import { format, fromUnixTime } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Dimensions,
-  Image,
   Linking,
   Modal,
   Platform,
@@ -13,33 +19,30 @@ import {
   View,
 } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { WebView } from "react-native-webview";
-import { Avatar, Title } from "react-native-paper";
 import { Button, Text } from "react-native-elements";
-import toUnicodeVariant from "../toUnicodeVariant.js";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
-import { setSessionAttended } from "../../services/events/EventService";
-import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import { Title } from "react-native-paper";
 import RenderHtml from "react-native-render-html";
-import firebase from "@react-native-firebase/app";
-import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
-import { format, fromUnixTime } from "date-fns";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { WebView } from "react-native-webview";
+
 import CountdownTimer from "../../commonComponents/countdown.js";
+import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS";
+import ProfileDummy from "../../images/profile_image.jpeg";
+import { setSessionAttended } from "../../services/events/EventService";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+import FastImage from "react-native-fast-image";
+import { useSelector } from "react-redux";
+import tambola from "tambola";
+
 import { Colors } from "../../assets/colors/color.js";
 import { hp, wp } from "../../helpers/common.js";
 import { storeCompletedSession } from "../../services/Startup.js";
-import VoucherBottomSheet from "../Rewards/VoucherBottomSheet.js";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import phonepe_payments from "../PhonePe/Payments.js";
-import tambola from "tambola";
-import FastImage from "react-native-fast-image";
-import { useTranslation } from "react-i18next";
+import VoucherBottomSheet from "../Rewards/VoucherBottomSheet.js";
 
 const SessionDetails = ({
   route,
@@ -50,7 +53,6 @@ const SessionDetails = ({
   alreadyBookedSameDayEvent,
   type,
   selfInviteCode,
-  setResultantCost,
 }) => {
   const [state, setState] = useState({
     modalVisible: false,
@@ -78,8 +80,6 @@ const SessionDetails = ({
     vouchers: [],
     voucherLoading: false,
     selectedVoucher: null,
-    payButtonLoading: false,
-    shareButtonLoading: false,
     paymentSharePopUp: false,
     after30: false,
     showPopUp: false,
@@ -88,7 +88,6 @@ const SessionDetails = ({
   });
 
   const modalRef = useRef();
-  const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const membership = useSelector((state) => state.membership.membership);
 
@@ -109,73 +108,73 @@ const SessionDetails = ({
     setState((prevState) => ({ ...prevState, name }));
   };
 
-  const paytringWrapper = async (share = false, type, item) => {
-    const data = {
-      phone: profile.phoneNumber,
-      amount: item.cost,
-      email:
-        profile.email != null || profile.email != ""
-          ? profile.email
-          : "void@paytring.com",
-      cname: profile.name,
-      type: type,
-      workshopId: item.id,
-    };
-    setState((prev) => ({
-      ...prev,
-      payButtonLoading: share ? false : true,
-      shareButtonLoading: share ? true : false,
-    }));
-    try {
-      const response = await axios.post(
-        `${SERVER_URL}/paytring/createOrder`,
-        data
-      );
-      const orderData = response.data;
+  // const paytringWrapper = async (share = false, type, item) => {
+  //   const data = {
+  //     phone: profile.phoneNumber,
+  //     amount: item.cost,
+  //     email:
+  //       profile.email != null || profile.email != ""
+  //         ? profile.email
+  //         : "void@paytring.com",
+  //     cname: profile.name,
+  //     type: type,
+  //     workshopId: item.id,
+  //   };
+  //   setState((prev) => ({
+  //     ...prev,
+  //     payButtonLoading: share ? false : true,
+  //     shareButtonLoading: share ? true : false,
+  //   }));
+  //   try {
+  //     const response = await globalThis.axios.post(
+  //       `${SERVER_URL}/paytring/createOrder`,
+  //       data
+  //     );
+  //     const orderData = response.data;
 
-      setState((prev) => ({
-        ...prev,
-        payButtonLoading: false,
-        shareButtonLoading: false,
-        paymentSharePopUp: false,
-      }));
-      if (share) {
-        handlePaymentShare(orderData, item.cost, item.eventName);
-        return;
-      } else {
-        navigation.navigate("PaytringView", {
-          callback: () => {
-            navigation.goBack();
-            navigation.goBack();
-            setState((prev) => ({
-              ...prev,
-              showPaymentAlert: true,
-              clickPopup: false,
-              payButtonLoading: false,
-              paymentSharePopUp: false,
-            }));
-          },
-          error_handler: () => {
-            navigation.navigate("PaymentFailed", {
-              type: "normal",
-              navigateTo: "HomeScreen",
-            });
-          },
-          order_id: orderData?.order_id,
-        });
-      }
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        payButtonLoading: false,
-        paymentSharePopUp: false,
-        shareButtonLoading: false,
-      }));
-      crashlytics().log(
-        `Error in paytringWrapper SubscriptionPlans.js ${error}`
-      );
-    }
-  };
+  //     setState((prev) => ({
+  //       ...prev,
+  //       payButtonLoading: false,
+  //       shareButtonLoading: false,
+  //       paymentSharePopUp: false,
+  //     }));
+  //     if (share) {
+  //       handlePaymentShare(orderData, item.cost, item.eventName);
+  //       return;
+  //     } else {
+  //       navigation.navigate("PaytringView", {
+  //         callback: () => {
+  //           navigation.goBack();
+  //           navigation.goBack();
+  //           setState((prev) => ({
+  //             ...prev,
+  //             showPaymentAlert: true,
+  //             clickPopup: false,
+  //             payButtonLoading: false,
+  //             paymentSharePopUp: false,
+  //           }));
+  //         },
+  //         error_handler: () => {
+  //           navigation.navigate("PaymentFailed", {
+  //             type: "normal",
+  //             navigateTo: "HomeScreen",
+  //           });
+  //         },
+  //         order_id: orderData?.order_id,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       payButtonLoading: false,
+  //       paymentSharePopUp: false,
+  //       shareButtonLoading: false,
+  //     }));
+  //     crashlytics().log(
+  //       `Error in paytringWrapper SubscriptionPlans.js ${error}`
+  //     );
+  //   }
+  // };
 
   const phonePeWrapper = async (type, item) => {
     const _callback = (id) => {
@@ -216,7 +215,7 @@ const SessionDetails = ({
           _errorHandler,
           "workshop",
           item.id,
-          tambolaTicket
+          tambolaTicket,
         )
         .then((link) => {
           //prettier-ignore
@@ -234,7 +233,7 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
           Share.share({
             message: message,
           })
-            .then((result) => {
+            .then(() => {
               setState((prev) => ({
                 ...prev,
                 shareButtonLoading: false,
@@ -254,42 +253,42 @@ ${toUnicodeVariant("Note", "bold")}: The link will expire in 20 minutes.`;
         item.cost,
         _callback,
         _errorHandler,
-        "workshop"
+        "workshop",
       );
     }
   };
 
-  const handlePaymentShare = async (orderData, amount, eventName) => {
-    try {
-      Share.share({
-        title: "GoHappy Payment Link",
-        message: `Hello from the GoHappy Club Family,
-${toUnicodeVariant(
-  profile.name,
-  "italic"
-)} is requesting a payment of ₹${toUnicodeVariant(
-          String(amount),
-          "bold"
-        )} for ${toUnicodeVariant(eventName, "bold")}.
-Please make the payment using the link below:
-https://api.paytring.com/pay/token/${orderData?.order_id}`,
-      });
-    } catch (error) {
-      console.log("Error in sharing payment link : ", error);
-      crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
-    }
-  };
+  //   const handlePaymentShare = async (orderData, amount, eventName) => {
+  //     try {
+  //       Share.share({
+  //         title: "GoHappy Payment Link",
+  //         message: `Hello from the GoHappy Club Family,
+  // ${toUnicodeVariant(
+  //   profile.name,
+  //   "italic"
+  // )} is requesting a payment of ₹${toUnicodeVariant(
+  //           String(amount),
+  //           "bold"
+  //         )} for ${toUnicodeVariant(eventName, "bold")}.
+  // Please make the payment using the link below:
+  // https://api.paytring.com/pay/token/${orderData?.order_id}`,
+  //       });
+  //     } catch (error) {
+  //       console.log("Error in sharing payment link : ", error);
+  //       crashlytics().log(`Error in handlePaymentShare Contribution.js ${error}`);
+  //     }
+  //   };
 
-  const extractMeetingNumber = (url) => {
-    const regex = /j\/(\d+)/;
-    const match = url.match(regex);
+  //   const extractMeetingNumber = (url) => {
+  //     const regex = /j\/(\d+)/;
+  //     const match = url.match(regex);
 
-    if (match && match[1]) {
-      return match[1];
-    } else {
-      return null;
-    }
-  };
+  //     if (match && match[1]) {
+  //       return match[1];
+  //     } else {
+  //       return null;
+  //     }
+  //   };
 
   const joinMeeting = async () => {
     try {
@@ -318,7 +317,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
             "https://apps.apple.com/ca/app/gohappy-club/id6737447673",
         },
       },
-      firebase.dynamicLinks.ShortLinkType.SHORT
+      firebase.dynamicLinks.ShortLinkType.SHORT,
     );
 
     setState((prevState) => ({ ...prevState, referralLink: link1 }));
@@ -429,15 +428,17 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
     Share.share({
       message: shareMessage,
     })
-      .then((result) => {})
+      .then(() => {})
       .catch((errorMsg) => {
         console.log("error in sharing", errorMsg);
       });
   };
   const sessionActionL = async () => {
-    crashlytics().log(
-      JSON.stringify(getTitle()) + JSON.stringify(alreadyBookedSameDayEvent)
-    );
+    globalThis
+      .crashlytics()
+      .log(
+        JSON.stringify(getTitle()) + JSON.stringify(alreadyBookedSameDayEvent),
+      );
     if (getTitle() === "Share") {
       setState((prev) => ({ ...prev, belowAgePopUp: true }));
       return;
@@ -469,7 +470,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
           event.coverImage,
           event.subCategory,
           phoneNumber,
-          event.endTime
+          event.endTime,
         );
         setSessionAttended(phoneNumber);
         // await Linking.openURL(event.meetingLink);
@@ -478,20 +479,8 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
       }
     }
 
-    var output = sessionAction("book", state.selectedVoucher);
+    sessionAction("book", state.selectedVoucher);
     setState((prev) => ({ ...prev, loadingButton: true }));
-  };
-
-  const giveRewards = async () => {
-    try {
-      const response = await axios.post(`${SERVER_URL}/event/giveReward`, {
-        phone: profile.phoneNumber,
-        eventId: event.id,
-      });
-    } catch (error) {
-      console.log("Error in giveRewards ==>", error);
-      crashlytics().log(`Error in giveRewards SessionDetails ${error}`);
-    }
   };
 
   const isBookingAllowed = () => {
@@ -542,7 +531,7 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
     if (profile.age != null && profile.age < 50) {
       handleBelowAge(
         item,
-        "https://www.gohappyclub.in/session_details/" + item.id
+        "https://www.gohappyclub.in/session_details/" + item.id,
       );
       return;
     }
@@ -551,17 +540,17 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
         ? item.shareMessage
         : await createShareMessage(
             item,
-            "https://www.gohappyclub.in/session_details/" + item.id
+            "https://www.gohappyclub.in/session_details/" + item.id,
           );
     Share.share({
       message: sessionShareMessage,
     })
-      .then((result) => {})
-      .catch((errorMsg) => {});
+      .then(() => {})
+      .catch(() => {});
   };
   const tambolaParsing = (item) => {
     var tic = new Array(10);
-    for (var i = 0; i < tic.length; i++) {
+    for (let i = 0; i < tic.length; i++) {
       tic[i] = new Array(3);
     }
     if (
@@ -575,19 +564,19 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
 
         if (jsonString != null) {
           var temp = jsonString.match(/\d+/g);
-          for (var i = 0; i < 9; i++) {
+          for (let i = 0; i < 9; i++) {
             tic[0][i] = parseInt(temp[i]);
             if (tic[0][i] == 0) {
               tic[0][i] = "";
             }
           }
-          for (var i = 9; i < 18; i++) {
+          for (let i = 9; i < 18; i++) {
             tic[1][i - 9] = parseInt(temp[i]);
             if (tic[1][i - 9] == 0) {
               tic[1][i - 9] = "";
             }
           }
-          for (var i = 18; i < 27; i++) {
+          for (let i = 18; i < 27; i++) {
             tic[2][i - 18] = parseInt(temp[i]);
             if (tic[2][i - 18] == 0) {
               tic[2][i - 18] = "";
@@ -652,14 +641,14 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
   const loadVouchers = async () => {
     try {
       setState((prev) => ({ ...prev, voucherLoading: true }));
-      const response = await axios.post(
-        `${SERVER_URL}/membership/getVouchers`,
+      const response = await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/membership/getVouchers`,
         {
           phone: profile.phoneNumber,
-        }
+        },
       );
       const eventsVouchers = response.data.filter(
-        (voucher) => voucher.category == `${event.type.toLowerCase()}s`
+        (voucher) => voucher.category == `${event.type.toLowerCase()}s`,
       );
       setState((prev) => ({
         ...prev,
@@ -669,7 +658,9 @@ https://api.paytring.com/pay/token/${orderData?.order_id}`,
     } catch (error) {
       setState((prev) => ({ ...prev, voucherLoading: false }));
       console.log("Error in getting rewards ==>", error);
-      crashlytics().log(`Error in loadVouchers SessionDetails ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in loadVouchers SessionDetails ${error}`);
     }
   };
 
@@ -905,7 +896,7 @@ Please confirm the booking. Thanks! `;
                     ? {
                         uri: item.expertImage,
                       }
-                    : require("../../images/profile_image.jpeg")
+                    : ProfileDummy
                 }
                 style={{ width: 30, height: 30, borderRadius: 20 }}
                 resizeMode="cover"
@@ -927,7 +918,7 @@ Please confirm the booking. Thanks! `;
         closeModal={() => {
           setState((prev) => ({ ...prev, showVouchers: false }));
           modalRef.current.snapToPosition(
-            state?.title?.toLowerCase()?.startsWith("book") ? "13%" : "8%"
+            state?.title?.toLowerCase()?.startsWith("book") ? "13%" : "8%",
           );
         }}
         modalRef={modalRef}
@@ -935,12 +926,12 @@ Please confirm the booking. Thanks! `;
         vouchers={state.vouchers}
         voucherLoading={state.voucherLoading}
         title={state.title}
-        selectedVoucher={state.selectedVoucher}
         costType={event.costType}
         setSelectedVoucher={(newVoucher) =>
           setState((prev) => ({ ...prev, selectedVoucher: newVoucher }))
         }
-        children={
+      >
+        {
           <SafeAreaView
             style={{
               backgroundColor: Colors.bottomNavigation,
@@ -1103,7 +1094,7 @@ Please confirm the booking. Thanks! `;
             </SafeAreaView>
           </SafeAreaView>
         }
-      />
+      </VoucherBottomSheet>
       {item.recordingLink != null && (
         <Modal
           style={{}}
@@ -1296,7 +1287,7 @@ Please confirm the booking. Thanks! `;
           onConfirmPressed={() => {
             handleBelowAge(
               item,
-              "https://www.gohappyclub.in/session_details/" + item.id
+              "https://www.gohappyclub.in/session_details/" + item.id,
             );
             setState((prev) => ({ ...prev, belowAgePopUp: false }));
           }}
@@ -1401,6 +1392,17 @@ Please confirm the booking. Thanks! `;
     </SafeAreaView>
   );
   // }
+};
+
+SessionDetails.propTypes = {
+  route: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
+  sessionAction: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired,
+  phoneNumber: PropTypes.string.isRequired,
+  alreadyBookedSameDayEvent: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
+  selfInviteCode: PropTypes.string.isRequired,
 };
 
 const contentHtmlStyles = StyleSheet.create({

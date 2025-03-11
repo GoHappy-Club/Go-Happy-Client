@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Platform,
-} from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faGift, faTrophy } from "@fortawesome/free-solid-svg-icons";
-import { hp, wp } from "../../helpers/common";
-import { Tab, TabView } from "@rneui/themed";
-import { Colors } from "../../assets/colors/color";
 import { useNavigation } from "@react-navigation/native";
-import Animated from "react-native-reanimated";
+import { Tab, TabView } from "@rneui/themed";
 import { format, fromUnixTime } from "date-fns";
-import { useDispatch, useSelector } from "react-redux";
-import { setMembership } from "../../redux/actions/counts";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Colors } from "../../assets/colors/color";
 import GOHLoader from "../../commonComponents/GOHLoader";
+import { hp, wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
 import CoinbackRewards from "./CoinbackRewards";
 import VouchersCard from "./VouchersCard";
 
@@ -71,7 +62,7 @@ const Vouchers = ({ vouchers, navigation }) => (
             marginTop: hp(10),
           }}
         >
-          You don't have any voucher yet.
+          You don&apos;t have any voucher yet.
         </Text>
       </View>
     )}
@@ -97,7 +88,6 @@ const Vouchers = ({ vouchers, navigation }) => (
               expiryDate: item.expiryDate,
               status: item.status,
               description: item.description,
-              status: item.status,
               redemptionTime: item.redemptionTime,
               parentExpiryDate: item.parentExpiryDate,
             })
@@ -115,7 +105,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
   const [amount, setAmount] = useState(
     rewards
       .filter((item) => item.scratched == true)
-      .reduce((_acc, item) => _acc + item.amount, 0)
+      .reduce((_acc, item) => _acc + item.amount, 0),
   );
   const navigation = useNavigation();
 
@@ -127,7 +117,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
     setAmount(
       rewards
         .filter((item) => item.scratched == true)
-        .reduce((_acc, item) => _acc + item.amount, 0)
+        .reduce((_acc, item) => _acc + item.amount, 0),
     );
   }, [rewards]);
 
@@ -142,7 +132,7 @@ const Rewards = ({ rewards, vouchers, loading }) => {
         <View style={styles.totalRewards}>
           <View style={styles.topContent}>
             <FastImage
-              source={require("../../images/coins.png")}
+              source={Coins}
               style={{
                 height: 70,
                 width: 70,
@@ -228,6 +218,17 @@ const Rewards = ({ rewards, vouchers, loading }) => {
       </View>
     </>
   );
+};
+
+Vouchers.propTypes = {
+  vouchers: PropTypes.array,
+  navigation: PropTypes.object,
+};
+
+Rewards.propTypes = {
+  rewards: PropTypes.array,
+  vouchers: PropTypes.array,
+  loading: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({

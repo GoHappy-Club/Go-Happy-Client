@@ -1,7 +1,14 @@
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Clipboard from "@react-native-clipboard/clipboard";
+import firebase from "@react-native-firebase/app";
+import { FacebookIcon, InstagramIcon } from "lucide-react-native";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 import {
   Dimensions,
-  Image,
   SafeAreaView,
   ScrollView,
   Share,
@@ -9,25 +16,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Toast from "react-native-simple-toast";
 import { Text } from "react-native-elements";
-
-import { connect, useSelector } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
+import FastImage from "react-native-fast-image";
+import Toast from "react-native-simple-toast";
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import firebase from "@react-native-firebase/app";
-import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS.js";
-import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Clipboard from "@react-native-clipboard/clipboard";
-import toUnicodeVariant from "../toUnicodeVariant.js";
 
 import { Colors } from "../../assets/colors/color.js";
+import { FirebaseDynamicLinksProps } from "../../config/CONSTANTS.js";
+import Refer123 from "../../images/1_2_3-Refer.png";
+import RemoveBg from "../../images/refer Background Removed.png";
+import { setProfile } from "../../redux/actions/counts.js";
+import toUnicodeVariant from "../toUnicodeVariant.js";
 import ReferBottomSheet from "./ReferBottomSheet.js";
-import { withTranslation } from "react-i18next";
-import { FacebookIcon, InstagramIcon } from "lucide-react-native";
-import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-import FastImage from "react-native-fast-image";
 
 const WIDTH = Dimensions.get("window").width;
 class Refer extends Component {
@@ -70,14 +71,15 @@ class Refer extends Component {
         "(नीचे दिए गए लिंक पर क्लिक करें ) to install the application using my referral link and attend FREE sessions: " +
         this.state.referralLink,
     })
-      .then((result) => {})
-      .catch((errorMsg) => {});
+      .then(() => {})
+      .catch(() => {});
   };
   _retrieveData = async () => {
     try {
-      const email = await AsyncStorage.getItem("email");
+      const email = await globalThis.AsyncStorage.getItem("email");
       this.setState({ email: email });
     } catch (error) {
+      console.log("Error retrieving email", error);
       // Error retrieving data
       //reverse a linked list
     }
@@ -101,7 +103,6 @@ class Refer extends Component {
   }
   _onRefresh() {
     this.setState({ refreshing: true });
-    var _this = this;
     // this.props.loadMySessions("", function () {
     //   _this.setState({ refreshing: false });
     // });
@@ -110,7 +111,7 @@ class Refer extends Component {
     let { profile, actions } = this.props;
     let selfInviteCode = this.props.profile.selfInviteCode;
     // alert('hi');
-    crashlytics().log(JSON.stringify(this.props.profile));
+    globalThis.crashlytics().log(JSON.stringify(this.props.profile));
     if (selfInviteCode == null) {
       selfInviteCode = "test";
     }
@@ -130,7 +131,7 @@ class Refer extends Component {
             "https://apps.apple.com/ca/app/gohappy-club/id6737447673",
         },
       },
-      firebase.dynamicLinks.ShortLinkType.SHORT
+      firebase.dynamicLinks.ShortLinkType.SHORT,
     );
 
     this.setState({ referralLink: link1 });
@@ -140,7 +141,7 @@ class Refer extends Component {
   };
 
   requestReferrals() {
-    var output = this.props.requestReferrals((responseData) => {
+    this.props.requestReferrals((responseData) => {
       // for testing
       // responseData = this.state.responseData;
       var countReferrals = 0;
@@ -174,7 +175,7 @@ class Refer extends Component {
       },
       () => {
         this.bottomSheetRef.current.present();
-      }
+      },
     );
   }
 
@@ -212,7 +213,7 @@ class Refer extends Component {
               width: "100%",
               height: WIDTH > 600 ? 200 : 150,
             }}
-            source={require("../../images/1_2_3-Refer.png")}
+            source={Refer123}
           />
 
           <View style={styles.clip}>
@@ -317,12 +318,12 @@ class Refer extends Component {
             resizeMode={FastImage.resizeMode.cover}
             style={{
               width: "100%",
-              height: WIDTH>600?320:220,
+              height: WIDTH > 600 ? 320 : 220,
               alignSelf: "center",
               // marginLeft: "10%",
               // marginRight: "10%",
             }}
-            source={require("../../images/refer Background Removed.png")}
+            source={RemoveBg}
           />
 
           <ReferBottomSheet
@@ -339,6 +340,14 @@ class Refer extends Component {
     );
   }
 }
+
+Refer.propTypes = {
+  profile: PropTypes.object,
+  actions: PropTypes.object,
+  requestReferrals: PropTypes.func,
+  mySessions: PropTypes.array,
+  t: PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   backButton: {
@@ -499,5 +508,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withTranslation()(Refer));

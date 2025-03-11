@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
 import { faGift, faTrophy } from "@fortawesome/free-solid-svg-icons";
-import { hp, wp } from "../../helpers/common";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+
 import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
 import { setMembership } from "../../redux/actions/counts";
-import RewardsCard from "./RewardsCard";
 import { getRandomColor } from "./Rewards";
+import RewardsCard from "./RewardsCard";
 
 const CoinbackRewards = ({
   rewards,
@@ -14,7 +16,7 @@ const CoinbackRewards = ({
   dispatch,
   membership,
   setAmount,
-  styles
+  styles,
 }) => {
   const [fixedRewards, setFixedRewards] = useState([]);
 
@@ -45,28 +47,28 @@ const CoinbackRewards = ({
     setAmount(
       updatedRewards
         .filter((item) => item.scratched == true)
-        .reduce((_acc, item) => _acc + item.amount, 0)
+        .reduce((_acc, item) => _acc + item.amount, 0),
     );
     await saveScratchInBackend(id, amount);
   };
 
   const saveScratchInBackend = async (id, amount) => {
     try {
-      const res = await axios.post(
-        `${SERVER_URL}/membership/scratchCardReward`,
+      await globalThis.axios.post(
+        `${globalThis.SERVER_URL}/membership/scratchCardReward`,
         {
           phone: profile.phoneNumber,
           coinTransactionId: id,
-        }
+        },
       );
       dispatch(
         setMembership({
           ...membership,
           coins: Number.parseInt(membership.coins) + amount,
-        })
+        }),
       );
     } catch (error) {
-      crashlytics().log(`Error in saveScratchInBackend: ${error}`);
+      globalThis.crashlytics().log(`Error in saveScratchInBackend: ${error}`);
       console.log("error in saving==>", error);
     }
   };
@@ -95,7 +97,7 @@ const CoinbackRewards = ({
               marginTop: hp(10),
             }}
           >
-            You don't have any reward yet.
+            You don&apos;t have any reward yet.
           </Text>
         </View>
       )}
@@ -120,6 +122,16 @@ const CoinbackRewards = ({
       </ScrollView>
     </View>
   );
+};
+
+CoinbackRewards.propTypes = {
+  rewards: PropTypes.array,
+  navigation: PropTypes.object,
+  profile: PropTypes.object,
+  dispatch: PropTypes.func,
+  membership: PropTypes.object,
+  setAmount: PropTypes.func,
+  styles: PropTypes.object,
 };
 
 export default CoinbackRewards;

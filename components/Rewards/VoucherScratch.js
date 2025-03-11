@@ -1,15 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useRoute } from "@react-navigation/native";
-import { BlurView } from "@react-native-community/blur";
-import { hp, wp } from "../../helpers/common";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { ScratchCard } from "rn-scratch-card";
+
+import { hp, wp } from "../../helpers/common";
+import ScratchForeground from "../../images/scratch_foreground.png";
 
 const VoucherScratch = () => {
   const [scratchPercent, setScratchPercent] = useState(0);
   const route = useRoute();
-  const { id, color, icon, amount, title, setScratchTrue } = route.params;
+  const { id, color, icon, amount, setScratchTrue } = route.params;
 
   useEffect(() => {
     if (scratchPercent > 55) setScratchTrue(id, amount);
@@ -39,7 +40,7 @@ const VoucherScratch = () => {
             }}
           >
             <ScratchCard
-              source={require("../../images/scratch_foreground.png")}
+              source={ScratchForeground}
               brushWidth={100}
               onScratch={(e) => {
                 console.log("Scratched", e);

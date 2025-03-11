@@ -692,7 +692,7 @@ Contribution.propTypes = {
   navigation: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
-  t: PropTypes.object.isRequired,
+  t: PropTypes.func,
 };
 export default connect(
   mapStateToProps,

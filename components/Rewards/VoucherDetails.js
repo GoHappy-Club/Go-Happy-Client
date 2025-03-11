@@ -1,36 +1,27 @@
+import Clipboard from "@react-native-clipboard/clipboard";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Platform,
-  Pressable,
-  ScrollView,
-} from "react-native";
-import Toast from "react-native-simple-toast";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import Animated, {
   FadeInDown,
   FadeInLeft,
   FadeOut,
-  FadeOutLeft,
   FadeOutRight,
 } from "react-native-reanimated";
-import { formatDate } from "./Rewards";
-import { hp, wp } from "../../helpers/common";
+import Toast from "react-native-simple-toast";
+
 import { Colors } from "../../assets/colors/color";
-import Clipboard from "@react-native-clipboard/clipboard";
-import { TouchableOpacity } from "react-native";
-import FastImage from "react-native-fast-image";
+import { hp, wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
+import { formatDate } from "./Rewards";
 
 const VoucherDetails = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const {
-    id,
     image,
     title,
-    color,
     value,
     percent,
     expiryDate,
@@ -85,7 +76,8 @@ const VoucherDetails = () => {
           style={[
             styles.card,
             {
-              backgroundColor: status == "ACTIVE" ? Colors.beige : Colors.grey.d,
+              backgroundColor:
+                status == "ACTIVE" ? Colors.beige : Colors.grey.d,
             },
           ]}
         >
@@ -122,7 +114,7 @@ const VoucherDetails = () => {
               >
                 {value != null && (
                   <FastImage
-                    source={require("../../images/coins.png")}
+                    source={Coins}
                     style={{
                       width: wp(8),
                       aspectRatio: 1,
@@ -156,6 +148,7 @@ const VoucherDetails = () => {
                   <Animated.Text
                     entering={FadeInLeft.delay(600 + i * 50)}
                     style={styles.conditionItem}
+                    key={i}
                   >
                     • {item}
                   </Animated.Text>

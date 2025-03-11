@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Dimensions,
-  Button,
-  Alert,
-  Text,
-  Image,
-  FlatList,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
-import { BackgroundImage } from "react-native-elements/dist/config";
-// import { ScrollView } from "reac t-native-gesture-handler";
-import * as Progress from "react-native-progress";
-import { Colors } from "../../assets/colors/color";
+import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
+import {
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import FastImage from "react-native-fast-image";
+import * as Progress from "react-native-progress";
+
+import { Colors } from "../../assets/colors/color";
+import ChestClosed from "../../images/chest-closed.png";
+import ChestOpen from "../../images/chest-opened.png";
+import HourGlass from "../../images/hourglass.png";
+import TickIcon from "../../images/tick-icon.png";
 
 const screenWidth = Dimensions.get("window").width;
 class ReferralsList extends React.Component {
@@ -38,9 +38,7 @@ class ReferralsList extends React.Component {
     const openedChestCount = Math.floor(this.props.numberReferrals / 3);
     const currentCount = this.props.numberReferrals - openedChestCount * 3;
     var chestType =
-      currentCount < this.state.referralComplete
-        ? require("../../images/chest-closed.png")
-        : require("../../images/chest-opened.png");
+      currentCount < this.state.referralComplete ? ChestClosed : ChestOpen;
     var chest = (
       <FastImage
         // resizeMode="cover"
@@ -52,7 +50,7 @@ class ReferralsList extends React.Component {
       <FastImage
         // resizeMode="cover"
         style={styles.chest}
-        source={require("../../images/chest-opened.png")}
+        source={ChestOpen}
       />
     );
 
@@ -72,7 +70,7 @@ class ReferralsList extends React.Component {
           />
           {chestOpened}
           <Text style={styles.label1}>3/3</Text>
-        </View>
+        </View>,
       );
     }
 
@@ -100,7 +98,7 @@ class ReferralsList extends React.Component {
                 alignSelf: "center",
                 marginLeft: "auto",
               }}
-              source={require("../../images/tick-icon.png")}
+              source={TickIcon}
             ></FastImage>
           )}
           {!item.hasAttendedSession && (
@@ -111,7 +109,7 @@ class ReferralsList extends React.Component {
                 alignSelf: "center",
                 marginLeft: "auto",
               }}
-              source={require("../../images/hourglass.png")}
+              source={HourGlass}
             ></FastImage>
           )}
         </View>
@@ -168,6 +166,16 @@ class ReferralsList extends React.Component {
   }
 }
 
+ReferralsList.propTypes = {
+  numberReferrals: PropTypes.number,
+  referrals: PropTypes.array,
+  trivialTitle1: PropTypes.string,
+  trivialTitle2: PropTypes.string,
+  requestReferrals: PropTypes.func,
+  t: PropTypes.func,
+  item: PropTypes.object,
+};
+
 const styles = StyleSheet.create({
   progressBar: {
     borderRadius: 30,
@@ -193,10 +201,6 @@ const styles = StyleSheet.create({
     width: 40,
     aspectRatio: 1 / 1,
     marginLeft: "5%",
-  },
-  divider: {
-    borderWidth: 5,
-    color: Colors.black,
   },
   profilePic: {
     marginLeft: 20,

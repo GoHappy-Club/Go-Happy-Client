@@ -1,27 +1,26 @@
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BlurView } from "@react-native-community/blur";
+import PropTypes from "prop-types";
+import React, { useCallback, useState } from "react";
 import {
-  Dimensions,
-  Image,
-  ScrollView,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Platform,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Colors } from "../../assets/colors/color";
+import FastImage from "react-native-fast-image";
+import { MaterialIndicator } from "react-native-indicators";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { BlurView } from "@react-native-community/blur";
-import { hp, wp } from "../../helpers/common";
-import { MaterialIndicator } from "react-native-indicators";
-import { formatDate, getRandomColor } from "./Rewards";
 
-const screenWidth = Dimensions.get("window").width;
+import { Colors } from "../../assets/colors/color";
+import { hp, wp } from "../../helpers/common";
+import Coins from "../../images/coins.png";
+import { formatDate } from "./Rewards";
 
 const VoucherBottomSheet = ({
   modalRef,
@@ -31,7 +30,6 @@ const VoucherBottomSheet = ({
   showVouchers,
   voucherLoading,
   title,
-  selectedVoucher,
   setSelectedVoucher,
   costType,
 }) => {
@@ -44,7 +42,7 @@ const VoucherBottomSheet = ({
           animatedIndex.value,
           [-1, 0],
           [0, 1],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         ),
       }));
 
@@ -86,7 +84,7 @@ const VoucherBottomSheet = ({
         </Animated.View>
       );
     },
-    [closeModal]
+    [closeModal],
   );
 
   const snapPoints = React.useMemo(
@@ -96,7 +94,7 @@ const VoucherBottomSheet = ({
         : "8%",
       "60%",
     ],
-    [title]
+    [title],
   );
 
   const handleVoucherSelect = (voucher) => {
@@ -169,7 +167,7 @@ const VoucherBottomSheet = ({
                           textAlign: "center",
                         }}
                       >
-                        Sorry, You don't have any vouchers.
+                        Sorry, You don&apos;t have any vouchers.
                       </Text>
                     </View>
                   )}
@@ -197,7 +195,7 @@ const VoucherBottomSheet = ({
   );
 };
 
-const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
+const VouchersCard = ({ voucher, onPress, isSelected }) => {
   return (
     <TouchableOpacity
       style={[styles.voucherCard]}
@@ -260,7 +258,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
           >
             {voucher?.value != null && (
               <FastImage
-                source={require("../../images/coins.png")}
+                source={Coins}
                 style={{
                   width: wp(8),
                   aspectRatio: 1,
@@ -284,7 +282,7 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
             {voucher.status == "REDEEMED"
               ? formatDate(voucher?.redemptionTime)
               : formatDate(
-                  Math.min(voucher.expiryDate, voucher.parentExpiryDate)
+                  Math.min(voucher.expiryDate, voucher.parentExpiryDate),
                 )}
           </Text>
         </View>
@@ -311,6 +309,24 @@ const VouchersCard = ({ voucher, id, onPress, isSelected, color }) => {
       />
     </TouchableOpacity>
   );
+};
+
+VoucherBottomSheet.propTypes = {
+  modalRef: PropTypes.object,
+  closeModal: PropTypes.func,
+  vouchers: PropTypes.array,
+  children: PropTypes.node,
+  showVouchers: PropTypes.bool,
+  voucherLoading: PropTypes.bool,
+  title: PropTypes.string,
+  setSelectedVoucher: PropTypes.func,
+  costType: PropTypes.string,
+};
+
+VouchersCard.propTypes = {
+  voucher: PropTypes.object,
+  onPress: PropTypes.func,
+  isSelected: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({
@@ -357,7 +373,7 @@ const styles = StyleSheet.create({
     fontSize: wp(4),
     fontWeight: "bold",
     fontFamily: "NunitoSans-Bold",
-    color:Colors.primaryText
+    color: Colors.primaryText,
   },
   voucherCard: {
     width: "90%",
