@@ -1,9 +1,10 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import Wallet from "../../components/subscription/Wallet";
+import { SafeAreaView, View } from "react-native";
 import { useSelector } from "react-redux";
-import GOHLoader from "../../commonComponents/GOHLoader";
+
 import { Colors } from "../../assets/colors/color";
+import GOHLoader from "../../commonComponents/GOHLoader";
+import Wallet from "../../components/subscription/Wallet";
 
 const WalletScreen = () => {
   const [transactions, setTransactions] = useState([]);
@@ -15,18 +16,18 @@ const WalletScreen = () => {
     const getTransactions = async () => {
       try {
         setLoading(true);
-        const response = await axios.post(
-          `${SERVER_URL}/membership/getRecentTransactions`,
+        const response = await globalThis.axios.post(
+          `${globalThis.SERVER_URL}/membership/getRecentTransactions`,
           {
             phone: profile.phoneNumber,
-          }
+          },
         );
         setTransactions(response.data);
         setLoading(false);
       } catch (error) {
-        crashlytics().log(
-          `Error in getRecentTransactions WalletScreen ${error}`
-        );
+        globalThis
+          .crashlytics()
+          .log(`Error in getRecentTransactions WalletScreen ${error}`);
         setLoading(false);
         console.log("Error in getting transaction ==>", error);
       }
@@ -58,5 +59,3 @@ const WalletScreen = () => {
 };
 
 export default WalletScreen;
-
-const styles = StyleSheet.create({});
