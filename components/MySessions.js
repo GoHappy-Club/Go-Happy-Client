@@ -245,29 +245,20 @@ class MySessions extends Component {
     );
 
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ backgroundColor: Colors.background }}
+      <SafeAreaView
+        style={{
+          backgroundColor: Colors.background,
+          height: "100%",
+        }}
       >
-        {this.props.ongoingEvents.length == 0 &&
-          this.props.upcomingEvents.length == 0 &&
-          this.props.expiredEvents.length == 0 &&
-          this.sorry()}
+        {this.props.expiredEvents.length == 0 && this.sorry()}
 
-        {this.props.expiredEvents.length > 0 && (
-          <Text h4 style={{ marginLeft: 5, marginTop: 20, marginBottom: 15 }}>
-            {this.props.childLoader == true && (
-              <MaterialIndicator color={Colors.blue.blue} />
-            )}
-          </Text>
-        )}
-        <SafeAreaView style={{ backgroundColor: Colors.background }}>
-          <FlatList
-            data={this.props.expiredEvents}
-            renderItem={(item) => renderItem(item, "expired")}
-            keyExtractor={(item) => item.id}
-          />
-        </SafeAreaView>
+        <FlatList
+          data={this.props.expiredEvents}
+          renderItem={(item) => renderItem(item, "expired")}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+        />
         {this.state.recordingLink && (
           <Modal
             animationType="slide"
@@ -287,7 +278,7 @@ class MySessions extends Component {
             />
           </Modal>
         )}
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 }

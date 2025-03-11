@@ -667,7 +667,7 @@ export default function App() {
                       <MySessionsScreen {...props} propProfile={profile} />
                     )}
                     options={({ navigation }) => ({
-                      headerTransparent: true,
+                      // headerTransparent: true,
                       title: null,
                       headerBackTitle: "back",
                       headerLeft: () => (
