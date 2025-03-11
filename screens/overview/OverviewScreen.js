@@ -1,20 +1,20 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
-import WhatsAppFAB from "../../commonComponents/whatsappHelpButton.js";
-import Video from "react-native-video";
-import { connect } from "react-redux";
-import { setProfile } from "../../redux/actions/counts.js";
 import { Platform, StatusBar, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
+import { Colors } from "../../assets/colors/color.js";
+import GOHLoader from "../../commonComponents/GOHLoader.js";
+import PromotionSection from "../../components/overview/PromotionSection.js";
+import Sections from "../../components/overview/Sections.js";
 import TopBanner from "../../components/overview/TopBanner.js";
 import TrendingSessions from "../../components/overview/TrendingSessions";
-import PromotionSection from "../../components/overview/PromotionSection.js";
-import { ScrollView } from "react-native-gesture-handler";
 import UpcomingWorkshops from "../../components/overview/UpcomingWorkshops.js";
-import Sections from "../../components/overview/Sections.js";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import GOHLoader from "../../commonComponents/GOHLoader.js";
-import { Colors } from "../../assets/colors/color.js";
 import Feed from "../../components/Reels/Feed.js";
+import { setProfile } from "../../redux/actions/counts.js";
 
 class OverviewScreen extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ class OverviewScreen extends Component {
       isInteractionBlocked: true,
       isBlocking: false,
     };
-    crashlytics().log(JSON.stringify(props.propProfile));
+    globalThis.crashlytics().log(JSON.stringify(props.propProfile));
     this.scrollViewRef = React.createRef();
     this.walkthroughStarted = React.createRef();
     // this.timer = null;
@@ -50,11 +50,11 @@ class OverviewScreen extends Component {
     this.setupTimer();
     this._unsubscribeFocus = this.props.navigation.addListener(
       "focus",
-      this.onFocus
+      this.onFocus,
     );
     this._unsubscribeBlur = this.props.navigation.addListener(
       "blur",
-      this.onBlur
+      this.onBlur,
     );
   }
 
@@ -105,9 +105,9 @@ class OverviewScreen extends Component {
   };
 
   async getOverviewData() {
-    var url = SERVER_URL + "/home/overview";
+    var url = globalThis.SERVER_URL + "/home/overview";
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         //console.log(response.data.trendingSessions);
         this.setState({
@@ -121,16 +121,18 @@ class OverviewScreen extends Component {
       }
     } catch (error) {
       this.error = true;
-      crashlytics().log(`Error in getOverviewData OverviewScreen ${error}`);
+      globalThis
+        .crashlytics()
+        .log(`Error in getOverviewData OverviewScreen ${error}`);
       // throw new Error("Error getting order ID");
     }
   }
 
   async getProperties() {
-    var url = SERVER_URL + "/properties/list";
+    var url = globalThis.SERVER_URL + "/properties/list";
     const redux_profile = this.props.profile;
     try {
-      const response = await axios.get(url);
+      const response = await globalThis.axios.get(url);
       if (response.data) {
         const properties = response.data.properties;
         if (properties && properties.length > 0 && redux_profile) {
@@ -141,11 +143,12 @@ class OverviewScreen extends Component {
       }
     } catch (error) {
       this.error = true;
+      console.log(error);
       // throw new Error("Error getting order ID");
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.getProperties();
   }
   render() {
@@ -212,6 +215,14 @@ class OverviewScreen extends Component {
     }
   }
 }
+
+OverviewScreen.propTypes = {
+  propProfile: PropTypes.object,
+  navigation: PropTypes.object,
+  start: PropTypes.func,
+  profile: PropTypes.object,
+  actions: PropTypes.object,
+};
 
 const mapStateToProps = (state) => ({
   count: state.count.count,

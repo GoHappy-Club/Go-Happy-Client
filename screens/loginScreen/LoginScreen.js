@@ -1,40 +1,40 @@
+import "@react-native-firebase/auth";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import analytics from "@react-native-firebase/analytics";
+import firebase from "@react-native-firebase/app";
+import dynamicLinks from "@react-native-firebase/dynamic-links";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import {
   Dimensions,
-  Image,
+  KeyboardAvoidingView,
   Linking,
+  SafeAreaView,
   StyleSheet,
   Text,
-  View,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Keyboard,
-  SafeAreaView,
-  Alert,
+  View,
 } from "react-native";
-//import axios from "axios";
 import AwesomeAlert from "react-native-awesome-alerts";
-import PhoneInput from "react-native-phone-number-input";
-import analytics from "@react-native-firebase/analytics";
-import firebase from "@react-native-firebase/app";
-import "@react-native-firebase/auth";
+import DeviceInfo from "react-native-device-info";
 import { Button } from "react-native-elements";
 import { BottomSheet, ListItem } from "react-native-elements";
-
-import { connect } from "react-redux";
-import { setMembership, setProfile } from "../../redux/actions/counts.js";
-import { bindActionCreators } from "redux";
+import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
-import dynamicLinks from "@react-native-firebase/dynamic-links";
-import RenderHtml from "react-native-render-html";
-import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
 import RNOtpVerify from "react-native-otp-verify";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import PhoneInput from "react-native-phone-number-input";
+import RenderHtml from "react-native-render-html";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
 import { Colors } from "../../assets/colors/color.js";
 import GOHLoader from "../../commonComponents/GOHLoader.js";
+import { PrivacyPolicy, TermOfUse } from "../../config/CONSTANTS.js";
+import LogoImage from "../../images/logo.png";
+import { setMembership, setProfile } from "../../redux/actions/counts.js";
 import OTPAuthWrapper from "../../services/Authentication/OTPAuthWrapper.js";
-import DeviceInfo from "react-native-device-info";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -94,10 +94,10 @@ class LoginScreen extends Component {
       });
 
     RNOtpVerify.getOtp()
-      .then((p) => {
+      .then(() => {
         RNOtpVerify.addListener(this.otpHandler);
       })
-      .catch((p) => {});
+      .catch(() => {});
   }
 
   componentWillUnmount() {
@@ -120,7 +120,7 @@ class LoginScreen extends Component {
             clearInterval(this.interval);
             this.setState({ isRunning: false, allowResend: true });
           }
-        }
+        },
       );
     }, 1000);
   };
@@ -137,8 +137,8 @@ class LoginScreen extends Component {
     if (otpList && otpList.length > 0) {
       const verificationCode = otpList[0];
       this.setState({ verificationCode: verificationCode });
-      if(!this.state.resend){
-        this.handleVerifyCode(verificationCode)
+      if (!this.state.resend) {
+        this.handleVerifyCode(verificationCode);
       }
     }
   };
@@ -184,7 +184,7 @@ class LoginScreen extends Component {
     emergencyContact,
     fcmToken,
     age,
-    dob
+    dob,
   ) {
     let { profile, actions } = this.props;
     profile = {
@@ -215,7 +215,7 @@ class LoginScreen extends Component {
         },
         () => {
           this.setState({ showPhoneNumberError: true });
-        }
+        },
       );
       return false;
     }
@@ -227,7 +227,7 @@ class LoginScreen extends Component {
         },
         () => {
           this.setState({ showPhoneNumberError: true });
-        }
+        },
       );
       return false;
     }
@@ -239,7 +239,7 @@ class LoginScreen extends Component {
         },
         () => {
           this.setState({ showPhoneNumberError: true });
-        }
+        },
       );
       return false;
     }
@@ -251,7 +251,7 @@ class LoginScreen extends Component {
         },
         () => {
           this.setState({ showPhoneNumberError: true });
-        }
+        },
       );
       return false;
     }
@@ -266,7 +266,7 @@ class LoginScreen extends Component {
       loadingResendButton: resend,
     });
 
-    crashlytics().log(JSON.stringify(this.state));
+    globalThis.crashlytics().log(JSON.stringify(this.state));
 
     if (!this.validatePhoneNumber()) {
       this.setState({ loadingButton: false, loadingResendButton: false });
@@ -284,52 +284,46 @@ class LoginScreen extends Component {
     }
   };
 
-  sendFirebaseOtp = async (resend) => {
-    try {
-      console.log("in sendfirebaseotp");
-      const confirmResult = await OTPAuthWrapper.FirebaseWrapper.sendOtp(
-        this.state.phoneNumber
-      );
-      this.setState(
-        {
-          confirmResult,
-          otpSent: true,
-          loadingButton: false,
-          loadingResendButton: false,
-        },
-        () => this.startTimer()
-      );
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.setState({ userId: user.uid });
-          if (this.state.reachedBackendSignIn == false) {
-            this.setState({ reachedBackendSignIn: true }, () => {
-              console.log("Calling bsign fromm AUTHSTATE");
-              this._backendSignIn(
-                user.phoneNumber,
-                "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
-              );
-            });
-          } else {
-            return;
-          }
+  sendFirebaseOtp = async () => {
+    const confirmResult = await OTPAuthWrapper.FirebaseWrapper.sendOtp(
+      this.state.phoneNumber,
+    );
+    this.setState(
+      {
+        confirmResult,
+        otpSent: true,
+        loadingButton: false,
+        loadingResendButton: false,
+      },
+      () => this.startTimer(),
+    );
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ userId: user.uid });
+        if (this.state.reachedBackendSignIn == false) {
+          this.setState({ reachedBackendSignIn: true }, () => {
+            this._backendSignIn(
+              user.phoneNumber,
+              "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
+            );
+          });
+        } else {
+          return;
         }
-      });
-    } catch (error) {
-      throw error;
-    }
+      }
+    });
   };
 
   sendGupshupOtp = async () => {
     const response = await OTPAuthWrapper.GupshupWrapper.sendOtp(
-      this.state.phoneNumber
+      this.state.phoneNumber,
     );
 
     if (response.data?.success == true) {
       this.setState({ otpSent: true }, () => this.startTimer());
     } else if (response.data?.statusCode == 308) {
       alert(
-        "You are re-trying too early, please wait a few minutes and try again."
+        "You are re-trying too early, please wait a few minutes and try again.",
       );
     } else {
       this.resendOtp();
@@ -339,9 +333,9 @@ class LoginScreen extends Component {
     this.setState({ loadingButton: false, loadingResendButton: false });
   };
 
-  handleOtpError = (error, resend) => {
+  handleOtpError = (error) => {
     console.error("Error in OTP process:", error);
-    crashlytics().recordError(JSON.stringify(error));
+    globalThis.crashlytics().recordError(JSON.stringify(error));
     this.showGenericError();
     this.setState({
       loadingVerifyButton: false,
@@ -352,7 +346,7 @@ class LoginScreen extends Component {
 
   showGenericError = () => {
     alert(
-      'There was an issue with the login. Please restart the app and try again. If the issue persists, click the "Contact Us" button.'
+      'There was an issue with the login. Please restart the app and try again. If the issue persists, click the "Contact Us" button.',
     );
   };
 
@@ -380,16 +374,13 @@ class LoginScreen extends Component {
 
   verifyFirebaseOtp = async (confirmResult, code) => {
     try {
-      const user = await OTPAuthWrapper.FirebaseWrapper.verifyOtp(
-        confirmResult,
-        code
-      );
+      await OTPAuthWrapper.FirebaseWrapper.verifyOtp(confirmResult, code);
       if (this.state.reachedBackendSignIn == false) {
         this.setState({ reachedBackendSignIn: true }, () => {
           console.log("Calling bsign fromm VERIFYFB");
           this._backendSignIn(
             this.state.phoneNumber,
-            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
+            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
           );
         });
       } else {
@@ -404,7 +395,7 @@ class LoginScreen extends Component {
   verifyGupshupOtp = async (code) => {
     const response = await OTPAuthWrapper.GupshupWrapper.verifyOtp(
       this.state.phoneNumber,
-      code
+      code,
     );
 
     if (response.data?.success == true) {
@@ -413,7 +404,7 @@ class LoginScreen extends Component {
           console.log("Calling bsign fromm GUPSHUP");
           this._backendSignIn(
             this.state.phoneNumber,
-            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png"
+            "https://www.pngitem.com/pimgs/m/272-2720607_this-icon-for-gender-neutral-user-circle-hd.png",
           );
         });
       } else {
@@ -516,7 +507,6 @@ class LoginScreen extends Component {
           const name = await AsyncStorage.getItem("name");
           const email = await AsyncStorage.getItem("email");
           const profileImage = await AsyncStorage.getItem("profileImage");
-          const token = await AsyncStorage.getItem("token");
           const phoneNumber = await AsyncStorage.getItem("phoneNumber");
           const dob = await AsyncStorage.getItem("dob");
           const sessionsAttended =
@@ -533,7 +523,7 @@ class LoginScreen extends Component {
           const membershipType = await AsyncStorage.getItem("membershipType");
           const id = await AsyncStorage.getItem("membershipId");
           const membershipStartDate = await AsyncStorage.getItem(
-            "membershipStartDate"
+            "membershipStartDate",
           );
           const membershipEndDate =
             await AsyncStorage.getItem("membershipEndDate");
@@ -552,7 +542,7 @@ class LoginScreen extends Component {
             emergencyContact,
             fcmToken,
             age,
-            dob
+            dob,
           );
           this.setMembership({
             membershipType: membershipType,
@@ -564,8 +554,8 @@ class LoginScreen extends Component {
             freeTrialActive: freeTrialActive,
           });
 
-          axios
-            .post(SERVER_URL + "/user/update", {
+          globalThis.axios
+            .post(globalThis.SERVER_URL + "/user/update", {
               fcmToken: fcmToken,
               phone: phoneNumber,
               lastDevice: `${DeviceInfo.getBrand()} ${DeviceInfo.getDeviceNameSync()}`,
@@ -573,36 +563,36 @@ class LoginScreen extends Component {
             .then((response) => {
               AsyncStorage.setItem(
                 "freeTrialActive",
-                String(response.data.freeTrialActive)
+                String(response.data.freeTrialActive),
               );
               AsyncStorage.setItem(
                 "membershipType",
-                response.data.membershipType
+                response.data.membershipType,
               );
               AsyncStorage.setItem(
                 "membershipStartDate",
-                String(response.data?.membershipStartDate)
+                String(response.data?.membershipStartDate),
               );
               AsyncStorage.setItem(
                 "membershipEndDate",
-                String(response.data?.membershipEndDate)
+                String(response.data?.membershipEndDate),
               );
               AsyncStorage.setItem("coins", String(response.data?.coins));
               AsyncStorage.setItem(
                 "freeTrialUsed",
-                String(response.data?.freeTrialUsed)
+                String(response.data?.freeTrialUsed),
               );
               AsyncStorage.setItem(
                 "freeTrialActive",
-                String(response.data?.freeTrialActive)
+                String(response.data?.freeTrialActive),
               );
               AsyncStorage.setItem(
                 "cancellationReason",
-                String(response.data?.cancellationReason)
+                String(response.data?.cancellationReason),
               );
               AsyncStorage.setItem(
                 "cancellationDate",
-                String(response.data?.cancellationDate)
+                String(response.data?.cancellationDate),
               );
 
               this.setProfile(
@@ -617,7 +607,7 @@ class LoginScreen extends Component {
                 response.data.emergencyContact,
                 response.data.fcmToken,
                 response.data.age,
-                response.data.dob
+                response.data.dob,
               );
 
               AsyncStorage.setItem("email", response.data.email);
@@ -625,20 +615,20 @@ class LoginScreen extends Component {
               AsyncStorage.setItem("profileImage", response.data.profileImage);
               AsyncStorage.setItem(
                 "sessionsAttended",
-                response.data.sessionsAttended
+                response.data.sessionsAttended,
               );
               AsyncStorage.setItem(
                 "dateOfJoining",
-                response.data.dateOfJoining
+                response.data.dateOfJoining,
               );
               AsyncStorage.setItem(
                 "selfInviteCode",
-                response.data.selfInviteCode
+                response.data.selfInviteCode,
               );
               AsyncStorage.setItem("city", response.data.city);
               AsyncStorage.setItem(
                 "emergencyContact",
-                response.data.emergencyContact
+                response.data.emergencyContact,
               );
               AsyncStorage.setItem("fcmToken", response.data.fcmToken);
               AsyncStorage.setItem("age", response.data.age);
@@ -675,13 +665,15 @@ class LoginScreen extends Component {
         console.log(error);
       }
       this.setState({ loader: false });
-    } catch (error) {}
+    } catch (error) {
+      console.log("ERROR", error);
+    }
   };
 
   _backendSignIn(phone, profileImage) {
-    var url = SERVER_URL + "/auth/login";
+    var url = globalThis.SERVER_URL + "/auth/login";
     this.setState({ loadingVerifyButton: true });
-    axios
+    globalThis.axios
       .post(url, {
         phone: phone.substr(1),
         referralId: this.state.referralCode,
@@ -702,7 +694,7 @@ class LoginScreen extends Component {
             response.data.emergencyContact,
             this.state.fcmToken,
             response.data.age,
-            response.data.dob
+            response.data.dob,
           );
           this.setMembership({
             membershipType: response.data.membershipType,
@@ -726,7 +718,7 @@ class LoginScreen extends Component {
           if (response.data.emergencyContact != null) {
             AsyncStorage.setItem(
               "emergencyContact",
-              response.data.emergencyContact
+              response.data.emergencyContact,
             );
           }
           if (response.data.city != null) {
@@ -738,7 +730,7 @@ class LoginScreen extends Component {
           AsyncStorage.setItem("token", response.data.id);
           AsyncStorage.setItem(
             "sessionsAttended",
-            response.data.sessionsAttended
+            response.data.sessionsAttended,
           );
           AsyncStorage.setItem("dateOfJoining", response.data.dateOfJoining);
           AsyncStorage.setItem("selfInviteCode", response.data.selfInviteCode);
@@ -751,21 +743,21 @@ class LoginScreen extends Component {
           if (response.data.membershipStartDate != null)
             AsyncStorage.setItem(
               "membershipStartDate",
-              response.data.membershipStartDate
+              response.data.membershipStartDate,
             );
           if (response.data.membershipEndDate != null)
             AsyncStorage.setItem(
               "membershipEndDate",
-              response.data.membershipEndDate
+              response.data.membershipEndDate,
             );
           AsyncStorage.setItem("coins", String(response.data.coins));
           AsyncStorage.setItem(
             "freeTrialUsed",
-            String(response.data?.freeTrialUsed)
+            String(response.data?.freeTrialUsed),
           );
           AsyncStorage.setItem(
             "freeTrialActive",
-            String(response.data?.freeTrialActive)
+            String(response.data?.freeTrialActive),
           );
 
           this.setState({
@@ -840,7 +832,6 @@ class LoginScreen extends Component {
   }
   showConditions(type) {
     if (type == 0) {
-      const { width } = Dimensions.get("window");
       this.setState({ conditionText: TermOfUse });
     } else {
       this.setState({ conditionText: PrivacyPolicy });
@@ -871,7 +862,7 @@ class LoginScreen extends Component {
             // loading={this.state.loadingResendButton}
             onPress={() => {
               Linking.openURL(
-                "https://wa.me/6280114385?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+                "https://wa.me/6280114385?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login",
               );
             }}
           />
@@ -883,7 +874,7 @@ class LoginScreen extends Component {
           <FastImage
             resizeMode="contain"
             style={styles.logo}
-            source={require("../../images/logo.png")}
+            source={LogoImage}
           />
 
           <Text
@@ -1013,7 +1004,7 @@ class LoginScreen extends Component {
               <TouchableOpacity
                 onPress={() => {
                   Linking.openURL(
-                    "https://wa.me/6280114385?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login"
+                    "https://wa.me/6280114385?text=Hi%20GoHappy%20Club%20Team%2C%20%0ACan%20you%20please%20help%20me%3F%0AI%20am%20facing%20trouble%20with%20login",
                   );
                 }}
               >
@@ -1064,6 +1055,14 @@ class LoginScreen extends Component {
     );
   }
 }
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.object,
+  actions: PropTypes.object,
+  membership: PropTypes.object,
+  profile: PropTypes.object,
+};
+
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
@@ -1090,10 +1089,6 @@ const styles = StyleSheet.create({
   tcP: {
     marginTop: 10,
     marginBottom: 10,
-    fontSize: 12,
-  },
-  tcP: {
-    marginTop: 10,
     fontSize: 12,
   },
   tcL: {
