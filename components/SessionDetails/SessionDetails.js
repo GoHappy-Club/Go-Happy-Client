@@ -756,13 +756,20 @@ Please confirm the booking. Thanks! `;
         </View>
 
         <View style={{ margin: 20 }}>
-          <View style={{ display: "flex", flexDirection: "row" }}>
-            <Text h3 style={{ fontWeight: "bold", marginRight: "10%" }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            }}
+          >
+            <Text h3 style={{ fontWeight: "bold" }}>
               {item.eventName}
             </Text>
             <View
               style={{
-                marginLeft: "auto",
                 marginTop: "3%",
               }}
             >
