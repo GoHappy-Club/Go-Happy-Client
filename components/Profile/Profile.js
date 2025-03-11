@@ -150,7 +150,7 @@ const Profile = () => {
   };
 
   const formatName = (name) => {
-    const names = name.split(" ");
+    const names = name?.split(" ");
     const formattedName = names
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(" ");
