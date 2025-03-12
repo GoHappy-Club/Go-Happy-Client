@@ -69,6 +69,7 @@ import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js"
 import BackButton from "./commonComponents/BackButton.js";
 import PaytringView from "./commonComponents/PaytringView.js";
 import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
+import NewsScreen from "./screens/News/NewsScreen.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -982,6 +983,24 @@ export default function App() {
                       headerBackVisible: false,
                       gestureEnabled: false,
                       headerShown: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="News"
+                    children={() => <NewsScreen />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerShadowVisible: false,
+                      animation: "slide_from_right",
+                      headerBackVisible: false,
+                      gestureEnabled: false,
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
                     })}
                   />
                 </>

@@ -74,6 +74,12 @@ export default function Sections(props) {
           },
         ]),
     {
+      title: "News",
+      imgUrl: require("../../images/help.png"),
+      link: "News",
+      text: "Need assistance? Click here to get help and find the support you need.",
+    },
+    {
       title: t("get_help"),
       imgUrl: require("../../images/help.png"),
       link: "props.helpUrl",

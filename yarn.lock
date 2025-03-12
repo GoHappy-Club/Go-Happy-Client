@@ -5364,6 +5364,7 @@ __metadata:
     redux: "npm:5.0.1"
     rn-fetch-blob: "npm:^0.12.0"
     rn-scratch-card: "npm:^1.2.3"
+    rn-swiper-list: "npm:^2.2.0"
     semver-compare: "npm:^1.0.0"
     tambola: "npm:3.0.3"
     typescript: "npm:5.0.4"
@@ -12933,6 +12934,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-gesture-handler@npm:*":
+  version: 2.24.0
+  resolution: "react-native-gesture-handler@npm:2.24.0"
+  dependencies:
+    "@egjs/hammerjs": "npm:^2.0.17"
+    hoist-non-react-statics: "npm:^3.3.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/eb2c5cb53690ae5de1482370a156cbd775f6b3054540cd47310ec4712df83a280fe7b6259f372eec4c14a6d7f70ab18f1919a9fe63beaca9ceae126edbe32298
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^2.9.0":
   version: 2.21.2
   resolution: "react-native-gesture-handler@npm:2.21.2"
@@ -12985,6 +13000,16 @@ __metadata:
   peerDependencies:
     react-native: ">=0.42.0"
   checksum: 10c0/f2e01cb30ebdba54cbadc7bcb584ef7491c24aa2d221312f084c6e7b1031b77c2d538f7bf778ee16959245dbbe4f7784bbead02448368b7d0cbe8dd8c808693f
+  languageName: node
+  linkType: hard
+
+"react-native-is-edge-to-edge@npm:1.1.6":
+  version: 1.1.6
+  resolution: "react-native-is-edge-to-edge@npm:1.1.6"
+  peerDependencies:
+    react: ">=18.2.0"
+    react-native: ">=0.73.0"
+  checksum: 10c0/5690e521e8310d21643634a8d0dacd524e19b76695f347b26f649fcac156a7a901fd6daef7f78482381a41e8445f4552f40ade13790fdf112fab15b0f54dbabd
   languageName: node
   linkType: hard
 
@@ -13088,6 +13113,30 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/e1b3d20a92025705cc5a3cc47e04e74c71ba0ab1621398b87334a9d6fa4714a051f0d05f7358e1dab81c3a0c6501f255ac345af17df952c458238e7e6b5de233
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@npm:*":
+  version: 3.17.1
+  resolution: "react-native-reanimated@npm:3.17.1"
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
+    "@babel/plugin-transform-class-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-classes": "npm:^7.0.0-0"
+    "@babel/plugin-transform-nullish-coalescing-operator": "npm:^7.0.0-0"
+    "@babel/plugin-transform-optional-chaining": "npm:^7.0.0-0"
+    "@babel/plugin-transform-shorthand-properties": "npm:^7.0.0-0"
+    "@babel/plugin-transform-template-literals": "npm:^7.0.0-0"
+    "@babel/plugin-transform-unicode-regex": "npm:^7.0.0-0"
+    "@babel/preset-typescript": "npm:^7.16.7"
+    convert-source-map: "npm:^2.0.0"
+    invariant: "npm:^2.2.4"
+    react-native-is-edge-to-edge: "npm:1.1.6"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/da4f653a675816eb0b3502aa5029c21ec4ec8889bcbbbbc174d567db1c05d9529d638a22c2e4085bf5a97ad2e184988d64cfa9b77774cb32322f29ab4e6c2585
   languageName: node
   linkType: hard
 
@@ -13863,6 +13912,21 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/c0979901e9745c93762109f128774e8fbf7fe15d87f0924b20f3f07dca37ef2d96085e3ab4139bed7f32fbdf6bb71f813d38f634491b0791f456af6f28f6f723
+  languageName: node
+  linkType: hard
+
+"rn-swiper-list@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "rn-swiper-list@npm:2.2.0"
+  dependencies:
+    react-native-gesture-handler: "npm:*"
+    react-native-reanimated: "npm:*"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-reanimated: "*"
+  checksum: 10c0/4823f97545238d1f84020805f19aec3403dee6d7012f8b9493e3d459a7fcd3d5929c3cd4333d81a6ea48434c07bd77d1fc5c1bc8a9b3a0e10ab16e1e030d1030
   languageName: node
   linkType: hard
 
