@@ -2,6 +2,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Linking,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -9,6 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -64,6 +66,7 @@ const AdditionalDetails = ({ route }) => {
     alertMessage: "",
     phoneNumber: route.params?.phoneNumber,
     selectedFromDropdown: false,
+    tempDate: route.params?.dob ? route.params?.dob : getFormattedDate(dayjs()),
   });
 
   const [updated, setUpdated] = useState(false);
@@ -252,6 +255,17 @@ const AdditionalDetails = ({ route }) => {
     }
   };
 
+  const handleConfirm = () => {
+    const finalDate = state.tempDate;
+
+    const d = parseDate(finalDate);
+    const millis = new Date().getTime() - d.getTime();
+    const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
+
+    setState((prev) => ({ ...prev, dob: finalDate, age }));
+    setOpen(false);
+  };
+
   if (!initialCheckDone) {
     return null;
   }
@@ -259,52 +273,89 @@ const AdditionalDetails = ({ route }) => {
   return (
     <>
       <SafeAreaView style={styles.mainContainer}>
-        <Pressable
+        <View
           style={{
-            display: open ? "flex" : "none",
-            position: "absolute",
-            backgroundColor: "#000000a0",
-            height: hp(100),
+            flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 1000000,
-            width: wp(100),
+            position: "absolute",
           }}
-          onPress={() => setOpen(false)}
         >
-          <View
-            style={{
-              backgroundColor: "white",
-              zIndex: 10000,
-              width: wp(90),
-              borderRadius: 10,
-              padding: 20,
-            }}
+          <Modal
+            transparent
+            visible={open}
+            animationType="fade"
+            onRequestClose={() => {}}
           >
-            <DatePicker
-              modal
-              open={open}
-              mode="date"
-              date={parseDate(state.dob)}
-              onConfirm={(date) => {
-                console.log("Date", date);
-                const today = date.getDate().toString().padStart(2, "0");
-                const month = (date.getMonth() + 1).toString().padStart(2, "0");
-                const year = date.getFullYear().toString();
-                const finalDate = `${today}-${month}-${year}`;
-                const d = parseDate(finalDate);
-                const millis = new Date().getTime() - d.getTime();
-                const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
-                setState((prev) => ({ ...prev, dob: finalDate, age: age }));
-                setOpen(false);
-              }}
-              onCancel={() => {
-                setOpen(false);
-              }}
-              maximumDate={new Date()}
-            />
-          </View>
-        </Pressable>
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    padding: 20,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    width: "80%",
+                  }}
+                >
+                  <Text style={{ marginBottom: 10 }}>Select Date of Birth</Text>
+
+                  <DatePicker
+                    open={true}
+                    date={parseDate(state.tempDate)}
+                    mode="date"
+                    onDateChange={(date) => {
+                      const today = date.getDate().toString().padStart(2, "0");
+                      const month = (date.getMonth() + 1)
+                        .toString()
+                        .padStart(2, "0");
+                      const year = date.getFullYear().toString();
+                      const finalDate = `${today}-${month}-${year}`;
+                      setState((prev) => ({ ...prev, tempDate: finalDate }));
+                    }}
+                    maximumDate={new Date()}
+                  />
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      gap: 14,
+                      width: "85%",
+                      marginTop: 20,
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => setOpen(false)}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                        }}
+                      >
+                        Cancel
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleConfirm}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                        }}
+                      >
+                        Confirm
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        </View>
         <StatusBar barStyle="dark-content" />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "position"}
