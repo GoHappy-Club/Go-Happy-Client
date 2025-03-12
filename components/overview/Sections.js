@@ -75,9 +75,9 @@ export default function Sections(props) {
         ]),
     {
       title: "Games",
-      imgUrl: require("../../images/contribute.png"),
+      imgUrl: require("../../images/games.png"),
       link: "FunZone",
-      text: "Help us make a difference! Click here to learn how you can contribute.",
+      text: "Enjoy the FunZone! Play games and enjoy our app.",
     },
     {
       title: t("get_help"),
