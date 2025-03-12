@@ -50,8 +50,6 @@ class HomeDetailsScreen extends Component {
   };
 
   getEventDetails(id) {
-    // this.setState({event:null})
-    this.setState({ loader: true });
     getEvent(id, this.state.phoneNumber)
       .then((response) => {
         this.setState({
