@@ -262,6 +262,7 @@ const EditProfile = () => {
                     open={true}
                     date={parseDate(state.tempDate)}
                     mode="date"
+                    timeZoneOffsetInMinutes={0}
                     onDateChange={(date) => {
                       const today = date.getDate().toString().padStart(2, "0");
                       const month = (date.getMonth() + 1)
