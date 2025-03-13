@@ -69,6 +69,9 @@ import MembershipDetails from "./screens/MembershipDetails/MembershipDetails.js"
 import BackButton from "./commonComponents/BackButton.js";
 import PaytringView from "./commonComponents/PaytringView.js";
 import PaymentProcessing from "./components/PaymentPages/PaymentProcessing.js";
+import Ludo from "./components/Game.js";
+import Game from "./components/Game.js";
+import FunZone from "./screens/FunZone/FunZone.js";
 
 const navigationRef = createNavigationContainerRef();
 
@@ -982,6 +985,47 @@ export default function App() {
                       headerBackVisible: false,
                       gestureEnabled: false,
                       headerShown: false,
+                    })}
+                  />
+                  <Stack.Screen
+                    name="FunZone"
+                    children={(props) => <FunZone />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerBackTitle: "back",
+                      headerStyle: {
+                        backgroundColor: Colors.bgBlack,
+                      },
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
+                      headerShadowVisible: false,
+                      animation: "slide_from_bottom",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="Game"
+                    children={(props) => <Game />}
+                    options={({ navigation }) => ({
+                      title: null,
+                      headerShadowVisible: false,
+                      animation: "slide_from_right",
+                      headerBackVisible: false,
+                      gestureEnabled: false,
+                      headerStyle: {
+                        backgroundColor: Colors.lowOpacityBlack,
+                      },
+                      headerLeft: () => (
+                        <BackButton
+                          styles={styles}
+                          navigation={navigation}
+                          back={true}
+                        />
+                      ),
                     })}
                   />
                 </>
