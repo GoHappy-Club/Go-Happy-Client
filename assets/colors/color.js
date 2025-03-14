@@ -54,4 +54,5 @@ export const Colors = {
   },
   copilotArrow: "#9FA8DA",
   upgradeBorder: "#FBC65F",
+  yellow:"#ffde59"
 };
