@@ -46,11 +46,8 @@ const AdditionalDetails = ({ route }) => {
     return finalDate;
   };
 
-  const getFormattedDate = (dayjsObject) => {
-    const finalDate = `${dayjsObject.get("date")}-${
-      dayjsObject.get("month") + 1
-    }-${dayjsObject.get("year")}`;
-    return finalDate;
+  const getFormattedDate = (date) => {
+    return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getFullYear()}`;
   };
 
   const profile = useSelector((state) => state.profile.profile);
@@ -59,14 +56,16 @@ const AdditionalDetails = ({ route }) => {
     name: route.params?.name,
     email: route.params?.email,
     emergencyContact: route.params?.emergencyContact,
-    dob: route.params?.dob ? route.params?.dob : getFormattedDate(dayjs()),
+    dob: route.params?.dob ? parseDate(route.params?.dob) : dayjs().toDate(),
     city: route.params?.city,
     age: route.params?.age,
     showAlert: false,
     alertMessage: "",
     phoneNumber: route.params?.phoneNumber,
     selectedFromDropdown: false,
-    tempDate: route.params?.dob ? route.params?.dob : getFormattedDate(dayjs()),
+    tempDate: route.params?.dob
+      ? parseDate(route.params?.dob)
+      : dayjs().toDate(),
   });
 
   const [updated, setUpdated] = useState(false);
@@ -138,14 +137,11 @@ const AdditionalDetails = ({ route }) => {
   };
 
   const validateDate = () => {
-    const dateSplitted = state?.dob?.split("-");
-    const day = dateSplitted[0];
-    const month = dateSplitted[1];
-    const year = dateSplitted[2];
-    const dayjsDay = dayjs().get("date");
-    const dayjsMonth = dayjs().get("month") + 1;
-    const dayjsYear = dayjs().get("year");
-    if (day == dayjsDay && month == dayjsMonth && year == dayjsYear) {
+    const today = new Date();
+    if (
+      state.dob.getDate() == today.getDate() &&
+      state.dob.getFullYear() == today.getFullYear()
+    ) {
       return false;
     }
     return true;
@@ -218,7 +214,7 @@ const AdditionalDetails = ({ route }) => {
         emergencyContact: state.emergencyContact,
         phone: profile.phoneNumber,
         city: state.city,
-        dob: state.dob,
+        dob: getFormattedDate(state.dob),
         age: state.age,
       });
       dispatch(
@@ -228,7 +224,7 @@ const AdditionalDetails = ({ route }) => {
           email: state.email,
           emergencyContact: state.emergencyContact,
           city: state.city,
-          dob: state.dob,
+          dob: getFormattedDate(state.dob),
           age: state.age,
         })
       );
@@ -237,7 +233,7 @@ const AdditionalDetails = ({ route }) => {
       AsyncStorage.setItem("email", state.email);
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
       AsyncStorage.setItem("city", state.city);
-      AsyncStorage.setItem("dob", state.dob);
+      AsyncStorage.setItem("dob", getFormattedDate(state.dob));
       AsyncStorage.setItem("age", JSON.stringify(state.age));
       setState((prevState) => ({ ...prevState, loading: false }));
       AsyncStorage.setItem("showTour", "true");
@@ -258,8 +254,7 @@ const AdditionalDetails = ({ route }) => {
   const handleConfirm = () => {
     const finalDate = state.tempDate;
 
-    const d = parseDate(finalDate);
-    const millis = new Date().getTime() - d.getTime();
+    const millis = new Date().getTime() - finalDate.getTime();
     const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
 
     setState((prev) => ({ ...prev, dob: finalDate, age }));
@@ -309,17 +304,11 @@ const AdditionalDetails = ({ route }) => {
 
                   <DatePicker
                     open={true}
-                    date={parseDate(state.tempDate)}
+                    date={state.tempDate}
                     mode="date"
                     timeZoneOffsetInMinutes={0}
                     onDateChange={(date) => {
-                      const today = date.getDate().toString().padStart(2, "0");
-                      const month = (date.getMonth() + 1)
-                        .toString()
-                        .padStart(2, "0");
-                      const year = date.getFullYear().toString();
-                      const finalDate = `${today}-${month}-${year}`;
-                      setState((prev) => ({ ...prev, tempDate: finalDate }));
+                      setState((prev) => ({ ...prev, tempDate: date }));
                     }}
                     maximumDate={new Date()}
                   />
@@ -398,6 +387,7 @@ const AdditionalDetails = ({ route }) => {
               setOpen={setOpen}
               setUpdated={setUpdated}
               styles={styles}
+              getFormattedDate={getFormattedDate}
             />
           </ScrollView>
         </KeyboardAvoidingView>
