@@ -41,25 +41,22 @@ const EditProfile = () => {
     return finalDate;
   };
 
-  const getFormattedDate = (dayjsObject) => {
-    const finalDate = `${dayjsObject.get("date")}-${
-      dayjsObject.get("month") + 1
-    }-${dayjsObject.get("year")}`;
-    return finalDate;
+  const getFormattedDate = (date) => {
+    return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getFullYear()}`;
   };
   const [state, setState] = useState({
     name: profile.name,
     email: profile.email,
     emergencyContact: profile.emergencyContact,
     whatsappLink: "",
-    dob: profile.dob ? profile.dob : getFormattedDate(dayjs()),
+    dob: profile.dob ? parseDate(profile.dob) : dayjs().toDate(),
     city: profile.city,
     showAlert: false,
     alertMessage: "",
     alertTitle: "",
     selectedFromDropdown: true,
     age: profile.age,
-    tempDate: profile.dob ? profile.dob : getFormattedDate(dayjs()),
+    tempDate: profile.dob ? parseDate(profile.dob) : dayjs().toDate(),
   });
 
   const [updated, setUpdated] = useState(false);
@@ -145,7 +142,7 @@ const EditProfile = () => {
         email: state.email,
         emergencyContact: state.emergencyContact,
         city: state.city,
-        dob: state.dob,
+        dob: getFormattedDate(state.dob),
         age: state.age,
       });
       dispatch(
@@ -155,7 +152,7 @@ const EditProfile = () => {
           emergencyContact: state.emergencyContact,
           name: state.name,
           city: state.city,
-          dob: state.dob,
+          dob: getFormattedDate(state.dob),
           age: state.age,
         })
       );
@@ -163,7 +160,7 @@ const EditProfile = () => {
       AsyncStorage.setItem("emergencyContact", state.emergencyContact);
       AsyncStorage.setItem("name", state.name);
       AsyncStorage.setItem("city", state.city);
-      AsyncStorage.setItem("dob", state.dob);
+      AsyncStorage.setItem("dob", getFormattedDate(state.dob));
       AsyncStorage.setItem("age", JSON.stringify(state.age));
       setState((prevState) => ({ ...prevState, loading: false }));
       setUpdated(true);
@@ -197,14 +194,11 @@ const EditProfile = () => {
   };
 
   const validateDate = () => {
-    const dateSplitted = state?.dob?.split("-");
-    const day = dateSplitted[0];
-    const month = dateSplitted[1];
-    const year = dateSplitted[2];
-    const dayjsDay = dayjs().get("date");
-    const dayjsMonth = dayjs().get("month") + 1;
-    const dayjsYear = dayjs().get("year");
-    if (day == dayjsDay && month == dayjsMonth && year == dayjsYear) {
+    const today = new Date();
+    if (
+      state.dob.getDate() == today.getDate() &&
+      state.dob.getFullYear() == today.getFullYear()
+    ) {
       return false;
     }
     return true;
@@ -213,8 +207,8 @@ const EditProfile = () => {
   const handleConfirm = () => {
     const finalDate = state.tempDate;
 
-    const d = parseDate(finalDate);
-    const millis = new Date().getTime() - d.getTime();
+    // const d = parseDate(finalDate);
+    const millis = new Date().getTime() - finalDate.getTime();
     const age = Math.floor(millis / (1000 * 60 * 60 * 24 * 365));
 
     setState((prev) => ({ ...prev, dob: finalDate, age }));
@@ -260,17 +254,11 @@ const EditProfile = () => {
 
                   <DatePicker
                     open={true}
-                    date={parseDate(state.tempDate)}
+                    date={state.tempDate}
                     mode="date"
                     timeZoneOffsetInMinutes={0}
                     onDateChange={(date) => {
-                      const today = date.getDate().toString().padStart(2, "0");
-                      const month = (date.getMonth() + 1)
-                        .toString()
-                        .padStart(2, "0");
-                      const year = date.getFullYear().toString();
-                      const finalDate = `${today}-${month}-${year}`;
-                      setState((prev) => ({ ...prev, tempDate: finalDate }));
+                      setState((prev) => ({ ...prev, tempDate: date }));
                     }}
                     maximumDate={new Date()}
                   />
@@ -284,8 +272,6 @@ const EditProfile = () => {
                       marginTop: 20,
                     }}
                   >
-                    {/* <Button title="Cancel" onPress={() => setOpen(false)} /> */}
-                    {/* <Button title="Cancel" onPress={() => setOpen(false)} /> */}
                     <TouchableOpacity onPress={() => setOpen(false)}>
                       <Text
                         style={{
@@ -411,6 +397,7 @@ const EditProfile = () => {
               setOpen={setOpen}
               setUpdated={setUpdated}
               styles={styles}
+              getFormattedDate={getFormattedDate}
             />
           </ScrollView>
         </KeyboardAvoidingView>

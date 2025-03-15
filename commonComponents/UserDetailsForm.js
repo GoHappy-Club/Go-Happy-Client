@@ -9,7 +9,8 @@ const UserDetailsForm = ({
   setState,
   setOpen,
   setUpdated,
-  styles
+  styles,
+  getFormattedDate
 }) => {
   return (
     <>
@@ -69,7 +70,7 @@ const UserDetailsForm = ({
           onPress={() => setOpen(true)}
         >
           <Text style={[styles.input, { borderBottomWidth: 0 }]}>
-            {state.dob}
+            {getFormattedDate(state.dob)}
           </Text>
           <Calendar size={24} color={"black"} />
         </Pressable>
